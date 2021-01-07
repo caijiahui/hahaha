@@ -1,5 +1,4 @@
-﻿@model advt.Model.PageModel.PEModel
-<html>
+﻿<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,19 +54,7 @@
                                         <a href="#">
                                             <span class="text-lg text-bold text-primary">
                                                 <font style="vertical-align:inherit">ICTOS平台管理</font>
-                                                @if (Model.tname == "Engineering")
-                                                {
-                                                    <font style="vertical-align:inherit">(工程管理)</font>
-                                                }
-                                                @if (Model.tname == "Quality")
-                                                {
-                                                    <font style="vertical-align:inherit">(品质管理)</font>
-                                                }
-                                                @if (Model.tname == "Production")
-                                                {
-                                                    <font style="vertical-align:inherit">(生产管理)</font>
-                                                }
-
+                                               
                                             </span>
                                         </a>
                                     </div>
@@ -85,7 +72,7 @@
                                 <li class="dropdown hidden-xs dropdown">
                                     <a href="#" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
                                         <img src="~/Images/timgs.png" />
-                                        @Model.username
+                                        @*@Model.username*@
                                     </a>
                                     <ul class="dropdown-menu animation-expand">
                                         <li class="dropdown-header"></li>
@@ -194,49 +181,7 @@
                                     <span class="title">公告模块</span>
                                 </a>
                             </li>
-                            @if (Model.tname == "Quality")
-                            {
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=2,tname="Quality" })">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">文件管控</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=8,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">签拟单/特采单</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=11,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">QC异常汇总</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=12,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">客诉</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=13,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">重大品质异常</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=14,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">品质管控履历表</span>
-                                    </a>
-                                </li>
-                            }
-                            @if (Model.tname == "Production")
-                            {
-
-                            }
+                          
                         </ul>
 
                     </div>

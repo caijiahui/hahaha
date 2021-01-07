@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="infrastructure\IsAdminAttribute.cs" />
     <Compile Include="infrastructure\Pagination.cs" />
+    <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -385,7 +386,6 @@
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
