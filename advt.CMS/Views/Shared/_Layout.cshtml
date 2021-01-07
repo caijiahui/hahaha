@@ -1,5 +1,4 @@
-﻿@model advt.Model.PageModel.PEModel
-<html>
+﻿<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,19 +54,7 @@
                                         <a href="#">
                                             <span class="text-lg text-bold text-primary">
                                                 <font style="vertical-align:inherit">ICTOS平台管理</font>
-                                                @if (Model.tname == "Engineering")
-                                                {
-                                                    <font style="vertical-align:inherit">(工程管理)</font>
-                                                }
-                                                @if (Model.tname == "Quality")
-                                                {
-                                                    <font style="vertical-align:inherit">(品质管理)</font>
-                                                }
-                                                @if (Model.tname == "Production")
-                                                {
-                                                    <font style="vertical-align:inherit">(生产管理)</font>
-                                                }
-
+                                               
                                             </span>
                                         </a>
                                     </div>
@@ -85,7 +72,7 @@
                                 <li class="dropdown hidden-xs dropdown">
                                     <a href="#" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
                                         <img src="~/Images/timgs.png" />
-                                        @Model.username
+                                        @*@Model.username*@
                                     </a>
                                     <ul class="dropdown-menu animation-expand">
                                         <li class="dropdown-header"></li>
@@ -158,7 +145,43 @@
                                     <span class="title">外来软件管理</span>
                                 </a>
                             </li>
-                           
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=4,tname="Engineering" })">
+                                    <div class="gui-icon"><i class="fa fa-spinner"></i></div>
+                                    <span class="title">新机种生产进度</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=5,tname="Engineering" })">
+                                    <div class="gui-icon"><i class="fa fa-line-chart"></i></div>
+                                    <span class="title">专案优化</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=6,tname="Engineering" })">
+                                    <div class="gui-icon"><i class="fa fa-file-pdf-o"></i></div>
+                                    <span class="title">3C资料分享</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=7,tname="Engineering" })">
+                                    <div class="gui-icon"><i class="fa fa-star"></i></div>
+                                    <span class="title">镜像异常事项</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=9,tname="Engineering"})">
+                                    <div class="gui-icon"><i class="glyphicon glyphicon-th"></i></div>
+                                    <span class="title">表单模块</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PEMain",new {tid=10,tname="Engineering"})">
+                                    <div class="gui-icon"><i class="glyphicon glyphicon-th-large"></i></div>
+                                    <span class="title">公告模块</span>
+                                </a>
+                            </li>
+                          
                         </ul>
 
                     </div>

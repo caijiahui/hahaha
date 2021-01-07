@@ -11,6 +11,7 @@ using advt.Common;
 using System.IO;
 using advt.CMS;
 using advt.Model.PageModel;
+using advt.CMS.Models.ExamModel;
 
 namespace advt.Web.Controllers
 {
@@ -170,14 +171,22 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult MaintainExamType()
         {
-            Model.PageModel.PEModel model = new Model.PageModel.PEModel();
+            ExamTypeModel model = new ExamTypeModel();
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult Test()
+        public ActionResult GetTypeInfo()
         {
-            var c = Data.ExamType.Get_All_ExamType(1);
-            return Json(new { tableData = c}, JsonRequestBehavior.AllowGet);
+            var model = new ExamTypeModel();
+            var data = Data.ExamType.Get_All_ExamType();
+            return Json(new { tableData = data, VexamType= model.VexamType }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SaveTypeInfo(ExamTypeModel model)
+        {
+            model.SaveType();
+            return Json(new { }, JsonRequestBehavior.AllowGet);
         }
 
 
