@@ -18,6 +18,7 @@ namespace advt.Data
         int Update_ExamSubject(Entity.ExamSubject info, string[] Include, string[] Exclude);
 
         int Delete_ExamSubject(int ID);
+        IDataReader GetSubjectList(object objparams);
 
         #endregion
     }

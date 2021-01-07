@@ -68,6 +68,16 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamSubject(ID);
         }
+
+        public static List<Entity.ExamType> GetSubjectList()
+        {
+            return GetSubjectList(null);
+        }
+        public static List<Entity.ExamType> GetSubjectList(object objparams)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetSubjectList(objparams);
+            return SqlHelper.GetReaderToList<Entity.ExamType>(reader);
+        }
         #endregion
     }
 }

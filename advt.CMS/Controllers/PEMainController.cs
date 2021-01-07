@@ -205,5 +205,17 @@ namespace advt.Web.Controllers
                 result = true;
             return Json(new { result = result }, JsonRequestBehavior.AllowGet);
         }
+
+        [MyAuthorize]
+        public ActionResult GetSubjectInfo()
+        {
+            var subjectInfo = Data.ExamSubject.Get_All_ExamSubject();
+            return Json(new { tableData = subjectInfo }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetSubjectList()
+        {
+            var subject = Data.ExamSubject.GetSubjectList();
+            return Json(new { ListSubjectName = subject }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -378,6 +378,7 @@
     <Content Include="Views\PEMain\Classify.cshtml" />
     <Content Include="Views\Exam\User_type.cshtml" />
     <Content Include="Views\PEMain\MaintainExamType.cshtml" />
+    <Content Include="Views\PEMain\MaintainExamSubject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
