@@ -147,9 +147,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=1,tname="Engineering" })">
+                                <a href="@Url.Action("MaintainExamSubject", "PEMain",new {tid=1,tname="Engineering" })">
                                     <div class="gui-icon"><i class="fa fa-file-text-o"></i></div>
-                                    <span class="title">案例分享</span>
+                                    <span class="title">考试科目</span>
                                 </a>
                             </li>
                             <li>
@@ -158,85 +158,7 @@
                                     <span class="title">外来软件管理</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=4,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-spinner"></i></div>
-                                    <span class="title">新机种生产进度</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=5,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-line-chart"></i></div>
-                                    <span class="title">专案优化</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=6,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-file-pdf-o"></i></div>
-                                    <span class="title">3C资料分享</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=7,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-star"></i></div>
-                                    <span class="title">镜像异常事项</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=9,tname="Engineering"})">
-                                    <div class="gui-icon"><i class="glyphicon glyphicon-th"></i></div>
-                                    <span class="title">表单模块</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=10,tname="Engineering"})">
-                                    <div class="gui-icon"><i class="glyphicon glyphicon-th-large"></i></div>
-                                    <span class="title">公告模块</span>
-                                </a>
-                            </li>
-                            @if (Model.tname == "Quality")
-                            {
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=2,tname="Quality" })">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">文件管控</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=8,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">签拟单/特采单</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=11,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">QC异常汇总</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=12,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">客诉</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=13,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">重大品质异常</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "PEMain",new {tid=14,tname="Quality"})">
-                                        <div class="gui-icon"><i class="fa fa-file-o"></i></div>
-                                        <span class="title">品质管控履历表</span>
-                                    </a>
-                                </li>
-                            }
-                            @if (Model.tname == "Production")
-                            {
-
-                            }
+                           
                         </ul>
 
                     </div>

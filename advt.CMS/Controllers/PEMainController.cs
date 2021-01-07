@@ -207,15 +207,38 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
+        public ActionResult MaintainExamSubject()
+        {
+            Model.PageModel.PEModel model = new Model.PageModel.PEModel();
+            return View(model);
+        }
+
+        [MyAuthorize]
         public ActionResult GetSubjectInfo()
         {
             var subjectInfo = Data.ExamSubject.Get_All_ExamSubject();
             return Json(new { tableData = subjectInfo }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetSubjectList()
+        public ActionResult GetSubjectList(string model)
         {
             var subject = Data.ExamSubject.GetSubjectList();
-            return Json(new { ListSubjectName = subject }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { ListSubjectName = subject, }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SaveSubjectInfo(ExamSubject model)
+        {
+            var result = false;
+            if (model.ID != null)
+            {
+                var info = Data.ExamSubject.Update_ExamSubject(model, null, new string[] { "id"});
+            }
+            return Json(new { result = result}, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult DeleteSubject(int model)
+        {
+            var subject = Data.ExamSubject.Delete_ExamSubject(model);
+            return RedirectToAction("MaintainExamSubject");
         }
     }
 }
