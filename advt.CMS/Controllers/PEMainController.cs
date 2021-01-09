@@ -178,17 +178,25 @@ namespace advt.Web.Controllers
         public ActionResult GetTypeInfo()
         {
             var model = new ExamTypeModel();
-            var data = Data.ExamType.Get_All_ExamType();
-            return Json(new { tableData = data, VexamType= model.VexamType }, JsonRequestBehavior.AllowGet);
+            model.GetAllVexamType();
+            return Json(new { LexamType = model.LexamType, VexamType= model.VexamType }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
         public ActionResult SaveTypeInfo(ExamTypeModel model)
         {
-            model.SaveType();
-            return Json(new { }, JsonRequestBehavior.AllowGet);
+            var username = this.UserContext.username;
+            model.SaveType(username);
+            return Json(new { model.LexamType }, JsonRequestBehavior.AllowGet);
         }
-
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult DeleteTypeInfo(string ID)
+        {
+            var model = new ExamTypeModel();
+            model.DeleteType(ID);
+            return Json(new { model.LexamType }, JsonRequestBehavior.AllowGet);
+        }
 
         [MyAuthorize]
         public void UploadFile(int id,string filename)

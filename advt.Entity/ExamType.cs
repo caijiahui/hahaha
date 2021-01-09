@@ -5,7 +5,7 @@ namespace advt.Entity
     public partial class ExamType
     {
 
-        public string ID { get; set; }
+        public int ID { get; set; }
 
         public string TypeName { get; set; }//¿¼ÊÔÀàĞÍÃû³Æ
 

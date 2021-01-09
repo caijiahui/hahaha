@@ -39,13 +39,22 @@ namespace advt.Data.SqlServer
 
         public int Insert_ExamType(Entity.ExamType info, string[] Include, string[] Exclude)
         {
-            List<DbParameter> l_parms = new List<DbParameter>();
-            StringBuilder commandText = new StringBuilder();
-            string item_name = string.Empty;
-            string item_value = string.Empty;
-            SqlHelper.Get_Inserte_Set(ExamType_item_prop_a, Include, Exclude, info, ref item_name, ref item_value, ref l_parms);
-            commandText.AppendLine("INSERT INTO [ExamType] (" + item_name + ") VALUES (" + item_value + ")");
-            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+            try
+            {
+                List<DbParameter> l_parms = new List<DbParameter>();
+                StringBuilder commandText = new StringBuilder();
+                string item_name = string.Empty;
+                string item_value = string.Empty;
+                SqlHelper.Get_Inserte_Set(ExamType_item_prop_a, Include, Exclude, info, ref item_name, ref item_value, ref l_parms);
+                commandText.AppendLine("INSERT INTO [ExamType] (" + item_name + ") VALUES (" + item_value + ")");
+                return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
 
         public int Update_ExamType(Entity.ExamType info, string[] Include, string[] Exclude)

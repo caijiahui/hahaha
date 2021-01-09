@@ -1,0 +1,385 @@
+/* css reset www.admin10000.com */  
+*{
+  box-sizing: border-box;
+}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { 
+  margin:0; 
+  padding:0; 
+}   
+body { 
+  background:#fff; 
+  color:#555; 
+  font-size:14px; 
+  font-family: Verdana, Arial, Helvetica, sans-serif; }   
+td,th,caption { 
+  font-size:14px; 
+}   
+h1, h2, h3, h4, h5, h6 { 
+  font-weight:normal; 
+  font-size:100%; 
+}   
+address, caption, cite, code, dfn, em, strong, th, var { 
+  font-style:normal; 
+  font-weight:normal;
+}   
+a { 
+  color:#555; 
+  text-decoration:none; 
+}   
+a:hover { 
+  text-decoration:none; 
+}   
+img { 
+  border:none; 
+}   
+ol,ul,li { 
+  list-style:none; 
+}   
+input, textarea, select, button { 
+  font:14px Verdana,Helvetica,Arial,sans-serif; 
+}   
+table { 
+  border-collapse:collapse; 
+}     
+/* css common */  
+.clearfix:after {
+  content: "."; 
+  display: block; 
+  height:0; 
+  clear:both; 
+  visibility: hidden;
+}   
+.clearfix { 
+  *zoom:1; 
+} 
+[v-cloak]{
+	display:none;
+}
+.wrap{
+	padding:30px 10%;
+}
+.header h1{
+	height:60px;
+	font-size:28px;
+	color:#4e97a2;
+	text-align: center;
+}
+.content{
+	margin:20px 0;
+	font-size:18px;
+}
+.content .pro-title{
+	display:flex;
+	margin-bottom:20px;
+	font-size: 18px;
+	font-weight: bold;
+	color: #5f5f5f;
+	line-height: 28px;
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+.content .pro-title>div:nth-of-type(1){
+	width:38px;
+	padding-top:2px;
+}
+.content .pro-title>div:nth-of-type(2){
+	flex:1;
+}
+.content .pro-ansower .el-radio,
+.content .pro-ansower .el-checkbox,
+.content .pro-ansower .el-textarea{
+	display:inline-block;
+	margin-bottom:10px;
+	line-height: 36px;
+}
+.content .pro-ansower .el-textarea__inner{
+	font-size:18px;
+}
+.content .pro-ansower .el-checkbox{
+	margin-bottom:20px;
+}
+
+.content .pro-ansower .el-radio .el-radio__input.is-checked+.el-radio__label,
+.content .pro-ansower .el-checkbox .el-checkbox__input.is-checked+.el-checkbox__label{
+	color:#3492e2;
+}
+.content .pro-ansower .el-radio .el-radio__input.is-checked .el-radio__inner,
+.content .pro-ansower .el-checkbox .el-checkbox__input.is-checked .el-checkbox__inner{
+	border-color:#3492e2;
+	background:#3492e2;
+}
+.content .detail-list .el-radio .el-radio__input.is-checked .el-radio__inner,
+.content .detail-list .el-checkbox .el-checkbox__input.is-checked .el-checkbox__inner{
+	border-color:#c7c7c7;
+	background:#f3f3f3;
+}
+.content .detail-list .el-radio__input.is-disabled+span.el-radio__label,
+.content .detail-list .el-checkbox__input.is-disabled+span.el-checkbox__label{
+	color:#a5a5a5;
+	line-height: 20px;
+}
+.content .detail-list .el-radio__input.is-disabled .el-radio__inner, 
+.content .detail-list .el-radio__input.is-disabled.is-checked .el-radio__inner{
+	background-color:#f1f1f1;
+	border-color:#d0d0d0;
+}
+.content .detail-list .el-radio__inner::after{
+	width:6px;
+	height:6px;
+}
+.content .pro-ansower .el-radio .el-radio__input .el-radio__inner{
+	margin-top:9px;
+}
+.content .pro-ansower .el-radio .el-radio__input .el-radio__inner,
+.content .pro-ansower .el-checkbox .el-checkbox__input .el-checkbox__inner{
+	width:22px;
+	height:22px;
+	border:1px solid #bfc0c1;
+}
+.content .pro-ansower .el-radio .el-radio__input .el-radio__inner::after,
+.content .pro-ansower .el-checkbox .el-checkbox__input .el-checkbox__inner::after{
+	width:10px;
+	height:10px;
+}
+.content .pro-ansower .el-checkbox .el-checkbox__input .el-checkbox__inner::after{
+	height:14px;
+	top:-1px;
+	left:4px;
+}
+.content .pro-ansower .el-radio .el-radio__label,
+.content .pro-ansower .el-checkbox .el-checkbox__label,
+.content .detail-list .el-radio .el-radio__label,
+.content .detail-list .el-checkbox .el-checkbox__label{
+	display:inline-block;
+	font-size:18px;
+	word-break: break-all;
+	word-wrap: break-word;
+	vertical-align: middle;
+	white-space: pre-wrap;
+}
+.content .detail-list .el-radio .el-radio__label,
+.content .detail-list .el-checkbox .el-checkbox__label{
+	font-size:14px;
+}
+.content .detail-list .el-radio__input,
+.content .detail-list .el-checkbox__input{
+	vertical-align: top;
+}
+.content .detail-list .pro-judge{
+	display:flex;
+	justify-content: space-between;
+	padding:4px 10px;
+	background:#f3f3f3;
+	border-radius: 20px;
+	color:#de4944;
+}
+.content .detail-list .judge-wrong{
+	padding:10px;
+	background:#f3f3f3;
+	border-radius: 6px;
+	margin-top:10px;
+	display:flex;
+	font-size:16px;
+}
+.content .detail-list .judge-wrong>div:nth-of-type(1){
+	width:80px;
+	color:#4db35d;
+	font-weight:bold;
+}
+.content .detail-list .judge-wrong>div:nth-of-type(2){
+	flex:1;
+	color:#717171;
+}
+.content .detail-list .judge-wrong>div:nth-of-type(2)>span{
+	margin-right:4px;
+}
+.content .detail-list .pro-judge.isRight{
+	color:#4db35d;
+}
+.content .detail-list .pro-judge>div:nth-of-type(1)>span{
+	vertical-align: middle;
+}
+.content .detail-list .pro-judge>div:nth-of-type(1)>span:nth-of-type(1){
+	display:inline-block;
+	width:25px;
+	height:25px;
+}
+.content .detail-list .pro-judge>div:nth-of-type(1)>span img{
+	width:100%;
+	height:100%;
+}
+.content .pro-ansower .pro-ans-con{
+	min-height: 280px;
+	margin-bottom:40px;
+}
+.content .pro-ansower .pro-ans-con .el-form-item{
+	margin-bottom:68px;
+}
+.content .pro-ansower .pro-ans-con .el-form-item__error{
+	height:36px;
+	line-height: 36px;
+	font-size: 15px;
+	width:100%;
+	padding-top:0;
+	background: #ffc9a9;
+	color: #ff0808;
+	border-radius: 4px;
+	padding-left: 10px;
+	transition: .5s all linear;
+	margin-top:12px;
+}
+.detail-content>div>label{
+	margin-bottom:10px;
+}
+.footer{
+	margin:20px 0;
+}
+/*.footer>p{
+	text-align: center;
+	margin:30px 0 10px;
+}*/
+.footer .el-divider{
+	text-align: center;
+	margin:50px 0 10px;
+}
+.footer .el-divider .el-divider__text{
+	font-size:16px;
+}
+.footer .footer-btn-box{
+	display:flex;
+}
+.footer .footer-btn-box>div{
+	flex:1;
+	text-align: center;
+}
+.footer .pro-btn{
+	text-align: center;
+	background:#4e97a2;
+	color:#fff;
+	border-color:#347f8a;
+	width:40%;
+}
+/*页面成绩汇总页*/
+.grade-title{
+	height:50px;
+	text-align: center;
+	font-size:22px;
+	color:#6f6f6f;
+	font-weight:bold;
+}
+.detail-divide{
+	height:40px;
+	line-height: 40px;
+	font-weight:bold;
+	margin-bottom:10px;
+	font-size:16px;
+	border-bottom:1px dashed #d6d6d6;
+}
+.detail-divide i{
+	margin-left:4px;
+}
+.grade-title.isSuccess{
+	color:#ff6a00;
+}
+.grade-show{
+	display:flex;
+}
+.grade-show>div{
+	flex:1;
+	border:1px solid #ddd;
+}
+.grade-show>div>div:nth-of-type(1){
+	height:100px;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+}
+
+.grade-show>div>div.grade{
+	font-size:40px;
+	color:#6f6f6f;
+	padding-bottom:15px;
+	background:url(../img/grade-gray.png) no-repeat center bottom/100px auto;
+}
+.grade-show>div>div.grade.isSuccess{
+	color:#ff6a00;
+	background:url(../img/grade.png) no-repeat center bottom/100px auto;
+}
+.grade-show>div>div:nth-of-type(1)>div{
+	flex:1;
+	display:flex;
+	align-items: flex-end;
+	padding-bottom:12px;
+	justify-content: center;
+	font-size:20px;
+	font-weight:bold;
+}
+.grade-show>div>div:nth-of-type(1)>p{
+	height:36px;
+	font-size:14px;
+	color:#7d7d7d;
+}
+.grade-show>div>div:nth-of-type(2){
+	text-align: center;
+	height:28px;
+	line-height: 28px;
+	background:#efefef;
+	font-size:14px;
+	color:#a0a0a0;
+}
+.detail-show{
+	margin-top:30px;
+}
+.detail-list{
+	margin-bottom:20px;
+}
+.detail-list .detail-title{
+	font-size:15px;
+	line-height: 24px;
+	margin-bottom:16px;
+}
+.detail-title>span{
+	padding:3px 10px;
+	background:#f3f3f3;
+	font-size:14px;
+	border-radius: 2px;
+	margin-left:8px;
+}
+@media screen and (min-width:710px){
+	
+	/*页面成绩汇总页*/
+	.detail-content>div>label{
+		display:block;
+	}
+	
+}
+@media screen and (max-width:700px){
+	.wrap{
+		padding:20px;
+	}
+	.content .pro-ansower .el-radio,
+	.content .pro-ansower .el-checkbox{
+		display:flex;
+		margin-right:0;
+	}
+	.content .pro-ansower .el-radio-group,
+	.content .pro-ansower .el-checkbox-group{
+		width:100%;
+	}
+	.content .pro-ansower .el-radio .el-radio__label,
+	.content .pro-ansower .el-checkbox .el-checkbox__label{
+		flex:1;
+	}
+	.footer .pro-btn{
+		width:96%;
+	}
+	.content .pro-ansower .pro-ans-con{
+		min-height: 380px;
+	}
+	/*页面成绩汇总页*/
+	
+}
+
+
+

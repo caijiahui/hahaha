@@ -233,6 +233,7 @@
     <Content Include="Images\bgs.png" />
     <Content Include="Images\cat2.jpg" />
     <Content Include="Images\cat3.jpg" />
+    <Content Include="Images\logo.png" />
     <Content Include="Images\MainTitle.jpg" />
     <Content Include="Images\main_bg.png" />
     <Content Include="Images\p.png" />
@@ -269,6 +270,9 @@
     <Content Include="Scripts\calendar.css" />
     <Content Include="Scripts\calendar.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\css\exam.css" />
+    <Content Include="Scripts\css\font-awesome.css" />
+    <Content Include="Scripts\css\layout.css" />
     <Content Include="Scripts\elementUI\lib\index.js" />
     <Content Include="Scripts\elementUI\lib\theme-chalk\index.css" />
     <Content Include="Scripts\fonts\fontawesome-webfont.eot" />
@@ -353,6 +357,12 @@
     <Content Include="Scripts\Vue\axios.js" />
     <Content Include="Scripts\Vue\index.css" />
     <Content Include="Scripts\Vue\index.js" />
+    <Content Include="Scripts\Vue\js\axios.js" />
+    <Content Include="Scripts\Vue\js\elementUI\lib\index.js" />
+    <Content Include="Scripts\Vue\js\elementUI\lib\theme-chalk\index.css" />
+    <Content Include="Scripts\Vue\js\less.js" />
+    <Content Include="Scripts\Vue\js\polyfill.min.js" />
+    <Content Include="Scripts\Vue\js\Vue.js" />
     <Content Include="Scripts\Vue\polyfill.min.js" />
     <Content Include="Scripts\Vue\Vue.js" />
     <Content Include="Web.config">
@@ -382,6 +392,8 @@
     <Content Include="Views\Exam\User_type.cshtml" />
     <Content Include="Views\PEMain\MaintainExamType.cshtml" />
     <Content Include="Views\PEMain\MaintainExamSubject.cshtml" />
+    <Content Include="Scripts\Vue\js\elementUI\lib\theme-chalk\fonts\element-icons.ttf" />
+    <Content Include="Scripts\Vue\js\elementUI\lib\theme-chalk\fonts\element-icons.woff" />
     <Content Include="Views\PEMain\MaintainExamRule.cshtml" />
   </ItemGroup>
   <ItemGroup>
