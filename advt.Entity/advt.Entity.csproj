@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="advt_Attachment.cs" />
+    <Compile Include="ExamRule.cs" />
     <Compile Include="ExamSubject.cs" />
     <Compile Include="ExamType.cs" />
     <Compile Include="TestReport.cs" />

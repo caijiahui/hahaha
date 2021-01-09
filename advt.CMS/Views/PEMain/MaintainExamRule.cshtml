@@ -1,0 +1,181 @@
+﻿@model advt.CMS.Models.ExamModel.ExamRuleModel
+
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <script src="~/Scripts/common.js"></script>
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <div id="app">
+        <div>
+            <el-button  @@click="createRule">新增</el-button>
+            <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase()))"
+                      style="width: 100% " :default-sort="{prop: 'SubjectName', order: 'CreateUser'}">
+                <el-table-column label="规则名字" prop="RuleName" sortable width="120"></el-table-column>
+                <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
+                <el-table-column label="考试科目" prop="SubjectName" sortable width="120"></el-table-column>
+                <el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
+                <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
+                <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
+                <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
+                <el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
+                <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+                <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>
+                <el-table-column label="创建人" prop="CreateUser" sortable width="120"></el-table-column>
+                <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
+                <el-table-column align="right">
+                    <template slot="header" slot-scope="scope">
+                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button size="mini"                                 
+                                   @@click="handleEdit(scope.row.ID,scope.row.RuleName,scope.row.TypeName,scope.row.SubjectName,scope.row)">Edit</el-button>
+                        <el-button size="mini"
+                                   type="danger"
+                                   @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
+                <el-form :model="VExamRule" ref="dialogForm">
+                    <el-form-item label="考试类型" :label-width="formLabelWidth">
+                        <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型">
+                            <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="考试科目" :label-width="formLabelWidth">
+                        <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目">
+                            <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="规则名" prop="RuleName">
+                        <el-input v-model="VExamRule.RuleName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="总分" prop="TotalScore">
+                        <el-input v-model="VExamRule.TotalScore"></el-input>
+                    </el-form-item>
+                    <el-form-item label="总时长" prop="TotalTime">
+                        <el-input v-model="VExamRule.TotalTime"></el-input>
+                    </el-form-item>
+                    <el-form-item label="总题数" prop="TotalSubject">
+                        <el-input v-model="VExamRule.TotalSubject"></el-input>
+                    </el-form-item>
+                    <el-form-item label="通过分数" prop="PassScore">
+                        <el-input v-model="VExamRule.PassScore"></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否批阅" prop="IsRead">
+                        <el-switch v-model="VExamRule.IsRead"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否重考" prop="IsRepeat">
+                        <el-switch v-model="VExamRule.IsRepeat"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="标头" prop="StartDeac">
+                        <el-input type="textarea" v-model="VExamRule.StartDeac"></el-input>
+                    </el-form-item>
+                    <el-form-item label="结尾" prop="EndDesc">
+                        <el-input type="textarea" v-model="VExamRule.EndDesc"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
+    </div>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                tableData: [],
+                dialogFormVisible: false,
+                ListTypeName: [],
+                VExamRule: [],
+                ListSubjectName:[],
+                formLabelWidth: '120px',
+                search: ''
+            },
+            watch: {
+                'VExamRule.TypeName': function (newval) {
+                    axios.post('/PEMain/GetSubjectName', {
+                        model: newval
+                    }).then(response => {
+                        this.ListSubjectName = response.data.ListSubjectName;
+                    });
+                },
+               
+            },
+            mounted: function () {
+                this.getdata();
+            },
+            methods: {
+                createRule: function () {
+                    var _this = this;
+                    axios.post('/PEMain/GetSubjectList').then(response => {
+                        _this.ListTypeName = response.data.ListTypeName;
+                    });
+                    _this.dialogFormVisible = true;
+                },
+                handleSave: function () {
+                    var _this = this;
+                    var objs = {};
+                    objs.VExamRule = _this.VExamRule;
+                    axios.post('/PEMain/SaveRuleInfo', {
+                        model: objs
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                        });
+                    _this.dialogFormVisible = false;
+
+                },
+                handleEdit(index, RuleName, TypeName, SubjectName, row) {
+                    var _this = this;
+                    console.log(row);
+                    _this.VExamRule.RuleName = row.RuleName;
+                    _this.VExamRule.TypeName = row.TypeName;
+                    _this.VExamRule.SubjectName = row.SubjectName;
+                    _this.VExamRule.TotalScore = row.TotalScore;
+                    _this.VExamRule.SubjectName = row.SubjectName;
+                    _this.VExamRule.TotalTime = row.TotalTime;
+                    _this.VExamRule.TotalSubject = row.TotalSubject;
+                    _this.VExamRule.PassScore = row.PassScore;
+                    _this.VExamRule.IsRead = row.IsRead;
+                    _this.VExamRule.IsRepeat = row.IsRepeat;
+                    _this.VExamRule.StartDeac = row.StartDeac;
+                    _this.VExamRule.EndDesc = row.EndDesc;
+                    _this.VExamRule.ID = index; 
+                    axios.post('/PEMain/GetSubjectList').then(response => {
+                        _this.ListTypeName = response.data.ListTypeName;
+                       
+                    });
+                    _this.dialogFormVisible = true;
+                },
+                handleDelete(index, row) {
+                    var _this = this;
+                    axios.post('/PEMain/DeleteRuleInfo', {
+                        model: index
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                    });
+                },
+                getdata: function () {
+                    var _this = this;
+                    axios.post('/PEMain/GetRuleInfo').then(function (responese) {
+                        _this.tableData = responese.data.tableData;
+                        _this.VExamRule = responese.data.VExamRule;
+                    })
+                }
+            },
+
+        })
+
+    </script>
+

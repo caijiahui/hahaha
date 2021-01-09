@@ -1,130 +1,123 @@
-﻿@model advt.Model.PageModel.PEModel
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<script src="~/Scripts/common.js"></script>
-<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-ui.min.js"></script>
-<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-<div id="app">
-    <div>
-        <el-table :data="tableData"
-                  style="width: 100% " :default-sort="{prop: 'TypeName', order: 'CreateUser'}">
-            <el-table-column label="考试科目"
-                             prop="SubjectName" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="考试类型"
-                             prop="TypeName" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="创建人"
-                             prop="CreateUser" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="创建时间"
-                             prop="CreateDate">
-            </el-table-column>
+﻿@model advt.CMS.Models.ExamModel.ExamSubjectModel
 
-            <el-table-column align="right">
-                <template slot="header" slot-scope="scope">
-
-                    <el-input v-model="search"
-                              size="mini"
-                              placeholder="输入关键字搜索" />
-                </template>
-                <template slot-scope="scope">
-                    <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName, scope.row)">Edit</el-button>
-                    <el-button size="mini"
-                               type="danger"
-                               @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
-                </template>
-
-            </el-table-column>
-        </el-table>
-        <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible">
-            <el-form :model="form" ref="dialogForm">
-                <el-form-item label="考试科目" :label-width="formLabelWidth">
-                    <el-input v-model="form.SubjectName" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="考试类型" :label-width="formLabelWidth">
-                    <el-select v-model="form.TypeName" placeholder="请选择考试类型">
-                        <el-option v-for="item in ListSubjectName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
-                    </el-select>
-                </el-form-item>
-              
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @@click="handleSave">确 定</el-button>
-            </div>
-        </el-dialog>
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <script src="~/Scripts/common.js"></script>
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <div id="app">
+        <div>
+            <el-button  @@click="createSubject">新增</el-button>
+            <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
+                  style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
+                <el-table-column label="考试科目"  prop="SubjectName" sortable  width="180"></el-table-column>
+                <el-table-column label="考试类型"  prop="TypeName" sortable  width="180"></el-table-column>
+                <el-table-column label="创建人" prop="CreateUser" sortable   width="180"></el-table-column>
+                <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
+                <el-table-column align="right">
+                    <template slot="header" slot-scope="scope">
+                        <el-input v-model="search"   size="mini"  placeholder="输入关键字搜索" />
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName, scope.row)">Edit</el-button>
+                        <el-button size="mini"
+                                   type="danger"
+                                   @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible">
+                <el-form :model="VexamSubject" ref="dialogForm">
+                    <el-form-item label="考试类型" :label-width="formLabelWidth">
+                        <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
+                            <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="考试科目" :label-width="formLabelWidth">
+                        <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
     </div>
-</div>
-<script src="~/Scripts/Vue/axios.js"></script>
-<script src="~/Scripts/Vue/Vue.js"></script>
-<script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
 
-<script src="~/Scripts/Vue/polyfill.min.js"></script>
-<script type="text/javascript">
-    new Vue({
-        el: '#app',
-        data: {
-            tableData: [],
-            dialogFormVisible: false,
-            ListSubjectName: [],
-            form: {
-                TypeName: '',
-                SubjectName:''               
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                tableData: [],
+                dialogFormVisible: false,
+                ListTypeName: [],
+                VexamSubject: [],
+                formLabelWidth: '120px',
+                search: ''
             },
-            formLabelWidth: '120px',
-            search: ''
-        },
-        mounted: function () {
-            this.getdata();
-        },
-        methods: {
-            handleSave: function () {
-                var _this = this;
-                this.$refs.dialogForm.validate(function (valid) {
-                    if (valid) {
-                        console.log(_this.form)
-                        axios.post('/PEMain/SaveSubjectInfo',{
-                            model: _this.form
-                        })
-                    }
-                });
-
-            },        
-            handleEdit(index,name,tname,row) {               
-                var _this = this;
-                _this.form.SubjectName = name;
-                _this.form.TypeName = tname;
-                _this.form.ID = index;
-                axios.post('/PEMain/GetSubjectList').then(response => {
-                    _this.ListTypeName = response.data.ListSubjectName;
-                });
-
-                _this.dialogFormVisible = true;
+            mounted: function () {
+                this.getdata();
             },
-            handleDelete(index, row) {
-                console.log(index);
-                axios.post('/PEMain/DeleteSubject', {
-                    model: index
-                })
+            methods: {
+                createSubject: function () {
+                    var _this = this;
+                    axios.post('/PEMain/GetSubjectList').then(response => {
+                        _this.ListTypeName = response.data.ListTypeName;
+                        console.log(response.data.ListSubjectName);
+                    });
+                    _this.dialogFormVisible = true;
+                },
+                handleSave: function () {
+                    var _this = this;
+                    var objs = {};
+                    objs.VexamSubject = _this.VexamSubject;
+                    axios.post('/PEMain/SaveSubjectInfo', {
+                        model: objs
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                        });
+                    _this.dialogFormVisible = false;
+
+                },
+                handleEdit(index, name, tname, row) {
+                    var _this = this;
+                    _this.VexamSubject.SubjectName = name;
+                    _this.VexamSubject.TypeName = tname;
+                    _this.VexamSubject.ID = index;                    
+                    axios.post('/PEMain/GetSubjectList').then(response => {
+                        _this.ListTypeName = response.data.ListTypeName;
+                       
+                    });
+                    _this.dialogFormVisible = true;
+                },
+                handleDelete(index, row) {
+                    var _this = this;
+                    axios.post('/PEMain/DeleteSubject', {
+                        model: index
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                    });
+                },
+                getdata: function () {
+                    var _this = this;
+                    axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
+                        _this.tableData = responese.data.tableData;
+                        _this.VexamSubject = responese.data.VexamSubject;
+                        console.log(responese.data.tableData);
+                    })
+                }
             },
-            getdata: function () {
-                var _this = this;
-                axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
-                    _this.tableData = responese.data.tableData;
-                    console.log(_this.tableData);
-                })
-            }
-        },
 
-    })
+        })
 
-</script>
+    </script>
 

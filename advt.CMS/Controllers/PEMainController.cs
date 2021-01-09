@@ -214,11 +214,11 @@ namespace advt.Web.Controllers
                 result = true;
             return Json(new { result = result }, JsonRequestBehavior.AllowGet);
         }
-
+        //考试类型
         [MyAuthorize]
         public ActionResult MaintainExamSubject()
         {
-            Model.PageModel.PEModel model = new Model.PageModel.PEModel();
+            ExamSubjectModel model = new ExamSubjectModel();
             return View(model);
         }
 
@@ -226,28 +226,66 @@ namespace advt.Web.Controllers
         public ActionResult GetSubjectInfo()
         {
             var subjectInfo = Data.ExamSubject.Get_All_ExamSubject();
-            return Json(new { tableData = subjectInfo }, JsonRequestBehavior.AllowGet);
+            ExamSubjectModel model = new ExamSubjectModel();
+            return Json(new { tableData = subjectInfo, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
         public ActionResult GetSubjectList(string model)
         {
             var subject = Data.ExamSubject.GetSubjectList();
-
-            return Json(new { ListSubjectName = subject, }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListTypeName = subject }, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult SaveSubjectInfo(ExamSubject model)
+        [MyAuthorize]
+        public ActionResult SaveSubjectInfo(ExamSubjectModel model)
         {
-            var result = false;
-            if (model.ID != null)
-            {
-                var info = Data.ExamSubject.Update_ExamSubject(model, null, new string[] { "id"});
-            }
-            return Json(new { result = result}, JsonRequestBehavior.AllowGet);
+            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            model.SaveSubject(username);
+            return Json(new { tableData = model.ListExamSubject }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
         public ActionResult DeleteSubject(int model)
         {
-            var subject = Data.ExamSubject.Delete_ExamSubject(model);
-            return RedirectToAction("MaintainExamSubject");
+            ExamSubjectModel mode = new ExamSubjectModel();
+            mode.Delete_ExamSubject(model);
+            return Json(new { tableData = mode.ListExamSubject }, JsonRequestBehavior.AllowGet);
         }
+
+        //考试规则
+        [MyAuthorize]
+        public ActionResult MaintainExamRule()
+        {
+            ExamRuleModel model = new ExamRuleModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult GetRuleInfo()
+        {
+            var subjectInfo = Data.ExamRule.Get_All_ExamRule();
+            ExamRuleModel model = new ExamRuleModel();
+            return Json(new { tableData = subjectInfo, VExamRule = model.VExamRule }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetSubjectName(string model)
+        {
+            var subject = Data.ExamRule.GetSubjectList(model);
+            return Json(new { ListSubjectName = subject }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult SaveRuleInfo(ExamRuleModel model)
+        {
+            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            model.SaveRuleInfo(username);
+            return Json(new { tableData = model.ListExamRule }, JsonRequestBehavior.AllowGet);
+          
+        }
+        [MyAuthorize]
+        public ActionResult DeleteRuleInfo(int model)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            models.Delete_ExamRule(model);
+            return Json(new { tableData = models.ListExamRule }, JsonRequestBehavior.AllowGet);
+        }
+        
+
     }
 }
