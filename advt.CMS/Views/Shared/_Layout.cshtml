@@ -1,205 +1,241 @@
-﻿<html>
+﻿<!doctype html>
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <title>@ViewBag.Title - 研华科技</title>
-    @RenderSection("head", required: false)
-    <script src="~/Scripts/jquery.min.js"></script>
-    <script src="~/Scripts/js/libs/jquery/jquery-1.11.2.min.js"></script>
-    <script src="~/Scripts/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
-    <script src="~/Scripts/js/libs/bootstrap/bootstrap.min.js"></script>
-    <script src="~/Scripts/js/libs/spin/spin.min.js"></script>
-    <script src="~/Scripts/js/libs/autosize/jquery.autosize.min.js"></script>
-    <script src="~/Scripts/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
-    <link href="~/Scripts/theme-default/mystyle.css" rel="stylesheet" />
-    <script src="~/Scripts/js/libs/toastr/toastr.js"></script>
-    <script src="~/Scripts/js/core/source/App.js"></script>
-    <script src="~/Scripts/js/core/source/AppNavigation.js"></script>
-    <script src="~/Scripts/js/core/source/AppOffcanvas.js"></script>
-    <script src="~/Scripts/js/core/source/AppCard.js"></script>
-    <script src="~/Scripts/js/core/source/AppForm.js"></script>
-    <script src="~/Scripts/js/core/source/AppNavSearch.js"></script>
-    <script src="~/Scripts/js/core/source/AppVendor.js"></script>
-    <script src="~/Scripts/js/core/demo/Demo.js"></script>
-    <script src="~/Scripts/js/core/demo/DemoLayout.js"></script>
-    <script src="~/Scripts/js/libs/angular/angular.min.js"></script>
-    <script src="~/Scripts/js/core/demo/DemoUIMessages.js"></script>
-
-    <link href="~/Scripts/theme-default/bootstrap.css" rel="stylesheet" />
-    <link href="~/Scripts/theme-default/font-awesome.min.css" rel="stylesheet" />
-    <link href="~/Scripts/theme-default/material-design-iconic-font.min.css" rel="stylesheet" />
-    <link href="~/Scripts/theme-default/materialadmin.css" rel="stylesheet" />
-    <link href="~/Scripts/theme-default/mystyle.css" rel="stylesheet" />
-    <link href="~/Scripts/theme-default/toastr.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>研华超级导航</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/css/layout.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <style>
+        #mainbox{
+            position:relative;
+        }
+        #mainbox .menu{
+            position:absolute;
+            top:50%;
+            transform:translateY(-50%);
+            right:-18px;
+            z-index:10
+        }
+        #mainbox .menu span {
+            display:inline-block;
+            width: 18px;
+            height:60px;
+            line-height:60px;
+            text-align:center;
+            border:1px solid #ddd;
+            font-size:18px;
+            color:#fff;
+            border-radius: 0 20px 20px 0;
+            border-left:0;
+            background: #cad2da;
+            cursor:pointer;
+        }
+            #mainbox .menu span:hover {
+                background: #6e93b7
+            }
+    </style>
 </head>
-@*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
-<body class="menubar-hoverable header-fixed header-single">
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+<body>
 
-                </div>
-                <header id="header">
-                    <div class="headerbar">
-                        <div class="headerbar-left">
-                            <ul class="header-nav header-nav-options">
-                                <li class="header-nav-brand">
-                                    <div class="brand-holder">
-                                        <a href="#">
-                                            <span class="text-lg text-bold text-primary">
-                                                <font style="vertical-align:inherit">ICTOS平台管理</font>
-                                               
-                                            </span>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="#">
-                                        <i class="fa fa-bars"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="headerbar-right">
-                            <ul class="header-nav header-nav-options header-nav header-nav-profile">
-                                <li></li>
-                                <li class="dropdown hidden-xs dropdown">
-                                    <a href="#" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/Images/timgs.png" />
-                                        @*@Model.username*@
-                                    </a>
-                                    <ul class="dropdown-menu animation-expand">
-                                        <li class="dropdown-header"></li>
-                                        <li>
-                                            <a href="@Url.Action("Classify","PEMain")" class="alert alert-callout alert-warning">
-                                                返回主页面
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="alert alert-callout alert-warning" href="@Url.Action("LogOff", "Account")">
-                                                <strong>注销账号</strong><br>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    
-                                </li>
-                                <li>
-                                    
-                                   
-                                </li>
-                            </ul>
+    <div  >
+        <div class="boxWrap">
+            <div style="display:flex;flex-direction:column;height:100vh">
+                <div id="headerid" v-cloak style="z-index:100">
+                    <el-header>
+                        <div class="nav-left">
+                            <div class="brand">
+                                <img src="~/Images/logo.png" />
+                            </div>
+                            <div class="plat-info">HR 考试平台</div>
                             
                         </div>
+                        <div class="nav-right">
+                            <ul>
+                                <li class="user-info">
+                                    <el-dropdown>
+                                        <span class="el-dropdown-link">
+                                            {{admin}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                        </span>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item disabled>hi,{{admin}}</el-dropdown-item>
+                                            <el-dropdown-item>个人中心</el-dropdown-item>
+                                            <el-dropdown-item divided>登出</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </li>
+                            </ul>
+                        </div>
+                    </el-header>
+                </div>
+                
+                <div style="display:flex;flex:1" class="nextWrap">
+                    <div id="mainbox" v-cloak>
+                        <div class="menu" >
+                            <span @@click="toggleColl">
+                                <i :class="isCollapse?'el-icon-arrow-right':'el-icon-arrow-left'"></i>
+                            </span>
+                            @*<el-button type="primary" :plain="isCollapse" @@click="toggleColl">
+                                <i class="fa fa-bars" ></i>
+                            </el-button>*@
+                        </div>
+                        <el-aside width="auto" style="height:100%">
+                            <el-menu default-active="1"
+                                     class="el-menu-vertical-demo"
+                                     @@open="asideHandleOpen"
+                                     @@close="asideHandleClose"
+                                     :unique-opened='true'
+                                     :collapse="isCollapse">
+
+                                <el-submenu index="1">
+                                    <template slot="title">
+                                        <i class="el-icon-location"></i>
+                                        <span>
+                                            <a href="@Url.Action("MaintainExamType", "PEMain",new {tname="Engineering" })">
+                                                <span class="title">考试管理</span>
+                                            </a>
+                                        </span>
+                                        
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item index="1-1">考试类型</el-menu-item>
+                                        <el-menu-item index="1-2">选项2</el-menu-item>
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-submenu index="2">
+                                    <template slot="title">
+                                        <i class="el-icon-menu"></i>
+                                        <span slot="title">人事管理类</span>
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item index="1-1">选项1</el-menu-item>
+                                        <el-menu-item index="1-2">选项2</el-menu-item>
+                                        <el-menu-item index="1-3">选项3</el-menu-item>
+                                        <el-menu-item index="1-4">选项4</el-menu-item>
+                                        <el-menu-item index="1-5">选项5</el-menu-item>
+                                        <el-menu-item index="1-6">选项6</el-menu-item>
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-menu-item index="3">
+                                    <i class="el-icon-document"></i>
+                                    <span slot="title">员工福利类</span>
+                                </el-menu-item>
+                                <el-menu-item index="4">
+                                    <i class="el-icon-setting"></i>
+                                    <span slot="title">部门网站类</span>
+                                </el-menu-item>
+                                <el-menu-item index="5">
+                                    <i class="el-icon-setting"></i>
+                                    <span slot="title">设计研发类</span>
+                                </el-menu-item>
+                                <el-menu-item index="6">
+                                    <i class="el-icon-setting"></i>
+                                    <span slot="title">IFactory4.0</span>
+                                </el-menu-item>
+                                <el-menu-item index="7">
+                                    <i class="el-icon-setting"></i>
+                                    <span slot="title">系统厂专属</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-aside>
                     </div>
-                </header>
-            </div>
-        </div>
-    <div id="base">
-        <div class="offcanvas">
-            <!-- 〜左画布内容到这里〜 -->
-        </div>
-        <div class="offcanvas">
-            <div id="offcanvas-search" class="offcanvas-pane width-8">
-                <div class="offcanvas-head">
-                    <header class="text-primary">Search</header>
-                    <div class="offcanvas-tools">
-                        <a href="#" class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas"><i class="fa fa-close"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="menubar">
-            <div class="menubar-fixed-panel">
-                <div>
-                    〜始终可见的内容在这里〜
-                </div>
-                <div class="expanded">
-                    当菜单展开时，您的徽标到这里〜
-                </div>
-            </div>
-            <div class="nano has-scrollbar">
-                <div class="nano-content">
-                    <div class="menubar-scroll-panel">
-                        <ul id="main-menu" class="gui-controls gui-controls-tree">
-                            <li>
-                                <a href="@Url.Action("MaintainExamType", "PEMain",new {tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-indent"></i></div>
-                                    <span class="title">考试类型</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=1,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-file-text-o"></i></div>
-                                    <span class="title">案例分享</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=3,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-code"></i></div>
-                                    <span class="title">外来软件管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=4,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-spinner"></i></div>
-                                    <span class="title">新机种生产进度</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=5,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-line-chart"></i></div>
-                                    <span class="title">专案优化</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=6,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-file-pdf-o"></i></div>
-                                    <span class="title">3C资料分享</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=7,tname="Engineering" })">
-                                    <div class="gui-icon"><i class="fa fa-star"></i></div>
-                                    <span class="title">镜像异常事项</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=9,tname="Engineering"})">
-                                    <div class="gui-icon"><i class="glyphicon glyphicon-th"></i></div>
-                                    <span class="title">表单模块</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "PEMain",new {tid=10,tname="Engineering"})">
-                                    <div class="gui-icon"><i class="glyphicon glyphicon-th-large"></i></div>
-                                    <span class="title">公告模块</span>
-                                </a>
-                            </li>
-                          
-                        </ul>
+                    
+                    <div style="flex:1;display:flex;flex-direction:column;overflow:auto">
+                        @RenderBody()
+                        <footer style="height:60px;padding:0 20px;color:#333;text-align:center">
+                            <div id="advan-footer">
+                                <div class="row-maxwidth-98pct">
+                                    <ul class="footer-copyright clearfix">
+
+                                        <li id="footer-info-privacy"><a href="https://beian.miit.gov.cn/#/Integrated/recordQuery">苏ICP备11055982号</a></li>
+                                    </ul>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </footer>
 
                     </div>
+
                 </div>
             </div>
         </div>
-        <div id="content" style="background-color:white">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - PE管理平台</p>
-            </footer>
-        </div>
+
     </div>
+    
+    <!-- Yoursite Scripts -->
+    <script>
+        new Vue({
+            el: "#headerid",
+            data: {
+                nowyear: '',
+                isMobileTurn: false,
+                mobileMenuDrawer: false,
+                admin: 'Admin',
+            },
+            mounted: function () {
+                var date = new Date();
+                this.nowyear = date.getFullYear();
 
-
-    @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")*@
-    @RenderSection("scripts", required: false)
+                if (this.isMobile()) {
+                    this.isMobileTurn = true
+                } else {
+                    this.isMobileTurn = false
+                }
+            },
+            methods: {
+                isMobile() {
+                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                    return flag
+                }
+            }
+        })
+         new Vue({
+             el: "#mainbox",
+            data: {
+                nowyear: '',
+                isMobileTurn: false,
+                mobileMenuDrawer: false,
+                isCollapse: true
+            },
+            mounted: function () {
+                var date = new Date();
+                this.nowyear = date.getFullYear();
+                if (this.isMobile()) {
+                    this.isMobileTurn = true
+                } else {
+                    this.isMobileTurn = false
+                }
+            },
+            methods: {
+                isMobile() {
+                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                    return flag
+                },
+                showMobileMenu: function () {
+                    this.mobileMenuDrawer = true;
+                },
+                asideHandleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                asideHandleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                toggleColl: function () {
+                    console.log(111)
+                    this.isCollapse = !this.isCollapse;
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                }
+            }
+        })
+    </script>
 </body>
 </html>
+    <!-- end #container -->
+ 

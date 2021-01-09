@@ -1,17 +1,19 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamTypeModel
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/common.js"></script>
-<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-ui.min.js"></script>
-<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-<div id="app">
+
+<style>
+    #app {
+        padding: 20px 30px
+    }
+</style>
+<div id="app" style="flex:1">
     <div>
-        <el-input placeholder="请输入需要新增的考试类型"  class="input-with-select">
-            <el-button slot="append" @@onclick="">Save</el-button>
+        <el-input placeholder="请输入需要新增的考试类型" v-model="ExamName" class="input-with-select">
+            <el-button slot="append" @@click="handleSave()">Save</el-button>
         </el-input>
-        <el-table :data="tableData.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
+        <el-table :data="LexamType.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'TypeName', order: 'CreateUser'}">
             <el-table-column label="考试类型"
                              prop="TypeName" sortable
@@ -21,8 +23,10 @@
                              prop="CreateUser" sortable
                              width="180">
             </el-table-column>
-            <el-table-column label="创建时间"
-                             prop="CreateDate">
+            <el-table-column label="创建时间">
+                <template slot-scope="scope">
+                    {{format(scope.row.CreateDate)}}{{scope.row.CreateDate}}
+                </template>
             </el-table-column>
 
             <el-table-column align="right">
@@ -37,7 +41,7 @@
                                @@click="handleEdit(scope.row.ID, scope.row.TypeName)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
-                               @@click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                               @@click="handleDelete(scope.row.ID, scope.row.TypeName)">Delete</el-button>
                 </template>
 
             </el-table-column>
@@ -61,17 +65,17 @@
         </el-dialog>
     </div>
 </div>
-<script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/elementUI/lib/index.js"></script>
-
 <script src="~/Scripts/Vue/polyfill.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: '#app',
         data: {
-            tableData: [],
-            VexamType:[],
+            LexamType: [],
+            VexamType: [],
+            ExamName: '',
             dialogFormVisible: false,
             form: [],
             formLabelWidth: '120px',
@@ -80,38 +84,67 @@
         mounted: function () {
             this.getdata();
         },
+
         methods: {
-            handleEdit(ID,TypeName) {
+            handleEdit(ID, TypeName) {
+               
                 var _this = this;
                 _this.dialogFormVisible = true;
                 _this.VexamType.TypeName = TypeName;
                 _this.VexamType.ID = ID
             },
-            handleDelete(index, row) {
-                console.log(index, row);
-            },
             handleSave() {
                 var _this = this;
                 var objs = {};
                 objs.VexamType = _this.VexamType;
-                console.log(_this.VexamType, 33);
+                objs.ExamName = _this.ExamName;
                 axios.post('/PEMain/SaveTypeInfo', {
                     model: objs
                 }).then(function (res) {
-                    console.log(res, 22);
+                    _this.LexamType = res.data.LexamType;
+                    _this.VexamType = [];
+                    _this.ExamName = '';
                 });
-                dialogFormVisible = false
+                _this.dialogFormVisible = false
+            },
+            handleDelete(index, row) {
+                var _this = this;
+                var ID = index;
+                axios.post('/PEMain/DeleteTypeInfo', {
+                    ID: ID
+                }).then(function (res) {
+                    _this.LexamType = res.data.LexamType;
+                    _this.VexamType = [];
+                    _this.ExamName = '';
+                });
+                _this.dialogFormVisible = false
             },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetTypeInfo').then(function (responese) {
-                    _this.tableData = responese.data.tableData;
+                    _this.LexamType = responese.data.LexamType;
                     _this.VexamType = responese.data.VexamType;
                 })
+            },
+            add0: function (m) {
+                return m < 10 ? '0' + m : m 
+            },
+            format: function (shijianchuo) {
+                var _this = this;
+                var time = new Date(shijianchuo);
+                console.log(time,135)
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                return y + '-' + _this.add0(m) + '-' + _this.add0(d) + ' ' + _this.add0(h) + ':' + _this.add0(mm) + ':' + _this.add0(s);
             }
-        },
+        }
 
     })
+
 
 </script>
 
