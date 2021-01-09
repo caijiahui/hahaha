@@ -17,14 +17,15 @@ namespace advt.Data.SqlServer
         #region ExamSubject , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] ExamSubject_key_a = { "ID" };
-        private string ExamSubject_item_str = "[ID],[SubjectName],[CreateUser],[CreateDate],[TypeName]";
+        private string ExamSubject_item_str = "[ID],[SubjectName],[CreateUser],[CreateDate],[TypeName],[ExamRuleName]";
         private string[][] ExamSubject_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
             new string[] {"SubjectName", "NText", "2147483646"},
             new string[] {"CreateUser", "NText", "2147483646"},
             new string[] {"CreateDate", "DateTime", "16"},
-             new string[] { "TypeName", "NText", "2147483646"}
+            new string[] { "TypeName", "NText", "2147483646"},
+            new string[] { "ExamRuleName", "NText", "2147483646"}
         };
         #endregion
 
