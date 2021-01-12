@@ -16,19 +16,17 @@
                 <el-table-column label="规则名字" prop="RuleName" sortable width="120"></el-table-column>
                 <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectName" sortable width="120"></el-table-column>
-                <el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
+                @*<el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
                 <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
                 <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
                 <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
                 <el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
                 <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
                 <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>
-                <el-table-column label="创建人" prop="CreateUser" sortable width="120"></el-table-column>
-                <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
+                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
                 <el-table-column align="right">
                     <template slot="header" slot-scope="scope">
-                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
+                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索"  style="width:200px" />
                     </template>
                     <template slot-scope="scope">
                         <el-button size="mini"                                 
@@ -40,7 +38,7 @@
                 </el-table-column>
             </el-table>
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
-                <el-form :model="VExamRule" ref="dialogForm">
+                <el-form :model="VExamRule" ref="dialogForm" :rules="rules" >
                     <el-form-item label="考试类型" :label-width="formLabelWidth">
                         <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型">
                             <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
@@ -101,7 +99,27 @@
                 VExamRule: [],
                 ListSubjectName:[],
                 formLabelWidth: '120px',
-                search: ''
+                search: '',
+                rules: {
+                    TypeName: [
+                        { required: true, message: '请输入考试类型', trigger: 'blur' }
+                    ], 
+                    RuleName: [
+                        { required: true, message: '请选择规则名字', trigger: 'blur' }
+                    ],
+                    TotalScore: [
+                        { required: true, message: '请选择总分', trigger: 'blur' }
+                    ],
+                    TotalTime: [
+                        { required: true, message: '请选择考试时长', trigger: 'blur' }
+                    ],
+                    TotalSubject: [
+                        { required: true, message: '请选择题目总数', trigger: 'blur' }
+                    ],
+                    PassScore: [
+                        { required: true, message: '请选择通过分数', trigger: 'blur' }
+                    ]
+                }
             },
             watch: {
                 'VExamRule.TypeName': function (newval) {
@@ -110,8 +128,7 @@
                     }).then(response => {
                         this.ListSubjectName = response.data.ListSubjectName;
                     });
-                },
-               
+                },               
             },
             mounted: function () {
                 this.getdata();
