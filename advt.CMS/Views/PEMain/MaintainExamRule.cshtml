@@ -37,7 +37,7 @@
                 </el-table-column>
             </el-table>
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
-                <el-form :model="VExamRule" ref="dialogForm" :rules="rules" >
+                <el-form :model="VExamRule" ref="dialogForm" :rules="rules">
                     <el-form-item label="考试类型" :label-width="formLabelWidth">
                         <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型">
                             <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
@@ -48,6 +48,25 @@
                             <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                         </el-select>
                     </el-form-item>
+
+                    @*<el-form-item label="题目类型" prop="ListTopicInfo">
+                        <el-cascader :options="ListTopicInfo"
+                                     :props="topicratioProps"
+                                     clearable
+                                     props.multiple=true
+                                     popper-class="topcascader"
+                                     v-model="ruleForm.topicratioPropsVal">
+                            <template slot-scope="{ node, data }" style="margin-bottom:6px;">
+                                <span>{{ data.Text }}</span>
+                                <div class="option-inner" v-if="node.checked">
+                                    <span>题数:</span>
+                                    <el-input v-model="data.pre" style="width:30px;height:30px"></el-input>
+                                    <span>分数:</span>
+                                    <el-input v-model="data.score" style="width:30px;height:30px"></el-input>
+                                </div>
+                            </template>
+                        </el-cascader>
+                    </el-form-item>*@
                     <el-form-item label="规则名" prop="RuleName">
                         <el-input v-model="VExamRule.RuleName"></el-input>
                     </el-form-item>
@@ -96,9 +115,11 @@
                 dialogFormVisible: false,
                 ListTypeName: [],
                 VExamRule: [],
+                ListTopicInfo:[],
                 ListSubjectName:[],
                 formLabelWidth: '120px',
                 search: '',
+                //topicratioPropsVal: [],
                 rules: {
                     TypeName: [
                         { required: true, message: '请输入考试类型', trigger: 'blur' }
@@ -126,6 +147,7 @@
                         model: newval
                     }).then(response => {
                         this.ListSubjectName = response.data.ListSubjectName;
+                        thi.ListTopicInfo = response.data.ListTopicInfo;
                     });
                 },               
             },
@@ -141,7 +163,19 @@
                     _this.dialogFormVisible = true;
                 },
                 handleSave: function () {
-                    var _this = this;
+                   var _this = this;
+                    //var topicratioarr = []
+                    //_this.topicratioPropsVal.forEach(function (item, index) {
+                    //    _this.ListExamMajors.forEach(function (list, index) {
+                    //        if (item == list.value) {
+                    //            topicratioarr.push(list)
+                    //        }
+                    //    })
+
+                    //})
+                    //_this.ruleForm.topicratioPropsVal = topicratioarr;
+
+                 
                     var objs = {};
                     objs.VExamRule = _this.VExamRule;
                     axios.post('/PEMain/SaveRuleInfo', {
