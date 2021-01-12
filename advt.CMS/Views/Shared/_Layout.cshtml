@@ -96,15 +96,13 @@
                                     <template slot="title">
                                         <i class="el-icon-location"></i>
                                         <span>
-                                            <a href="@Url.Action("MaintainExamType", "PEMain",new {tname="Engineering" })">
-                                                <span class="title">考试管理</span>
-                                            </a>
-                                        </span>
-                                        
+                                            <span class="title">考试管理</span>
+                                        </span>                                        
                                     </template>
                                     <el-menu-item-group>
-                                        <el-menu-item index="1-1">考试类型</el-menu-item>
-                                        <el-menu-item index="1-2">选项2</el-menu-item>
+                                        <el-menu-item index="1-1" @@click="OpenExamType('type')">考试类型</el-menu-item>
+                                        <el-menu-item index="1-2" @@click="OpenExamType('subject')">考试科目</el-menu-item>
+                                        <el-menu-item index="1-2" @@click="OpenExamType('rule')">考试规则</el-menu-item>
                                     </el-menu-item-group>
                                 </el-submenu>
                                 <el-submenu index="2">
@@ -211,7 +209,12 @@
                     this.isMobileTurn = false
                 }
             },
-            methods: {
+             methods: {           
+                 OpenExamType: function (ids) {
+                     if (ids == "type") { window.location.href = "/PEMain/MaintainExamType" }
+                     else if (ids == "subject") { window.location.href = "/PEMain/MaintainExamSubject" }
+                     else if (ids == "rule") { window.location.href = "/PEMain/MaintainExamRule" }
+                 },
                 isMobile() {
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
                     return flag
