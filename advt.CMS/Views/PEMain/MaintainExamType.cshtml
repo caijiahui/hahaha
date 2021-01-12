@@ -23,12 +23,10 @@
                              prop="CreateUser" sortable
                              width="180">
             </el-table-column>
-            <el-table-column label="创建时间">
-                <template slot-scope="scope">
-                    {{format(scope.row.CreateDate)}}{{scope.row.CreateDate}}
-                </template>
+            <el-table-column label="创建时间"
+                             prop="CreateDate" sortable
+                             width="180">
             </el-table-column>
-
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
 
@@ -92,7 +90,7 @@
                 _this.dialogFormVisible = true;
                 _this.VexamType.TypeName = TypeName;
                 _this.VexamType.ID = ID
-            },
+            }, 
             handleSave() {
                 var _this = this;
                 var objs = {};
@@ -102,8 +100,10 @@
                     model: objs
                 }).then(function (res) {
                     _this.LexamType = res.data.LexamType;
-                    _this.VexamType = [];
+                    _this.VexamType = {};
                     _this.ExamName = '';
+                    //object.assign(_this.VexamType, _this.ExamName);
+                    console.log(_this.VexamType,333);
                 });
                 _this.dialogFormVisible = false
             },
@@ -114,7 +114,7 @@
                     ID: ID
                 }).then(function (res) {
                     _this.LexamType = res.data.LexamType;
-                    _this.VexamType = [];
+                    _this.VexamType = {};
                     _this.ExamName = '';
                 });
                 _this.dialogFormVisible = false
@@ -125,21 +125,6 @@
                     _this.LexamType = responese.data.LexamType;
                     _this.VexamType = responese.data.VexamType;
                 })
-            },
-            add0: function (m) {
-                return m < 10 ? '0' + m : m 
-            },
-            format: function (shijianchuo) {
-                var _this = this;
-                var time = new Date(shijianchuo);
-                console.log(time,135)
-                var y = time.getFullYear();
-                var m = time.getMonth() + 1;
-                var d = time.getDate();
-                var h = time.getHours();
-                var mm = time.getMinutes();
-                var s = time.getSeconds();
-                return y + '-' + _this.add0(m) + '-' + _this.add0(d) + ' ' + _this.add0(h) + ':' + _this.add0(mm) + ':' + _this.add0(s);
             }
         }
 
