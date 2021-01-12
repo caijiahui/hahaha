@@ -233,6 +233,7 @@
     <Content Include="Images\bgs.png" />
     <Content Include="Images\cat2.jpg" />
     <Content Include="Images\cat3.jpg" />
+    <Content Include="Images\loginBg.jpg" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\MainTitle.jpg" />
     <Content Include="Images\main_bg.png" />
@@ -270,6 +271,11 @@
     <Content Include="Scripts\calendar.css" />
     <Content Include="Scripts\calendar.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\css2\all.min.css" />
+    <Content Include="Scripts\css2\common-1200.css" />
+    <Content Include="Scripts\css2\common-mq-1200.css" />
+    <Content Include="Scripts\css2\font-awesome.css" />
+    <Content Include="Scripts\css2\layout.css" />
     <Content Include="Scripts\css\exam.css" />
     <Content Include="Scripts\css\font-awesome.css" />
     <Content Include="Scripts\css\layout.css" />
