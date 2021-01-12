@@ -1,0 +1,76 @@
+.el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before, .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before{
+	margin-left:-10px;
+	margin-right:6px;
+}
+li{
+	list-style: none;
+}
+html,body{
+	font-size:0;
+}
+html,body,#app{
+	height:100vh;
+}
+#app{
+	font-size:12px;
+}
+#container{
+	height:100%;
+}
+[v-cloak]{
+	display:none;
+}
+.loginWrap{
+	display:flex;
+	height:100vh;
+}
+    .loginWrap .login_L {
+        flex: 1;
+        background: url('../../Images/loginBg.jpg') no-repeat center center/auto 100%;
+    }
+.loginWrap .login_L>h2{
+	font-size:48px;
+	margin: 28vh 0 20px 5vw;
+	letter-spacing:6px;
+	color:#004280;
+}
+.loginWrap .login_L .logo{
+	width:180px;
+	position: absolute;
+	top:18px;
+	left:28px;
+}
+.loginWrap .login_L .logo img{
+	width:100%;
+}
+.loginWrap .login_R{
+	width:38vw;
+	background: #fff;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+.loginWrap .login_R .loginBox{
+	width:22vw;
+	height:50vh;
+}
+.loginWrap .login_R .loginBox>h2{
+	font-size:30px;
+	color:#004280;
+	text-align: center;
+	
+}
+.loginWrap .login_R .loginBox>div{
+	margin-top:30px;
+}
+.loginWrap .login_R .el-form-item__content button{
+	width:100%;
+	font-size:18px;
+}
+.loginWrap .login_R .loginBtn{
+	margin-top:60px;
+}
+.loginWrap .login_R .el-button--primary{
+	background:#004280;
+	border-color:#053767
+}

@@ -33,7 +33,7 @@ namespace advt.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Login(Model.LoginModel model, string returnUrl)
         {
             Service.IProvider.IAuthorizationServices service= new Service.Provider.AuthorizationServices();
@@ -48,14 +48,13 @@ namespace advt.Web.Controllers
 
                     //写入Cookie，无需登入。
                     XUtils.WriteUserCookie(user, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
-              
-                    return RedirectToAction("index", "PEMain");
+                    return Json(new { IsLogin = "Pass"}, JsonRequestBehavior.AllowGet);
+                    //return RedirectToAction("index", "PEMain");
                 }
             }
 
             ModelState.AddModelError("", "用户名或者密码错误!");
-
-            return RedirectToAction("Login", "Account");
+            return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
         }
 
         [MyAuthorize]
