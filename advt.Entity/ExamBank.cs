@@ -48,6 +48,8 @@ namespace advt.Entity
         public string OptionF { get; set; }
 
         public string OptionFPicNum { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string CreateUser { get; set; }
         #endregion
     }
 }

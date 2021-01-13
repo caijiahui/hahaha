@@ -41,7 +41,9 @@ namespace advt.Data.SqlServer
             new string[] {"OptionE", "NVarChar", "500"},
             new string[] {"OptionEPicNum", "NVarChar", "500"},
             new string[] {"OptionF", "NVarChar", "500"},
-            new string[] {"OptionFPicNum", "NVarChar", "500"}
+            new string[] {"OptionFPicNum", "NVarChar", "500"},
+            new string[] {"CreateUser", "NVarChar", "50"},
+            new string[] {"CreateDate", "DateTime", "16"},
         };
         #endregion
 

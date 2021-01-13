@@ -10,11 +10,11 @@
 </style>
 <div id="app" style="flex:1">
     <div>
-        <el-input placeholder="请输入需要新增的考试类型" v-model="ExamName" class="input-with-select">
-            <el-button slot="append" @@click="handleSave()">Save</el-button>
+        <el-input placeholder="请输入需要新增的考试类型" v-model="ExamName" class="input-with-select" style="width:30%">
+            <el-button slot="append" @@click="handleSave('Edit')">Save</el-button>
         </el-input>
         <el-table :data="LexamType.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100% " :default-sort="{prop: 'TypeName', order: 'CreateUser'}">
+                  style="width: 100%;margin-top:20px " :default-sort="{prop: 'TypeName', order: 'CreateUser'}" border>
             <el-table-column label="考试类型"
                              prop="TypeName" sortable
                              width="180">
@@ -58,7 +58,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @@click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @@click="handleSave()">确 定</el-button>
+                <el-button type="primary" @@click="handleSave('save')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -91,19 +91,21 @@
                 _this.VexamType.TypeName = TypeName;
                 _this.VexamType.ID = ID
             }, 
-            handleSave() {
+            handleSave(flag) {
                 var _this = this;
                 var objs = {};
-                objs.VexamType = _this.VexamType;
-                objs.ExamName = _this.ExamName;
+                if (flag == 'save') {
+                    objs.VexamType = _this.VexamType;
+                }
+                else if (flag == 'Edit') {
+                    objs.ExamName = _this.ExamName;
+                }
                 axios.post('/PEMain/SaveTypeInfo', {
                     model: objs
                 }).then(function (res) {
                     _this.LexamType = res.data.LexamType;
-                    _this.VexamType = {};
+                    this.VexamType = {};
                     _this.ExamName = '';
-                    //object.assign(_this.VexamType, _this.ExamName);
-                    console.log(_this.VexamType,333);
                 });
                 _this.dialogFormVisible = false
             },
@@ -114,7 +116,7 @@
                     ID: ID
                 }).then(function (res) {
                     _this.LexamType = res.data.LexamType;
-                    _this.VexamType = {};
+                    this.VexamType = {};
                     _this.ExamName = '';
                 });
                 _this.dialogFormVisible = false
