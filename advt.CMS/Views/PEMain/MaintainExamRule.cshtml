@@ -4,7 +4,6 @@
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
     <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-ui.min.js"></script>
     <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 <style>
@@ -15,19 +14,19 @@
     <div id="app">
         <div>
             <el-button @@click="createRule">新增</el-button>
-            <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase()))"
-                      style="width: 100% " :default-sort="{prop: 'SubjectName', order: 'CreateUser'}">
+            <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
+                      style="width: 100% " :default-sort="{prop: 'RuleName'||'TypeName', order: 'CreateUser'}">
                 <el-table-column label="规则名字" prop="RuleName" sortable width="120"></el-table-column>
                 <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectName" sortable width="120"></el-table-column>
-                @*<el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
-            <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
-            <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
-            <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
-            <el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-            <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-            <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-            <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+                <el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
+                <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
+                <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
+                <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
+                @*<el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
+        <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+        <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+        <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
                 <el-table-column align="right">
                     <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -42,13 +41,13 @@
                 </el-table-column>
             </el-table>
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
-                <el-form :model="VExamRule" ref="dialogForm" :rules="rules">
-                    <el-form-item label="考试类型" :label-width="formLabelWidth">
+                <el-form :model="VExamRule" ref="dialogForm" :rules="ruleform" :label-position="labelPosition">
+                    <el-form-item label="考试类型" prop="TypeName">
                         <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型">
                             <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="考试科目" :label-width="formLabelWidth">
+                    <el-form-item label="考试科目" prop="SubjectName" >
                         <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目">
                             <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                         </el-select>
@@ -141,30 +140,29 @@
                 dialogFormVisible: false,
                 ListTypeName: [],
                 VExamRule: [],
+                VRuleGrList: [],
                 ListTopicInfo:[],
                 ListSubjectName:[],
                 formLabelWidth: '120px',
                 search: '',
                 topicratioPropsVal: [],
                 RuleGrList: [],
-                rules: {
-                    TypeName: [
-                        { required: true, message: '请输入考试类型', trigger: 'blur' }
-                    ], 
+                labelPosition:'right',
+                ruleform: {                    
                     RuleName: [
-                        { required: true, message: '请选择规则名字', trigger: 'blur' }
+                        { required: true, message: '请输入规则名字', trigger: 'blur' }
                     ],
                     TotalScore: [
-                        { required: true, message: '请选择总分', trigger: 'blur' }
+                        { required: true, message: '请输入总分', trigger: 'blur' }
                     ],
                     TotalTime: [
-                        { required: true, message: '请选择考试时长', trigger: 'blur' }
+                        { required: true, message: '请输入考试时长', trigger: 'blur' }
                     ],
                     TotalSubject: [
-                        { required: true, message: '请选择题目总数', trigger: 'blur' }
+                        { required: true, message: '请输入题目总数', trigger: 'blur' }
                     ],
                     PassScore: [
-                        { required: true, message: '请选择通过分数', trigger: 'blur' }
+                        { required: true, message: '请输入通过分数', trigger: 'blur' }
                     ]
                 }
             },
@@ -199,9 +197,11 @@
                     var _this = this;
                     axios.post('/PEMain/GetSubjectList').then(response => {
                         _this.ListTypeName = response.data.ListTypeName;
+                        _this.VExamRule = {};
+                        _this.VRuleGrList = {};
                     });
                     _this.dialogFormVisible = true;
-                },
+                },             
                 handleSave: function () {
                    var _this = this;                    
                     var objs = {};
@@ -212,7 +212,8 @@
                     }).then(function (res) {
                         _this.tableData = res.data.tableData;
                         _this.RuleGrList = res.data.RuleGrList;
-                        console.log(res.data.RuleGrList);
+                        _this.VExamRule = {};
+                        _this.RuleGrList = {};
                         });
                     _this.dialogFormVisible = false;
 
