@@ -1,0 +1,150 @@
+﻿@model advt.CMS.Models.ExamModel.ExamBankModel
+
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <div id="app">
+        <el-upload class="upload-demo"
+                   ref="upload"
+                   :multiple="false"
+                   action="/PEMain/Upload_TEL_MASTER">
+            <el-button size="small" type="primary">EXCEL上传题库</el-button>
+        </el-upload>
+        <el-table :data="LexamType.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
+                  style="width: 100%;margin-top:20px " :default-sort="{prop: 'TypeName', order: 'CreateUser'}" border>
+            <el-table-column label="考试类型"
+                             prop="ExamType" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目专业"
+                             prop="TopicMajor" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目等级"
+                             prop="TopicLevel" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目类型"
+                             prop="TopicType" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目内容"
+                             prop="TopicTitle" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="上传时间"
+                             prop="CreateDate" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="上传人"
+                             prop="CreateUser" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column align="right">
+                <template slot="header" slot-scope="scope">
+
+                    <el-input v-model="search"
+                              size="mini"
+                              placeholder="输入关键字搜索" />
+                </template>
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.ID, scope.row.TypeName)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.ID, scope.row.TypeName)">Delete</el-button>
+                </template>
+
+            </el-table-column>
+        </el-table>
+
+
+
+
+    </div>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                importData: '',
+                wb: ''
+              
+            },
+            watch: {
+                'VExamRule.TypeName': function (newval) {
+                    axios.post('/PEMain/GetSubjectName', {
+                        model: newval
+                    }).then(response => {
+                        this.ListSubjectName = response.data.ListSubjectName;
+                        thi.ListTopicInfo = response.data.ListTopicInfo;
+                    });
+                },               
+            },
+            mounted: function () {
+               
+            },
+            methods: {
+                importExcel() {
+                    document.getElementById('imFile').click()
+                },
+                importFile: function (e) {
+                    let obj = e.target
+                    if (e.target.files.length == 0) {
+                        console.log("没有获取到导入内容")
+                        return
+                    }
+                    var f = obj.files[0]
+                    var reader = new FileReader()
+                    reader.readAsBinaryString(f)
+                    reader.onload = (e) => {
+                        var data = e.target.result //获取上传的文件数据
+                        console.log(data,23232)
+                        this.wb = XLSX.read(data, {
+                            type: 'binary'
+                        })
+                        this.importData = XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]])
+                        //至此已完成对上传excel的内容解析 然后可以直接把这个对象数组传给后端
+                        console.log("this.importData is:", this.importData)
+                        // this.uploadExcelData()
+                    }
+                },
+                uploadExcelData() {
+                    this.imFile.value = ''
+                    this.$post('/PEMain/MaintainExamBank', data).then(
+                        res => {
+                            if (res.code == 'success') {
+                                this.$notify({ title: '成功', message: '导入成功!', type: 'success' })
+                                this.queryData()
+                                this.fullscreenLoading = false
+                            } else (
+                                this.$alert(res.message, '导入失败', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.fullscreenLoading = false
+                                        this.queryData()
+                                    }
+                                })
+                            )
+                        }
+                    ).catch(err => {
+                        console.log("err is:", err)
+                        this.$notify.error({ title: '错误', message: '抱歉，导入失败!' })
+                        this.fullscreenLoading = false
+                    })
+                }
+            }
+            
+
+        })
+
+    </script>
+

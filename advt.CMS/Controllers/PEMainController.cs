@@ -12,6 +12,11 @@ using System.IO;
 using advt.CMS;
 using advt.Model.PageModel;
 using advt.CMS.Models.ExamModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.Util;
+using System.Data;
 
 namespace advt.Web.Controllers
 {
@@ -297,7 +302,42 @@ namespace advt.Web.Controllers
             models.Delete_ExamRule(model);
             return Json(new { tableData = models.ListExamRule }, JsonRequestBehavior.AllowGet);
         }
-        
+        [MyAuthorize]
+        public ActionResult MaintainExamBank()
+        {
+            return View();
+        }
+        public JsonResult Upload_TEL_MASTER(HttpPostedFileBase file)
+        {
+            string filepath = "";
+            var LBank = new List<ExamBank>();
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new ExamBankModel();
+            model.UploadBank(filepath);
+
+            return Json(new {  }, JsonRequestBehavior.AllowGet);
+        }
+        //public ActionResult Upload_TEL_MASTER(File files)
+        //{
+        //    return null;
+        //}
+
+
 
     }
 }
