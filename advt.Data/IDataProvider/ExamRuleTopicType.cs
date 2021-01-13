@@ -19,6 +19,8 @@ namespace advt.Data
 
         int Delete_ExamRuleTopicType(int ID);
 
+        IDataReader Get_ExamRuleTopic(string model);
+        IDataReader Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType, int id); 
         #endregion
     }
 }

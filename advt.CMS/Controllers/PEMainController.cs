@@ -240,8 +240,10 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult GetSubjectList(string model)
         {
+            ExamRuleModel models = new ExamRuleModel();
             var subject = Data.ExamSubject.GetSubjectList();
-            return Json(new { ListTypeName = subject }, JsonRequestBehavior.AllowGet);
+            models.GetRuleType(model);
+            return Json(new { ListTypeName = subject, RuleGrList = models.RuleTopicList }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
@@ -275,15 +277,17 @@ namespace advt.Web.Controllers
 
         public ActionResult GetSubjectName(string model)
         {
-            var subject = Data.ExamRule.GetSubjectList(model);
-            return Json(new { ListSubjectName = subject }, JsonRequestBehavior.AllowGet);
+            ExamRuleModel models = new ExamRuleModel();
+            models.GetSubjectList(model);
+            return Json(new { ListSubjectName = models.ListExamSubject,ListTopic=models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SaveRuleInfo(ExamRuleModel model)
         {
             var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
             model.SaveRuleInfo(username);
-            return Json(new { tableData = model.ListExamRule }, JsonRequestBehavior.AllowGet);
+            model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
+            return Json(new { tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
           
         }
         [MyAuthorize]

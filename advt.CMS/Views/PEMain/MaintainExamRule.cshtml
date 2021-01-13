@@ -7,28 +7,33 @@
     <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-ui.min.js"></script>
     <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+<style>
+    .topie {
+        width: 50px;
+    }
+</style>
     <div id="app">
         <div>
-            <el-button  @@click="createRule">新增</el-button>
+            <el-button @@click="createRule">新增</el-button>
             <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase()))"
                       style="width: 100% " :default-sort="{prop: 'SubjectName', order: 'CreateUser'}">
                 <el-table-column label="规则名字" prop="RuleName" sortable width="120"></el-table-column>
                 <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectName" sortable width="120"></el-table-column>
                 @*<el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
-                <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
-                <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
-                <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
-                <el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-                <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-                <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+            <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
+            <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
+            <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
+            <el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
+            <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+            <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+            <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
                 <el-table-column align="right">
                     <template slot="header" slot-scope="scope">
-                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索"  style="width:200px" />
+                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
                     </template>
                     <template slot-scope="scope">
-                        <el-button size="mini"                                 
+                        <el-button size="mini"
                                    @@click="handleEdit(scope.row.ID,scope.row.RuleName,scope.row.TypeName,scope.row.SubjectName,scope.row)">Edit</el-button>
                         <el-button size="mini"
                                    type="danger"
@@ -48,25 +53,44 @@
                             <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="题目类型" prop="ListTopicInfo">
+                        <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
+                            <el-option v-for="item in ListTopicInfo"
+                                       :key="item.ID"
+                                       :label="item.TopicMajor+item.TopicLevel+item.TopicType"
+                                       :value="item.ID">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <template>
+                        <el-table :data="RuleGrList" style="width:100%">
+                            <el-table-column prop="TopicMajor" label="类型" width="80"></el-table-column>
+                            <el-table-column prop="TopicLevel" label="等级" width="80"></el-table-column>
+                            <el-table-column prop="TopicType" label="题型" width="80"></el-table-column>
+                            <el-table-column prop="TopicNum" label="分数" width="80">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.TopicNum" class="topie"></el-input>
+                                </template>
+                            </el-table-column>
+                            @*<el-table-column prop="TopicNum" label="分数" width="80"></el-table-column>*@
+                            @*<el-table-column prop="TopicScore" label="题数" width="80"></el-table-column>*@
+                            <el-table-column prop="TopicScore" label="题数" width="80">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.TopicScore" class="topie"></el-input>
+                                </template>
+                            </el-table-column>
 
-                    @*<el-form-item label="题目类型" prop="ListTopicInfo">
-                        <el-cascader :options="ListTopicInfo"
-                                     :props="topicratioProps"
-                                     clearable
-                                     props.multiple=true
-                                     popper-class="topcascader"
-                                     v-model="ruleForm.topicratioPropsVal">
-                            <template slot-scope="{ node, data }" style="margin-bottom:6px;">
-                                <span>{{ data.Text }}</span>
-                                <div class="option-inner" v-if="node.checked">
-                                    <span>题数:</span>
-                                    <el-input v-model="data.pre" style="width:30px;height:30px"></el-input>
-                                    <span>分数:</span>
-                                    <el-input v-model="data.score" style="width:30px;height:30px"></el-input>
-                                </div>
-                            </template>
-                        </el-cascader>
-                    </el-form-item>*@
+                            <el-table-column label="操作" width="120">
+                                <template slot-scope="scope">
+                                    <el-button @@click.native.prevent="deleteRow(scope.$index,RuleGrList)"
+                                               type="text"
+                                               size="small">
+                                        移除
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
                     <el-form-item label="规则名" prop="RuleName">
                         <el-input v-model="VExamRule.RuleName"></el-input>
                     </el-form-item>
@@ -100,6 +124,7 @@
                     <el-button type="primary" @@click="handleSave">确 定</el-button>
                 </div>
             </el-dialog>
+         
         </div>
     </div>
     <script src="~/Scripts/Vue/axios.js"></script>
@@ -111,6 +136,7 @@
         new Vue({
             el: '#app',
             data: {
+                topicratioProps: { multiple: true, label: 'Text', },
                 tableData: [],
                 dialogFormVisible: false,
                 ListTypeName: [],
@@ -119,7 +145,8 @@
                 ListSubjectName:[],
                 formLabelWidth: '120px',
                 search: '',
-                //topicratioPropsVal: [],
+                topicratioPropsVal: [],
+                RuleGrList: [],
                 rules: {
                     TypeName: [
                         { required: true, message: '请输入考试类型', trigger: 'blur' }
@@ -143,18 +170,31 @@
             },
             watch: {
                 'VExamRule.TypeName': function (newval) {
+                    var _this = this;
                     axios.post('/PEMain/GetSubjectName', {
                         model: newval
                     }).then(response => {
-                        this.ListSubjectName = response.data.ListSubjectName;
-                        thi.ListTopicInfo = response.data.ListTopicInfo;
-                    });
-                },               
+                        _this.ListSubjectName = response.data.ListSubjectName;
+                        _this.ListTopicInfo = response.data.ListTopic;
+                      });
+                },
+               
             },
             mounted: function () {
                 this.getdata();
             },
             methods: {
+                topicratioPropsFn: function (val) {
+                    var _this = this;
+                    _this.RuleGrList = [];
+                    val.forEach(function (lst, num) {
+                        _this.ListTopicInfo.forEach(function (item, index) {
+                            if (item.ID == lst)
+                                _this.RuleGrList.push(item);                            
+                        })
+                    })
+
+                },
                 createRule: function () {
                     var _this = this;
                     axios.post('/PEMain/GetSubjectList').then(response => {
@@ -163,32 +203,22 @@
                     _this.dialogFormVisible = true;
                 },
                 handleSave: function () {
-                   var _this = this;
-                    //var topicratioarr = []
-                    //_this.topicratioPropsVal.forEach(function (item, index) {
-                    //    _this.ListExamMajors.forEach(function (list, index) {
-                    //        if (item == list.value) {
-                    //            topicratioarr.push(list)
-                    //        }
-                    //    })
-
-                    //})
-                    //_this.ruleForm.topicratioPropsVal = topicratioarr;
-
-                 
+                   var _this = this;                    
                     var objs = {};
                     objs.VExamRule = _this.VExamRule;
+                    objs.RuleGrList = _this.RuleGrList;
                     axios.post('/PEMain/SaveRuleInfo', {
-                        model: objs
+                        model: objs,
                     }).then(function (res) {
                         _this.tableData = res.data.tableData;
+                        _this.RuleGrList = res.data.RuleGrList;
+                        console.log(res.data.RuleGrList);
                         });
                     _this.dialogFormVisible = false;
 
                 },
                 handleEdit(index, RuleName, TypeName, SubjectName, row) {
                     var _this = this;
-                    console.log(row);
                     _this.VExamRule.RuleName = row.RuleName;
                     _this.VExamRule.TypeName = row.TypeName;
                     _this.VExamRule.SubjectName = row.SubjectName;
@@ -202,10 +232,17 @@
                     _this.VExamRule.StartDeac = row.StartDeac;
                     _this.VExamRule.EndDesc = row.EndDesc;
                     _this.VExamRule.ID = index; 
-                    axios.post('/PEMain/GetSubjectList').then(response => {
+                    axios.post('/PEMain/GetSubjectList', {
+                        model: index
+                    }).then(response => {
                         _this.ListTypeName = response.data.ListTypeName;
-                       
+                        _this.RuleGrList = response.data.RuleGrList;
                     });
+                    //axios.post('/PEMain/GetSubjectList').then(response => {
+                    //    _this.ListTypeName = response.data.ListTypeName;
+                    //    _this.RuleGrList = response.data.ListTopic;
+                       
+                    //});
                     _this.dialogFormVisible = true;
                 },
                 handleDelete(index, row) {
@@ -222,6 +259,12 @@
                         _this.tableData = responese.data.tableData;
                         _this.VExamRule = responese.data.VExamRule;
                     })
+                },
+                editRow(index, rows) {
+
+                },
+                deleteRow(index, rows) {
+                    rows.splice(index, 1);
                 }
             },
 

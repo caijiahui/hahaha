@@ -17,7 +17,7 @@ namespace advt.Entity
 
         public string TopicNum { get; set; }
 
-        public bool? TopicScore { get; set; }
+        public decimal? TopicScore { get; set; }
 
         public int? RuleId { get; set; }
         #endregion
