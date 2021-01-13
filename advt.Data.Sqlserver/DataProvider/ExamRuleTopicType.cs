@@ -26,7 +26,7 @@ namespace advt.Data.SqlServer
             new string[] {"TopicLevel", "NVarChar", "500"},
             new string[] {"TopicType", "NVarChar", "500"},
             new string[] {"TopicNum", "NVarChar", "500"},
-            new string[] {"TopicScore", "Bit", "1"},
+            new string[] {"TopicScore", "Decimal", "20"},
             new string[] {"RuleId", "Int", "4"}
         };
         #endregion
