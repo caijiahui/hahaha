@@ -24,9 +24,9 @@
                 <el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>
                 <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
                 @*<el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-        <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-        <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-        <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+            <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+            <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+            <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
                 <el-table-column align="right">
                     <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -40,6 +40,14 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-pagination @@size-change="handleSizeChange"
+                           @@current-change="handleCurrentChange"
+                           :current-page="paginations.page_index"
+                           :page-sizes="paginations.page_sizes"
+                           :page-size="paginations.page_size"
+                           :layout="paginations.layout"
+                           :total="paginations.total">
+            </el-pagination>
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
                 <el-form :model="VExamRule" ref="dialogForm" :rules="ruleform" :label-position="labelPosition">
                     <el-form-item label="考试类型" prop="TypeName">
@@ -47,7 +55,7 @@
                             <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="考试科目" prop="SubjectName" >
+                    <el-form-item label="考试科目" prop="SubjectName">
                         <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目">
                             <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                         </el-select>
@@ -123,7 +131,7 @@
                     <el-button type="primary" @@click="handleSave">确 定</el-button>
                 </div>
             </el-dialog>
-       
+
         </div>
     </div>
     <script src="~/Scripts/Vue/axios.js"></script>
@@ -164,7 +172,15 @@
                     PassScore: [
                         { required: true, message: '请输入通过分数', trigger: 'blur' }
                     ]
-                }
+                },
+                paginations: {
+                    page_index: 1,
+                    total: 0,
+                    page_size: 5,
+                    page_sizes: [5, 10, 15, 20],
+                    layout: 'total, sizes, prev, pager, next, jumper'
+                },
+                allTableData: []
             },
             watch: {
                 'VExamRule.TypeName': function (newval) {
@@ -180,8 +196,51 @@
             },
             mounted: function () {
                 this.getdata();
+                this.getInfoList();
             },
             methods: {
+                getInfoList() {
+                    var _this = this;
+                    axios.post('/PEMain/GetRuleInfo').then(res => {
+                        const data = res.data.tableData;
+                        this.allTableData = data;
+                        this.setPaginations()
+                    })
+                },
+                setPaginations() {
+                    this.paginations.total = this.allTableData.length; //数据的数量
+                    console.log(this.allTableData.length);
+                    this.paginations.page_index = 1; //默认显示第一页
+                    this.paginations.page_size = 5; //每页显示多少数据
+
+                    //显示数据
+                    this.tableData = this.allTableData.filter((item, index) => {
+                        return index < this.paginations.page_size;
+                    })
+                },
+                handleSizeChange(page_size) {
+                    this.paginations.page_index = 1; //第一页
+                    this.paginations.page_size = page_size; //每页先显示多少数据
+                    this.tableData = this.allTableData.filter((item, index) => {
+                        return index < page_size
+                    })
+                },
+                handleCurrentChange(page) {
+
+                    // 跳转页数
+                    //获取当前页
+                    let index = this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = this.paginations.page_size * page;
+
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (this.allTableData[i]) {
+                            tablist.push(this.allTableData[i])
+                        }
+                        this.tableData = tablist;
+                    }
+                },
                 topicratioPropsFn: function (val) {
                     var _this = this;
                     _this.RuleGrList = [];
