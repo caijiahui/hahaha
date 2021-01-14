@@ -13,8 +13,13 @@
                   style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
             <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
             <el-table-column label="考试类型" prop="TypeName" sortable width="180"></el-table-column>
-            @*<el-table-column label="创建人" prop="CreateUser" sortable   width="180"></el-table-column>
-            <el-table-column label="创建时间" prop="CreateDate"></el-table-column>*@
+            <el-table-column label="创建人" prop="CreateUser" sortable width="180"></el-table-column>
+            <el-table-column label="创建时间"
+                             width="120">
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.CreateDate)}}</span>
+                </template>
+            </el-table-column>
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -125,6 +130,21 @@
                     }
                     this.tableData = tablist;
                 }
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
             },
             createSubject: function () {
                 var _this = this;
