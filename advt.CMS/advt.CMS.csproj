@@ -325,7 +325,6 @@
     <Content Include="Scripts\fonts\roboto\Roboto-Thin.ttf" />
     <Content Include="Scripts\fonts\roboto\Roboto-Thin.woff" />
     <Content Include="Scripts\fonts\roboto\Roboto-Thin.woff2" />
-    <Content Include="Attachment\temp\327f1c37970543d6b1068811d26c8a81Test.pptx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.wsdl" />
     <Content Include="Properties\DataSources\System.Data.DataSet.datasource" />
     <None Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -427,6 +426,7 @@
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Attachment\temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

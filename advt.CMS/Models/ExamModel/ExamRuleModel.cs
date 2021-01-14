@@ -11,6 +11,7 @@ namespace advt.CMS.Models.ExamModel
     {
         public ExamRule VExamRule { get; set; }        
         public List<ExamRuleTopicType> RuleGrList { get; set; }
+        public List<ExamRuleTopicType> RuleTopic { get; set; }
         public List<ExamRuleTopicType> RuleTopicList { get; set; }
         public List<ExamRule> ListExamRule { get; set; }
 
@@ -30,6 +31,7 @@ namespace advt.CMS.Models.ExamModel
             RuleGrList = new List<ExamRuleTopicType>();
             topictype = new ExamRuleTopicType();
             RuleTopicList = new List<ExamRuleTopicType>();
+            RuleTopic = new List<ExamRuleTopicType>();
         }
        
 
@@ -61,11 +63,24 @@ namespace advt.CMS.Models.ExamModel
                 {
                     if (id != 0)
                     {
-                        var ee = Data.ExamRuleTopicType.Get_ExamRuleInfo(item.TopicLevel, item.TopicMajor, item.TopicType, id);
+                        if (item.TopicType == "单选")
+                        {
+                            type.TopicType = "L1";
+                        }
+                        else if (item.TopicType == "问答")
+                        {
+                            type.TopicType = "L2";
+                        }
+                        else if (item.TopicType == "多选")
+                        {
+                            type.TopicType = "L3";
+                        }
+                        var ee = Data.ExamRuleTopicType.Get_ExamRuleInfo(item.TopicLevel, item.TopicMajor, type.TopicType, id);
                         type.TopicLevel = item.TopicLevel;
                         type.TopicMajor = item.TopicMajor;
-                        type.TopicType = item.TopicType;
                         type.RuleId = id;
+                        
+                       
                         if (ee.Count() > 0)
                         {
                             type.ID = item.ID;
@@ -118,7 +133,36 @@ namespace advt.CMS.Models.ExamModel
         {
             if (model != null)
             {
-                RuleTopicList= Data.ExamRuleTopicType.Get_ExamRuleTopic(model);
+                RuleTopic  = Data.ExamRuleTopicType.Get_ExamRuleTopic(model);
+                if (RuleTopic.Count() > 0)
+                {
+                    foreach (var item in RuleTopic)
+                    {
+                        var type = "";
+                        if (item.TopicType == "L1")
+                        {
+                            type = "单选";
+                        }
+                        else if (item.TopicType == "L2")
+                        {
+                            type = "问答";
+                        }
+                        else if (item.TopicType == "L3")
+                        {
+                            type = "多选";
+                        }
+                        RuleTopicList.Add(new ExamRuleTopicType {
+                            TopicMajor = item.TopicMajor,
+                            TopicLevel = item.TopicLevel,
+                            TopicNum = item.TopicNum,
+                            TopicScore =item.TopicScore,
+                            TopicType = type,
+                            ID = item.ID,
+                            RuleId=item.RuleId
+                        });
+                    }
+                }
+               
             }
         }
     }

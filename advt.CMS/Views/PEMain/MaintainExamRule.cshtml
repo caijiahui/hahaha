@@ -160,7 +160,7 @@
                 TotalScore: '',
                 TotalTime: '',
                 TotalSubject: '',
-                PassScore:'',
+                PassScore: '',
                 ruleform: {                    
                     RuleName: [
                         { required: true, message: '请输入规则名字', trigger: 'blur' }
@@ -270,17 +270,26 @@
                 handleSave: function () {
                     var _this = this;
                     _this.$refs.dialogForm.validate(function (valid) {
-                        if (valid) {                          
-                            var objs = {};
-                            objs.VExamRule = _this.VExamRule;
-                            objs.RuleGrList = _this.RuleGrList;
-                            axios.post('/PEMain/SaveRuleInfo', {
-                                model: objs,
-                            }).then(function (res) {
-                                _this.tableData = res.data.tableData;
-                                _this.RuleGrList = res.data.RuleGrList;
-                            });
-                            _this.dialogFormVisible = false;
+                        if (valid) {         
+                            //判读题数分数之和
+                            var numscore = 0;
+                            _this.RuleGrList.forEach(function (item, index) {
+                                numscore += item.TopicNum * item.TopicScore
+                            })
+                            if (numscore == 100) {
+                                var objs = {};
+                                objs.VExamRule = _this.VExamRule;
+                                objs.RuleGrList = _this.RuleGrList;
+                                axios.post('/PEMain/SaveRuleInfo', {
+                                    model: objs,
+                                }).then(function (res) {
+                                    _this.tableData = res.data.tableData;
+                                    _this.RuleGrList = res.data.RuleGrList;
+                                });
+                                _this.dialogFormVisible = false;
+                            }
+                            else { _this.$alert('填入的题数分数之和不可超过100分,请检查') }
+                          
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -309,6 +318,7 @@
                     }).then(response => {
                         _this.ListTypeName = response.data.ListTypeName;
                         _this.RuleGrList = response.data.RuleGrList;
+                       
                     });
                     //axios.post('/PEMain/GetSubjectList').then(response => {
                     //    _this.ListTypeName = response.data.ListTypeName;
@@ -329,7 +339,8 @@
                     var _this = this;
                     axios.post('/PEMain/GetRuleInfo').then(function (responese) {
                         _this.tableData = responese.data.tableData;
-                        _this.VExamRule = responese.data.VExamRule;
+                        _this.VExamRule = responese.data.VExamRule;                        
+                      
                     })
                 },
                 editRow(index, rows) {
