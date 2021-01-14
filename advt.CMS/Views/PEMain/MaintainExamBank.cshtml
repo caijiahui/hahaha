@@ -13,7 +13,6 @@
         <el-upload class="upload-demo" style="margin-top:30px"
                    ref="upload"
                    :multiple="false"
-                   
                    action="/PEMain/Upload_TEL_MASTER">
             <el-button size="small" type="primary">EXCEL上传题库</el-button>
         </el-upload>
@@ -78,6 +77,14 @@
 
         </el-table-column>
     </el-table>
+    <el-pagination @@size-change="handleSizeChange"
+                   @@current-change="handleCurrentChange"
+                   :current-page="paginations.page_index"
+                   :page-sizes="paginations.page_sizes"
+                   :page-size="paginations.page_size"
+                   :layout="paginations.layout"
+                   :total="paginations.total">
+    </el-pagination>
     <el-dialog title="题目编辑" :visible.sync="dialogFormVisible">
         <el-form :model="VExamBank">
             <el-form-item label="考试类型" :label-width="formLabelWidth">
@@ -111,15 +118,16 @@
             </el-form-item>
             <el-form-item label="选项A图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionAPicNum" autocomplete="off"></el-input>
+
             </el-form-item>
 
             @*<el-form-item v-if="VExamBank.OptionAPicNum" label="选项A图片" :label-width="formLabelWidth">
-            <img :src="~/Attachment/BankPic/12.png" />
-        </el-form-item>*@
+                    <img :src="~/Attachment/BankPic/12.png" />
+                </el-form-item>*@
 
             @*<el-form-item label="选项A图片" :label-width="formLabelWidth">
-            <img v-bind:src="~/Attachment/BankPic/12.png"/>
-        </el-form-item>*@
+                    <img v-bind:src="~/Attachment/BankPic/12.png"/>
+                </el-form-item>*@
             @*<img v-if="VExamBank.OptionAPicNum.length>0" :src="~/Attachment/BankPic/12.png" />*@
 
             <el-form-item label="选项B" :label-width="formLabelWidth">
@@ -176,9 +184,18 @@
                 TypeName: '',
                 dialogFormVisible: false,
                 formLabelWidth: '120px',
+                paginations: {
+                    page_index: 1,
+                    total: 0,
+                    page_size: 5,
+                    page_sizes: [5, 10, 15, 20],
+                    layout: 'total, sizes, prev, pager, next, jumper'
+                },
+                allTableData: []
             },
             mounted: function () {
                 this.getdata();
+                this.getInfoList();
             },
             methods: {
                 getdata: function () {
@@ -187,6 +204,48 @@
                         _this.LExamBank = responese.data.LExamBank;
                         _this.LExamType = responese.data.LExamType;
                     })
+                },
+                getInfoList() {
+                    var _this = this;
+                    axios.post('/PEMain/GetBankInfo').then(res => {
+                        const data = res.data.LExamBank;
+                        this.allTableData = data;
+                        this.setPaginations()
+                    })
+                },
+                setPaginations() {
+                    this.paginations.total = this.allTableData.length; //数据的数量
+                    console.log(this.allTableData.length);
+                    this.paginations.page_index = 1; //默认显示第一页
+                    this.paginations.page_size = 5; //每页显示多少数据
+
+                    //显示数据
+                    this.tableData = this.allTableData.filter((item, index) => {
+                        return index < this.paginations.page_size;
+                    })
+                },
+                handleSizeChange(page_size) {
+                    this.paginations.page_index = 1; //第一页
+                    this.paginations.page_size = page_size; //每页先显示多少数据
+                    this.tableData = this.allTableData.filter((item, index) => {
+                        return index < page_size
+                    })
+                },
+                handleCurrentChange(page) {
+
+                    // 跳转页数
+                    //获取当前页
+                    let index = this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = this.paginations.page_size * page;
+
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (this.allTableData[i]) {
+                            tablist.push(this.allTableData[i])
+                        }
+                        this.LExamBank = tablist;
+                    }
                 },
                 SearchinByTypeName() {
                     var _this = this;
