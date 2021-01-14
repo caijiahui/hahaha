@@ -40,14 +40,14 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination @@size-change="handleSizeChange"
+            @*<el-pagination @@size-change="handleSizeChange"
                            @@current-change="handleCurrentChange"
                            :current-page="paginations.page_index"
                            :page-sizes="paginations.page_sizes"
                            :page-size="paginations.page_size"
                            :layout="paginations.layout"
                            :total="paginations.total">
-            </el-pagination>
+            </el-pagination>*@
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
                 <el-form :model="VExamRule" ref="dialogForm" :rules="ruleform" :label-position="labelPosition">
                     <el-form-item label="考试类型" prop="TypeName">
@@ -155,7 +155,12 @@
                 search: '',
                 topicratioPropsVal: [],
                 RuleGrList: [],
-                labelPosition:'right',
+                labelPosition: 'right',
+                RuleName: '',
+                TotalScore: '',
+                TotalTime: '',
+                TotalSubject: '',
+                PassScore:'',
                 ruleform: {                    
                     RuleName: [
                         { required: true, message: '请输入规则名字', trigger: 'blur' }
@@ -173,14 +178,14 @@
                         { required: true, message: '请输入通过分数', trigger: 'blur' }
                     ]
                 },
-                paginations: {
-                    page_index: 1,
-                    total: 0,
-                    page_size: 5,
-                    page_sizes: [5, 10, 15, 20],
-                    layout: 'total, sizes, prev, pager, next, jumper'
-                },
-                allTableData: []
+                //paginations: {
+                //    page_index: 1,
+                //    total: 0,
+                //    page_size: 5,
+                //    page_sizes: [5, 10, 15, 20],
+                //    layout: 'total, sizes, prev, pager, next, jumper'
+                //},
+                //allTableData: []
             },
             watch: {
                 'VExamRule.TypeName': function (newval) {
@@ -196,51 +201,51 @@
             },
             mounted: function () {
                 this.getdata();
-                this.getInfoList();
+               // this.getInfoList();
             },
             methods: {
-                getInfoList() {
-                    var _this = this;
-                    axios.post('/PEMain/GetRuleInfo').then(res => {
-                        const data = res.data.tableData;
-                        this.allTableData = data;
-                        this.setPaginations()
-                    })
-                },
-                setPaginations() {
-                    this.paginations.total = this.allTableData.length; //数据的数量
-                    console.log(this.allTableData.length);
-                    this.paginations.page_index = 1; //默认显示第一页
-                    this.paginations.page_size = 5; //每页显示多少数据
+                //getInfoList() {
+                //    var _this = this;
+                //    axios.post('/PEMain/GetRuleInfo').then(res => {
+                //        const data = res.data.tableData;
+                //        this.allTableData = data;
+                //        this.setPaginations()
+                //    })
+                //},
+                //setPaginations() {
+                //    this.paginations.total = this.allTableData.length; //数据的数量
+                //    console.log(this.allTableData.length);
+                //    this.paginations.page_index = 1; //默认显示第一页
+                //    this.paginations.page_size = 5; //每页显示多少数据
 
-                    //显示数据
-                    this.tableData = this.allTableData.filter((item, index) => {
-                        return index < this.paginations.page_size;
-                    })
-                },
-                handleSizeChange(page_size) {
-                    this.paginations.page_index = 1; //第一页
-                    this.paginations.page_size = page_size; //每页先显示多少数据
-                    this.tableData = this.allTableData.filter((item, index) => {
-                        return index < page_size
-                    })
-                },
-                handleCurrentChange(page) {
+                //    //显示数据
+                //    this.tableData = this.allTableData.filter((item, index) => {
+                //        return index < this.paginations.page_size;
+                //    })
+                //},
+                //handleSizeChange(page_size) {
+                //    this.paginations.page_index = 1; //第一页
+                //    this.paginations.page_size = page_size; //每页先显示多少数据
+                //    this.tableData = this.allTableData.filter((item, index) => {
+                //        return index < page_size
+                //    })
+                //},
+                //handleCurrentChange(page) {
 
-                    // 跳转页数
-                    //获取当前页
-                    let index = this.paginations.page_size * (page - 1);
-                    //获取总数
-                    let allData = this.paginations.page_size * page;
+                //    // 跳转页数
+                //    //获取当前页
+                //    let index = this.paginations.page_size * (page - 1);
+                //    //获取总数
+                //    let allData = this.paginations.page_size * page;
 
-                    let tablist = [];
-                    for (let i = index; i < allData; i++) {
-                        if (this.allTableData[i]) {
-                            tablist.push(this.allTableData[i])
-                        }
-                        this.tableData = tablist;
-                    }
-                },
+                //    let tablist = [];
+                //    for (let i = index; i < allData; i++) {
+                //        if (this.allTableData[i]) {
+                //            tablist.push(this.allTableData[i])
+                //        }
+                //        this.tableData = tablist;
+                //    }
+                //},
                 topicratioPropsFn: function (val) {
                     var _this = this;
                     _this.RuleGrList = [];
@@ -257,22 +262,31 @@
                     axios.post('/PEMain/GetSubjectList').then(response => {
                         _this.ListTypeName = response.data.ListTypeName;
                         _this.VExamRule = {};
-                       
+                        _this.RuleGrList = [];
+                     
                     });
                     _this.dialogFormVisible = true;
-                },             
+                },                  
                 handleSave: function () {
-                   var _this = this;                    
-                    var objs = {};
-                    objs.VExamRule = _this.VExamRule;
-                    objs.RuleGrList = _this.RuleGrList;
-                    axios.post('/PEMain/SaveRuleInfo', {
-                        model: objs,
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                        _this.RuleGrList = res.data.RuleGrList;
-                        });
-                    _this.dialogFormVisible = false;
+                    var _this = this;
+                    _this.$refs.dialogForm.validate(function (valid) {
+                        if (valid) {                          
+                            var objs = {};
+                            objs.VExamRule = _this.VExamRule;
+                            objs.RuleGrList = _this.RuleGrList;
+                            axios.post('/PEMain/SaveRuleInfo', {
+                                model: objs,
+                            }).then(function (res) {
+                                _this.tableData = res.data.tableData;
+                                _this.RuleGrList = res.data.RuleGrList;
+                            });
+                            _this.dialogFormVisible = false;
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                   
 
                 },
                 handleEdit(index, RuleName, TypeName, SubjectName, row) {
