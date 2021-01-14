@@ -301,7 +301,37 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult MaintainExamBank()
         {
+            var model = new ExamBankModel();
             return View();
+        }
+        [MyAuthorize]
+        public ActionResult GetBankInfo(string ExamType)
+        {
+            var model = new ExamBankModel();
+            model.GetBankInfo(ExamType);
+            return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetTopic(int ID)
+        {
+            var model = new ExamBankModel();
+            model.GetTopic(ID);
+            return Json(new { VExamBank = model.VExamBank}, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult DeleteBankInfo(int ID)
+        {
+            var model = new ExamBankModel();
+            model.DeleteBankInfo(ID);
+            return Json(new { Result="Pass",model.LExamBank}, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SaveBankInfo(ExamBankModel model)
+        {
+            var username = this.UserContextSubstring;
+            model.SaveBankInfo(username);
+            return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_TEL_MASTER(HttpPostedFileBase file)
         {
@@ -328,11 +358,53 @@ namespace advt.Web.Controllers
 
             return Json(new {  }, JsonRequestBehavior.AllowGet);
         }
-        //public ActionResult Upload_TEL_MASTER(File files)
-        //{
-        //    return null;
-        //}
+        public JsonResult Upload_BankPic(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                //判断传入图片大小是否小于1MB
+                if (file.ContentLength <= 1048576)
+                {
+                    //判断是否是图片类型
+                    if (file.FileName.IndexOf(".jpg") > 0 || file.FileName.IndexOf(".png") > 0 || file.FileName.IndexOf(".jpeg") > 0 || file.FileName.IndexOf(".gif") > 0)
+                    {
+                        DataTable dt = new DataTable();
+                        string filepath = "";
+                        string path = Server.MapPath(_AttachmentBankPic);//设定上传的文件路径
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        string filenName = '\\' + file.FileName;
+                        filepath = path + filenName;
+                        if (Directory.Exists(filepath))
+                        {
 
+                            return Json(new { Result = "已有相同名称图片" }, JsonRequestBehavior.AllowGet);
+
+                        }
+                        else
+                        {
+
+
+                            file.SaveAs(filepath);//上传路径
+                        }
+                    }
+                    else
+                    {
+                        return Json(new { Result = "只可传入格式.jpg/.png/.jpeg/.gif文件" }, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                else
+                {
+                    return Json(new { Result = "图片大小大于1MB" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+           
+            return Json(new { Result="成功" }, JsonRequestBehavior.AllowGet);
+        }
 
 
     }

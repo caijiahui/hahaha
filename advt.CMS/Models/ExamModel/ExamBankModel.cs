@@ -13,8 +13,15 @@ namespace advt.CMS.Models.ExamModel
 {
     public class ExamBankModel
     {
+        public List<ExamBank> LExamBank { get; set; }
+        public ExamBank VExamBank { get; set; }
+        //public List<ExamType> LExamType { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }
         public ExamBankModel() : base()
         {
+            LExamBank = new List<ExamBank>();
+            LExamType = new List<KeyValuePair<string, string>>();
+            VExamBank = new ExamBank();
         }
         public void UploadBank(string filepath)
         {
@@ -80,18 +87,19 @@ namespace advt.CMS.Models.ExamModel
                                 RightKey = dr[7].ToString().Trim(),
                                 Remark = dr[8].ToString().Trim(),
                                 OptionA = dr[9].ToString().Trim(),
-                                OptionAPicNum = dr[10].ToString().Trim(),
+                                OptionAPicNum = string.IsNullOrEmpty(dr[10].ToString().Trim())==true?null: "~/Attachment/BankPic"+ dr[10].ToString().Trim(),
                                 OptionB = dr[11].ToString().Trim(),
-                                OptionBPicNum = dr[12].ToString().Trim(),
+                                OptionBPicNum = string.IsNullOrEmpty(dr[12].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[12].ToString().Trim(),
                                 OptionC = dr[13].ToString().Trim(),
-                                OptionCPicNum = dr[14].ToString().Trim(),
+                                OptionCPicNum = string.IsNullOrEmpty(dr[14].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[14].ToString().Trim(),
                                 OptionD = dr[15].ToString().Trim(),
                                 OptionDPicNum = dr[16].ToString().Trim(),
                                 OptionE = dr[17].ToString().Trim(),
-                                OptionEPicNum = dr[18].ToString().Trim(),
+                                OptionEPicNum = string.IsNullOrEmpty(dr[18].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[18].ToString().Trim(),
                                 OptionF = dr[19].ToString().Trim(),
-                                OptionFPicNum = dr[20].ToString().Trim()
-                            };
+                                OptionFPicNum = string.IsNullOrEmpty(dr[20].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[20].ToString().Trim(),
+                                CreateDate = DateTime.Now
+                };
                     LBank = q.ToList();
                 }
                 foreach (var item in LBank)
@@ -105,6 +113,49 @@ namespace advt.CMS.Models.ExamModel
             {
                 files.Close();//关闭当前流并释放资源
             }
+        }
+        public void GetBankInfo(string ExamType)
+        {
+            if (!string.IsNullOrEmpty(ExamType))
+            {
+                LExamBank = Data.ExamBank.Get_All_ExamBank_ExamType(ExamType);
+            }
+            else
+            {
+                LExamBank = Data.ExamBank.Get_All_ExamBank();
+            }
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
+            {
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName,item.TypeName));
+            }
+            //var examtypes=
+            //LExamType = Data.ExamType.Get_All_ExamType();
+            //LExamType.Add(new ExamType { TypeName = "" });
+        }
+        public void DeleteBankInfo(int id)
+        {
+            Data.ExamBank.Delete_ExamBank(id);
+            LExamBank = Data.ExamBank.Get_All_ExamBank();
+        }
+        public void GetTopic(int id)
+        {
+            VExamBank = Data.ExamBank.Get_ExamBank(id);
+        }
+        public void SaveBankInfo(string username)
+        {
+            VExamBank.CreateDate = DateTime.Now;
+            VExamBank.CreateUser = username;
+            if (VExamBank.ID == 0)
+            {
+                Data.ExamBank.Insert_ExamBank(VExamBank, null, new string[] { "ID" });
+                //Data.ExamType.Insert_ExamType(VexamType);
+            }
+            else
+            {
+                Data.ExamBank.Update_ExamBank(VExamBank, null, new string[] { "ID" });
+            }
+            LExamBank = Data.ExamBank.Get_All_ExamBank();
         }
         }
 }

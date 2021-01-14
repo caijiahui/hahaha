@@ -18,7 +18,7 @@ namespace advt.Manager
     {
         protected string _AttachmentUploadDirectory = "~/Attachment";
         protected string _AttachmentUploadDirectory_temp = "~/Attachment/temp";
-
+        protected string _AttachmentBankPic = "~/Attachment/BankPic";
         /// <summary>
         /// 是自适应站点
         /// </summary>
@@ -139,7 +139,17 @@ namespace advt.Manager
                 return Login.UserContext;
             }
         }
-
+        /// <summary>
+        /// 用户信息，如果没取到说明用户没有登录
+        /// </summary>
+        public String UserContextSubstring
+        {
+            get
+            {
+                var username = Login.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+                return username;
+            }
+        }
         /// <summary>
         /// 用户ID(必须存在才可以登入)
         /// </summary>
