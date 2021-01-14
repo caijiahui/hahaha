@@ -22,6 +22,10 @@ namespace advt.Data
         {
             return Get_All_ExamBank(null);
         }
+        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType(string ExamType)
+        {
+            return Get_All_ExamBank(new { ExamType = ExamType });
+        }
 
         public static Entity.ExamBank Get_ExamBank(object objparams)
         {
@@ -33,6 +37,7 @@ namespace advt.Data
         {
             return Get_ExamBank(new { ID = ID });
         }
+
 
         public static int Insert_ExamBank(Entity.ExamBank info)
         {

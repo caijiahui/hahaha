@@ -3,69 +3,163 @@
     @{
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
-    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-ui.min.js"></script>
-    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-    <div id="app">
-        <el-upload class="upload-demo"
+<div id="app">
+    <div style="width:100%;margin-top:30px">
+        <el-button @@click="createTopic">新增</el-button>
+        <el-select v-model="TypeName" placeholder="请选择考试类型">
+            <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
+        <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
+        <el-upload class="upload-demo" style="margin-top:30px"
                    ref="upload"
                    :multiple="false"
+                   
                    action="/PEMain/Upload_TEL_MASTER">
             <el-button size="small" type="primary">EXCEL上传题库</el-button>
         </el-upload>
-        <el-table :data="LexamType.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100%;margin-top:20px " :default-sort="{prop: 'TypeName', order: 'CreateUser'}" border>
-            <el-table-column label="考试类型"
-                             prop="ExamType" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="题目专业"
-                             prop="TopicMajor" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="题目等级"
-                             prop="TopicLevel" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="题目类型"
-                             prop="TopicType" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="题目内容"
-                             prop="TopicTitle" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="上传时间"
-                             prop="CreateDate" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="上传人"
-                             prop="CreateUser" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column align="right">
-                <template slot="header" slot-scope="scope">
-
-                    <el-input v-model="search"
-                              size="mini"
-                              placeholder="输入关键字搜索" />
-                </template>
-                <template slot-scope="scope">
-                    <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID, scope.row.TypeName)">Edit</el-button>
-                    <el-button size="mini"
-                               type="danger"
-                               @@click="handleDelete(scope.row.ID, scope.row.TypeName)">Delete</el-button>
-                </template>
-
-            </el-table-column>
-        </el-table>
-
-
-
+        <el-upload class="upload-demo" style="margin-top:30px"
+                   ref="upload"
+                   :multiple="false"
+                   :on-success="handleSuccess"
+                   action="/PEMain/Upload_BankPic">
+            <el-button size="small" type="primary">上传图片</el-button>
+        </el-upload>
+        <a href="/Attachment/temp/Template/BankTemplate.xlsx">
+            <el-button size="small" type="primary" style="margin-top:30px">题库模板下载</el-button>
+        </a>
 
     </div>
+
+    <el-table :data="LExamBank.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
+              style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border>
+        <el-table-column label="考试类型"
+                         prop="ExamType" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="题目专业"
+                         prop="TopicMajor" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="题目等级"
+                         prop="TopicLevel" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="题目类型"
+                         prop="TopicType" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="题目内容"
+                         prop="TopicTitle" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="上传时间"
+                         prop="CreateDate" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column label="上传人"
+                         prop="CreateUser" sortable
+                         width="180">
+        </el-table-column>
+        <el-table-column align="right">
+            <template slot="header" slot-scope="scope">
+
+                <el-input v-model="search"
+                          size="mini"
+                          placeholder="输入关键字搜索" />
+            </template>
+
+            <template slot-scope="scope">
+                <el-button size="mini"
+                           @@click="handleEdit(scope.row.ID)">Edit</el-button>
+                <el-button size="mini"
+                           type="danger"
+                           @@click="handleDelete(scope.row.ID)">Delete</el-button>
+            </template>
+
+        </el-table-column>
+    </el-table>
+    <el-dialog title="题目编辑" :visible.sync="dialogFormVisible">
+        <el-form :model="VExamBank">
+            <el-form-item label="考试类型" :label-width="formLabelWidth">
+                <el-select v-model="VExamBank.ExamType" placeholder="请选择考试类型">
+                    <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="题目专业" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.TopicMajor" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="题目等级" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.TopicLevel" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="题目类型(1单选题2多选题3问答题)" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.TopicType" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="题目内容" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.TopicTitle" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="题目图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.TopicTitlePicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="正确答案" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.RightKey" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="答案解析" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.Remark" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项A" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionA" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项A图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionAPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+
+            @*<el-form-item v-if="VExamBank.OptionAPicNum" label="选项A图片" :label-width="formLabelWidth">
+            <img :src="~/Attachment/BankPic/12.png" />
+        </el-form-item>*@
+
+            @*<el-form-item label="选项A图片" :label-width="formLabelWidth">
+            <img v-bind:src="~/Attachment/BankPic/12.png"/>
+        </el-form-item>*@
+            @*<img v-if="VExamBank.OptionAPicNum.length>0" :src="~/Attachment/BankPic/12.png" />*@
+
+            <el-form-item label="选项B" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionB" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项B图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionBPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项C" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionC" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项C图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionCPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项D" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionD" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项D图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionDPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项E" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionE" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项E图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionEPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项F" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionE" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="选项F图片" :label-width="formLabelWidth">
+                <el-input v-model="VExamBank.OptionFPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="handleSave('save')">确 定</el-button>
+        </div>
+    </el-dialog>
+
+</div>
     <script src="~/Scripts/Vue/axios.js"></script>
     <script src="~/Scripts/Vue/Vue.js"></script>
     <script src="~/Scripts/elementUI/lib/index.js"></script>
@@ -75,71 +169,72 @@
         new Vue({
             el: '#app',
             data: {
-                importData: '',
-                wb: ''
-              
-            },
-            watch: {
-                'VExamRule.TypeName': function (newval) {
-                    axios.post('/PEMain/GetSubjectName', {
-                        model: newval
-                    }).then(response => {
-                        this.ListSubjectName = response.data.ListSubjectName;
-                        thi.ListTopicInfo = response.data.ListTopicInfo;
-                    });
-                },               
+                LExamBank: [],
+                VExamBank: {},
+                LExamType: [],
+                search: '',
+                TypeName: '',
+                dialogFormVisible: false,
+                formLabelWidth: '120px',
             },
             mounted: function () {
-               
+                this.getdata();
             },
             methods: {
-                importExcel() {
-                    document.getElementById('imFile').click()
-                },
-                importFile: function (e) {
-                    let obj = e.target
-                    if (e.target.files.length == 0) {
-                        console.log("没有获取到导入内容")
-                        return
-                    }
-                    var f = obj.files[0]
-                    var reader = new FileReader()
-                    reader.readAsBinaryString(f)
-                    reader.onload = (e) => {
-                        var data = e.target.result //获取上传的文件数据
-                        console.log(data,23232)
-                        this.wb = XLSX.read(data, {
-                            type: 'binary'
-                        })
-                        this.importData = XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]])
-                        //至此已完成对上传excel的内容解析 然后可以直接把这个对象数组传给后端
-                        console.log("this.importData is:", this.importData)
-                        // this.uploadExcelData()
-                    }
-                },
-                uploadExcelData() {
-                    this.imFile.value = ''
-                    this.$post('/PEMain/MaintainExamBank', data).then(
-                        res => {
-                            if (res.code == 'success') {
-                                this.$notify({ title: '成功', message: '导入成功!', type: 'success' })
-                                this.queryData()
-                                this.fullscreenLoading = false
-                            } else (
-                                this.$alert(res.message, '导入失败', {
-                                    confirmButtonText: '确定',
-                                    callback: action => {
-                                        this.fullscreenLoading = false
-                                        this.queryData()
-                                    }
-                                })
-                            )
-                        }
-                    ).catch(err => {
-                        console.log("err is:", err)
-                        this.$notify.error({ title: '错误', message: '抱歉，导入失败!' })
-                        this.fullscreenLoading = false
+                getdata: function () {
+                    var _this = this;
+                    axios.post('/PEMain/GetBankInfo').then(function (responese) {
+                        _this.LExamBank = responese.data.LExamBank;
+                        _this.LExamType = responese.data.LExamType;
                     })
+                },
+                SearchinByTypeName() {
+                    var _this = this;
+                    axios.post('/PEMain/GetBankInfo', {
+                        ExamType: _this.TypeName
+                    }).then(function (res) {
+                        _this.LExamBank = res.data.LExamBank;
+                    });
+                    _this.dialogFormVisible = false
+                },
+                handleEdit(ID) {
+                    var _this = this;
+                    axios.post('/PEMain/GetTopic', {
+                        ID: ID
+                    }).then(function (res) {
+                        _this.VExamBank = res.data.VExamBank;
+                    });
+                    _this.dialogFormVisible = true;
+                }, 
+                handleSave() {
+                    var _this = this;
+                    var objs = {};
+                    objs.VExamBank = _this.VExamBank;
+                    axios.post('/PEMain/SaveBankInfo', {
+                        model: objs
+                    }).then(function (res) {
+                        _this.LExamBank = res.data.LExamBank;
+                        this.VExamBank = {};
+                        console.log(this.VExamBank,32323)
+                    });
+                    _this.dialogFormVisible = false
+                },
+                handleDelete(index) {
+                    var _this = this;
+                    var ID = index;
+                    axios.post('/PEMain/DeleteBankInfo', {
+                        ID: ID
+                    }).then(function (res) {
+                        _this.LExamBank = res.data.LExamBank;
+                    });
+                },
+                createTopic() {
+                    var _this = this;
+                    this.VExamBank = {};
+                    _this.dialogFormVisible = true;
+                },
+                handleSuccess(Result) {
+                    console.log(Result, 43);
                 }
             }
             

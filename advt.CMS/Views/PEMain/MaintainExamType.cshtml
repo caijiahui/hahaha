@@ -24,9 +24,12 @@
                              width="180">
             </el-table-column>
             <el-table-column label="创建时间"
-                             prop="CreateDate" sortable
-                             width="180">
+                             width="120">
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.CreateDate)}}</span>
+                </template>
             </el-table-column>
+
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
 
@@ -120,6 +123,22 @@
                     _this.ExamName = '';
                 });
                 _this.dialogFormVisible = false
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                //console.log(new Date(date).getFullYear())
+                return year + '-' + mon + '-' + day;
             },
             getdata: function () {
                 var _this = this;
