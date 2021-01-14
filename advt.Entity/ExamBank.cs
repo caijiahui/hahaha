@@ -11,11 +11,11 @@ namespace advt.Entity
 
         public string ExamType { get; set; }
 
-        public string TopicMajor { get; set; }
+        public string TopicMajor { get; set; }//C#
 
-        public string TopicLevel { get; set; }
+        public string TopicLevel { get; set; }//G1
 
-        public string TopicType { get; set; }
+        public string TopicType { get; set; }//ÎÊ´ð
 
         public string TopicTitle { get; set; }
 

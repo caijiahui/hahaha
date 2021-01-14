@@ -77,7 +77,17 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().GetSubjectList(model);
             return SqlHelper.GetReaderToList<Entity.ExamSubject>(reader);
         }
+        public static List<Entity.ExamBank> GetTopicInfo()
+        {
+            return GetTopicInfo(null);
+        }
+        public static List<Entity.ExamBank> GetTopicInfo(string model)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetTopicInfo(model);
+            return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
+        }
        
+        
         #endregion
     }
 }

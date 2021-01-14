@@ -20,6 +20,7 @@ namespace advt.Data
         int Delete_ExamRule(int ID);
 
         IDataReader GetSubjectList(string model);
+        IDataReader GetTopicInfo(string model);
         #endregion
     }
 }

@@ -1,119 +1,202 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamSubjectModel
 
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-    <div id="app">
-        <div>
-            <el-button  @@click="createSubject">新增</el-button>
-            <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+
+
+<div id="app">
+    <div>
+        <el-button @@click="createSubject">新增</el-button>
+        <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
-                <el-table-column label="考试科目"  prop="SubjectName" sortable  width="180"></el-table-column>
-                <el-table-column label="考试类型"  prop="TypeName" sortable  width="180"></el-table-column>
-                <el-table-column label="创建人" prop="CreateUser" sortable   width="180"></el-table-column>
-                <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
-                <el-table-column align="right">
-                    <template slot="header" slot-scope="scope">
-                        <el-input v-model="search"   size="mini"  placeholder="输入关键字搜索"  style="width:200px" />
-                    </template>
-                    <template slot-scope="scope">
-                        <el-button size="mini"
-                                   @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName, scope.row)">Edit</el-button>
-                        <el-button size="mini"
-                                   type="danger"
-                                   @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible">
-                <el-form :model="VexamSubject" ref="dialogForm">
-                    <el-form-item label="考试类型" :label-width="formLabelWidth">
-                        <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
-                            <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="考试科目" :label-width="formLabelWidth">
-                        <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @@click="handleSave">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div>
+            <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable width="180"></el-table-column>
+            <el-table-column label="创建人" prop="CreateUser" sortable width="180"></el-table-column>
+            <el-table-column label="创建时间"
+                             width="120">
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.CreateDate)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column align="right">
+                <template slot="header" slot-scope="scope">
+                    <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
+                </template>
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName, scope.row)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination @@size-change="handleSizeChange"
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
+        <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible">
+            <el-form :model="VexamSubject" ref="dialogForm">
+                <el-form-item label="考试类型" :label-width="formLabelWidth">
+                    <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
+                        <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="考试科目" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @@click="handleSave">确 定</el-button>
+            </div>
+        </el-dialog>
+
     </div>
-    <script src="~/Scripts/Vue/axios.js"></script>
-    <script src="~/Scripts/Vue/Vue.js"></script>
-    <script src="~/Scripts/elementUI/lib/index.js"></script>
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
 
-    <script src="~/Scripts/Vue/polyfill.min.js"></script>
-    <script type="text/javascript">
-        new Vue({
-            el: '#app',
-            data: {
-                tableData: [],
-                dialogFormVisible: false,
-                ListTypeName: [],
-                VexamSubject: [],
-                formLabelWidth: '120px',
-                search: ''
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            tableData: [],
+            dialogFormVisible: false,
+            ListTypeName: [],
+            VexamSubject: [],
+            formLabelWidth: '120px',
+            search: '',
+            paginations: {
+                page_index: 1, 
+                total: 0,
+                page_size:5,
+                page_sizes: [5, 10, 15, 20], 
+                layout: 'total, sizes, prev, pager, next, jumper'
             },
-            mounted: function () {
-                this.getdata();
+            allTableData: []
+        },
+        mounted: function () {
+            this.getdata();
+            this.getInfoList();
+        },
+        methods: {
+            getInfoList() {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectInfo').then(res => {
+                    const data = res.data.tableData;
+                    this.allTableData = data;
+                    this.setPaginations()
+                })
             },
-            methods: {
-                createSubject: function () {
-                    var _this = this;
-                    axios.post('/PEMain/GetSubjectList').then(response => {
-                        _this.ListTypeName = response.data.ListTypeName;
-                        console.log(response.data.ListSubjectName);
-                    });
-                    _this.dialogFormVisible = true;
-                },
-                handleSave: function () {
-                    var _this = this;
-                    var objs = {};
-                    objs.VexamSubject = _this.VexamSubject;
-                    axios.post('/PEMain/SaveSubjectInfo', {
-                        model: objs
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                        });
-                    _this.dialogFormVisible = false;
+            setPaginations() {
+                this.paginations.total = this.allTableData.length; //数据的数量
+                console.log(this.allTableData.length);
+                this.paginations.page_index = 1; //默认显示第一页
+                this.paginations.page_size = 5; //每页显示多少数据
 
-                },
-                handleEdit(index, name, tname, row) {
-                    var _this = this;
-                    _this.VexamSubject.SubjectName = name;
-                    _this.VexamSubject.TypeName = tname;
-                    _this.VexamSubject.ID = index;                    
-                    axios.post('/PEMain/GetSubjectList').then(response => {
-                        _this.ListTypeName = response.data.ListTypeName;
-                       
-                    });
-                    _this.dialogFormVisible = true;
-                },
-                handleDelete(index, row) {
-                    var _this = this;
-                    axios.post('/PEMain/DeleteSubject', {
-                        model: index
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                    });
-                },
-                getdata: function () {
-                    var _this = this;
-                    axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
-                        _this.tableData = responese.data.tableData;
-                        _this.VexamSubject = responese.data.VexamSubject;
-                        console.log(responese.data.tableData);
-                    })
+                //显示数据
+                this.tableData = this.allTableData.filter((item, index) => {
+                    return index < this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                this.paginations.page_index = 1; //第一页
+                this.paginations.page_size = page_size; //每页先显示多少数据
+                this.tableData = this.allTableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                
+                // 跳转页数
+                //获取当前页
+                let index = this.paginations.page_size * (page - 1);
+                //获取总数
+                let allData = this.paginations.page_size * page;
+
+                let tablist = [];
+                for (let i = index; i < allData; i++) {
+                    if (this.allTableData[i]) {
+                        tablist.push(this.allTableData[i])
+                    }
+                    this.tableData = tablist;
                 }
             },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            createSubject: function () {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectList').then(response => {
+                    _this.ListTypeName = response.data.ListTypeName;
+                    _this.VexamSubject = {};
+                });
+                _this.dialogFormVisible = true;
+            },
+            handleSave: function () {
+                var _this = this;
+                var objs = {};
+                objs.VexamSubject = _this.VexamSubject;
+                axios.post('/PEMain/SaveSubjectInfo', {
+                    model: objs
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                });
+                _this.dialogFormVisible = false;
 
-        })
+            },
+            handleEdit(index, name, tname, row) {
+                var _this = this;
+                _this.VexamSubject.SubjectName = name;
+                _this.VexamSubject.TypeName = tname;
+                _this.VexamSubject.ID = index;
+                axios.post('/PEMain/GetSubjectList').then(response => {
+                    _this.ListTypeName = response.data.ListTypeName;
 
-    </script>
+                });
+                _this.dialogFormVisible = true;
+            },
+            handleDelete(index, row) {
+                var _this = this;
+                axios.post('/PEMain/DeleteSubject', {
+                    model: index
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                });
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
+                    _this.tableData = responese.data.tableData;
+                    _this.VexamSubject = responese.data.VexamSubject;
+                })
+            }
+        },
+
+    })
+
+</script>
+
+
 

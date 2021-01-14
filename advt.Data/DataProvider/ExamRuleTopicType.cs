@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace advt.Data
 {
-    public partial class ExamRule
+    public partial class ExamRuleTopicType
     {
         #region ExamRuleTopicType , (Ver:2.3.8) at: 2021/1/12 15:49:07
 
@@ -67,6 +67,25 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamRuleTopicType(ID);
         }
+        public static List<Entity.ExamRuleTopicType> Get_ExamRuleTopic()
+        {
+            return Get_ExamRuleTopic(null);
+        }
+        public static List<Entity.ExamRuleTopicType> Get_ExamRuleTopic(string model)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleTopic(model);
+            return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
+        }
+        public static List<Entity.ExamRuleTopicType> Get_ExamRuleInfo()
+        {
+            return Get_ExamRuleInfo(null,null,null,0);
+        }
+        public static List<Entity.ExamRuleTopicType> Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType,int id)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleInfo(TopicLevel,TopicMajor,TopicType,id);
+            return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
+        }
+        
         #endregion
     }
 }
