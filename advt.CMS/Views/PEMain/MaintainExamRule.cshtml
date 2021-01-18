@@ -14,8 +14,8 @@
     <div id="app">
         <div>
             <el-button @@click="createRule">新增</el-button>
-            <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
-                      style="width: 100% " :default-sort="{prop: 'RuleName'||'TypeName', order: 'CreateUser'}">
+            <el-table :data="tableData.filter(data => !search || data.RuleName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase())||data.SubjectName.toLowerCase().includes(search.toLowerCase()))"
+                      style="width: 100% " :default-sort="{prop: 'RuleName'||'TypeName'||'SubjectName', order: 'CreateUser'}">
                 <el-table-column label="规则名字" prop="RuleName" sortable width="120"></el-table-column>
                 <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectName" sortable width="120"></el-table-column>
@@ -40,14 +40,14 @@
                     </template>
                 </el-table-column>
             </el-table>
-            @*<el-pagination @@size-change="handleSizeChange"
+            <el-pagination @@size-change="handleSizeChange"
                            @@current-change="handleCurrentChange"
                            :current-page="paginations.page_index"
                            :page-sizes="paginations.page_sizes"
                            :page-size="paginations.page_size"
                            :layout="paginations.layout"
                            :total="paginations.total">
-            </el-pagination>*@
+            </el-pagination>
             <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible">
                 <el-form :model="VExamRule" ref="dialogForm" :rules="ruleform" :label-position="labelPosition">
                     <el-form-item label="考试类型" prop="TypeName">
@@ -79,8 +79,6 @@
                                     <el-input v-model="scope.row.TopicNum" class="topie"></el-input>
                                 </template>
                             </el-table-column>
-                            @*<el-table-column prop="TopicNum" label="分数" width="80"></el-table-column>*@
-                            @*<el-table-column prop="TopicScore" label="题数" width="80"></el-table-column>*@
                             <el-table-column prop="TopicScore" label="题数" width="80">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.TopicScore" class="topie"></el-input>
@@ -178,14 +176,14 @@
                         { required: true, message: '请输入通过分数', trigger: 'blur' }
                     ]
                 },
-                //paginations: {
-                //    page_index: 1,
-                //    total: 0,
-                //    page_size: 5,
-                //    page_sizes: [5, 10, 15, 20],
-                //    layout: 'total, sizes, prev, pager, next, jumper'
-                //},
-                //allTableData: []
+                paginations: {
+                    page_index: 1,
+                    total: 0,
+                    page_size: 5,
+                    page_sizes: [5, 10, 15, 20],
+                    layout: 'total, sizes, prev, pager, next, jumper'
+                },
+                allTableData: []
             },
             watch: {
                 'VExamRule.TypeName': function (newval) {
@@ -201,51 +199,52 @@
             },
             mounted: function () {
                 this.getdata();
-               // this.getInfoList();
+               this.getInfoList();
             },
             methods: {
-                //getInfoList() {
-                //    var _this = this;
-                //    axios.post('/PEMain/GetRuleInfo').then(res => {
-                //        const data = res.data.tableData;
-                //        this.allTableData = data;
-                //        this.setPaginations()
-                //    })
-                //},
-                //setPaginations() {
-                //    this.paginations.total = this.allTableData.length; //数据的数量
-                //    console.log(this.allTableData.length);
-                //    this.paginations.page_index = 1; //默认显示第一页
-                //    this.paginations.page_size = 5; //每页显示多少数据
+                getInfoList() {
+                    var _this = this;
+                    axios.post('/PEMain/GetRuleInfo').then(res => {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations()
+                    })
+                },
+                setPaginations() {
+                    var _this = this;
+                    _this.paginations.total = _this.tableData.length; //数据的数量
+                   
+                    _this.paginations.page_index = 1; //默认显示第一页
+                    _this.paginations.page_size = 5; //每页显示多少数据
 
-                //    //显示数据
-                //    this.tableData = this.allTableData.filter((item, index) => {
-                //        return index < this.paginations.page_size;
-                //    })
-                //},
-                //handleSizeChange(page_size) {
-                //    this.paginations.page_index = 1; //第一页
-                //    this.paginations.page_size = page_size; //每页先显示多少数据
-                //    this.tableData = this.allTableData.filter((item, index) => {
-                //        return index < page_size
-                //    })
-                //},
-                //handleCurrentChange(page) {
+                    //显示数据
+                    _this.tableData = _this.tableData.filter((item, index) => {
+                        return index < _this.paginations.page_size;
+                    })
+                },
+                handleSizeChange(page_size) {
+                    var _this = this;
+                    _this.paginations.page_index = 1; //第一页
+                    _this.paginations.page_size = page_size; //每页先显示多少数据
+                    _this.tableData = _this.tableData.filter((item, index) => {
+                        return index < page_size
+                    })
+                },
+                handleCurrentChange(page) {
+                    var _this = this;
+                    // 跳转页数
+                    //获取当前页
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
 
-                //    // 跳转页数
-                //    //获取当前页
-                //    let index = this.paginations.page_size * (page - 1);
-                //    //获取总数
-                //    let allData = this.paginations.page_size * page;
-
-                //    let tablist = [];
-                //    for (let i = index; i < allData; i++) {
-                //        if (this.allTableData[i]) {
-                //            tablist.push(this.allTableData[i])
-                //        }
-                //        this.tableData = tablist;
-                //    }
-                //},
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i])
+                        }
+                    }
+                    _this.tableData = tablist;
+                },
                 topicratioPropsFn: function (val) {
                     var _this = this;
                     _this.RuleGrList = [];
@@ -274,7 +273,7 @@
                             //判读题数分数之和
                             var numscore = 0;
                             _this.RuleGrList.forEach(function (item, index) {
-                                numscore += item.TopicNum * item.TopicScore
+                                numscore += item.TopicNum * item.TopicScore;
                             })
                             if (numscore == 100) {
                                 var objs = {};
@@ -285,6 +284,7 @@
                                 }).then(function (res) {
                                     _this.tableData = res.data.tableData;
                                     _this.RuleGrList = res.data.RuleGrList;
+                                    _this.setPaginations();
                                 });
                                 _this.dialogFormVisible = false;
                             }
@@ -333,6 +333,7 @@
                         model: index
                     }).then(function (res) {
                         _this.tableData = res.data.tableData;
+                        _this.setPaginations();
                     });
                 },
                 getdata: function () {
@@ -340,7 +341,7 @@
                     axios.post('/PEMain/GetRuleInfo').then(function (responese) {
                         _this.tableData = responese.data.tableData;
                         _this.VExamRule = responese.data.VExamRule;                        
-                      
+                        _this.setPaginations();
                     })
                 },
                 editRow(index, rows) {

@@ -78,8 +78,7 @@ namespace advt.CMS.Models.ExamModel
                         var ee = Data.ExamRuleTopicType.Get_ExamRuleInfo(item.TopicLevel, item.TopicMajor, type.TopicType, id);
                         type.TopicLevel = item.TopicLevel;
                         type.TopicMajor = item.TopicMajor;
-                        type.RuleId = id;
-                        
+                        type.RuleId = id;                        
                        
                         if (ee.Count() > 0)
                         {
