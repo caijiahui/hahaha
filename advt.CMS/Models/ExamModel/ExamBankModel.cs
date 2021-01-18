@@ -17,6 +17,7 @@ namespace advt.CMS.Models.ExamModel
         public ExamBank VExamBank { get; set; }
         //public List<ExamType> LExamType { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public string Result { get; set; }
         public ExamBankModel() : base()
         {
             LExamBank = new List<ExamBank>();
@@ -75,7 +76,7 @@ namespace advt.CMS.Models.ExamModel
                 using (var ds = dt)
                 {
                     var q = from DataRow dr in ds.Rows
-                            where dr[0] != DBNull.Value && !String.IsNullOrWhiteSpace(dr[0].ToString())
+                            
                             select new Entity.ExamBank
                             {
                                 ExamType = dr[1].ToString().Trim(),
@@ -105,12 +106,15 @@ namespace advt.CMS.Models.ExamModel
                 foreach (var item in LBank)
                 {
                     Data.ExamBank.Insert_ExamBank(item, null, new string[] { "ID" });
+                    LExamBank = Data.ExamBank.Get_All_ExamBank();
+                    Result = "success";
                 }
 
             }
 
             catch (Exception ex)
             {
+               
                 files.Close();//关闭当前流并释放资源
             }
         }

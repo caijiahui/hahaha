@@ -11,10 +11,11 @@
         <el-button @@click="createSubject">新增</el-button>
         <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
-            <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
             <el-table-column label="考试类型" prop="TypeName" sortable width="180"></el-table-column>
+            <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
+
             <el-table-column label="创建人" prop="CreateUser" sortable width="180"></el-table-column>
-            
+
             <img src="~/Images/logo.png" />
             <el-table-column label="创建时间"
                              width="120">

@@ -13,6 +13,7 @@
         <el-upload class="upload-demo" style="margin-top:30px"
                    ref="upload"
                    :multiple="false"
+                   :on-success="handleExcelSuccess"
                    action="/PEMain/Upload_TEL_MASTER">
             <el-button size="small" type="primary">EXCEL上传题库</el-button>
         </el-upload>
@@ -51,14 +52,14 @@
                          prop="TopicTitle" sortable
                          width="180">
         </el-table-column>
-        <el-table-column label="上传时间"
+        @*<el-table-column label="上传时间"
                          prop="CreateDate" sortable
                          width="180">
         </el-table-column>
         <el-table-column label="上传人"
                          prop="CreateUser" sortable
                          width="180">
-        </el-table-column>
+        </el-table-column>*@
         <el-table-column align="right">
             <template slot="header" slot-scope="scope">
 
@@ -272,9 +273,11 @@
                     axios.post('/PEMain/SaveBankInfo', {
                         model: objs
                     }).then(function (res) {
-                        _this.LExamBank = res.data.LExamBank;
+                        _this.allTableData = res.data.LExamBank;
                         this.VExamBank = {};
-                        console.log(this.VExamBank,32323)
+                        _this.setPaginations();
+
+
                     });
                     _this.dialogFormVisible = false
                 },
@@ -284,8 +287,10 @@
                     axios.post('/PEMain/DeleteBankInfo', {
                         ID: ID
                     }).then(function (res) {
-                        _this.LExamBank = res.data.LExamBank;
-                    });
+                        _this.allTableData = res.data.LExamBank;
+                        _this.setPaginations();
+                        });
+                  
                 },
                 createTopic() {
                     var _this = this;
@@ -294,6 +299,20 @@
                 },
                 handleSuccess(Result) {
                     console.log(Result, 43);
+                },
+                handleExcelSuccess(Result, LExamBank) {
+                    console.log(Result,45454)
+                    if (Result == 'success') {
+                        var _this = this;
+                        _this.LExamBank = LExamBank;
+                        this.$message({
+                            message: '恭喜你,上传成功',
+                            type: 'success'
+                        });
+                    }
+                    else {
+                        this.$message.error('上传失败');
+                    }
                 }
             }
             

@@ -360,7 +360,7 @@ namespace advt.Web.Controllers
             var model = new ExamBankModel();
             model.UploadBank(filepath);
 
-            return Json(new {  }, JsonRequestBehavior.AllowGet);
+            return Json(new {Result=model.Result, model.LExamBank }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_BankPic(HttpPostedFileBase file)
         {
