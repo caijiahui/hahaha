@@ -36,7 +36,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination @@size-change="handleSizeChange"
+        <el-pagination  @@size-change="handleSizeChange"
                        @@current-change="handleCurrentChange"
                        :current-page="paginations.page_index"
                        :page-sizes="paginations.page_sizes"
@@ -82,57 +82,64 @@
                 page_index: 1, 
                 total: 0,
                 page_size:5,
-                page_sizes: [5, 10, 15, 20], 
+                page_sizes: [5,10, 15, 20], 
                 layout: 'total, sizes, prev, pager, next, jumper'
-            },
-            allTableData: []
+            }
         },
         mounted: function () {
-            this.getdata();
-            this.getInfoList();
+            var _this = this;
+            _this.getdata();
+            _this.getInfoList();
         },
         methods: {
             getInfoList() {
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo').then(res => {
-                    const data = res.data.tableData;
-                    this.allTableData = data;
-                    this.setPaginations()
+                    _this.tableData = res.data.tableData;
+                    console.log(_this.tableData,99)
+                    _this.setPaginations();
                 })
             },
             setPaginations() {
-                this.paginations.total = this.allTableData.length; //数据的数量
-                console.log(this.allTableData.length);
-                this.paginations.page_index = 1; //默认显示第一页
-                this.paginations.page_size = 5; //每页显示多少数据
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 5; //每页显示多少数据
 
                 //显示数据
-                this.tableData = this.allTableData.filter((item, index) => {
-                    return index < this.paginations.page_size;
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
                 })
             },
             handleSizeChange(page_size) {
-                this.paginations.page_index = 1; //第一页
-                this.paginations.page_size = page_size; //每页先显示多少数据
-                this.tableData = this.allTableData.filter((item, index) => {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
                     return index < page_size
                 })
             },
-            handleCurrentChange(page) {
-                
-                // 跳转页数
-                //获取当前页
-                let index = this.paginations.page_size * (page - 1);
-                //获取总数
-                let allData = this.paginations.page_size * page;
+            handleCurrentChange(page) {   
+                var _this = this;
+                axios.post('/PEMain/GetSubjectInfo').then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.tableData, 133);
+                  
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
 
-                let tablist = [];
-                for (let i = index; i < allData; i++) {
-                    if (this.allTableData[i]) {
-                        tablist.push(this.allTableData[i])
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+
                     }
-                    this.tableData = tablist;
-                }
+                    _this.tableData = tablist;
+                })            
+              
+          
             },
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
@@ -165,8 +172,9 @@
                     model: objs
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
+                    _this.setPaginations();
                 });
-                _this.dialogFormVisible = false;
+                _this.dialogFormVisible = false;           
 
             },
             handleEdit(index, name, tname, row) {
@@ -186,14 +194,19 @@
                     model: index
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
-                });
+                    _this.setPaginations();
+                    });
             },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
                     _this.tableData = responese.data.tableData;
                     _this.VexamSubject = responese.data.VexamSubject;
+                    _this.setPaginations();
+                 
                 })
+              
+               
             }
         },
 
