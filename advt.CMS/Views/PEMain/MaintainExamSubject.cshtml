@@ -96,6 +96,7 @@
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo').then(res => {
                     _this.tableData = res.data.tableData;
+                    console.log(_this.tableData,99)
                     _this.setPaginations();
                 })
             },
@@ -111,7 +112,6 @@
                 })
             },
             handleSizeChange(page_size) {
-                console.log(page_size,114)
                 var _this = this;
                 _this.paginations.page_index = 1; //第一页
                 _this.paginations.page_size = page_size; //每页先显示多少数据
@@ -121,22 +121,24 @@
             },
             handleCurrentChange(page) {   
                 var _this = this;
-                // 跳转页数
-                //获取当前页               
-                let index = _this.paginations.page_size * (page - 1);
-                //获取总数
-                let allData = _this.paginations.page_size * page;
+                axios.post('/PEMain/GetSubjectInfo').then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.tableData, 133);
+                  
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
 
-                let tablist = [];
-                console.log(_this.tableData,132)
-                for (let i = index; i < allData; i++) {
-                    if (_this.tableData[i]) {
-                        tablist.push(_this.tableData[i]);
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+
                     }
-                    console.log(tablist)
-                   
-                }
-                _this.tableData = tablist;
+                    _this.tableData = tablist;
+                })            
+              
           
             },
             changeDate: function (dates) {

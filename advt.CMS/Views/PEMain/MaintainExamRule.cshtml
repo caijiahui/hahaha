@@ -230,20 +230,23 @@
                     })
                 },
                 handleCurrentChange(page) {
-                    var _this = this;
-                    // 跳转页数
-                    //获取当前页
-                    let index = _this.paginations.page_size * (page - 1);
-                    //获取总数
-                    let allData = _this.paginations.page_size * page;
 
-                    let tablist = [];
-                    for (let i = index; i < allData; i++) {
-                        if (_this.tableData[i]) {
-                            tablist.push(_this.tableData[i])
+                    var _this = this;
+                    axios.post('/PEMain/GetRuleInfo').then(res => {
+                        _this.tableData = res.data.tableData;
+                        let index = _this.paginations.page_size * (page - 1);
+                        //获取总数
+                        let allData = _this.paginations.page_size * page;
+                        console.log(_this.tableData, index, allData);
+                        let tablist = [];
+                        for (let i = index; i < allData; i++) {
+                            if (_this.tableData[i]) {
+                                tablist.push(_this.tableData[i]);
+                            }
                         }
-                    }
-                    _this.tableData = tablist;
+                        _this.tableData = tablist;
+                    })
+                    
                 },
                 topicratioPropsFn: function (val) {
                     var _this = this;
