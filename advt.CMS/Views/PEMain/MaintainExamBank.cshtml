@@ -233,20 +233,24 @@
                     })
                 },
                 handleCurrentChange(page) {
+                    var _this = this;
+                    axios.post('/PEMain/GetBankInfo').then(function (responese) {
+                        _this.LExamBank = responese.data.LExamBank;
+                        // 跳转页数
+                        //获取当前页
+                        let index = _this.paginations.page_size * (page - 1);
+                        //获取总数
+                        let allData = _this.paginations.page_size * page;
 
-                    // 跳转页数
-                    //获取当前页
-                    let index = this.paginations.page_size * (page - 1);
-                    //获取总数
-                    let allData = this.paginations.page_size * page;
-
-                    let tablist = [];
-                    for (let i = index; i < allData; i++) {
-                        if (this.allTableData[i]) {
-                            tablist.push(this.allTableData[i])
+                        let tablist = [];
+                        for (let i = index; i < allData; i++) {
+                            if (_this.allTableData[i]) {
+                                tablist.push(_this.allTableData[i])
+                            }
+                            _this.LExamBank = tablist;
                         }
-                        this.LExamBank = tablist;
-                    }
+                    })
+                    
                 },
                 SearchinByTypeName() {
                     var _this = this;
