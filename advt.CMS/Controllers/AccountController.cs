@@ -23,13 +23,13 @@ namespace advt.Web.Controllers
         // GET: /Account/Login
         public ActionResult Login(string returnUrl)
         {
-            Manager.Login.ClearSession();
-            if (Manager.Login.ValidateUser)
-            {
-                alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
-            }
+            //Manager.Login.ClearSession();
+            //if (Manager.Login.ValidateUser)
+            //{
+            //    alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
+            //}
 
-            return View();
+            return RedirectToAction("MaintainExamType", "PEMain");
         }
 
         [HttpPost]
@@ -484,6 +484,12 @@ namespace advt.Web.Controllers
             cookie.Domain = cookieDomain;
             cookie.Value = FormsAuthentication.Encrypt(newTicket);
             System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
+        }
+        [MyAuthorize]
+        public ActionResult GetUser()
+        {
+            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            return Json(new { admin = username },JsonRequestBehavior.AllowGet);
         }
     }
 }
