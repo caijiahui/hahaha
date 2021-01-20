@@ -6,17 +6,30 @@
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 
 
-<div id="app">
-    <div>
+<div id="app" style="margin-left:20px">
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>考试科目</el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-steps :active="1" style="margin-bottom:20px">
+            <el-step title="考试类型"></el-step>
+            <el-step title="考试科目"></el-step>
+            <el-step title="题库上传"></el-step>
+        </el-steps>
         <el-button @@click="createSubject">新增</el-button>
+    </template>
+
+
+    <div style="margin-top:20px">
+
+
         <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
             <el-table-column label="考试类型" prop="TypeName" sortable width="180"></el-table-column>
             <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
 
             <el-table-column label="创建人" prop="CreateUser" sortable width="180"></el-table-column>
-
-            <img src="~/Images/logo.png" />
             <el-table-column label="创建时间"
                              width="120">
                 <template slot-scope="scope">
@@ -36,7 +49,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination  @@size-change="handleSizeChange"
+        <el-pagination @@size-change="handleSizeChange"
                        @@current-change="handleCurrentChange"
                        :current-page="paginations.page_index"
                        :page-sizes="paginations.page_sizes"
@@ -56,8 +69,11 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @@click="handleSave">确 定</el-button>
+                <template>
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave">确 定</el-button>
+                </template>
+
             </div>
         </el-dialog>
 
