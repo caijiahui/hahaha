@@ -23,13 +23,13 @@ namespace advt.Web.Controllers
         // GET: /Account/Login
         public ActionResult Login(string returnUrl)
         {
-            //Manager.Login.ClearSession();
-            //if (Manager.Login.ValidateUser)
-            //{
-            //    alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
-            //}
+            Manager.Login.ClearSession();
+            if (Manager.Login.ValidateUser)
+            {
+                alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
+            }
 
-            return RedirectToAction("MaintainExamType", "PEMain");
+            return View();
         }
 
         [HttpPost]
