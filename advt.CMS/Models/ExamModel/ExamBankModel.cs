@@ -17,12 +17,17 @@ namespace advt.CMS.Models.ExamModel
         public ExamBank VExamBank { get; set; }
         //public List<ExamType> LExamType { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public List<KeyValuePair<string, string>> LTopicType { get; set; }
         public string Result { get; set; }
         public ExamBankModel() : base()
         {
             LExamBank = new List<ExamBank>();
             LExamType = new List<KeyValuePair<string, string>>();
             VExamBank = new ExamBank();
+            LTopicType = new List<KeyValuePair<string, string>>();
+            LTopicType.Add(new KeyValuePair<string, string>("L1", "单选"));
+            LTopicType.Add(new KeyValuePair<string, string>("L2", "多选"));
+            LTopicType.Add(new KeyValuePair<string, string>("L3", "问答"));
         }
         public void UploadBank(string filepath)
         {
