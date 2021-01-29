@@ -36,6 +36,7 @@ namespace advt.Web.Controllers
         //[ValidateAntiForgeryToken]
         public ActionResult Login(Model.LoginModel model, string returnUrl)
         {
+
             Service.IProvider.IAuthorizationServices service= new Service.Provider.AuthorizationServices();
 
             if (ModelState.IsValid)
