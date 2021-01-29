@@ -1,0 +1,238 @@
+﻿@model advt.CMS.Models.ExamPageModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题页</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="wrap">
+            <div class="header">
+                <h1>前端开发G5技能考核</h1>
+            </div>
+            <div class="content">
+                <div class="pro-title">
+                    <div>{{nowItem}}.</div>
+                    <div>{{examList.proName}}</div>
+                </div>
+                <div class="pro-ansower">
+                    <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                        <div class="pro-ans-con">
+                            <el-form-item prop="selectItem">
+                                <el-radio-group v-if="examList.type=='L1'" v-model="examList.selectItem" prop="examtype">
+                                    <el-radio :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-radio>
+                                </el-radio-group>
+                                <el-checkbox-group v-if="examList.type=='L2'" v-model="examList.selectItem">
+                                    <el-checkbox :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-checkbox>
+                                </el-checkbox-group>
+                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="footer">
+                            <div class="footer-btn-box">
+                                <div>
+                                    <el-button class="pro-btn" @@click="preBtn()">上一题</el-button>
+                                </div>
+                                <div>
+                                    <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                </div>
+                            </div>
+                            <el-divider>{{nowItem}}/{{total}} 题</el-divider>
+                            <!-- <p>{{nowItem}}/{{total}} 题</p> -->
+                        </div>
+                    </el-form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- end #container -->
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <!-- Yoursite Scripts -->
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                nowyear: '',
+                isMobileTurn: false,
+                admin: 'Admin',
+                isCollapse: true,
+                total: [],      //一共多少题  后台获取
+                nowItem: [],     //当前的题目  后台获取
+                //examList: [],
+                examList: {},
+                ListBankView: {},
+                //examList: {
+
+                //    selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //    type: 0,      //0 单选题  1 多选题  2 问答题
+                //    proName: '在 HTML 页面中包含一个按钮控件 mybutton ，如果要实现点击该按钮时调用已定义的 JavaScript 函数 compute ，要编写的 HTML 代码是()',
+                //    ansower: 4,     //当前题目正确答案
+                //    ansowerList: ['<input name=”mybutton” type=”button” onBlur=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onFocus=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”function compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”compute()” value=”计算”>']
+                //},
+                rules: {
+                    selectItem: [
+                        { required: true, message: '请填写答案！', trigger: 'blur' }
+                    ]
+
+                }
+            },
+            mounted: function () {
+                var date = new Date();
+                this.nowyear = date.getFullYear();
+
+                if (this.isMobile()) {
+                    this.isMobileTurn = true
+                } else {
+                    this.isMobileTurn = false
+                }
+                this.getdata();
+                console.log(this.isMobileTurn)
+            },
+            watch: {
+                'examList.selectItem': function (newval) {
+                    console.log(newval, 232);
+                }
+
+
+            },
+            methods: {
+                isMobile: function () {
+                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                    return flag
+                },
+                submitForm: function (formName) {
+                    var _this = this;
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                var obj = {};
+                                obj.examList = _this.examList;
+                                obj.ListBankView = _this.ListBankView;
+                                axios.post('/Exampage/FinishTopic', {
+                                    model: obj
+                                }).then(function (res) {
+                                    if (res.data.examList.type == 1) {
+                                        _this.examList.selectItem = []
+                                    } else {
+                                        _this.examList.selectItem = ''
+                                    }
+                                });
+                                window.location.href = "./finish.html"
+                            } else {
+                                var obj = {};
+                                obj.examList = _this.examList;
+                                obj.nowItem = _this.nowItem;
+                                obj.total = _this.total;
+                                obj.ListBankView = _this.ListBankView;
+                                obj.PreNext = "Next";
+                                axios.post('/PEMain/NextTopic', {
+                                    model: obj
+                                }).then(function (res) {
+                                    console.log(res.data, 12);
+                                    _this.examList = res.data.examList;
+
+                                    _this.total = res.data.total;
+                                    _this.nowItem = res.data.nowItem;
+                                    _this.ListBankView = res.data.ListBank;
+                                    if (res.data.examList.selectItem == null) {
+                                        _this.examList.selectItem = []
+                                    }
+                                    //if (res.data.examList.type == 1) {
+                                    //    _this.examList.selectItem = []
+                                    //} else {
+                                    //    _this.examList.selectItem = ''
+                                    //}
+                                });
+                                //第二个按钮为下一题事件
+                                console.log('下一题!', '当前答案为：', _this.examList.selectItem);
+                            }
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                preBtn: function () {
+                    var _this = this;
+                    console.log(_this.examList);
+                    var objs = {};
+                    objs.examList = _this.examList;
+                    objs.nowItem = _this.nowItem;
+                    objs.total = _this.total;
+                    objs.ListBankView = _this.ListBankView;
+                    objs.PreNext = "Pre";
+                    axios.post('/PEMain/NextTopic', {
+                        model: objs
+                    }).then(function (res) {
+                        console.log(res.data.examList.selectItem, 234);
+                        console.log(res.data.ListBank, 4);
+                        _this.examList = res.data.examList;
+                        _this.total = res.data.total;
+                        _this.nowItem = res.data.nowItem;
+                        _this.ListBankView = res.data.ListBank;
+                        //if (res.data.examList.selectItem == null) {
+                        //    _this.examList.selectItem = []
+                        //}
+                        //if (res.data.examList.type == 1) {
+                        //    _this.examList.selectItem = []
+                        //} else {
+                        //    _this.examList.selectItem = ''
+                        //}
+                    });
+                    console.log('上一题')
+                },
+                abcChange: function (val) {
+                    if (val == 0) {
+                        return 'A'
+                    } else if (val == 1) {
+                        return 'B'
+                    } else if (val == 2) {
+                        return 'C'
+                    } else if (val == 3) {
+                        return 'D'
+                    } else if (val == 4) {
+                        return 'E'
+                    } else if (val == 5) {
+                        return 'F'
+                    }
+                },
+                getdata: function () {
+                    var _this = this;
+                    axios.post('/PEMain/Test').then(function (responese) {
+                        console.log(responese.data.examList, 23);
+                        _this.examList = responese.data.examList;
+                        if (_this.examList.selectItem == null) {
+                            _this.examList.selectItem = []
+                        }
+                        //if (_this.examList.type == 1) {
+                        //    _this.examList.selectItem = []
+                        //} else {
+                        //    _this.examList.selectItem = ''
+                        //}
+                        _this.total = responese.data.total;
+                        _this.nowItem = responese.data.nowItem;
+                        _this.ListBankView = responese.data.ListBankView
+                        console.log(responese.model);
+                    })
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>
+

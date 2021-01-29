@@ -17,6 +17,10 @@ namespace advt.Data
             return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
         }
 
+        public static List<Entity.ExamRuleTopicType> Get_All_ExamRuleTopicType_RuleId(int RuleId)
+        {
+            return Get_All_ExamRuleTopicType(new { RuleId=RuleId });
+        }
         public static List<Entity.ExamRuleTopicType> Get_All_ExamRuleTopicType()
         {
             return Get_All_ExamRuleTopicType(null);

@@ -17,6 +17,7 @@ using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.Util;
 using System.Data;
+using advt.CMS.Models;
 
 namespace advt.Web.Controllers
 {
@@ -410,6 +411,32 @@ namespace advt.Web.Controllers
             return Json(new { Result="成功" }, JsonRequestBehavior.AllowGet);
         }
 
-
+        [MyAuthorize]
+        public ActionResult ExamPage()
+        {
+            var model = new ExamPageModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult Test()
+        {
+            var model = new ExamPageModel();
+            model.GetListExam();
+            return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult NextTopic(ExamPageModel model)
+        {
+            model.GetExam();
+            return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult FinishTopic(ExamPageModel model)
+        {
+            model.GetExam();
+            return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

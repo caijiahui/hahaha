@@ -26,6 +26,10 @@ namespace advt.Data
         {
             return Get_All_ExamBank(new { ExamType = ExamType });
         }
+        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Rule(string TopicType,string TopicMajor,string TopicLevel)
+        {
+            return Get_All_ExamBank(new { TopicType=TopicType, TopicMajor=TopicMajor, TopicLevel= TopicLevel });
+        }
 
         public static Entity.ExamBank Get_ExamBank(object objparams)
         {
