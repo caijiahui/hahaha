@@ -1,4 +1,4 @@
-﻿@model advt.CMS.Models.ExamModel.ExamTypeModel
+﻿@model advt.CMS.Models.ExamPageModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -27,10 +27,10 @@
                     <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                         <div class="pro-ans-con">
                             <el-form-item prop="selectItem">
-                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem" prop="examtype">
+                                <el-radio-group v-if="examList.type=='L1'" v-model="examList.selectItem" prop="examtype">
                                     <el-radio :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-radio>
                                 </el-radio-group>
-                                <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
+                                <el-checkbox-group v-if="examList.type=='L2'" v-model="examList.selectItem">
                                     <el-checkbox :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-checkbox>
                                 </el-checkbox-group>
                                 <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
@@ -139,7 +139,7 @@
                                 obj.total = _this.total;
                                 obj.ListBankView = _this.ListBankView;
                                 obj.PreNext = "Next";
-                                axios.post('/Exampage/NextTopic', {
+                                axios.post('/PEMain/NextTopic', {
                                     model: obj
                                 }).then(function (res) {
                                     console.log(res.data, 12);
@@ -171,20 +171,22 @@
                     console.log(_this.examList);
                     var objs = {};
                     objs.examList = _this.examList;
-                    console.log("2");
                     objs.nowItem = _this.nowItem;
                     objs.total = _this.total;
                     objs.ListBankView = _this.ListBankView;
                     objs.PreNext = "Pre";
-                    axios.post('/Exampage/NextTopic', {
+                    axios.post('/PEMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
+                        console.log(res.data.examList.selectItem, 234);
+                        console.log(res.data.ListBank, 4);
                         _this.examList = res.data.examList;
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
-                        if (res.data.examList.selectItem == null) {
-                            _this.examList.selectItem = []
-                        }
+                        _this.ListBankView = res.data.ListBank;
+                        //if (res.data.examList.selectItem == null) {
+                        //    _this.examList.selectItem = []
+                        //}
                         //if (res.data.examList.type == 1) {
                         //    _this.examList.selectItem = []
                         //} else {
@@ -210,7 +212,7 @@
                 },
                 getdata: function () {
                     var _this = this;
-                    axios.post('/ExamPage/Test').then(function (responese) {
+                    axios.post('/PEMain/Test').then(function (responese) {
                         console.log(responese.data.examList, 23);
                         _this.examList = responese.data.examList;
                         if (_this.examList.selectItem == null) {
