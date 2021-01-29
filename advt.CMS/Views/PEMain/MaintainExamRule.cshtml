@@ -190,8 +190,8 @@
                 paginations: {
                     page_index: 1,
                     total: 0,
-                    page_size: 5,
-                    page_sizes: [5, 10, 15, 20],
+                    page_size: 10,
+                    page_sizes: [10, 15, 20],
                     layout: 'total, sizes, prev, pager, next, jumper'
                 },
                 allTableData: []
@@ -225,7 +225,7 @@
                     _this.paginations.total = _this.tableData.length; //数据的数量
                    
                     _this.paginations.page_index = 1; //默认显示第一页
-                    _this.paginations.page_size = 5; //每页显示多少数据
+                    _this.paginations.page_size = 10; //每页显示多少数据
 
                     //显示数据
                     _this.tableData = _this.tableData.filter((item, index) => {

@@ -43,7 +43,7 @@
 </head>
 <body>
 
-    <div  >
+    <div>
         <div class="boxWrap">
             <div style="display:flex;flex-direction:column;height:100vh">
                 <div id="headerid" v-cloak style="z-index:100">
@@ -64,8 +64,10 @@
                                         </span>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item disabled>hi,{{admin}}</el-dropdown-item>
-                                            <el-dropdown-item>个人中心</el-dropdown-item>
-                                            <el-dropdown-item divided>登出</el-dropdown-item>
+                                            @*<el-dropdown-item>个人中心</el-dropdown-item>*@                                            
+                                            <a href="@Url.Action("Login","Account")">
+                                                <el-dropdown-item divided>退出</el-dropdown-item>
+                                            </a>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </li>
@@ -141,19 +143,31 @@
                 nowyear: '',
                 isMobileTurn: false,
                 mobileMenuDrawer: false,
-                admin: 'Admin',
+                admin: '',
             },
             mounted: function () {
+                var _this = this;
                 var date = new Date();
-                this.nowyear = date.getFullYear();
+                _this.nowyear = date.getFullYear();
 
-                if (this.isMobile()) {
-                    this.isMobileTurn = true
+                if (_this.isMobile()) {
+                    _this.isMobileTurn = true
                 } else {
-                    this.isMobileTurn = false
+                    _this.isMobileTurn = false
                 }
+                _this.getuser();
             },
             methods: {
+                getuser() {
+                    var _this = this;
+                    axios.post('/Account/GetUser').then(res => {
+                        console.log('163');
+
+                        console.log(res);
+                        _this.admin = res.data.admin;
+                    })
+
+                },
                 isMobile() {
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
                     return flag
@@ -176,6 +190,7 @@
                 } else {
                     this.isMobileTurn = false
                 }
+
             },
              methods: {           
                  OpenExamType: function (ids) {

@@ -486,5 +486,11 @@ namespace advt.Web.Controllers
             cookie.Value = FormsAuthentication.Encrypt(newTicket);
             System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
         }
+        [MyAuthorize]
+        public ActionResult GetUser()
+        {
+            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            return Json(new { admin = username },JsonRequestBehavior.AllowGet);
+        }
     }
 }
