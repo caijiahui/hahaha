@@ -1,4 +1,4 @@
-﻿@model advt.CMS.Models.ExamPageModel
+﻿@model advt.CMS.Models.ExamFinishModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -95,68 +95,68 @@
                 grade: 70,      //答题分数
                 rightItem: 35,   //答对题数
                 examList: [      //题目列表
-                    {
-                        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '在 HTML 页面中包含一个按钮控件 mybutton ，如果要实现点击该按钮时调用已定义的 JavaScript 函数 compute ，要编写的 HTML 代码是()',
-                        ansower: 3,     //当前题目正确答案
-                        ansowerList: ['<input name=”mybutton” type=”button” onBlur=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onFocus=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”function compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”compute()” value=”计算”>'],
-                        grade: 2,      //当前题目分数
-                        isRight: true,    //答案是否正确
-                    }, {
-                        selectItem: [1, 2],   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 1,      //0 单选题  1 多选题  2 问答题
-                        proName: '下列关于比较Ajax与Flash的优缺点，相关描述正确的是？',
-                        ansower: [1, 2, 3],     //当前题目正确答案
-                        ansowerList: ['Ajax的优势在意在于开放性，易用性及易于开发', 'Flash的优势在于多媒体处理，可以更容易的调用浏览器以外的外部资源', 'Ajax最主要的批评就是它可能破坏浏览器的后退功能', 'flash 用户第一次使用的时候不需要等待太长时间'],
-                        grade: 2,      //当前题目分数
-                        isRight: false,    //答案是否正确
-                    }, {
-                        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '要运用css3动画，你需要运用什么规则',
-                        ansower: 1,     //当前题目正确答案
-                        ansowerList: ['animation', 'keyframes', 'flash', 'transition'],
-                        grade: 2,      //当前题目分数
-                        isRight: true,    //答案是否正确
-                    }, {
-                        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '关于HTML语义化，以下哪个说法是正确的',
-                        ansower: 3,     //当前题目正确答案
-                        ansowerList: ['语义化的HTML有利于机器的阅读，如PDA手持设备、搜索引擎爬虫；但不利于人的阅读', 'Table 属于过时的标签，遇到数据列表时，需尽量使用 div 来模拟表格', '语义化是HTML5带来的新概念，此前版本的HTML无法做到语义化', 'header、article、address都属于语义化明确的标签'],
-                        grade: 2,      //当前题目分数
-                        isRight: false,    //答案是否正确
-                    }, {
-                        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '以下运行结果:\
-                for(var i = 0; i < 10; i++) {\
-                    setTimeout(function() {\
-                        console.log(i);\
-                    }, 1000);\
-                }',
-                        ansower: 4,     //当前题目正确答案
-                        ansowerList: ['0--9', '10个10', '10个9', '无限循环'],
-                        grade: 2,      //当前题目分数
-                        isRight: true,    //答案是否正确
-                    }, {
-                        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '网站为某临时性的活动或者推广宣传某商品或服务而推出的特别页面，有很强的时效性，通常称之为',
-                        ansower: 1,     //当前题目正确答案
-                        ansowerList: ['引导页', '专题页', '临时页', '主题页'],
-                        grade: 2,      //当前题目分数
-                        isRight: true,    //答案是否正确
-                    }, {
-                        selectItem: 0,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                        type: 0,      //0 单选题  1 多选题  2 问答题
-                        proName: '通常我们需要获取某个信息时，都会通过几个缩写的关键字进行检索，那么，在开发中，如何使用Html5元素进行布局',
-                        ansower: 0,     //当前题目正确答案
-                        ansowerList: ['abbr', 'search', 'key', 'bdo'],
-                        grade: 2,      //当前题目分数
-                        isRight: true,    //答案是否正确
-                    },
+                //    {
+                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '在 HTML 页面中包含一个按钮控件 mybutton ，如果要实现点击该按钮时调用已定义的 JavaScript 函数 compute ，要编写的 HTML 代码是()',
+                //        ansower: 3,     //当前题目正确答案
+                //        ansowerList: ['<input name=”mybutton” type=”button” onBlur=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onFocus=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”function compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”compute()” value=”计算”>'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: true,    //答案是否正确
+                //    }, {
+                //        selectItem: [1, 2],   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 1,      //0 单选题  1 多选题  2 问答题
+                //        proName: '下列关于比较Ajax与Flash的优缺点，相关描述正确的是？',
+                //        ansower: [1, 2, 3],     //当前题目正确答案
+                //        ansowerList: ['Ajax的优势在意在于开放性，易用性及易于开发', 'Flash的优势在于多媒体处理，可以更容易的调用浏览器以外的外部资源', 'Ajax最主要的批评就是它可能破坏浏览器的后退功能', 'flash 用户第一次使用的时候不需要等待太长时间'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: false,    //答案是否正确
+                //    }, {
+                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '要运用css3动画，你需要运用什么规则',
+                //        ansower: 1,     //当前题目正确答案
+                //        ansowerList: ['animation', 'keyframes', 'flash', 'transition'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: true,    //答案是否正确
+                //    }, {
+                //        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '关于HTML语义化，以下哪个说法是正确的',
+                //        ansower: 3,     //当前题目正确答案
+                //        ansowerList: ['语义化的HTML有利于机器的阅读，如PDA手持设备、搜索引擎爬虫；但不利于人的阅读', 'Table 属于过时的标签，遇到数据列表时，需尽量使用 div 来模拟表格', '语义化是HTML5带来的新概念，此前版本的HTML无法做到语义化', 'header、article、address都属于语义化明确的标签'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: false,    //答案是否正确
+                //    }, {
+                //        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '以下运行结果:\
+                //for(var i = 0; i < 10; i++) {\
+                //    setTimeout(function() {\
+                //        console.log(i);\
+                //    }, 1000);\
+                //}',
+                //        ansower: 4,     //当前题目正确答案
+                //        ansowerList: ['0--9', '10个10', '10个9', '无限循环'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: true,    //答案是否正确
+                //    }, {
+                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '网站为某临时性的活动或者推广宣传某商品或服务而推出的特别页面，有很强的时效性，通常称之为',
+                //        ansower: 1,     //当前题目正确答案
+                //        ansowerList: ['引导页', '专题页', '临时页', '主题页'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: true,    //答案是否正确
+                //    }, {
+                //        selectItem: 0,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+                //        type: 0,      //0 单选题  1 多选题  2 问答题
+                //        proName: '通常我们需要获取某个信息时，都会通过几个缩写的关键字进行检索，那么，在开发中，如何使用Html5元素进行布局',
+                //        ansower: 0,     //当前题目正确答案
+                //        ansowerList: ['abbr', 'search', 'key', 'bdo'],
+                //        grade: 2,      //当前题目分数
+                //        isRight: true,    //答案是否正确
+                //    },
                 ]
             },
             mounted: function () {

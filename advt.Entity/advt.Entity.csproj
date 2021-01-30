@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="advt_Attachment.cs" />
     <Compile Include="ExamBank.cs" />
+    <Compile Include="ExamRecord.cs" />
     <Compile Include="ExamRuleTopicType.cs" />
     <Compile Include="ExamRule.cs" />
     <Compile Include="ExamScore.cs" />

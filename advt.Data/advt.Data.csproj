@@ -64,6 +64,7 @@
     <Compile Include="DataProvider\ExamRuleTopicType.cs" />
     <Compile Include="DataProvider\ExamRule.cs" />
     <Compile Include="DataProvider\ExamScore.cs" />
+    <Compile Include="DataProvider\ExamRecord.cs" />
     <Compile Include="DataProvider\ExamSubject.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
     <Compile Include="DataProvider\TestReport.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="IDataProvider\ExamRuleTopicType.cs" />
     <Compile Include="IDataProvider\ExamRule.cs" />
     <Compile Include="IDataProvider\ExamScore.cs" />
+    <Compile Include="IDataProvider\ExamRecord.cs" />
     <Compile Include="IDataProvider\ExamSubject.cs" />
     <Compile Include="IDataProvider\ExamType.cs" />
     <Compile Include="IDataProvider\TestReport.cs" />
