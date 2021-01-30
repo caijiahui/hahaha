@@ -68,6 +68,7 @@
     <Compile Include="DataProvider\ExamBank.cs" />
     <Compile Include="DataProvider\ExamRuleTopicType.cs" />
     <Compile Include="DataProvider\ExamRule.cs" />
+    <Compile Include="DataProvider\ExamScore.cs" />
     <Compile Include="DataProvider\ExamSubject.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
     <Compile Include="DataProvider\TestReport.cs" />
