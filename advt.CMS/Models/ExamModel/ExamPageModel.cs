@@ -19,10 +19,15 @@ namespace advt.CMS.Models
         public int nowItem { get; set; }
         public int total { get; set; }
         public string PreNext { get; set; }
+        public List<ExamView> TestD { get; set; }
+        public List<LAnsower> LAnsower { get; set; }
+        public ExamScore VExamScore { get; set; }
         public ExamPageModel() : base()
         {
             examList = new ExamView();
             ListBankView = new List<ExamView>();
+            TestD = new List<ExamView>();
+            LAnsower = new List<LAnsower>();
         }
         public void GetListExam()
         {
@@ -183,16 +188,14 @@ namespace advt.CMS.Models
         }
         public List<ExamView> TestData()
         {
-            var TestD = new List<ExamView>();
-            var LAnsower = new List<LAnsower>();
             //添加单选
-            string[] selectItem = { "A"}; 
+            string[] selectItem = { "A" };
             LAnsower.Add(new LAnsower {
-               
-                TopicType="0",//单选题
-                ansower= "10>=a>=0",
-                ansowerpic="",
-                ansowerflag="A"
+
+                TopicType = "0",//单选题
+                ansower = "10>=a>=0",
+                ansowerpic = "",
+                ansowerflag = "A"
             });
             LAnsower.Add(new LAnsower
             {
@@ -225,16 +228,17 @@ namespace advt.CMS.Models
             TestD.Add(new ExamView {
                 ToTalScore = 100,
                 type = "0",
-                proName= "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",
-                ansower="",
-                ansowerList= LAnsower,
-                selectItem=selectItem,
-                TopicScore=5,
+                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",
+                ansower = "",
+                ansowerList = LAnsower,
+                selectItem = selectItem,
+                TopicScore = 5,
+                corent="A"
 
             });
             //添加多选
             LAnsower = new List<LAnsower>();
-            string[] selectItem2 = { "A","B" };
+            string[] selectItem2 = { "A", "B" };
             LAnsower.Add(new LAnsower
             {
                 TopicType = "1",//多选题
@@ -279,10 +283,11 @@ namespace advt.CMS.Models
                 ansowerList = LAnsower,
                 selectItem = selectItem,
                 TopicScore = 2,
+                corent="A,B"
             });
             //添加填空
             LAnsower = new List<LAnsower>();
-            string ans = "瞎填填";           
+            string ans = "瞎填填";
             TestD.Add(new ExamView
             {
                 ToTalScore = 100,
@@ -292,8 +297,53 @@ namespace advt.CMS.Models
                 ansowerList = LAnsower,
                 selectItem = selectItem,
                 TopicScore = 3,
+                
             });
             return TestD;
+        }
+
+        public void InsertScoreData(ExamPageModel model)
+        {
+            if (model.TestD.Count() > 0)
+            {
+                ExamScore score = new ExamScore();
+                int sd = 0;
+                decimal sc = 0;
+                foreach (var item in model.TestD)
+                {
+                    score.IsTest = true;
+                    score.ExamType = "ddd";
+                    score.CreateUser = "yin.chen";
+                    score.CreateDate = DateTime.Now;
+                
+                    //答对题数
+                    if (item.selectItem.Count() > 0)
+                    {                       
+                        foreach (var items in item.selectItem)
+                        {
+                            if (item.corent == items)
+                            {
+                                sd++;
+                                sc += item.TopicScore;
+                            }
+
+                        }
+                    }
+                 
+                    //总分
+                    score.TotalScore = item.TopicScore;
+
+                    score.CorrectNum = Convert.ToInt32(sd);
+                    //答对分数
+                    score.CorrectScore = sc;
+                    Data.ExamScore.Insert_ExamScore(score, null, new string[] { "ID" });
+
+                }
+            }
+        }
+        public void InsertRecoredData(ExamPageModel model)
+        {
+            
         }
     }
     public class ExamView
@@ -305,8 +355,9 @@ namespace advt.CMS.Models
         public string proName { get; set; }//题目内容
         public string ansower { get; set; }//回答答案
         public List<LAnsower> ansowerList { get; set; }//题目选项
-        public double TopicScore { get; set; }
+        public decimal TopicScore { get; set; }
         public int index { get; set; }
+        public string corent { get; set; }
 
         //selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
         //            type: 0,      //0 单选题  1 多选题  2 问答题

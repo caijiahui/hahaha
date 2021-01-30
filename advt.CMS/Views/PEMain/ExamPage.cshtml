@@ -130,7 +130,10 @@
                                     } else {
                                         _this.examList.selectItem = ''
                                     }
-                                });
+                                    });
+                                axios.post('/PEMain/InsertScore').then(function (responese) {
+                                   
+                                })
                                 window.location.href = "./ExamFinish.cshtml";
                             } else {
                                 var obj = {};

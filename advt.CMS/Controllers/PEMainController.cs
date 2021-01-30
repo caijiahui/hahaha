@@ -438,5 +438,16 @@ namespace advt.Web.Controllers
             model.GetExam();
             return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
         }
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult InsertScore()
+        {
+            var model = new ExamPageModel();
+            model.TestData();
+            model.InsertScoreData(model);
+            model.InsertRecoredData(model);
+            return Json(new { examList = model.examList}, JsonRequestBehavior.AllowGet);
+        }
     }
 }
