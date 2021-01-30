@@ -44,7 +44,7 @@ namespace advt.CMS.Models
                             {
                                 ID = items.ID,
                                 TopicType = items.TopicType,
-                                TopicTitle = items.TopicType,
+                                TopicTitle = items.TopicTitle,
                                 OptionA = items.OptionA,
                                 OptionAPicNum = items.OptionAPicNum,
                                 OptionB = items.OptionB,
@@ -57,7 +57,8 @@ namespace advt.CMS.Models
                                 OptionF = items.OptionF,
                                 OptionEPicNum = items.OptionEPicNum,
                                 OptionFPicNum = items.OptionFPicNum,
-                                Score = Convert.ToDecimal(item.TopicScore)
+                                Score = Convert.ToDecimal(item.TopicScore),
+                                TotalScore=Convert.ToDecimal(item.TopicScore)
                             });
                         }
                     }
@@ -181,18 +182,24 @@ namespace advt.CMS.Models
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
 
         }
-        public List<ExamView> TestData()
+        public ExamUserInfo TestData()
         {
-            var TestD = new List<ExamView>();
+            var TestD = new ExamUserInfo();
+            TestD.LExamViews = new List<ExamView>();
             var LAnsower = new List<LAnsower>();
-            //添加单选
-            string[] selectItem = { "A"}; 
-            LAnsower.Add(new LAnsower {
-               
-                TopicType="0",//单选题
-                ansower= "10>=a>=0",
-                ansowerpic="",
-                ansowerflag="A"
+            TestD.IsTest = false;
+            TestD.ExamType = "技能等级考试";
+            TestD.TotalScore = 100;//总分
+            TestD.UserName = "Jiahui";
+            //单选
+            string[] selectItem = { "A" };
+            LAnsower.Add(new LAnsower
+            {
+
+                TopicType = "0",//单选题
+                ansower = "10>=a>=0",
+                ansowerpic = "",
+                ansowerflag = "A"
             });
             LAnsower.Add(new LAnsower
             {
@@ -222,21 +229,21 @@ namespace advt.CMS.Models
                 ansowerpic = "",
                 ansowerflag = "D"
             });
-            TestD.Add(new ExamView {
-                ToTalScore = 100,
-                type = "0",
-                proName= "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",
-                ansower="",
-                ansowerList= LAnsower,
-                selectItem=selectItem,
-                TopicScore=5,
-
+            TestD.LExamViews.Add(new ExamView {
+                TopicScore = 5,
+                RightKey = "B",//正确答案
+                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+                type = "0",//题目类型
+                selectItem = selectItem,//自己选择题选择的内容
+                 ansower="",//填空题自己填的内容
+                  ansowerList= LAnsower//题目选项信息
             });
-            //添加多选
+            //多选题
+           selectItem =new string[] { "A","C" };
             LAnsower = new List<LAnsower>();
-            string[] selectItem2 = { "A","B" };
             LAnsower.Add(new LAnsower
             {
+
                 TopicType = "1",//多选题
                 ansower = "10>=a>=0",
                 ansowerpic = "",
@@ -270,43 +277,46 @@ namespace advt.CMS.Models
                 ansowerpic = "",
                 ansowerflag = "D"
             });
-            TestD.Add(new ExamView
+            TestD.LExamViews.Add(new ExamView
             {
-                ToTalScore = 100,
-                type = "1",
-                proName = "假设2=1，是否正确",
-                ansower = "",
-                ansowerList = LAnsower,
-                selectItem = selectItem,
-                TopicScore = 2,
+                TopicScore = 5,
+                RightKey = "C,D",//正确答案
+                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+                type = "1",//题目类型
+                selectItem = selectItem,//自己选择题选择的内容
+                ansower = "",//填空题自己填的内容
+                ansowerList = LAnsower//题目选项信息
             });
-            //添加填空
-            LAnsower = new List<LAnsower>();
-            string ans = "瞎填填";           
-            TestD.Add(new ExamView
+            //填空题
+            var ans = "瞎填";
+            TestD.LExamViews.Add(new ExamView
             {
-                ToTalScore = 100,
-                type = "1",
-                proName = "填空题请随意发挥",
-                ansower = ans,
-                ansowerList = LAnsower,
-                selectItem = selectItem,
-                TopicScore = 3,
+                TopicScore = 5,
+                RightKey = "C,D",//正确答案
+                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+                type = "2",//题目类型
+                selectItem = selectItem,//自己选择题选择的内容
+                ansower = ans,//填空题自己填的内容
+                ansowerList = LAnsower//题目选项信息
             });
             return TestD;
         }
     }
+    //第二层
     public class ExamView
     {
         public string id { get; set; }
-        public decimal ToTalScore { get; set; }//总分
-        public string[] selectItem { get; set; } //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-        public string type { get; set; }//0 单选题  1 多选题  2 问答题
-        public string proName { get; set; }//题目内容
-        public string ansower { get; set; }//回答答案
+        public string[] selectItem { get; set; } //选择题自己选的用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
+        public string type { get; set; }//0 单选题  1 多选题  2 问答题 题目类型
+        public string proName { get; set; }//题目名称
+        public string ansower { get; set; }//填空题自己写的回答答案
         public List<LAnsower> ansowerList { get; set; }//题目选项
-        public double TopicScore { get; set; }
+        public string RightKey { get; set; }//正确答案
+        public decimal TopicScore { get; set; }//单题分数
         public int index { get; set; }
+        //public string ExamType { get; set; }
+
+        //public bool IsTest { get; set; }
 
         //selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
         //            type: 0,      //0 单选题  1 多选题  2 问答题
@@ -325,7 +335,7 @@ namespace advt.CMS.Models
     {
         public int ID { get; set; }
 
-
+        public decimal TotalScore {get;set;}
         public string TopicType { get; set; }//问答
 
         public string TopicTitle { get; set; }
@@ -360,5 +370,13 @@ namespace advt.CMS.Models
 
         public string OptionFPicNum { get; set; }
         public decimal Score { get; set; }
+    }
+    public class ExamUserInfo
+    {
+        public string ExamType { get; set; }//考试科目
+        public bool IsTest { get; set; }//是否测试
+        public decimal TotalScore { get; set; }//总分
+        public string UserName { get; set; }//考试人
+        public List<ExamView> LExamViews { get; set; }//题目选项内容
     }
 }
