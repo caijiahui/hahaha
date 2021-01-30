@@ -65,15 +65,15 @@ namespace advt.CMS.Models.ExamModel
                     {
                         if (item.TopicType == "单选")
                         {
-                            type.TopicType = "L1";
+                            type.TopicType = "0";
                         }
                         else if (item.TopicType == "问答")
                         {
-                            type.TopicType = "L2";
+                            type.TopicType = "1";
                         }
                         else if (item.TopicType == "多选")
                         {
-                            type.TopicType = "L3";
+                            type.TopicType = "2";
                         }
                         var ee = Data.ExamRuleTopicType.Get_ExamRuleInfo(item.TopicLevel, item.TopicMajor, type.TopicType, id);
                         type.TopicLevel = item.TopicLevel;
@@ -138,15 +138,15 @@ namespace advt.CMS.Models.ExamModel
                     foreach (var item in RuleTopic)
                     {
                         var type = "";
-                        if (item.TopicType == "L1")
+                        if (item.TopicType == "0")
                         {
                             type = "单选";
                         }
-                        else if (item.TopicType == "L2")
+                        else if (item.TopicType == "1")
                         {
                             type = "问答";
                         }
-                        else if (item.TopicType == "L3")
+                        else if (item.TopicType == "2")
                         {
                             type = "多选";
                         }
