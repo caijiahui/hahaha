@@ -27,13 +27,13 @@
                     <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                         <div class="pro-ans-con">
                             <el-form-item prop="selectItem">
-                                <el-radio-group v-if="examList.type=='L1'" v-model="examList.selectItem" prop="examtype">
+                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem" prop="examtype">
                                     <el-radio :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-radio>
                                 </el-radio-group>
-                                <el-checkbox-group v-if="examList.type=='L2'" v-model="examList.selectItem">
+                                <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
                                     <el-checkbox :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-checkbox>
                                 </el-checkbox-group>
-                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
+                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.ansower" v-if="examList.type==2"></el-input>
                             </el-form-item>
                         </div>
                         <div class="footer">
@@ -84,9 +84,9 @@
                 //    ansowerList: ['<input name=”mybutton” type=”button” onBlur=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onFocus=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”function compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”compute()” value=”计算”>']
                 //},
                 rules: {
-                    selectItem: [
-                        { required: true, message: '请填写答案！', trigger: 'blur' }
-                    ]
+                    //selectItem: [
+                    //    { required: true, message: '请填写答案！', trigger: 'blur' }
+                    //]
 
                 }
             },
@@ -151,6 +151,9 @@
                                     if (res.data.examList.selectItem == null) {
                                         _this.examList.selectItem = []
                                     }
+                                    if (res.data.examList.type == 0) {
+                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                    } 
                                     //if (res.data.examList.type == 1) {
                                     //    _this.examList.selectItem = []
                                     //} else {
@@ -184,6 +187,9 @@
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
                         _this.ListBankView = res.data.ListBank;
+                        if (res.data.examList.type == 0) {
+                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                        } 
                         //if (res.data.examList.selectItem == null) {
                         //    _this.examList.selectItem = []
                         //}
