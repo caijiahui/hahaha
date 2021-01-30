@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="infrastructure\IsAdminAttribute.cs" />
     <Compile Include="infrastructure\Pagination.cs" />
+    <Compile Include="Models\ExamModel\ExamFinishModel.cs" />
     <Compile Include="Models\ExamModel\ExamPageModel.cs" />
     <Compile Include="Models\ExamModel\ExamRuleModel.cs" />
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
@@ -422,6 +423,7 @@
     <Content Include="Views\PEMain\MaintainExamRule.cshtml" />
     <Content Include="Views\PEMain\MaintainExamBank.cshtml" />
     <Content Include="Views\PEMain\ExamPage.cshtml" />
+    <Content Include="Views\PEMain\ExamFinish.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
