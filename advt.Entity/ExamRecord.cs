@@ -45,6 +45,12 @@ namespace advt.Entity
         public DateTime? CreateDate { get; set; }
 
         public string CreateUser { get; set; }
+        public decimal TopicNum { get; set; }
+        //正确答案
+        public string  CorrectAnsower { get; set; }
+        //选择答案
+        public string WriteAnsower { get; set; }
+        public string Type { get; set; }
         #endregion
     }
 }
