@@ -16,6 +16,7 @@ namespace advt.CMS.Models
         public ExamRule Current { get; set; }
         public ExamView examList { get; set; }
         public List<ExamView> ListBankView { get; set; }
+        public ExamUserInfo VExamUserInfo { get; set; }
         public int nowItem { get; set; }
         public int total { get; set; }
         public string PreNext { get; set; }
@@ -33,15 +34,27 @@ namespace advt.CMS.Models
                 var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
             }
+            VExamUserInfo = new ExamUserInfo();
         }
+
         public void GetListExam()
         {
             try
             {
+               
                 var ListBanks = new List<ExamBankView>();
                 var Rule = Data.ExamRule.Get_ExamRule(26);
                 if (Rule != null)
                 {
+                    VExamUserInfo.ExamType = Rule.TypeName;//考试名称
+                    VExamUserInfo.TotalScore = Rule.TotalScore;//总分
+                    VExamUserInfo.UserName = "Q-19568";//工号
+                    VExamUserInfo.IsTest = true;//是否模拟
+                    VExamUserInfo.IsRead = Rule.IsRead;//是否审批
+                    VExamUserInfo.TotalTime = Rule.TotalTime;
+                    VExamUserInfo.StartDesc = Rule.StartDeac;
+                    VExamUserInfo.EndDesc = Rule.EndDesc;
+                    VExamUserInfo.PassScore = Rule.PassScore;
                     var topicnum = Data.ExamRuleTopicType.Get_All_ExamRuleTopicType_RuleId(Rule.ID);
                     foreach (var item in topicnum)
                     {
@@ -50,6 +63,7 @@ namespace advt.CMS.Models
                         var bank = banks.OrderBy(y => Guid.NewGuid()).Take(TopicNum);
                         foreach (var items in bank)
                         {
+                            var right = items.RightKey.Split(',').OrderBy(x => x).ToArray();
                             ListBanks.Add(new ExamBankView
                             {
                                 ID = items.ID,
@@ -61,87 +75,94 @@ namespace advt.CMS.Models
                                 OptionBPicNum = items.OptionBPicNum,
                                 OptionC = items.OptionC,
                                 OptionCPicNum = items.OptionCPicNum,
-                                OptionD = items.OptionDPicNum,
+                                OptionD = items.OptionD,
                                 OptionDPicNum = items.OptionDPicNum,
                                 OptionE = items.OptionEPicNum,
                                 OptionF = items.OptionF,
                                 OptionEPicNum = items.OptionEPicNum,
                                 OptionFPicNum = items.OptionFPicNum,
-                                Score = Convert.ToDecimal(item.TopicScore),
-                                TotalScore = Convert.ToDecimal(item.TopicScore)
+                                Score = Convert.ToInt32(item.TopicScore),
+                                TotalScore = Convert.ToDecimal(item.TopicScore),
+                                RightKey = right,
+                                Remark=items.Remark
                             });
                         }
                     }
-                }
-                ListBanks = ListBanks.OrderBy(y => Guid.NewGuid()).ToList();
-                total = ListBanks.Count();
-                nowItem = 1;
-                var index = 1;
-                var ans = string.Empty;
-                foreach (var item in ListBanks)
-                {
-                    List<LAnsower> answ = new List<LAnsower>();
-                    if (!string.IsNullOrEmpty(item.OptionA))
+                    ListBanks = ListBanks.OrderBy(y => Guid.NewGuid()).ToList();
+                    total = ListBanks.Count();
+                    nowItem = 1;
+                    var index = 1;
+                    //找到符合要求的题目
+                    foreach (var item in ListBanks)
                     {
-                        answ.Add(new LAnsower
+                        List<LAnsower> answ = new List<LAnsower>();
+                        if (!string.IsNullOrEmpty(item.OptionA))
                         {
-                            ansower = item.OptionA,
-                            ansowerpic = item.OptionAPicNum,
-                            ansowerflag = "A",
-                        });
-                    }
-                    if (!string.IsNullOrEmpty(item.OptionB))
-                    {
-                        answ.Add(new LAnsower
+                            answ.Add(new LAnsower
+                            {
+                                ansower = item.OptionA,
+                                ansowerpic = item.OptionAPicNum,
+                                ansowerflag = "A",
+                            });
+                        }
+                        if (!string.IsNullOrEmpty(item.OptionB))
                         {
-                            ansower = item.OptionB,
-                            ansowerpic = item.OptionBPicNum,
-                            ansowerflag = "B",
-                        });
-                    }
-                    if (!string.IsNullOrEmpty(item.OptionC))
-                    {
-                        answ.Add(new LAnsower
+                            answ.Add(new LAnsower
+                            {
+                                ansower = item.OptionB,
+                                ansowerpic = item.OptionBPicNum,
+                                ansowerflag = "B",
+                            });
+                        }
+                        if (!string.IsNullOrEmpty(item.OptionC))
                         {
-                            ansower = item.OptionC,
-                            ansowerpic = item.OptionCPicNum,
-                            ansowerflag = "C",
-                        });
-                    }
-                    if (!string.IsNullOrEmpty(item.OptionD))
-                    {
-                        answ.Add(new LAnsower
+                            answ.Add(new LAnsower
+                            {
+                                ansower = item.OptionC,
+                                ansowerpic = item.OptionCPicNum,
+                                ansowerflag = "C",
+                            });
+                        }
+                        if (!string.IsNullOrEmpty(item.OptionD))
                         {
-                            ansower = item.OptionD,
-                            ansowerpic = item.OptionDPicNum,
-                            ansowerflag = "D",
-                        });
-                    }
-                    if (!string.IsNullOrEmpty(item.OptionE))
-                    {
-                        answ.Add(new LAnsower
+                            answ.Add(new LAnsower
+                            {
+                                ansower = item.OptionD,
+                                ansowerpic = item.OptionDPicNum,
+                                ansowerflag = "D",
+                            });
+                        }
+                        if (!string.IsNullOrEmpty(item.OptionE))
                         {
-                            ansower = item.OptionE,
-                            ansowerpic = item.OptionEPicNum,
-                            ansowerflag = "E",
-                        });
-                    }
-                    ListBankView.Add(new ExamView
-                    {
-                        id = item.ID.ToString(),
-                        type = item.TopicType,
-                        proName = item.TopicTitle,
-                        ansowerList = answ,
-                        index = index,
-                        ansower = ans
+                            answ.Add(new LAnsower
+                            {
+                                ansower = item.OptionE,
+                                ansowerpic = item.OptionEPicNum,
+                                ansowerflag = "E",
+                            });
+                        }
+                        ListBankView.Add(new ExamView
+                        {
+                            id = item.ID.ToString(),
+                            type = item.TopicType,//题目类型
+                            proName = item.TopicTitle,//题目标题
+                            ansowerList = answ,//选项内容List
+                            index = index,//下标
+                            RightKey = item.RightKey,//正确答案
+                            Remark = item.Remark,//答案解析
+                            TopicScore= item.Score//单题分数
 
-                    });
-                    index++;
+                        });
+                        index++;
+                    }
+                    if (ListBankView.Count() != 0)
+                    {
+                        examList = ListBankView.OrderBy(x => x.index).FirstOrDefault();
+                    }
+                    VExamUserInfo.LExamViews = new List<ExamView>();
+                    VExamUserInfo.LExamViews.AddRange(ListBankView);
                 }
-                if (ListBankView.Count() != 0)
-                {
-                    examList = ListBankView.OrderBy(x => x.index).FirstOrDefault();
-                }
+               
 
             }
             catch (Exception ex)
@@ -159,7 +180,8 @@ namespace advt.CMS.Models
                 if (item.index == nowItem)
                 {
                     item.selectItem = examList.selectItem;
-                    item.ansower = examList.ansower;
+                    //item.ansower = examList.ansower;
+                    item.LselectItem = examList.LselectItem;
                 }
             }
             if (PreNext == "Pre")
@@ -171,6 +193,7 @@ namespace advt.CMS.Models
                 nowItem = nowItem + 1;
             }
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
+            VExamUserInfo.LExamViews = ListBankView;
 
         }
         public void InsertResult()
@@ -246,7 +269,6 @@ namespace advt.CMS.Models
                 proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
                 type = "0",//题目类型
                 selectItem = selectItem,//自己选择题选择的内容
-                ansower = "",//填空题自己填的内容
                 ansowerList = LAnsower//题目选项信息
             });
             //多选题
@@ -295,7 +317,6 @@ namespace advt.CMS.Models
                 proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
                 type = "1",//题目类型
                 selectItem = selectItem,//自己选择题选择的内容
-                ansower = "",//填空题自己填的内容
                 ansowerList = LAnsower//题目选项信息
             });
             //填空题
@@ -307,7 +328,6 @@ namespace advt.CMS.Models
                 proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
                 type = "2",//题目类型
                 selectItem = selectItem,//自己选择题选择的内容
-                ansower = ans,//填空题自己填的内容
                 ansowerList = LAnsower//题目选项信息
             });
             return TestD;
@@ -418,11 +438,12 @@ namespace advt.CMS.Models
         public string[] selectItem { get; set; } //选择题自己选的用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
         public string type { get; set; }//0 单选题  1 多选题  2 问答题 题目类型
         public string proName { get; set; }//题目名称
-        public string ansower { get; set; }//填空题自己写的回答答案
         public List<LAnsower> ansowerList { get; set; }//题目选项
         public string[] RightKey { get; set; }//正确答案
         public int TopicScore { get; set; }//单题分数
         public int index { get; set; }
+        public string Remark { get; set; }
+        public string[] LselectItem { get; set; }
         //public string ExamType { get; set; }
 
         //public bool IsTest { get; set; }
@@ -451,7 +472,7 @@ namespace advt.CMS.Models
 
         public string TopicTitlePicNum { get; set; }
 
-        public string RightKey { get; set; }
+        public string[] RightKey { get; set; }
 
         public string Remark { get; set; }
 
@@ -478,14 +499,20 @@ namespace advt.CMS.Models
         public string OptionF { get; set; }
 
         public string OptionFPicNum { get; set; }
-        public decimal Score { get; set; }
+        public int Score { get; set; }
+
     }
     public class ExamUserInfo
     {
         public string ExamType { get; set; }//考试科目
         public bool IsTest { get; set; }//是否测试
+        public bool IsRead { get; set; }//是否人工审批
         public decimal TotalScore { get; set; }//总分
         public string UserName { get; set; }//考试人
+        public string StartDesc { get; set; }//开头
+        public string EndDesc { get; set; }
+        public decimal TotalTime { get; set; }
         public List<ExamView> LExamViews { get; set; }//题目选项内容
+        public decimal PassScore { get; set; }
     }
 }

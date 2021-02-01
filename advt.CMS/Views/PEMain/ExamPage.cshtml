@@ -16,7 +16,16 @@
     <div id="app" v-cloak>
         <div class="wrap">
             <div class="header">
-                <h1>前端开发G5技能考核</h1>
+                <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
+                <div class="demo-basic--circle">
+                    <i class="el-icon-user"></i>   {{VExamUserInfo.UserName}}
+                    {{VExamUserInfo.StartDesc}}
+                    <p>{{minute}}:{{second}}</p>
+                </div>
+                
+            </div>
+            <div>
+
             </div>
             <div class="content">
                 <div class="pro-title">
@@ -27,13 +36,21 @@
                     <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                         <div class="pro-ans-con">
                             <el-form-item prop="selectItem">
-                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem" prop="examtype">
-                                    <el-radio :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-radio>
+                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem" >
+                                    <el-radio :label="index" v-for="(item,index) in examList.ansowerList">
+                                        {{abcChange(index)}}、{{item.ansower}}<br />
+                                        <img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic+'.png'" width="100" height="100"/>
+                                    </el-radio>
+
                                 </el-radio-group>
                                 <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
-                                    <el-checkbox :label="index" v-for="(item,index) in examList.ansowerList">{{abcChange(index)}}、{{item.ansower}}</el-checkbox>
+                                    <el-checkbox :label="index.toString()" v-for="(item,index) in examList.ansowerList">
+                                        {{abcChange(index)}}、{{item.ansower}}<br />
+                                        <el-avatar v-if="item.ansowerpic!=null" shape="square" :size="100" :fit="fill" :src="'/Attachment/BankPic/'+item.ansowerpic+'.png'" width="100" height="100"></el-avatar>
+                                        <img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic+'.png'" :size="50" />
+                                    </el-checkbox>
                                 </el-checkbox-group>
-                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.ansower" v-if="examList.type==2"></el-input>
+                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
                             </el-form-item>
                         </div>
                         <div class="footer">
@@ -75,6 +92,9 @@
                 //examList: [],
                 examList: {},
                 ListBankView: {},
+                VExamUserInfo: {},
+                minutes: [],
+                seconds: 0,
                 //examList: {
 
                 //    selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
@@ -100,16 +120,53 @@
                     this.isMobileTurn = false
                 }
                 this.getdata();
+                this.add();
                 console.log(this.isMobileTurn)
             },
             watch: {
                 'examList.selectItem': function (newval) {
                     console.log(newval, 232);
+                },
+                second: {
+                    handler(newVal) {
+                        this.num(newVal)
+                    }
+                },
+                minute: {
+                    handler(newVal) {
+                        this.num(newVal)
+                    }
+                }
+            },
+            computed: {
+                second: function () {
+                    return this.num(this.seconds)
+                },
+                minute: function () {
+                    return this.num(this.minutes)
                 }
 
 
             },
             methods: {
+                num: function (n) {
+                    return n < 10 ? '0' + n : '' + n
+                },
+                add() {
+                    var _this = this
+                    var time = window.setInterval(function () {
+                        if (_this.seconds === 0 && _this.minutes !== 0) {
+                            _this.seconds = 59
+                            _this.minutes -= 1
+                        } else if (_this.minutes === 0 && _this.seconds === 0) {
+                            _this.seconds = 0
+                            window.clearInterval(time)
+
+                        } else {
+                            _this.seconds -= 1
+                        }
+                    }, 1000)
+                },
                 isMobile: function () {
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
                     return flag
@@ -118,8 +175,58 @@
                     var _this = this;
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
+                            //判断是否是模拟
+                            _this.VExamUserInfo.IsTest = false;
+                            if (_this.VExamUserInfo.IsTest) {
+                                _this.examList.LselectItem = [];
+                                if (_this.examList.type == 1) {
+                                    for (var i = 0; i < _this.examList.selectItem.length; i++) {
+                                        if (_this.examList.selectItem[i] == '0') {
+                                            _this.examList.LselectItem.push('A')
+                                        } else if (_this.examList.selectItem[i] == '1') {
+                                            _this.examList.LselectItem.push('B')
+                                        } else if (_this.examList.selectItem[i] == '2') {
+                                            _this.examList.LselectItem.push('C')
+                                        } else if (_this.examList.selectItem[i] == '3') {
+                                            _this.examList.LselectItem.push('D')
+                                        } else if (_this.examList.selectItem[i] == '4') {
+                                            _this.examList.LselectItem.push('E')
+                                        } else if (_this.examList.selectItem[i] == '5') {
+                                            _this.examList.LselectItem.push('F')
+                                        }
+                                    }
+                                }
+                                if (_this.examList.type == 0) {
+                                    if (_this.examList.selectItem == 0) {
+                                        _this.examList.LselectItem.push('A')
+                                    } else if (_this.examList.selectItem == 1) {
+                                        _this.examList.LselectItem.push('B')
+                                    } else if (_this.examList.selectItem == 2) {
+                                        _this.examList.LselectItem.push('C')
+                                    } else if (_this.examList.selectItem == 3) {
+                                        _this.examList.LselectItem.push('D')
+                                    } else if (_this.examList.selectItem == 4) {
+                                        _this.examList.LselectItem.push('E')
+                                    } else if (_this.examList.selectItem == 5) {
+                                        _this.examList.LselectItem.push('F')
+                                    }
+                                }
+                                //单选多选判断对错,填空直接往下
+                                if (_this.examList.type == 1 || _this.examList.type == 0) {
+                                    if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
+                                        console.log(_this.examList.LselectItem.sort().toString(), 1111)
+                                        console.log(_this.examList.RightKey.sort().toString(), 222)
+                                        console.log("答案不正确", 333);
+                                        _this.$alert('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
+                                            dangerouslyUseHTMLString: true
+                                        });
+                                        return;
+                                    }
+                                }
+                            }
+                            var obj = {};
                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-                                var obj = {};
+                               
                                 obj.examList = _this.examList;
                                 obj.ListBankView = _this.ListBankView;
                                 axios.post('/Exampage/FinishTopic', {
@@ -136,35 +243,41 @@
                                 });
                                 window.location.href = "/PEMain/ExamFinish";
                             } else {
-                                var obj = {};
+                                console.log(_this.examList, 66);
                                 obj.examList = _this.examList;
                                 obj.nowItem = _this.nowItem;
                                 obj.total = _this.total;
                                 obj.ListBankView = _this.ListBankView;
+                                obj.VExamUserInfo = _this.VExamUserInfo;
                                 obj.PreNext = "Next";
                                 axios.post('/PEMain/NextTopic', {
                                     model: obj
                                 }).then(function (res) {
-                                    console.log(res.data, 12);
                                     _this.examList = res.data.examList;
 
                                     _this.total = res.data.total;
                                     _this.nowItem = res.data.nowItem;
                                     _this.ListBankView = res.data.ListBank;
-                                    if (res.data.examList.selectItem == null) {
+                                    _this.VExamUserInfo = res.data.VExamUserInfo;
+                                    console.log(_this.examList, 6565);
+                                    if (_this.examList.selectItem == null) {
                                         _this.examList.selectItem = []
                                     }
-                                    if (res.data.examList.type == 0) {
+                                    if (_this.examList.LselectItem == null) {
+                                        _this.examList.LselectItem = []
+                                    }
+                                    if (res.data.examList.type == 1) {
+                                        _this.examList.selectItem = []
+                                    }
+                                    else if (res.data.examList.type == 0) {
                                         _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                    } 
-                                    //if (res.data.examList.type == 1) {
-                                    //    _this.examList.selectItem = []
-                                    //} else {
-                                    //    _this.examList.selectItem = ''
-                                    //}
+                                    }
+                                    else {
+                                        _this.examList.selectItem = ''
+                                    }
+
+
                                 });
-                                //第二个按钮为下一题事件
-                                console.log('下一题!', '当前答案为：', _this.examList.selectItem);
                             }
                         } else {
                             console.log('error submit!!');
@@ -180,29 +293,36 @@
                     objs.nowItem = _this.nowItem;
                     objs.total = _this.total;
                     objs.ListBankView = _this.ListBankView;
+                    console.log(objs.ListBankView, 2323);
+                    objs.VExamUserInfo = _this.VExamUserInfo;
                     objs.PreNext = "Pre";
                     axios.post('/PEMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
-                        console.log(res.data.examList.selectItem, 234);
-                        console.log(res.data.ListBank, 4);
                         _this.examList = res.data.examList;
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
                         _this.ListBankView = res.data.ListBank;
-                        if (res.data.examList.type == 0) {
+                        _this.VExamUserInfo = res.data.VExamUserInfo;
+                        if (_this.examList.selectItem == null) {
+                            _this.examList.selectItem = []
+                        }
+                        if (_this.examList.LselectItem == null) {
+                            _this.examList.LselectItem = []
+                        }
+                        if (res.data.examList.type == 1) {
+                            _this.examList.selectItem = []
+                        }
+                        else if (res.data.examList.type == 0) {
                             _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                        } 
-                        //if (res.data.examList.selectItem == null) {
-                        //    _this.examList.selectItem = []
-                        //}
-                        //if (res.data.examList.type == 1) {
-                        //    _this.examList.selectItem = []
-                        //} else {
-                        //    _this.examList.selectItem = ''
-                        //}
+                        }
+                        else {
+                            _this.examList.selectItem = _this.examList.selectItem[0].toString();
+                        }
+
+
+
                     });
-                    console.log('上一题')
                 },
                 abcChange: function (val) {
                     if (val == 0) {
@@ -224,14 +344,24 @@
                     axios.post('/PEMain/Test').then(function (responese) {
                         console.log(responese.data.examList, 23);
                         _this.examList = responese.data.examList;
+                        _this.VExamUserInfo = responese.data.VExamUserInfo;
                         if (_this.examList.selectItem == null) {
                             _this.examList.selectItem = []
                         }
-                        //if (_this.examList.type == 1) {
-                        //    _this.examList.selectItem = []
-                        //} else {
-                        //    _this.examList.selectItem = ''
-                        //}
+                        if (responese.data.examList.type == 1) {
+                            _this.examList.selectItem = []
+                        }
+                        else if (responese.data.examList.type == 0) {
+                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                        }
+                        else {
+                            _this.examList.selectItem = ''
+                        }
+                        if (_this.examList.LselectItem == null) {
+                            _this.examList.LselectItem = []
+                        }
+                        _this.minutes = responese.data.VExamUserInfo.TotalTime;
+
                         _this.total = responese.data.total;
                         _this.nowItem = responese.data.nowItem;
                         _this.ListBankView = responese.data.ListBankView

@@ -422,14 +422,14 @@ namespace advt.Web.Controllers
         {
             var model = new ExamPageModel();
             model.GetListExam();
-            return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
+            return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total, model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
         public ActionResult NextTopic(ExamPageModel model)
         {
             model.GetExam();
-            return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
+            return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total, model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
