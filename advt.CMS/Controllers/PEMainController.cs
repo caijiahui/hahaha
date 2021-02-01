@@ -446,7 +446,7 @@ namespace advt.Web.Controllers
             model.GetExam();
             model.InsertScoreData(model);
             model.InsertRecoredData(model);
-            return Json(new { examList = model}, JsonRequestBehavior.AllowGet);
+            return Json(new { examList = model,}, JsonRequestBehavior.AllowGet);
         }
         //考试类型
         [MyAuthorize]

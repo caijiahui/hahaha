@@ -82,12 +82,12 @@
                             <el-table-column prop="TopicMajor" label="类型" width="80"></el-table-column>
                             <el-table-column prop="TopicLevel" label="等级" width="80"></el-table-column>
                             <el-table-column prop="TopicType" label="题型" width="80"></el-table-column>
-                            <el-table-column prop="TopicNum" label="分数" width="80">
+                            <el-table-column prop="TopicNum" label="题数" width="80">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.TopicNum" class="topie"></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="TopicScore" label="题数" width="80">
+                            <el-table-column prop="TopicScore" label="分数" width="80">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.TopicScore" class="topie"></el-input>
                                 </template>
@@ -110,12 +110,12 @@
                     <el-form-item label="总分" prop="TotalScore">
                         <el-input v-model="VExamRule.TotalScore"></el-input>
                     </el-form-item>
-                    <el-form-item label="总时长" prop="TotalTime">
+                    <el-form-item label="总时长(Min)" prop="TotalTime">
                         <el-input v-model="VExamRule.TotalTime"></el-input>
                     </el-form-item>
-                    <el-form-item label="总题数" prop="TotalSubject">
+                    @*<el-form-item label="总题数" prop="TotalSubject">
                         <el-input v-model="VExamRule.TotalSubject"></el-input>
-                    </el-form-item>
+                    </el-form-item>*@
                     <el-form-item label="通过分数" prop="PassScore">
                         <el-input v-model="VExamRule.PassScore"></el-input>
                     </el-form-item>

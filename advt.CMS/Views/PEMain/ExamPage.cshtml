@@ -194,7 +194,6 @@
                 },
                 submitForm: function (formName) {
                     var _this = this;
-                    var IsCon = false;
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             _this.examList.LselectItem = [];
@@ -250,7 +249,7 @@
                                         //});
                                         //return;
                                         _this.$confirm('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
-                                            confirmButtonText: '确定',
+                                            confirmButtonText: '下一题',
                                             cancelButtonText: '取消',
                                         }).then(() => {
                                             var obj = {};
@@ -347,9 +346,9 @@
                                                 axios.post('/PEMain/InsertScore', {
                                                     model: obj
                                                 }).then(function (res) {
-
+                                                    window.location.href = "/PEMain/ExamFinish";
                                                 });
-                                                window.location.href = "/PEMain/ExamFinish";
+                                               
 
                                             } else {
                                                 obj.PreNext = "Next";
