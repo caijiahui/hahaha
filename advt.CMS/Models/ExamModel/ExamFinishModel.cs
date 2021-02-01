@@ -192,7 +192,10 @@ namespace advt.CMS.Models
                         selectItem=output,
                         selectOption=option,
                         CorrectAnsower=item.CorrectAnsower,
-                        WriteItem=item.WriteAnsower
+                        WriteItem=item.WriteAnsower,
+                        TopicTitlePicNum=item.TopicTitlePicNum,
+                        Remark=item.Remark,
+                        TopicTitlePic=item.TopicTitlePicNum
                     });
                 }
             }
@@ -242,6 +245,8 @@ namespace advt.CMS.Models
         public string[] selectItem { get; set; }
         public string selectOption { get; set; }
         public string WriteItem { get; set; }
+        public string Remark { get; set; }
+        public string TopicTitlePic { get; set; }
     }
    
 

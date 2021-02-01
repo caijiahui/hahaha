@@ -39,20 +39,27 @@
                             答案解析: <i class="fa fa-angle-double-down"></i>
                         </div>
                         <div class="detail-list" v-for="(item,index) in examList">
-                            <div class="detail-title">
-                            {{index+1}}.{{item.TopicTitle}}
-                            <span>分值{{item.TopicNum}}分</span></div>
+                            <div>
+                                <div class="detail-title">
+                                    {{index+1}}.{{item.TopicTitle}}
+                                    <span>分值{{item.TopicNum}}分</span>
+                                </div>
+                            </div>
+                            <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
+                           
                             <div class="detail-content">
                                 <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
                                     <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                        {{abcChange(index)}}.{{list.ansower}}
-                                        <div><img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+list.ansowerpic+'.png'" width="100" height="100" /></div>
+                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
                                     </el-radio>
                                 </el-radio-group>
                                 <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
                                     <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                        {{abcChange(index)}}.{{list.ansower}}
-                                        <div><img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+list.ansowerpic+'.png'" width="100" height="100" /></div>
+                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
                                     </el-checkbox>
                                 </el-checkbox-group>
                                 <el-input v-if="item.Type==2"
@@ -66,10 +73,14 @@
                                         </span>
                                         <span>{{item.isright?'回答正确':'回答错误'}}</span>
                                     </div>
+
                                     <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
                                 </div>
                                 <div class="judge-wrong" v-if="!item.isright">
-                                    <span>正确答案:{{item.CorrectAnsower}}</span>                                   
+                                    <span>正确答案:{{item.CorrectAnsower}}</span>
+                                </div>
+                                <div class="judge-wrong">
+                                    <span>答案解析:{{item.Remark}}</span>
                                 </div>
                             </div>
                         </div>
