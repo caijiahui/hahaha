@@ -443,6 +443,7 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult InsertScore(ExamPageModel model)
         {
+            model.GetExam();
             model.InsertScoreData(model);
             model.InsertRecoredData(model);
             return Json(new { examList = model}, JsonRequestBehavior.AllowGet);

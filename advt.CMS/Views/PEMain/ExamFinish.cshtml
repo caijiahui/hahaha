@@ -48,7 +48,7 @@
                                     <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}.{{list.ansower}}</el-checkbox>
                                 </el-checkbox-group>
                                 <el-input v-if="item.Type==2"
-                                          v-model="item.selectItem"
+                                          v-model="item.WriteItem"
                                           :disabled="true">
                                 </el-input>
                                 <div class="pro-judge" :class="{'isright':item.isright}">
