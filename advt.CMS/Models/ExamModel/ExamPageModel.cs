@@ -367,7 +367,6 @@ namespace advt.CMS.Models
                 sc.IsTest = model.VExamUserInfo.IsTest;
                 sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
                 sc.PassScore = model.VExamUserInfo.PassScore;
-              
                 int sd = 0;
                 int score = 0;
                 foreach (var item in model.VExamUserInfo.LExamViews)
@@ -405,8 +404,14 @@ namespace advt.CMS.Models
 
                 record.ExamID = ee.ToString();
                 record.TopicTitle = item.proName;
+                if (item.TopicTitlePic!=null)
+                {
+                    record.TopicTitlePicNum = item.TopicTitlePic;
+
+                }
                 record.TopicNum = Convert.ToInt32(item.TopicScore);
                 record.Type = item.type;
+                record.Remark = item.Remark;
                 if (item.LselectItem!=null)
                 {
                     foreach (var ss in item.LselectItem)
@@ -423,37 +428,40 @@ namespace advt.CMS.Models
                         record.CorrectAnsower += sr + ';';
                     }
                 }
-                foreach (var items in item.ansowerList)
+                if (item.ansowerList!=null&&item.ansowerList.Count()>0)
                 {
-                    if (items.ansowerflag == "A")
+                    foreach (var items in item.ansowerList)
                     {
-                        record.OptionA = items.ansower;
-                        record.OptionAPicNum = items.ansowerpic;
-                    }
-                    if (items.ansowerflag == "B")
-                    {
-                        record.OptionB = items.ansower;
-                        record.OptionBPicNum = items.ansowerpic;
-                    }
-                    if (items.ansowerflag == "C")
-                    {
-                        record.OptionC = items.ansower;
-                        record.OptionCPicNum = items.ansowerpic;
-                    }
-                    if (items.ansowerflag == "D")
-                    {
-                        record.OptionD = items.ansower;
-                        record.OptionDPicNum = items.ansowerpic;
-                    }
-                    if (items.ansowerflag == "E")
-                    {
-                        record.OptionE = items.ansower;
-                        record.OptionEPicNum = items.ansowerpic;
-                    }
-                    if (items.ansowerflag == "F")
-                    {
-                        record.OptionF = items.ansower;
-                        record.OptionFPicNum = items.ansowerpic;
+                        if (items.ansowerflag == "A")
+                        {
+                            record.OptionA = items.ansower;
+                            record.OptionAPicNum = items.ansowerpic;
+                        }
+                        if (items.ansowerflag == "B")
+                        {
+                            record.OptionB = items.ansower;
+                            record.OptionBPicNum = items.ansowerpic;
+                        }
+                        if (items.ansowerflag == "C")
+                        {
+                            record.OptionC = items.ansower;
+                            record.OptionCPicNum = items.ansowerpic;
+                        }
+                        if (items.ansowerflag == "D")
+                        {
+                            record.OptionD = items.ansower;
+                            record.OptionDPicNum = items.ansowerpic;
+                        }
+                        if (items.ansowerflag == "E")
+                        {
+                            record.OptionE = items.ansower;
+                            record.OptionEPicNum = items.ansowerpic;
+                        }
+                        if (items.ansowerflag == "F")
+                        {
+                            record.OptionF = items.ansower;
+                            record.OptionFPicNum = items.ansowerpic;
+                        }
                     }
                 }
                 record.CreateUser = model.VExamUserInfo.UserName;

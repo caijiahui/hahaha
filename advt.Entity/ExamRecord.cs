@@ -51,6 +51,8 @@ namespace advt.Entity
         //选择答案
         public string WriteAnsower { get; set; }
         public string Type { get; set; }
+
+        public string Remark { get; set; }
         #endregion
     }
 }

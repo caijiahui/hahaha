@@ -61,7 +61,6 @@
                                         <div>{{abcChange(index)}}、{{item.ansower}}</div>
                                         <div><img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" width="100" height="100" /></div>
                                     </el-radio>
-
                                 </el-radio-group>
                                 <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
                                     <el-checkbox :label="index.toString()" v-for="(item,index) in examList.ansowerList">
