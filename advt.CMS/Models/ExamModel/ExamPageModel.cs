@@ -84,7 +84,8 @@ namespace advt.CMS.Models
                                 Score = Convert.ToInt32(item.TopicScore),
                                 TotalScore = Convert.ToDecimal(item.TopicScore),
                                 RightKey = right,
-                                Remark=items.Remark
+                                Remark=items.Remark,
+                                TopicTitlePic= items.TopicTitlePicNum
                             });
                         }
                     }
@@ -141,6 +142,19 @@ namespace advt.CMS.Models
                                 ansowerflag = "E",
                             });
                         }
+                        var typename = "";
+                        if (item.TopicType == "0")
+                        {
+                            typename = "(单选)";
+                        }
+                        else if(item.TopicType == "1")
+                        {
+                            typename = "(多选)";
+                        }
+                        else if (item.TopicType == "2")
+                        {
+                            typename = "(问答)";
+                        }
                         ListBankView.Add(new ExamView
                         {
                             id = item.ID.ToString(),
@@ -150,7 +164,9 @@ namespace advt.CMS.Models
                             index = index,//下标
                             RightKey = item.RightKey,//正确答案
                             Remark = item.Remark,//答案解析
-                            TopicScore= item.Score//单题分数
+                            TopicScore= item.Score,//单题分数
+                            ExamTypeName= typename,
+                            TopicTitlePic=item.TopicTitlePic
 
                         });
                         index++;
@@ -444,6 +460,8 @@ namespace advt.CMS.Models
         public int index { get; set; }
         public string Remark { get; set; }
         public string[] LselectItem { get; set; }
+        public string ExamTypeName { get; set; }//题目类型中文
+        public string TopicTitlePic { get; set; }
         //public string ExamType { get; set; }
 
         //public bool IsTest { get; set; }
@@ -500,6 +518,8 @@ namespace advt.CMS.Models
 
         public string OptionFPicNum { get; set; }
         public int Score { get; set; }
+        public string ExamTypeName { get; set; }
+        public string TopicTitlePic { get; set; }
 
     }
     public class ExamUserInfo
