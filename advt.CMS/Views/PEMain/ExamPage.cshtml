@@ -303,8 +303,8 @@
 
                                                 });
                                             }
-                                            }).catch(() => {
-                                                return;
+                                        }).catch(() => {
+                                            return;
                                         });
 
 
@@ -330,6 +330,58 @@
                                         //        }
                                         //    }
                                         //});
+                                    }
+                                    else {
+                                            var obj = {};
+                                            obj.examList = _this.examList;
+                                            obj.nowItem = _this.nowItem;
+                                            obj.total = _this.total;
+                                            obj.ListBankView = _this.ListBankView;
+                                            obj.VExamUserInfo = _this.VExamUserInfo;
+                                            obj.LselectItem = _this.LselectItem;
+                                            console.log(_this.examList.selectItem, 345);
+                                            if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                                obj.examList = _this.examList;
+                                                obj.ListBankView = _this.ListBankView;
+                                                obj.VExamUserInfo = _this.VExamUserInfo;
+                                                axios.post('/PEMain/InsertScore', {
+                                                    model: obj
+                                                }).then(function (res) {
+
+                                                });
+                                                window.location.href = "/PEMain/ExamFinish";
+
+                                            } else {
+                                                obj.PreNext = "Next";
+                                                axios.post('/PEMain/NextTopic', {
+                                                    model: obj
+                                                }).then(function (res) {
+                                                    _this.examList = res.data.examList;
+
+                                                    _this.total = res.data.total;
+                                                    _this.nowItem = res.data.nowItem;
+                                                    _this.ListBankView = res.data.ListBank;
+                                                    _this.VExamUserInfo = res.data.VExamUserInfo;
+                                                    console.log(_this.examList, 6565);
+                                                    if (_this.examList.selectItem == null) {
+                                                        _this.examList.selectItem = []
+                                                    }
+                                                    if (_this.examList.LselectItem == null) {
+                                                        _this.examList.LselectItem = []
+                                                    }
+                                                    if (res.data.examList.type == 1) {
+                                                        _this.examList.selectItem = []
+                                                    }
+                                                    else if (res.data.examList.type == 0) {
+                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                    }
+                                                    else {
+                                                        _this.examList.selectItem = '';
+                                                    }
+
+
+                                                });
+                                            }
                                     }
                                 }
 
