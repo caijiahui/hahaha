@@ -256,15 +256,16 @@
                             obj.LselectItem = _this.LselectItem;
                             console.log(_this.examList.selectItem, 345);
                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                obj.examList = _this.examList;
+                                obj.ListBankView = _this.ListBankView;
+                                obj.VExamUserInfo = _this.VExamUserInfo;
                                 axios.post('/PEMain/InsertScore', {
                                     model: obj
                                 }).then(function (res) {
-                                  
-                                    });
-                                //axios.post('/PEMain/InsertScore').then(function (responese) {
 
-                                //});
-                               // window.location.href = "/PEMain/ExamFinish";
+                                });
+                                window.location.href = "/PEMain/ExamFinish";
+
                             } else {
                                 obj.PreNext = "Next";
                                 axios.post('/PEMain/NextTopic', {
@@ -290,7 +291,7 @@
                                         _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                                     }
                                     else {
-                                        _this.examList.selectItem = ''
+                                        _this.examList.selectItem = '';
                                     }
 
 

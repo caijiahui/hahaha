@@ -35,6 +35,7 @@ namespace advt.CMS.Models
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
             }
             VExamUserInfo = new ExamUserInfo();
+            VExamUserInfo.LExamViews = new List<ExamView>();
         }
 
         public void GetListExam()
@@ -231,147 +232,149 @@ namespace advt.CMS.Models
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
 
         }
-        public ExamUserInfo TestData()
-        {
+        //public ExamUserInfo TestData()
+        //{
          
-            TestD.LExamViews = new List<ExamView>();
-            var LAnsower = new List<LAnsower>();
-            TestD.IsTest = false;
-            TestD.ExamType = "技能等级考试";
-            TestD.TotalScore = 100;//总分
-            TestD.UserName = "Jiahui";
-            //单选
-            string[] selectItem = { "B" };
-            LAnsower.Add(new LAnsower
-            {
+        //    TestD.LExamViews = new List<ExamView>();
+        //    var LAnsower = new List<LAnsower>();
+        //    TestD.IsTest = false;
+        //    TestD.ExamType = "技能等级考试";
+        //    TestD.TotalScore = 100;//总分
+        //    TestD.UserName = "Jiahui";
+        //    //单选
+        //    string[] selectItem = { "B" };
+        //    LAnsower.Add(new LAnsower
+        //    {
 
-                TopicType = "0",//单选题
-                ansower = "10>=a>=0",
-                ansowerpic = "",
-                ansowerflag = "A"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "0",//单选题
-                ansower = "a>=0 and a<=10",
-                ansowerpic = "",
-                ansowerflag = "B"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "0",//单选题
-                ansower = "a1223232",
-                ansowerpic = "",
-                ansowerflag = "C"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "0",//单选题
-                ansower = "a2",
-                ansowerpic = "",
-                ansowerflag = "D"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "0",//单选题
-                ansower = "a3",
-                ansowerpic = "",
-                ansowerflag = "D"
-            });
-            TestD.LExamViews.Add(new ExamView
-            {
-                TopicScore = 5,
-                RightKey = new string[] { "B"},//正确答案
-                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-                type = "0",//题目类型
-                selectItem = selectItem,//自己选择题选择的内容
-                ansowerList = LAnsower//题目选项信息
-            });
-            //多选题
-            selectItem = new string[] { "A", "C" };
-            LAnsower = new List<LAnsower>();
-            LAnsower.Add(new LAnsower
-            {
+        //        TopicType = "0",//单选题
+        //        ansower = "10>=a>=0",
+        //        ansowerpic = "",
+        //        ansowerflag = "A"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "0",//单选题
+        //        ansower = "a>=0 and a<=10",
+        //        ansowerpic = "",
+        //        ansowerflag = "B"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "0",//单选题
+        //        ansower = "a1223232",
+        //        ansowerpic = "",
+        //        ansowerflag = "C"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "0",//单选题
+        //        ansower = "a2",
+        //        ansowerpic = "",
+        //        ansowerflag = "D"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "0",//单选题
+        //        ansower = "a3",
+        //        ansowerpic = "",
+        //        ansowerflag = "D"
+        //    });
+        //    TestD.LExamViews.Add(new ExamView
+        //    {
+        //        TopicScore = 5,
+        //        RightKey = new string[] { "B"},//正确答案
+        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+        //        type = "0",//题目类型
+        //        selectItem = selectItem,//自己选择题选择的内容
+        //        ansowerList = LAnsower//题目选项信息
+        //    });
+        //    //多选题
+        //    selectItem = new string[] { "A", "C" };
+        //    LAnsower = new List<LAnsower>();
+        //    LAnsower.Add(new LAnsower
+        //    {
 
-                TopicType = "1",//多选题
-                ansower = "10>=a>=0",
-                ansowerpic = "",
-                ansowerflag = "A"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "1",//多选题
-                ansower = "a>=0 and a<=10",
-                ansowerpic = "",
-                ansowerflag = "B"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "1",//多选题
-                ansower = "a1223232",
-                ansowerpic = "",
-                ansowerflag = "C"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "1",//多选题
-                ansower = "a2",
-                ansowerpic = "",
-                ansowerflag = "D"
-            });
-            LAnsower.Add(new LAnsower
-            {
-                TopicType = "1",//多选题
-                ansower = "a3",
-                ansowerpic = "",
-                ansowerflag = "D"
-            });
-            TestD.LExamViews.Add(new ExamView
-            {
-                TopicScore = 5,
-                RightKey = new string[] { "A", "C" },//正确答案
-                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-                type = "1",//题目类型
-                selectItem = selectItem,//自己选择题选择的内容
-                ansowerList = LAnsower//题目选项信息
-            });
-            //填空题
-            var ans = "瞎填";
-            TestD.LExamViews.Add(new ExamView
-            {
-                TopicScore = 5,
-                RightKey = new string[] { "C", "D" },//正确答案
-                proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-                type = "2",//题目类型
-                selectItem = selectItem,//自己选择题选择的内容
-                ansowerList = LAnsower//题目选项信息
-            });
-            return TestD;
-        }
+        //        TopicType = "1",//多选题
+        //        ansower = "10>=a>=0",
+        //        ansowerpic = "",
+        //        ansowerflag = "A"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "1",//多选题
+        //        ansower = "a>=0 and a<=10",
+        //        ansowerpic = "",
+        //        ansowerflag = "B"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "1",//多选题
+        //        ansower = "a1223232",
+        //        ansowerpic = "",
+        //        ansowerflag = "C"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "1",//多选题
+        //        ansower = "a2",
+        //        ansowerpic = "",
+        //        ansowerflag = "D"
+        //    });
+        //    LAnsower.Add(new LAnsower
+        //    {
+        //        TopicType = "1",//多选题
+        //        ansower = "a3",
+        //        ansowerpic = "",
+        //        ansowerflag = "D"
+        //    });
+        //    TestD.LExamViews.Add(new ExamView
+        //    {
+        //        TopicScore = 5,
+        //        RightKey = new string[] { "A", "C" },//正确答案
+        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+        //        type = "1",//题目类型
+        //        selectItem = selectItem,//自己选择题选择的内容
+        //        ansowerList = LAnsower//题目选项信息
+        //    });
+        //    //填空题
+        //    var ans = "瞎填";
+        //    TestD.LExamViews.Add(new ExamView
+        //    {
+        //        TopicScore = 5,
+        //        RightKey = new string[] { "C", "D" },//正确答案
+        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
+        //        type = "2",//题目类型
+        //        selectItem = selectItem,//自己选择题选择的内容
+        //        ansowerList = LAnsower//题目选项信息
+        //    });
+        //    return TestD;
+        //}
 
         public void InsertScoreData(ExamPageModel model)
         {
-            if (model.TestD.LExamViews.Count() > 0)
+
+            if (model.VExamUserInfo.LExamViews.Count() > 0)
             {
                 ExamScore sc = new ExamScore();
-                sc.ExamType = model.TestD.ExamType;
-                sc.TotalScore = model.TestD.TotalScore;
+                sc.ExamType = model.VExamUserInfo.ExamType;
+                sc.TotalScore = model.VExamUserInfo.TotalScore;
                 sc.CreateDate = DateTime.Now;
-                sc.CreateUser = model.TestD.UserName;
-                sc.IsTest = model.TestD.IsTest;
-                sc.TatalTopicNum = model.TestD.LExamViews.Count();
+                sc.CreateUser = model.VExamUserInfo.UserName;
+                sc.IsTest = model.VExamUserInfo.IsTest;
+                sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
+                sc.PassScore = model.VExamUserInfo.PassScore;
               
                 int sd = 0;
                 int score = 0;
-                foreach (var item in model.TestD.LExamViews)
+                foreach (var item in model.VExamUserInfo.LExamViews)
                 {
                     
                     var ss = item.RightKey.OrderBy(x => x).ToArray();
-                    var sl = item.selectItem.OrderBy(x => x).ToArray();
-                    //答对题数CorrectNum
-               
-                    if (item.selectItem.Count() > 0)
+                    if(item.LselectItem!=null)
                     {
+                        var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                        //答对题数CorrectNum
+
                         if (Enumerable.SequenceEqual(ss, sl))
                         {
                             sd++;
@@ -380,7 +383,10 @@ namespace advt.CMS.Models
                             score += item.TopicScore;
                         }
                     }
+                 
                 }
+                if (sc.CorrectNum== null)
+                { sc.CorrectNum = 0; }
                 sc.CorrectScore = score;
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
                 
@@ -389,7 +395,7 @@ namespace advt.CMS.Models
         public void InsertRecoredData(ExamPageModel model)
         {
             var ee = Data.ExamScore.Get_All_ExamScore().Max(x=>x.ExamID);
-            foreach (var item in model.TestD.LExamViews)
+            foreach (var item in model.VExamUserInfo.LExamViews)
             {
                 ExamRecord record = new ExamRecord();
 
@@ -397,9 +403,9 @@ namespace advt.CMS.Models
                 record.TopicTitle = item.proName;
                 record.TopicNum = Convert.ToInt32(item.TopicScore);
                 record.Type = item.type;
-                if (item.selectItem.Count() > 0)
+                if (item.LselectItem!=null)
                 {
-                    foreach (var ss in item.selectItem)
+                    foreach (var ss in item.LselectItem)
                     {
                         //选择的答案
                         record.WriteAnsower += ss + ';';
@@ -418,29 +424,35 @@ namespace advt.CMS.Models
                     if (items.ansowerflag == "A")
                     {
                         record.OptionA = items.ansower;
+                        record.OptionAPicNum = items.ansowerpic;
                     }
                     if (items.ansowerflag == "B")
                     {
                         record.OptionB = items.ansower;
+                        record.OptionBPicNum = items.ansowerpic;
                     }
                     if (items.ansowerflag == "C")
                     {
                         record.OptionC = items.ansower;
+                        record.OptionCPicNum = items.ansowerpic;
                     }
                     if (items.ansowerflag == "D")
                     {
                         record.OptionD = items.ansower;
+                        record.OptionDPicNum = items.ansowerpic;
                     }
                     if (items.ansowerflag == "E")
                     {
                         record.OptionE = items.ansower;
+                        record.OptionEPicNum = items.ansowerpic;
                     }
                     if (items.ansowerflag == "F")
                     {
                         record.OptionF = items.ansower;
+                        record.OptionFPicNum = items.ansowerpic;
                     }
                 }
-                record.CreateUser = model.TestD.UserName;
+                record.CreateUser = model.VExamUserInfo.UserName;
                 record.CreateDate = DateTime.Now;
                 Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
 

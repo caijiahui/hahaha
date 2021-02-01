@@ -30,9 +30,9 @@ namespace advt.CMS.Models
             {
                 var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
+           
                 ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
-                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
-               
+                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();               
                 ID = ss;
             }
            
@@ -102,34 +102,37 @@ namespace advt.CMS.Models
                     }
                     if (item.Type == "0")
                     {
-                        list = item.WriteAnsower.Split(';');
-                        option = list.FirstOrDefault();
-                        var ss = "";
-                        if (!string.IsNullOrEmpty(option))
+                        if (item.WriteAnsower != null)
                         {
-                            if (option.Equals("A"))
+                            list = item.WriteAnsower.Split(';');
+                            option = list.FirstOrDefault();
+                            var ss = "";
+                            if (!string.IsNullOrEmpty(option))
                             {
-                                ss = "0";
-                            }
-                            else if (option.Equals("B"))
-                            {
-                                ss = "1";
-                            }
-                            else if (option.Equals("C"))
-                            {
-                                ss = "2";
-                            }
-                            else if (option.Equals("D"))
-                            {
-                                ss = "3";
-                            }
-                            else if (option.Equals("E"))
-                            {
-                                ss = "4";
-                            }
-                            option = ss;
+                                if (option.Equals("A"))
+                                {
+                                    ss = "0";
+                                }
+                                else if (option.Equals("B"))
+                                {
+                                    ss = "1";
+                                }
+                                else if (option.Equals("C"))
+                                {
+                                    ss = "2";
+                                }
+                                else if (option.Equals("D"))
+                                {
+                                    ss = "3";
+                                }
+                                else if (option.Equals("E"))
+                                {
+                                    ss = "4";
+                                }
+                                option = ss;
 
 
+                            }
                         }
                     }
                     else if (item.Type == "1")
@@ -171,7 +174,7 @@ namespace advt.CMS.Models
                             output = listnum.Split(';');
                         }
                     }
-                   
+
                     examList.Add(new ExamScoreInfo
                     {
                         ExamID = id.ToString(),
@@ -182,7 +185,8 @@ namespace advt.CMS.Models
                         Type=item.Type,
                         selectItem=output,
                         selectOption=option,
-                        CorrectAnsower=item.CorrectAnsower
+                        CorrectAnsower=item.CorrectAnsower,
+                        WriteItem=item.WriteAnsower
                     });
                 }
             }
@@ -231,6 +235,7 @@ namespace advt.CMS.Models
         public string Type { get; set; }
         public string[] selectItem { get; set; }
         public string selectOption { get; set; }
+        public string WriteItem { get; set; }
     }
    
 

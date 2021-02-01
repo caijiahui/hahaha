@@ -24,6 +24,7 @@ namespace advt.Entity
         public  int CorrectScore { get; set; }
         public decimal?  TotalScore { get; set; }
         public int? TatalTopicNum {get; set; }
+        public decimal? PassScore { get; set; }
     #endregion
     }
 }

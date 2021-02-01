@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamScore , (Ver:2.3.8) at: 2021/1/30 14:23:24
         #region Var: 
         private string[] ExamScore_key_a = { "ExamID" };
-        private string ExamScore_item_str = "[ExamID],[ExamType],[IsTest],[CreateUser],[CreateDate],[CorrectNum],[CorrectScore],[TotalScore],[TatalTopicNum]";
+        private string ExamScore_item_str = "[ExamID],[ExamType],[IsTest],[CreateUser],[CreateDate],[CorrectNum],[CorrectScore],[TotalScore],[TatalTopicNum],[PassScore]";
         private string[][] ExamScore_item_prop_a =
         {
             new string[] {"ExamID", "Int", "4"},
@@ -26,9 +26,10 @@ namespace advt.Data.SqlServer
             new string[] {"CreateUser", "NVarChar", "500"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"CorrectNum", "Int", "4"},
-             new string[] { "CorrectScore", "Int", "4"},
-              new string[] { "TotalScore", "Decimal", "20"},
-                 new string[] { "TatalTopicNum", "Int", "4"}
+            new string[] { "CorrectScore", "Int", "4"},
+            new string[] { "TotalScore", "Decimal", "20"},
+            new string[] { "TatalTopicNum", "Int", "4"},
+            new string[] { "PassScore", "Decimal", "20" }
         };
         #endregion
 

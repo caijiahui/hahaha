@@ -48,7 +48,7 @@
                                     <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}.{{list.ansower}}</el-checkbox>
                                 </el-checkbox-group>
                                 <el-input v-if="item.Type==2"
-                                          v-model="item.selectItem"
+                                          v-model="item.WriteItem"
                                           :disabled="true">
                                 </el-input>
                                 <div class="pro-judge" :class="{'isright':item.isright}">
@@ -82,7 +82,7 @@
         new Vue({
             el: "#app",
             data: {
-                isSuccess: true,    //是否通过考试
+                isSuccess: false,    //是否通过考试
                 nowyear: '',
                 isMobileTurn: false,
                 admin: '',
@@ -111,6 +111,10 @@
                     var _this = this;
                     axios.post('/PEMain/ExamFinishInfo').then(function (responese) {
                         _this.VExamScore = responese.data.VExamScore;
+                        console.log(responese.data.VExamScore.CorrectScore, responese.data.VExamScore.PassScore);
+                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                            _this.isSuccess = true;
+                        }
                         _this.examList = responese.data.examList;
                         console.log(responese.data.examList);
 
