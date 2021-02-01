@@ -346,6 +346,7 @@ namespace advt.CMS.Models
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
                 sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
+                sc.PassScore = model.VExamUserInfo.PassScore;
               
                 int sd = 0;
                 int score = 0;

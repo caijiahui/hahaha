@@ -30,6 +30,7 @@ namespace advt.CMS.Models
             {
                 var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
+           
                 ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
                 ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();               
                 ID = ss;
@@ -173,7 +174,7 @@ namespace advt.CMS.Models
                             output = listnum.Split(';');
                         }
                     }
-                   
+
                     examList.Add(new ExamScoreInfo
                     {
                         ExamID = id.ToString(),
