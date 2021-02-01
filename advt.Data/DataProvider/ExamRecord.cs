@@ -10,73 +10,63 @@ namespace advt.Data
     public partial class ExamRecord
     {
 
-        #region ExamSubject , (Ver:2.3.8) at: 2021/1/7 16:05:32
+        #region ExamRecord , (Ver:2.3.8) at: 2021/1/30 14:28:04
 
-        public static List<Entity.ExamSubject> Get_All_ExamSubject(object objparams)
+        public static List<Entity.ExamRecord> Get_All_ExamRecord(object objparams)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamSubject(objparams);
-            return SqlHelper.GetReaderToList<Entity.ExamSubject>(reader);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamRecord(objparams);
+            return SqlHelper.GetReaderToList<Entity.ExamRecord>(reader);
         }
 
-        public static List<Entity.ExamSubject> Get_All_ExamSubject()
+        public static List<Entity.ExamRecord> Get_All_ExamRecord()
         {
-            return Get_All_ExamSubject(null);
+            return Get_All_ExamRecord(null);
         }
 
-        public static Entity.ExamSubject Get_ExamSubject(object objparams)
+        public static Entity.ExamRecord Get_ExamRecord(object objparams)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamSubject(objparams);
-            return SqlHelper.GetReaderToFirstOrDefault<Entity.ExamSubject>(reader);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamRecord(objparams);
+            return SqlHelper.GetReaderToFirstOrDefault<Entity.ExamRecord>(reader);
         }
 
-        public static Entity.ExamSubject Get_ExamSubject(int ID)
+        public static Entity.ExamRecord Get_ExamRecord(int ID)
         {
-            return Get_ExamSubject(new { ID = ID });
+            return Get_ExamRecord(new { ID = ID });
         }
 
-        public static int Insert_ExamSubject(Entity.ExamSubject info)
+        public static int Insert_ExamRecord(Entity.ExamRecord info)
         {
-            return Insert_ExamSubject(info, null, null);
+            return Insert_ExamRecord(info, null, null);
         }
 
-        public static int Insert_ExamSubject(Entity.ExamSubject info, string[] Include)
+        public static int Insert_ExamRecord(Entity.ExamRecord info, string[] Include)
         {
-            return Insert_ExamSubject(info, Include, null);
+            return Insert_ExamRecord(info, Include, null);
         }
 
-        public static int Insert_ExamSubject(Entity.ExamSubject info, string[] Include, string[] Exclude)
+        public static int Insert_ExamRecord(Entity.ExamRecord info, string[] Include, string[] Exclude)
         {
-            return DatabaseProvider.GetInstance().Insert_ExamSubject(info, Include, Exclude);
+            return DatabaseProvider.GetInstance().Insert_ExamRecord(info, Include, Exclude);
         }
 
-        public static int Update_ExamSubject(Entity.ExamSubject info)
+        public static int Update_ExamRecord(Entity.ExamRecord info)
         {
-            return Update_ExamSubject(info, null, null);
+            return Update_ExamRecord(info, null, null);
         }
 
-        public static int Update_ExamSubject(Entity.ExamSubject info, string[] Include)
+        public static int Update_ExamRecord(Entity.ExamRecord info, string[] Include)
         {
-            return Update_ExamSubject(info, Include, null);
+            return Update_ExamRecord(info, Include, null);
         }
 
-        public static int Update_ExamSubject(Entity.ExamSubject info, string[] Include, string[] Exclude)
+        public static int Update_ExamRecord(Entity.ExamRecord info, string[] Include, string[] Exclude)
         {
-            return DatabaseProvider.GetInstance().Update_ExamSubject(info, Include, Exclude);
+            return DatabaseProvider.GetInstance().Update_ExamRecord(info, Include, Exclude);
         }
 
-        public static int Delete_ExamSubject(int ID)
+        public static int Delete_ExamRecord(int ID)
         {
-            return DatabaseProvider.GetInstance().Delete_ExamSubject(ID);
-        }
-
-        public static List<Entity.ExamType> GetSubjectList()
-        {
-            return GetSubjectList(null);
-        }
-        public static List<Entity.ExamType> GetSubjectList(object objparams)
-        {
-            IDataReader reader = DatabaseProvider.GetInstance().GetSubjectList(objparams);
-            return SqlHelper.GetReaderToList<Entity.ExamType>(reader);
+            return DatabaseProvider.GetInstance().Delete_ExamRecord(ID);
         }
         #endregion
     }

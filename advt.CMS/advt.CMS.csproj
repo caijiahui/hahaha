@@ -254,11 +254,13 @@
     <Content Include="Images\bgs.png" />
     <Content Include="Images\cat2.jpg" />
     <Content Include="Images\cat3.jpg" />
+    <Content Include="Images\error.png" />
     <Content Include="Images\loginBg.jpg" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\MainTitle.jpg" />
     <Content Include="Images\main_bg.png" />
     <Content Include="Images\p.png" />
+    <Content Include="Images\right.png" />
     <Content Include="Images\timgs.png" />
     <Content Include="Images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Images\ui-bg_flat_75_ffffff_40x100.png" />

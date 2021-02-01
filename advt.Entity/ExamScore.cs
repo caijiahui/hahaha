@@ -21,8 +21,9 @@ namespace advt.Entity
         public DateTime? CreateDate { get; set; }
 
         public int? CorrectNum { get; set; }
-        public  decimal? CorrectScore { get; set; }
+        public  int CorrectScore { get; set; }
         public decimal?  TotalScore { get; set; }
-        #endregion
+        public int? TatalTopicNum {get; set; }
+    #endregion
     }
 }

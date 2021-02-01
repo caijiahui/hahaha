@@ -438,5 +438,29 @@ namespace advt.Web.Controllers
             model.GetExam();
             return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
         }
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult InsertScore(ExamPageModel model)
+        {
+            model.InsertScoreData(model);
+            model.InsertRecoredData(model);
+            return Json(new { examList = model}, JsonRequestBehavior.AllowGet);
+        }
+        //考试类型
+        [MyAuthorize]
+        public ActionResult ExamFinish()
+        {
+            ExamFinishModel model = new ExamFinishModel();
+            return View(model);
+        }
+
+        [MyAuthorize]
+        public ActionResult ExamFinishInfo()
+        {
+            ExamFinishModel model = new ExamFinishModel();
+            model.GetExamListInfo(model.ID);
+            return Json(new { VExamScore = model.VExamScore, examList=model.examList }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -8,30 +8,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>成绩汇总</title>
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="js/elementUI/lib/theme-chalk/index.css">
-    <link rel="stylesheet" type="text/css" href="css/exam.css">
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
 </head>
 <body>
     <div id="app" v-cloak>
         <div class="wrap">
             <div class="header">
-                <h1>前端开发G5技能考核</h1>
+                <h1>{{VExamScore.ExamType}}</h1>
             </div>
             <div class="content">
                 <div>
                     <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
                     <div class="grade-show">
                         <div>
-                            <div class="grade" :class="{'isSuccess':isSuccess}">{{grade}}</div>
-                            <div>总分 {{totalGrade}}</div>
+                            <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
+                            <div>总分 {{VExamScore.TotalScore}}</div>
                         </div>
                         <div>
                             <div>
-                                <div>{{rightItem}}</div>
+                                <div>{{VExamScore.CorrectNum}}</div>
                                 <p>答对题数</p>
                             </div>
-                            <div>共 {{total}} 题</div>
+                            <div>共 {{VExamScore.TatalTopicNum}} 题</div>
                         </div>
                     </div>
                     <div class="detail-show">
@@ -39,33 +39,29 @@
                             答案解析: <i class="fa fa-angle-double-down"></i>
                         </div>
                         <div class="detail-list" v-for="(item,index) in examList">
-                            <div class="detail-title">{{index+1}}.{{item.proName}}<span>分值{{item.grade}}分</span></div>
+                            <div class="detail-title">{{index+1}}.{{item.TopicTitle}}<span>分值{{item.TopicNum}}分</span></div>
                             <div class="detail-content">
-                                <el-radio-group v-if="item.type==0" v-model="item.selectItem">
-                                    <el-radio :label="index" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}、{{list}}</el-radio>
+                                <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
+                                    <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}.{{list.ansower}}</el-radio>
                                 </el-radio-group>
-                                <el-checkbox-group v-model="item.selectItem" v-if="item.type==1">
-                                    <el-checkbox :label="index" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}、{{list}}</el-checkbox>
+                                <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
+                                    <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">{{abcChange(index)}}.{{list.ansower}}</el-checkbox>
                                 </el-checkbox-group>
-                                <el-input v-if="item.type==2"
+                                <el-input v-if="item.Type==2"
                                           v-model="item.selectItem"
                                           :disabled="true">
                                 </el-input>
-                                <div class="pro-judge" :class="{'isRight':item.isRight}">
+                                <div class="pro-judge" :class="{'isright':item.isright}">
                                     <div>
                                         <span>
-                                            <img :src="item.isRight?'img/right.png':'img/error.png'">
+                                            <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
                                         </span>
-                                        <span>{{item.isRight?'回答正确':'回答错误'}}</span>
+                                        <span>{{item.isright?'回答正确':'回答错误'}}</span>
                                     </div>
-                                    <div>{{item.isRight?'+'+item.grade+'分':'+0分'}}</div>
+                                    <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
                                 </div>
-                                <div class="judge-wrong" v-if="!item.isRight">
-                                    <div>正确答案:</div>
-                                    <div v-if="item.ansower instanceof Array">
-                                        <span v-for="a in item.ansower">{{abcChange(a)}}</span>
-                                    </div>
-                                    <div v-else>{{abcChange(item.ansower)}}</div>
+                                <div class="judge-wrong" v-if="!item.isright">
+                                    <span>正确答案:{{item.CorrectAnsower}}</span>                                   
                                 </div>
                             </div>
                         </div>
@@ -77,10 +73,10 @@
     </div>
 
     <!-- end #container -->
-    <script type="text/javascript" src="js/Vue.js"></script>
-    <script type="text/javascript" src="js/polyfill.min.js"></script>
-    <script type="text/javascript" src="js/axios.js"></script>
-    <script type="text/javascript" src="js/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
     <!-- Yoursite Scripts -->
     <script>
         new Vue({
@@ -89,75 +85,15 @@
                 isSuccess: true,    //是否通过考试
                 nowyear: '',
                 isMobileTurn: false,
-                admin: 'Admin',
-                total: 50,      //一共多少题  后台获取
-                totalGrade: 100,  //总分数
-                grade: 70,      //答题分数
-                rightItem: 35,   //答对题数
-                examList: [      //题目列表
-                //    {
-                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '在 HTML 页面中包含一个按钮控件 mybutton ，如果要实现点击该按钮时调用已定义的 JavaScript 函数 compute ，要编写的 HTML 代码是()',
-                //        ansower: 3,     //当前题目正确答案
-                //        ansowerList: ['<input name=”mybutton” type=”button” onBlur=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onFocus=”compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”function compute()” value=”计算”>', '<input name=”mybutton” type=”button” onClick=”compute()” value=”计算”>'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: true,    //答案是否正确
-                //    }, {
-                //        selectItem: [1, 2],   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 1,      //0 单选题  1 多选题  2 问答题
-                //        proName: '下列关于比较Ajax与Flash的优缺点，相关描述正确的是？',
-                //        ansower: [1, 2, 3],     //当前题目正确答案
-                //        ansowerList: ['Ajax的优势在意在于开放性，易用性及易于开发', 'Flash的优势在于多媒体处理，可以更容易的调用浏览器以外的外部资源', 'Ajax最主要的批评就是它可能破坏浏览器的后退功能', 'flash 用户第一次使用的时候不需要等待太长时间'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: false,    //答案是否正确
-                //    }, {
-                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '要运用css3动画，你需要运用什么规则',
-                //        ansower: 1,     //当前题目正确答案
-                //        ansowerList: ['animation', 'keyframes', 'flash', 'transition'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: true,    //答案是否正确
-                //    }, {
-                //        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '关于HTML语义化，以下哪个说法是正确的',
-                //        ansower: 3,     //当前题目正确答案
-                //        ansowerList: ['语义化的HTML有利于机器的阅读，如PDA手持设备、搜索引擎爬虫；但不利于人的阅读', 'Table 属于过时的标签，遇到数据列表时，需尽量使用 div 来模拟表格', '语义化是HTML5带来的新概念，此前版本的HTML无法做到语义化', 'header、article、address都属于语义化明确的标签'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: false,    //答案是否正确
-                //    }, {
-                //        selectItem: 2,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '以下运行结果:\
-                //for(var i = 0; i < 10; i++) {\
-                //    setTimeout(function() {\
-                //        console.log(i);\
-                //    }, 1000);\
-                //}',
-                //        ansower: 4,     //当前题目正确答案
-                //        ansowerList: ['0--9', '10个10', '10个9', '无限循环'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: true,    //答案是否正确
-                //    }, {
-                //        selectItem: 1,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '网站为某临时性的活动或者推广宣传某商品或服务而推出的特别页面，有很强的时效性，通常称之为',
-                //        ansower: 1,     //当前题目正确答案
-                //        ansowerList: ['引导页', '专题页', '临时页', '主题页'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: true,    //答案是否正确
-                //    }, {
-                //        selectItem: 0,   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
-                //        type: 0,      //0 单选题  1 多选题  2 问答题
-                //        proName: '通常我们需要获取某个信息时，都会通过几个缩写的关键字进行检索，那么，在开发中，如何使用Html5元素进行布局',
-                //        ansower: 0,     //当前题目正确答案
-                //        ansowerList: ['abbr', 'search', 'key', 'bdo'],
-                //        grade: 2,      //当前题目分数
-                //        isRight: true,    //答案是否正确
-                //    },
-                ]
+                admin: '',
+                TatalTopicNum: '',      //一共多少题  后台获取
+                TotalScore: '',  //总分数
+                CorrectScore: '',      //答题分数
+                CorrectNum: '',   //答对题数
+                VExamScore: [],
+                VexamRecord:[],
+                examList: []
+
             },
             mounted: function () {
                 var date = new Date();
@@ -168,9 +104,18 @@
                 } else {
                     this.isMobileTurn = false
                 }
-                console.log(this.isMobileTurn)
+                this.getdata();
             },
             methods: {
+                getdata: function () {
+                    var _this = this;
+                    axios.post('/PEMain/ExamFinishInfo').then(function (responese) {
+                        _this.VExamScore = responese.data.VExamScore;
+                        _this.examList = responese.data.examList;
+                        console.log(responese.data.examList);
+
+                    })
+                },
                 isMobile: function () {
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
                     return flag
@@ -189,7 +134,8 @@
                     } else if (val == 5) {
                         return 'F'
                     }
-                }
+                },
+                
             }
         })
     </script>
