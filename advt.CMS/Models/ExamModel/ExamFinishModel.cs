@@ -52,52 +52,58 @@ namespace advt.CMS.Models
                         isright = true;
                     }
                     List<LAnsower> answ = new List<LAnsower>();
-                    if (item.OptionA != null)
+                    if (item.OptionA != null||item.OptionAPicNum!=null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionA,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic=item.OptionAPicNum
                         });
                     }
-                    if (item.OptionB != null)
+                    if (item.OptionB != null || item.OptionBPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionB,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic = item.OptionBPicNum
                         });
                     }
-                    if (item.OptionC != null)
+                    if (item.OptionC != null || item.OptionCPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionC,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic = item.OptionCPicNum
                         });
                     }
-                    if (item.OptionD != null)
+                    if (item.OptionD != null || item.OptionDPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionD,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic = item.OptionDPicNum
                         });
                     }
-                    if (item.OptionE != null)
+                    if (item.OptionE != null || item.OptionEPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionE,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic = item.OptionEPicNum
                         });
                     }
-                    if (item.OptionF != null)
+                    if (item.OptionF != null || item.OptionFPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionF,
-                            ansowerflag = item.CorrectAnsower
+                            ansowerflag = item.CorrectAnsower,
+                            ansowerpic = item.OptionFPicNum
                         });                        
                     }
                     if (item.Type == "0")
