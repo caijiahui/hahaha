@@ -441,10 +441,8 @@ namespace advt.Web.Controllers
 
         [MyAuthorize]
         [HttpPost]
-        public ActionResult InsertScore()
+        public ActionResult InsertScore(ExamPageModel model)
         {
-            var model = new ExamPageModel();
-            model.TestData();
             model.InsertScoreData(model);
             model.InsertRecoredData(model);
             return Json(new { examList = model}, JsonRequestBehavior.AllowGet);
