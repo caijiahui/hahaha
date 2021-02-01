@@ -46,8 +46,8 @@
             <div class="content">
                 <div style="margin-bottom:20px">
                     <el-card class="box-card">
-                        <div><strong>{{nowItem}}.{{examList.proName}}{{examList.ExamTypeName}} </strong></div>
-                        <div><img v-if="examList.TopicTitlePic!=null" :src="'/Attachment/BankPic/'+examList.TopicTitlePic+'.png'" width="100" height="100" /></div>
+                        <div><strong>{{nowItem}}.{{examList.proName}}({{examList.TopicLevel }} {{examList.TopicMajor}} {{examList.ExamTypeName}}) </strong></div>
+                        <div><img v-if="examList.TopicTitlePic!=''&&examList.TopicTitlePic!=null" :src="'/Attachment/BankPic/'+examList.TopicTitlePic" width="100" height="100" /></div>
                     </el-card>
 
                 </div>
@@ -56,17 +56,17 @@
                     <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                         <div class="pro-ans-con">
                             <el-form-item prop="selectItem">
-                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem" >
+                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem">
                                     <el-radio :label="index" v-for="(item,index) in examList.ansowerList">
-                                        <div>{{abcChange(index)}}、{{item.ansower}}</div> 
-                                        <div><img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic+'.png'" width="100" height="100" /></div>
+                                        <div>{{abcChange(index)}}、{{item.ansower}}</div>
+                                        <div><img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" width="100" height="100" /></div>
                                     </el-radio>
 
                                 </el-radio-group>
                                 <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
                                     <el-checkbox :label="index.toString()" v-for="(item,index) in examList.ansowerList">
                                         <div>{{abcChange(index)}}、{{item.ansower}}</div>
-                                        <div> <img v-if="item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic+'.png'" :width="100" height="100" /></div>
+                                        <div> <img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" :width="100" height="100" /></div>
                                     </el-checkbox>
                                 </el-checkbox-group>
                                 <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
@@ -86,8 +86,11 @@
                         </div>
                     </el-form>
 
+
                 </div>
+
             </div>
+
 
         </div>
     </div>
@@ -192,6 +195,7 @@
                 },
                 submitForm: function (formName) {
                     var _this = this;
+                    var IsCon = false;
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             _this.examList.LselectItem = [];
@@ -231,8 +235,10 @@
                                 _this.examList.LselectItem = _this.examList.selectItem;
                             }
                             console.log(_this.examList.selectItem, 343);
+                            console.log(_this.examList.type,344);
                             //判断是否是模拟
-                            _this.VExamUserInfo.IsTest = false;
+                            _this.VExamUserInfo.IsTest = true;
+     
                             if (_this.VExamUserInfo.IsTest) {
                                 //单选多选判断对错,填空直接往下
                                 if (_this.examList.type == 1 || _this.examList.type == 0) {
@@ -240,63 +246,149 @@
                                         console.log(_this.examList.LselectItem.sort().toString(), 1111)
                                         console.log(_this.examList.RightKey.sort().toString(), 222)
                                         console.log("答案不正确", 333);
-                                        _this.$alert('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
-                                            dangerouslyUseHTMLString: true
+                                        //_this.$alert('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
+                                        //    dangerouslyUseHTMLString: true
+                                        //});
+                                        //return;
+                                        _this.$confirm('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
+                                            confirmButtonText: '确定',
+                                            cancelButtonText: '取消',
+                                        }).then(() => {
+                                            var obj = {};
+                                            obj.examList = _this.examList;
+                                            obj.nowItem = _this.nowItem;
+                                            obj.total = _this.total;
+                                            obj.ListBankView = _this.ListBankView;
+                                            obj.VExamUserInfo = _this.VExamUserInfo;
+                                            obj.LselectItem = _this.LselectItem;
+                                            console.log(_this.examList.selectItem, 345);
+                                            if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                                obj.examList = _this.examList;
+                                                obj.ListBankView = _this.ListBankView;
+                                                obj.VExamUserInfo = _this.VExamUserInfo;
+                                                axios.post('/PEMain/InsertScore', {
+                                                    model: obj
+                                                }).then(function (res) {
+
+                                                });
+                                                window.location.href = "/PEMain/ExamFinish";
+
+                                            } else {
+                                                obj.PreNext = "Next";
+                                                axios.post('/PEMain/NextTopic', {
+                                                    model: obj
+                                                }).then(function (res) {
+                                                    _this.examList = res.data.examList;
+
+                                                    _this.total = res.data.total;
+                                                    _this.nowItem = res.data.nowItem;
+                                                    _this.ListBankView = res.data.ListBank;
+                                                    _this.VExamUserInfo = res.data.VExamUserInfo;
+                                                    console.log(_this.examList, 6565);
+                                                    if (_this.examList.selectItem == null) {
+                                                        _this.examList.selectItem = []
+                                                    }
+                                                    if (_this.examList.LselectItem == null) {
+                                                        _this.examList.LselectItem = []
+                                                    }
+                                                    if (res.data.examList.type == 1) {
+                                                        _this.examList.selectItem = []
+                                                    }
+                                                    else if (res.data.examList.type == 0) {
+                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                    }
+                                                    else {
+                                                        _this.examList.selectItem = '';
+                                                    }
+
+
+                                                });
+                                            }
+                                            }).catch(() => {
+                                                return;
                                         });
-                                        return;
+
+
+
+
+                                        //const h = _this.$createElement;
+                                        //_this.$msgbox({
+                                        //    title: '正确答案:' + _this.examList.RightKey.sort().toString(),
+                                        //    message: h('p', null, [
+                                        //        h('span', null, '答案解析:<br>' + _this.examList.Remark),
+                                        //    ]),
+                                        //    showCancelButton: true,
+                                        //    confirmButtonText: '下一题',
+                                        //    cancelButtonText: '取消',
+                                        //    beforeClose: (action, instance, done) => {
+                                        //        console.log(action, 454)
+                                        //        if (action === 'confirm') {
+                                        //            IsCon = true;
+                                        //            done();
+                                        //            console.log(IsCon, 4444);
+                                        //        } else {
+                                        //            done();
+                                        //        }
+                                        //    }
+                                        //});
                                     }
                                 }
+
+                              
                             }
-                            var obj = {};
-                            obj.examList = _this.examList;
-                            obj.nowItem = _this.nowItem;
-                            obj.total = _this.total;
-                            obj.ListBankView = _this.ListBankView;
-                            obj.VExamUserInfo = _this.VExamUserInfo;
-                            obj.LselectItem = _this.LselectItem;
-                            console.log(_this.examList.selectItem, 345);
-                            if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                            if (_this.VExamUserInfo.IsTest == false || _this.examList.type==2) {
+                                var obj = {};
                                 obj.examList = _this.examList;
+                                obj.nowItem = _this.nowItem;
+                                obj.total = _this.total;
                                 obj.ListBankView = _this.ListBankView;
                                 obj.VExamUserInfo = _this.VExamUserInfo;
-                                axios.post('/PEMain/InsertScore', {
-                                    model: obj
-                                }).then(function (res) {
+                                obj.LselectItem = _this.LselectItem;
+                                console.log(_this.examList.selectItem, 345);
+                                if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                    obj.examList = _this.examList;
+                                    obj.ListBankView = _this.ListBankView;
+                                    obj.VExamUserInfo = _this.VExamUserInfo;
+                                    axios.post('/PEMain/InsertScore', {
+                                        model: obj
+                                    }).then(function (res) {
 
-                                });
-                                window.location.href = "/PEMain/ExamFinish";
+                                    });
+                                    window.location.href = "/PEMain/ExamFinish";
 
-                            } else {
-                                obj.PreNext = "Next";
-                                axios.post('/PEMain/NextTopic', {
-                                    model: obj
-                                }).then(function (res) {
-                                    _this.examList = res.data.examList;
+                                } else {
+                                    obj.PreNext = "Next";
+                                    axios.post('/PEMain/NextTopic', {
+                                        model: obj
+                                    }).then(function (res) {
+                                        _this.examList = res.data.examList;
 
-                                    _this.total = res.data.total;
-                                    _this.nowItem = res.data.nowItem;
-                                    _this.ListBankView = res.data.ListBank;
-                                    _this.VExamUserInfo = res.data.VExamUserInfo;
-                                    console.log(_this.examList, 6565);
-                                    if (_this.examList.selectItem == null) {
-                                        _this.examList.selectItem = []
-                                    }
-                                    if (_this.examList.LselectItem == null) {
-                                        _this.examList.LselectItem = []
-                                    }
-                                    if (res.data.examList.type == 1) {
-                                        _this.examList.selectItem = []
-                                    }
-                                    else if (res.data.examList.type == 0) {
-                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                    }
-                                    else {
-                                        _this.examList.selectItem = '';
-                                    }
+                                        _this.total = res.data.total;
+                                        _this.nowItem = res.data.nowItem;
+                                        _this.ListBankView = res.data.ListBank;
+                                        _this.VExamUserInfo = res.data.VExamUserInfo;
+                                        console.log(_this.examList, 6565);
+                                        if (_this.examList.selectItem == null) {
+                                            _this.examList.selectItem = []
+                                        }
+                                        if (_this.examList.LselectItem == null) {
+                                            _this.examList.LselectItem = []
+                                        }
+                                        if (res.data.examList.type == 1) {
+                                            _this.examList.selectItem = []
+                                        }
+                                        else if (res.data.examList.type == 0) {
+                                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                        }
+                                        else {
+                                            _this.examList.selectItem = '';
+                                        }
 
 
-                                });
+                                    });
+                                }
                             }
+                           
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -318,6 +410,7 @@
                     axios.post('/PEMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
+                        console.log(res.data.examList, 888);
                         _this.examList = res.data.examList;
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
@@ -329,15 +422,13 @@
                         if (_this.examList.LselectItem == null) {
                             _this.examList.LselectItem = []
                         }
-                        if (res.data.examList.type == 1) {
-                            _this.examList.selectItem = []
-                        }
                         else if (res.data.examList.type == 0) {
                             _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                         }
-                        else {
+                        else if (res.data.examList.type==2) {
                             _this.examList.selectItem = _this.examList.selectItem[0].toString();
                         }
+                        console.log(_this.examList.selectItem,999);
 
 
 

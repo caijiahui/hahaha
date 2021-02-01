@@ -86,7 +86,9 @@ namespace advt.CMS.Models
                                 TotalScore = Convert.ToDecimal(item.TopicScore),
                                 RightKey = right,
                                 Remark=items.Remark,
-                                TopicTitlePic= items.TopicTitlePicNum
+                                TopicTitlePic= items.TopicTitlePicNum,
+                                TopicLevel=items.TopicLevel,
+                                TopicMajor = items.TopicMajor
                             });
                         }
                     }
@@ -146,15 +148,15 @@ namespace advt.CMS.Models
                         var typename = "";
                         if (item.TopicType == "0")
                         {
-                            typename = "(单选)";
+                            typename = "单选";
                         }
                         else if(item.TopicType == "1")
                         {
-                            typename = "(多选)";
+                            typename = "多选";
                         }
                         else if (item.TopicType == "2")
                         {
-                            typename = "(问答)";
+                            typename = "问答";
                         }
                         ListBankView.Add(new ExamView
                         {
@@ -167,7 +169,9 @@ namespace advt.CMS.Models
                             Remark = item.Remark,//答案解析
                             TopicScore= item.Score,//单题分数
                             ExamTypeName= typename,
-                            TopicTitlePic=item.TopicTitlePic
+                            TopicTitlePic=item.TopicTitlePic,
+                            TopicLevel=item.TopicLevel,
+                            TopicMajor=item.TopicMajor
 
                         });
                         index++;
@@ -474,6 +478,8 @@ namespace advt.CMS.Models
         public string[] LselectItem { get; set; }
         public string ExamTypeName { get; set; }//题目类型中文
         public string TopicTitlePic { get; set; }
+        public string TopicLevel { get; set; }//G1 G2
+        public string TopicMajor { get; set; }//c#db
         //public string ExamType { get; set; }
 
         //public bool IsTest { get; set; }
@@ -532,6 +538,8 @@ namespace advt.CMS.Models
         public int Score { get; set; }
         public string ExamTypeName { get; set; }
         public string TopicTitlePic { get; set; }
+        public string TopicLevel { get; set; }//G1 G2
+        public string TopicMajor { get; set; }//c#db
 
     }
     public class ExamUserInfo
