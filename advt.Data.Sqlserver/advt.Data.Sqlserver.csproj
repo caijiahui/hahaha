@@ -71,7 +71,12 @@
     <Compile Include="DataProvider\ExamScore.cs" />
     <Compile Include="DataProvider\ExamRecord.cs" />
     <Compile Include="DataProvider\ExamSubject.cs" />
+    <Compile Include="DataProvider\PracticeInfo.cs" />
+    <Compile Include="DataProvider\SkillInfo.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
+    <Compile Include="DataProvider\ExamUserDetailInfo.cs" />
+    <Compile Include="DataProvider\RankInfo.cs" />
+    <Compile Include="DataProvider\ExamUserInfo.cs" />
     <Compile Include="DataProvider\TestReport.cs" />
     <Compile Include="DataProvider\advt_users_type.cs" />
     <Compile Include="DataProvider\advt_topics.cs" />

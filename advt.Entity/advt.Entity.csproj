@@ -69,6 +69,11 @@
     <Compile Include="ExamScore.cs" />
     <Compile Include="ExamSubject.cs" />
     <Compile Include="ExamType.cs" />
+    <Compile Include="ExamUserDetailInfo.cs" />
+    <Compile Include="ExamUserInfo.cs" />
+    <Compile Include="PracticeInfo.cs" />
+    <Compile Include="RankInfo.cs" />
+    <Compile Include="SkillInfo.cs" />
     <Compile Include="TestReport.cs" />
     <Compile Include="advt_users_type.cs" />
     <Compile Include="advt_Attach_Files.cs" />

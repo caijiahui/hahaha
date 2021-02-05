@@ -66,7 +66,12 @@
     <Compile Include="DataProvider\ExamScore.cs" />
     <Compile Include="DataProvider\ExamRecord.cs" />
     <Compile Include="DataProvider\ExamSubject.cs" />
+    <Compile Include="DataProvider\PracticeInfo.cs" />
+    <Compile Include="DataProvider\SkillInfo.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
+    <Compile Include="DataProvider\ExamUserDetailInfo.cs" />
+    <Compile Include="DataProvider\RankInfo.cs" />
+    <Compile Include="DataProvider\ExamUserInfo.cs" />
     <Compile Include="DataProvider\TestReport.cs" />
     <Compile Include="DataProvider\advt_users_type.cs" />
     <Compile Include="DataProvider\advt_Category.cs" />
@@ -95,7 +100,12 @@
     <Compile Include="IDataProvider\ExamScore.cs" />
     <Compile Include="IDataProvider\ExamRecord.cs" />
     <Compile Include="IDataProvider\ExamSubject.cs" />
+    <Compile Include="IDataProvider\PracticeInfo.cs" />
+    <Compile Include="IDataProvider\SkillInfo.cs" />
     <Compile Include="IDataProvider\ExamType.cs" />
+    <Compile Include="IDataProvider\ExamUserDetailInfo.cs" />
+    <Compile Include="IDataProvider\RankInfo.cs" />
+    <Compile Include="IDataProvider\ExamUserInfo.cs" />
     <Compile Include="IDataProvider\TestReport.cs" />
     <Compile Include="IDataProvider\advt_users_type.cs" />
     <Compile Include="IDataProvider\advt_CMSCategory.cs" />
