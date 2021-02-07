@@ -68,6 +68,43 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamUserInfo(ID);
         }
+
+        public static int Get_UpdateExamUserInfo(string UserCode, string Achievement)
+        {
+            return DatabaseProvider.GetInstance().Get_UpdateExamUserInfo(UserCode, Achievement);
+        }
+
+        public static List<Entity.RankInfo> Get_ExamUserLevel(string RankName)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserLevel(RankName);
+            return SqlHelper.GetReaderToList<Entity.RankInfo>(reader);
+        }
+        public static List<Entity.ExamUserDetailInfo> GetExamUserDetail(string UserCode)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetExamUserDetail(UserCode);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+        public static List<Entity.PracticeInfo> GetPraticeScore(string UserCode,string CurrentSkillLevel)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetPraticeScore(UserCode, CurrentSkillLevel);
+            return SqlHelper.GetReaderToList<Entity.PracticeInfo>(reader);
+        }
+        public static List<Entity.RankInfo> GetRanKInfoID(string app)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetRanKInfoID(app);
+            return SqlHelper.GetReaderToList<Entity.RankInfo>(reader);
+        }
+        public static List<Entity.RankInfo> GetRanKInfoSkill(string idd)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetRanKInfoSkill(idd);
+            return SqlHelper.GetReaderToList<Entity.RankInfo>(reader);
+        }
+        public static List<Entity.SkillInfo> GetSkillAch(string ApplicationLevel)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetSkillAch(ApplicationLevel);
+            return SqlHelper.GetReaderToList<Entity.SkillInfo>(reader);
+        }
+        
         #endregion
     }
 }

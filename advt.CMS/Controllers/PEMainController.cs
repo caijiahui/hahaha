@@ -463,5 +463,66 @@ namespace advt.Web.Controllers
             model.GetExamListInfo(model.ID);
             return Json(new { VExamScore = model.VExamScore, examList=model.examList }, JsonRequestBehavior.AllowGet);
         }
+
+        //考试个人基本信息
+        [MyAuthorize]
+        public ActionResult MaintainExamUserInfo()
+        {
+            ExamUserInfoModel model = new ExamUserInfoModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult GetUserInfo()
+        {
+            ExamUserInfoModel model = new ExamUserInfoModel();
+            model.GetUserInfo();
+            return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Upload_UserAch(HttpPostedFileBase file)
+        {
+            string filepath = "";
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new ExamUserInfoModel();
+            model.UploadUser(filepath);
+            model.GetUserInfo();
+            return Json(new { Result = model.Result, tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+
+        [MyAuthorize]
+        public ActionResult GetExamUser(int ID)
+        {
+            var model = new ExamUserInfoModel();
+            model.GetExamUser(ID);
+            return Json(new { VExamUserInfo = model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult DeleteExamUserInfo(int model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.DeleteExamUserInfo(model);
+            models.GetUserInfo();
+            return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+        //[MyAuthorize]
+        //public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
+        //{
+        //    model.SaveUserInfo();
+        //    return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        //}
     }
 }

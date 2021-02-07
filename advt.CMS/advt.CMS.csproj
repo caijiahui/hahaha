@@ -183,6 +183,7 @@
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
+    <Compile Include="Models\ExamModel\ExamUserInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +235,8 @@
     <Content Include="Connected Services\MembershipWebservice\advt.CMS.MembershipWebservice.UserLevel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="Attachment\temp\Template\BankTemplate.xlsx" />
+    <Content Include="Attachment\temp\Template\UserAchievement.xlsx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.disco" />
     <None Include="Connected Services\MembershipWebservice\configuration91.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\configuration.svcinfo" />
@@ -426,13 +429,13 @@
     <Content Include="Views\PEMain\MaintainExamBank.cshtml" />
     <Content Include="Views\PEMain\ExamPage.cshtml" />
     <Content Include="Views\PEMain\ExamFinish.cshtml" />
+    <Content Include="Views\PEMain\MaintainExamUserInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Attachment\temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
