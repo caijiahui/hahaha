@@ -1,89 +1,87 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamUserInfoModel
 
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-    @*<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />*@
-    @*<script src="~/Scripts/jquery-ui.min.js"></script>*@
-    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 <style>
     .topie {
         width: 50px;
     }
 </style>
-    <div id="app"  style="margin-left:20px">
-        <div>
-          
-            <template>               
-                <el-upload class="upload-demo" style="margin-top:30px;"
-                           ref="upload"
-                           :multiple="false"
-                           :on-success="handleExcelSuccess"
-                           action="/PEMain/Upload_UserAch">
-                    <el-button size="small" type="primary">EXCEL上传绩效</el-button>
-                </el-upload>              
-                <a href="/Attachment/temp/Template/UserAchievement.xlsx">
-                    <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
-                </a>
-            </template>
+<div id="app" style="margin-left:20px">
+    <div>
 
-            <el-table :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
-                      style="width: 100% " :default-sort="{prop: 'UserCode', order: 'CreateUser'}">
-                <el-table-column fixed
-                                 prop="UserCode"
-                                 label="工号"
-                                 width="120">
-                </el-table-column>
-                <el-table-column label="姓名" prop="UserName" sortable width="120"></el-table-column>
-                <el-table-column label="部门代码" prop="DepartCode" sortable width="120"></el-table-column>
-                <el-table-column label="职位" prop="PostName" sortable width="120"></el-table-column>
-                <el-table-column label="职等" prop="RankName" sortable width="120"></el-table-column>
-                <el-table-column label="入职日"
-                                 width="120">
-                    <template slot-scope="scope">
-                        <span>{{changeDate(scope.row.EntryDate)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="绩效" prop="Achievement" sortable width="120"></el-table-column>
-                <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
-                <el-table-column label="科目" prop="SubjectName" sortable width="120"></el-table-column>
-                <el-table-column label="本职等技能" prop="SkillLevel" sortable width="120"></el-table-column>
-                <el-table-column label="目前技能等级" prop="CurrentSkillLevel" sortable width="120"></el-table-column>
-                <el-table-column label="理论成绩" prop="TheoreticalAchievement" sortable width="120"></el-table-column>
-                <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable width="120"></el-table-column>
-                <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable width="120"></el-table-column>
-                @*<el-table-column label="是否符合绩效" prop="IsAchment" sortable width="120"></el-table-column>*@
-                <el-table-column label="是否符合绩效"
-                                 width="120">
-                    <template slot-scope="scope">
-                        <span>{{ChangeAch(scope.row.IsAchment)}}</span>
-                    </template>
-                </el-table-column>
-                @*<el-table-column label="本次是否考试" prop="IsExam" sortable width="120"></el-table-column>*@
-                <el-table-column label="本次是否考试"
-                                 width="120">
-                    <template slot-scope="scope">
-                        <span>{{ChangeAch(scope.row.IsExam)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column fixed="right">
-                    <template slot="header" slot-scope="scope">
-                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:300px" />
-                    </template>
-                    <template slot-scope="scope">
-                        <el-button size="mini"
-                                   @@click="handleEdit(scope.row.Id, scope.row)">Edit</el-button>
-                        <el-button size="mini"
-                                   type="danger"
-                                   @@click="handleDelete(scope.row.Id)">Delete</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+        <template>
+            <el-upload class="upload-demo" style="margin-top:30px;"
+                       ref="upload"
+                       :multiple="false"
+                       :on-success="handleExcelSuccess"
+                       action="/PEMain/Upload_UserAch">
+                <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+            </el-upload>
+            <a href="/Attachment/temp/Template/UserAchievement.xlsx">
+                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
+            </a>
+        </template>
+
+        <el-table :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
+                  style="width: 100% " :default-sort="{prop: 'UserCode', order: 'CreateUser'}">
+            <el-table-column fixed
+                             prop="UserCode"
+                             label="工号"
+                             width="120">
+            </el-table-column>
+            <el-table-column label="姓名" prop="UserName" sortable width="120"></el-table-column>
+            <el-table-column label="部门代码" prop="DepartCode" sortable width="120"></el-table-column>
+            <el-table-column label="职位" prop="PostName" sortable width="120"></el-table-column>
+            <el-table-column label="职等" prop="RankName" sortable width="120"></el-table-column>
+            <el-table-column label="入职日"
+                             width="120">
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.EntryDate)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="绩效" prop="Achievement" sortable width="120"></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
+            <el-table-column label="科目" prop="SubjectName" sortable width="120"></el-table-column>
+            <el-table-column label="本职等技能" prop="SkillLevel" sortable width="120"></el-table-column>
+            <el-table-column label="目前技能等级" prop="CurrentSkillLevel" sortable width="130"></el-table-column>
+            <el-table-column label="理论成绩" prop="TheoreticalAchievement" sortable width="120"></el-table-column>
+            <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable width="140"></el-table-column>
+            <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable width="140"></el-table-column>
+            <el-table-column label="是否符合绩效"
+                             width="130">
+                <template slot-scope="scope">
+                    <span>{{ChangeAch(scope.row.IsAchment)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="本次是否考试"
+                             width="130">
+                <template slot-scope="scope">
+                    <span>{{ChangeAch(scope.row.IsExam)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column fixed="right">
+                <template slot="header" slot-scope="scope">
+                    <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:300px" />
+                </template>
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.Id, scope.row)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.Id)">Delete</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
 
 
 
-            @*<el-pagination @@size-change="handleSizeChange"
+        @*<el-pagination @@size-change="handleSizeChange"
                            @@current-change="handleCurrentChange"
                            :current-page="paginations.page_index"
                            :page-sizes="paginations.page_sizes"
@@ -91,160 +89,161 @@
                            :layout="paginations.layout"
                            :total="paginations.total">
             </el-pagination>*@
-            <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
-                <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition">
-                    <el-form-item label="工号" prop="UserCode">
-                        <el-input v-model="VExamUserInfo.UserCode"></el-input>
-                    </el-form-item>
-                    <el-form-item label="姓名" prop="UserName">
-                        <el-input v-model="VExamUserInfo.UserName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="部门代码" prop="DepartCode">
-                        <el-input v-model="VExamUserInfo.DepartCode"></el-input>
-                    </el-form-item>
-                    <el-form-item label="职位" prop="PostName">
-                        <el-input v-model="VExamUserInfo.PostName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="职等" prop="RankName">
-                        <el-input v-model="VExamUserInfo.RankName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="入职日" prop="EntryDate">
-                        <el-input v-model="VExamUserInfo.EntryDate"></el-input>
-                    </el-form-item>
-                    <el-form-item label="绩效" prop="Achievement">
-                        <el-input v-model="VExamUserInfo.Achievement"></el-input>
-                    </el-form-item>
-                    <el-form-item label="考试类型" prop="TypeName">
-                        <el-input v-model="VExamUserInfo.TypeName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="科目" prop="SubjectName">
-                        <el-input v-model="VExamUserInfo.SubjectName"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <template>
-                        <el-button @@click="dialogFormVisible = false">取 消</el-button>
-                        <el-button type="primary" @@click="handleSave">确 定</el-button>
-                    </template>
+        <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
+            <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition">
+                <el-form-item label="工号" prop="UserCode">
+                    <el-input v-model="VExamUserInfo.UserCode"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" prop="UserName">
+                    <el-input v-model="VExamUserInfo.UserName"></el-input>
+                </el-form-item>
+                <el-form-item label="部门代码" prop="DepartCode">
+                    <el-input v-model="VExamUserInfo.DepartCode"></el-input>
+                </el-form-item>
+                <el-form-item label="职位" prop="PostName">
+                    <el-input v-model="VExamUserInfo.PostName"></el-input>
+                </el-form-item>
+                <el-form-item label="职等" prop="RankName">
+                    <el-input v-model="VExamUserInfo.RankName"></el-input>
+                </el-form-item>
+                <el-form-item label="入职日" prop="EntryDate">
+                    @*<el-input v-model="VExamUserInfo.EntryDate"></el-input>*@
+                    <el-date-picker type="date" v-model="VExamUserInfo.EntryDate"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="绩效" prop="Achievement">
+                    <el-input v-model="VExamUserInfo.Achievement"></el-input>
+                </el-form-item>
+                <el-form-item label="考试类型" prop="TypeName">
+                    <el-input v-model="VExamUserInfo.TypeName"></el-input>
+                </el-form-item>
+                <el-form-item label="科目" prop="SubjectName">
+                    <el-input v-model="VExamUserInfo.SubjectName"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave">确 定</el-button>
+                </template>
 
-                </div>
-            </el-dialog>
+            </div>
+        </el-dialog>
 
-        </div>
     </div>
-    <script src="~/Scripts/Vue/axios.js"></script>
-    <script src="~/Scripts/Vue/Vue.js"></script>
-    <script src="~/Scripts/elementUI/lib/index.js"></script>
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
 
-    <script src="~/Scripts/Vue/polyfill.min.js"></script>
-    <script type="text/javascript">
-        new Vue({
-            el: '#app',
-            data: {
-                topicratioProps: { multiple: true, label: 'Text', },
-                tableData: [],
-                dialogFormVisible: false,
-                VExamUserInfo: [],
-                formLabelWidth: '120px',
-                search: '',
-                topicratioPropsVal: [],
-                labelPosition: 'right',
-                RuleName: '',
-                TotalScore: '',
-                TotalTime: '',
-                TotalSubject: '',
-                PassScore: '',
-              
-                //paginations: {
-                //    page_index: 1,
-                //    total: 0,
-                //    page_size: 10,
-                //    page_sizes: [10, 15, 20],
-                //    layout: 'total, sizes, prev, pager, next, jumper'
-                //},
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            topicratioProps: { multiple: true, label: 'Text', },
+            tableData: [],
+            dialogFormVisible: false,
+            VExamUserInfo: [],
+            formLabelWidth: '120px',
+            search: '',
+            topicratioPropsVal: [],
+            labelPosition: 'right',
+            RuleName: '',
+            TotalScore: '',
+            TotalTime: '',
+            TotalSubject: '',
+            PassScore: '',
+
+            //paginations: {
+            //    page_index: 1,
+            //    total: 0,
+            //    page_size: 10,
+            //    page_sizes: [10, 15, 20],
+            //    layout: 'total, sizes, prev, pager, next, jumper'
+            //},
+        },
+
+        mounted: function () {
+            this.getdata();
+        },
+        methods: {
+            handleSave: function () {
+                var _this = this;
+                var objs = {};
+                objs.VExamUserInfo = _this.VExamUserInfo;
+                axios.post('/PEMain/SaveVExamUserInfo', {
+                    model: objs
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    // _this.setPaginations();
+                });
+                _this.dialogFormVisible = false;
+
             },
-            
-            mounted: function () {
-                this.getdata();
+            handleEdit(index, row) {
+                var _this = this;
+                axios.post('/PEMain/GetExamUser', {
+                    ID: index
+                }).then(function (res) {
+                    _this.VExamUserInfo = res.data.VExamUserInfo;
+                });
+                _this.dialogFormVisible = true;
             },
-            methods: {                     
-                handleSave: function () {
-                    var _this = this;
-                    var objs = {};
-                    objs.VExamUserInfo = _this.VExamUserInfo;
-                    axios.post('/PEMain/SaveVExamUserInfo', {
-                        model: objs
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                       // _this.setPaginations();
-                    });
-                    _this.dialogFormVisible = false;                  
-
-                },
-                handleEdit(index,row) {
-                    var _this = this;
-                    axios.post('/PEMain/GetExamUser', {
-                        ID: index
-                    }).then(function (res) {
-                        _this.VExamUserInfo = res.data.VExamUserInfo;
-                    });
-                    _this.dialogFormVisible = true;
-                },
-                handleDelete(index) {
-                    var _this = this;
-                    axios.post('/PEMain/DeleteExamUserInfo', {
-                        model: index
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                        //_this.setPaginations();
-                    });
-                },
-                getdata: function () {
-                    var _this = this;
-                    axios.post('/PEMain/GetUserInfo').then(function (responese) {
-                        _this.tableData = responese.data.tableData;                      
-                        //_this.setPaginations();
-                    })
-                },
-                changeDate: function (dates) {
-                    var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
-                    Y = date.getFullYear() + '-';
-                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-                    D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-                    h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
-                    m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
-                    s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
-                    var NewDtime = Y + M + D + h + m + s;
-                    var listDate = new Date(date);
-                    var year = listDate.getFullYear();
-                    var mon = listDate.getMonth() + 1;
-                    var day = listDate.getDate();
-                    return year + '-' + mon + '-' + day;
-                },
-                ChangeAch: function (ach) {
-                    if (ach == false) {
-                        return "否";
-                    }
-                    if (ach == true) {
-                        return "是";
-                    }
-                },
-                handleExcelSuccess(Result) {
-                    if (Result == 'success') {
-                        var _this = this;
-                        _this.tableData = responese.data.tableData;       
-                        this.$message({
-                            message: '恭喜你,上传成功',
-                            type: 'success'
-                        });
-                    }
-                    else {
-                        this.$message.error('上传成功');
-                    }
-                },
+            handleDelete(index) {
+                var _this = this;
+                axios.post('/PEMain/DeleteExamUserInfo', {
+                    model: index
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    //_this.setPaginations();
+                });
             },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(function (responese) {
+                    _this.tableData = responese.data.tableData;
+                    //_this.setPaginations();
+                })
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            ChangeAch: function (ach) {
+                if (ach == false) {
+                    return "否";
+                }
+                if (ach == true) {
+                    return "是";
+                }
+            },
+            handleExcelSuccess(Result) {
+                if (Result == 'success') {
+                    var _this = this;
+                    _this.tableData = responese.data.tableData;
+                    this.$message({
+                        message: '恭喜你,上传成功',
+                        type: 'success'
+                    });
+                }
+                else {
+                    this.$message.error('上传成功');
+                }
+            },
+        },
 
-        })
+    })
 
-    </script>
+</script>
 

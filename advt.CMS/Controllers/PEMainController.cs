@@ -518,11 +518,13 @@ namespace advt.Web.Controllers
             models.GetUserInfo();
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
-        //[MyAuthorize]
-        //public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
-        //{
-        //    model.SaveUserInfo();
-        //    return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
-        //}
+        [MyAuthorize]
+        public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
+        {
+            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            model.SaveUserInfo(username);
+            model.GetUserInfo();
+            return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

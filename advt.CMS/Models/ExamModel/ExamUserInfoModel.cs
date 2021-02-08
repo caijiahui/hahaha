@@ -284,6 +284,24 @@ namespace advt.CMS.Models.ExamModel
         {
             Data.ExamUserInfo.Delete_ExamUserInfo(model);           
         }
+        public void SaveUserInfo(string username)
+        {
+            if (VExamUserInfo.ID != 0)
+            {
+                VExamUserInfo.UpdateUser = username;
+                VExamUserInfo.UpdateDate = DateTime.Now;
+                Data.ExamUserInfo.Update_ExamUserInfo(VExamUserInfo, null, new string[] { "ID" });
+            }
+            else
+            {
+
+                VExamUserInfo.CreateUser = username;
+                VExamUserInfo.CreateDate = DateTime.Now;
+                Data.ExamUserInfo.Insert_ExamUserInfo(VExamUserInfo, null, new string[] { "ID" });
+
+            }
+
+        }
 
     }
     public class UserInfo
