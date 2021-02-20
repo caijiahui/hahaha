@@ -79,6 +79,73 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        public int Get_UpdateExamUserInfo(string UserCode, string Achievement)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string set_str = string.Empty;
+            commandText.AppendLine(" update ExamUserInfo set Achievement=@Achievement where UserCode=@UserCode");
+            l_parms.Add(SqlHelper.MakeInParam("@Achievement", (DbType)SqlDbType.NVarChar, 150, Achievement));
+            l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 150, UserCode));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+
+        }
+
+        public IDataReader Get_ExamUserLevel(string RankName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select SkillName,MaxSkillName from RankInfo where RankName=@RankName");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@RankName", (DbType)SqlDbType.NVarChar, 150, RankName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+
+        public IDataReader GetExamUserDetail(string UserCode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ExamUserDetailInfo where UserCode=@UserCode order by ExamDate desc");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 150, UserCode));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+
+        public IDataReader GetPraticeScore(string UserCode, string CurrentSkillLevel)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from PracticeInfo where UserCode=@UserCode and SkillName=@CurrentSkillLevel");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 150, UserCode));
+            l_parms.Add(SqlHelper.MakeInParam("@CurrentSkillLevel", (DbType)SqlDbType.NVarChar, 150, CurrentSkillLevel));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public IDataReader GetRanKInfoID(string app)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string set_str = string.Empty;
+            commandText.AppendLine(" select * from RankInfo where MaxSkillName=@app");
+            l_parms.Add(SqlHelper.MakeInParam("@app", (DbType)SqlDbType.NVarChar, 150, app));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public IDataReader GetRanKInfoSkill(string add)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string set_str = string.Empty;
+            commandText.AppendLine(" select * from RankInfo where SkillName=@add");
+            l_parms.Add(SqlHelper.MakeInParam("@add", (DbType)SqlDbType.NVarChar, 150, add));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public IDataReader GetSkillAch(string ApplicationLevel)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string set_str = string.Empty;
+            commandText.AppendLine(" select * from [dbo].[SkillInfo] where SKillName=@ApplicationLevel");
+            l_parms.Add(SqlHelper.MakeInParam("@ApplicationLevel", (DbType)SqlDbType.NVarChar, 150, ApplicationLevel));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
         #endregion
     }
 }
