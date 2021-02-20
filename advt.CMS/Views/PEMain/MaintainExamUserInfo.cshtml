@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-ui.min.js"></script>
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 <style>
     .topie {
@@ -81,21 +80,21 @@
 
 
 
-        @*<el-pagination @@size-change="handleSizeChange"
+        <el-pagination @@size-change="handleSizeChange"
                            @@current-change="handleCurrentChange"
                            :current-page="paginations.page_index"
                            :page-sizes="paginations.page_sizes"
                            :page-size="paginations.page_size"
                            :layout="paginations.layout"
                            :total="paginations.total">
-            </el-pagination>*@
+            </el-pagination>
         <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
             <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition">
                 <el-form-item label="工号" prop="UserCode">
-                    <el-input v-model="VExamUserInfo.UserCode"></el-input>
+                    <el-input v-model="VExamUserInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" prop="UserName">
-                    <el-input v-model="VExamUserInfo.UserName"></el-input>
+                    <el-input v-model="VExamUserInfo.UserName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="部门代码" prop="DepartCode">
                     <el-input v-model="VExamUserInfo.DepartCode"></el-input>
@@ -107,17 +106,16 @@
                     <el-input v-model="VExamUserInfo.RankName"></el-input>
                 </el-form-item>
                 <el-form-item label="入职日" prop="EntryDate">
-                    @*<el-input v-model="VExamUserInfo.EntryDate"></el-input>*@
-                    <el-date-picker type="date" v-model="VExamUserInfo.EntryDate"></el-date-picker>
+                    <el-input v-model="VExamUserInfo.EntryDate"></el-input>
                 </el-form-item>
                 <el-form-item label="绩效" prop="Achievement">
                     <el-input v-model="VExamUserInfo.Achievement"></el-input>
                 </el-form-item>
                 <el-form-item label="考试类型" prop="TypeName">
-                    <el-input v-model="VExamUserInfo.TypeName"></el-input>
+                    <el-input v-model="VExamUserInfo.TypeName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="科目" prop="SubjectName">
-                    <el-input v-model="VExamUserInfo.SubjectName"></el-input>
+                    <el-input v-model="VExamUserInfo.SubjectName" :disabled="true"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -135,6 +133,7 @@
 <script src="~/Scripts/Vue/Vue.js"></script>
 <script src="~/Scripts/elementUI/lib/index.js"></script>
 <script src="~/Scripts/Vue/polyfill.min.js"></script>
+@*<script src="~/Scripts/jquery-ui.min.js"></script>*@
 
 <script type="text/javascript">
     new Vue({
@@ -146,27 +145,67 @@
             VExamUserInfo: [],
             formLabelWidth: '120px',
             search: '',
-            topicratioPropsVal: [],
             labelPosition: 'right',
-            RuleName: '',
-            TotalScore: '',
-            TotalTime: '',
-            TotalSubject: '',
-            PassScore: '',
-
-            //paginations: {
-            //    page_index: 1,
-            //    total: 0,
-            //    page_size: 10,
-            //    page_sizes: [10, 15, 20],
-            //    layout: 'total, sizes, prev, pager, next, jumper'
-            //},
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 10,
+                page_sizes: [10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
         },
-
         mounted: function () {
             this.getdata();
         },
         methods: {
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
+
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 10; //每页显示多少数据
+
+                //显示数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+                    }
+                    _this.tableData = tablist;
+                })
+
+            },
+            topicratioPropsFn: function (val) {
+                var _this = this;
+                _this.RuleGrList = [];
+                val.forEach(function (lst, num) {
+                    _this.ListTopicInfo.forEach(function (item, index) {
+                        if (item.ID == lst)
+                            _this.RuleGrList.push(item);
+                    })
+                })
+
+            },
             handleSave: function () {
                 var _this = this;
                 var objs = {};
@@ -175,7 +214,7 @@
                     model: objs
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
-                    // _this.setPaginations();
+                    _this.setPaginations();
                 });
                 _this.dialogFormVisible = false;
 
@@ -186,6 +225,7 @@
                     ID: index
                 }).then(function (res) {
                     _this.VExamUserInfo = res.data.VExamUserInfo;
+                    _this.VExamUserInfo.EntryDate = _this.changeDate(_this.VExamUserInfo.EntryDate)
                 });
                 _this.dialogFormVisible = true;
             },
@@ -195,14 +235,14 @@
                     model: index
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
-                    //_this.setPaginations();
+                   _this.setPaginations();
                 });
             },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetUserInfo').then(function (responese) {
                     _this.tableData = responese.data.tableData;
-                    //_this.setPaginations();
+                    _this.setPaginations();
                 })
             },
             changeDate: function (dates) {
