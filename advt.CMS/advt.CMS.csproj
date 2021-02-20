@@ -182,6 +182,7 @@
     <Compile Include="Models\ExamModel\ExamRuleModel.cs" />
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
+    <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -426,6 +427,7 @@
     <Content Include="Views\PEMain\MaintainExamBank.cshtml" />
     <Content Include="Views\PEMain\ExamPage.cshtml" />
     <Content Include="Views\PEMain\ExamFinish.cshtml" />
+    <Content Include="Views\PEMain\SupervisorAudit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

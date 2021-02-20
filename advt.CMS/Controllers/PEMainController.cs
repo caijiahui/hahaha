@@ -463,5 +463,19 @@ namespace advt.Web.Controllers
             model.GetExamListInfo(model.ID);
             return Json(new { VExamScore = model.VExamScore, examList=model.examList }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult SupervisorAudit()
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult GetSupervisorAuditUser()
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            model.GetAllExamUserDetailInfo();
+            return Json(new { ListExamUserDetailInfos = model.ListExamUserDetailInfos });
+        }
     }
 }
