@@ -158,6 +158,13 @@
             this.getdata();
         },
         methods: {
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(function (responese) {
+                    _this.tableData = responese.data.tableData;
+                    _this.setPaginations();
+                })
+            },
             setPaginations() {
                 var _this = this;
                 _this.paginations.total = _this.tableData.length; //数据的数量
@@ -237,14 +244,7 @@
                     _this.tableData = res.data.tableData;
                    _this.setPaginations();
                 });
-            },
-            getdata: function () {
-                var _this = this;
-                axios.post('/PEMain/GetUserInfo').then(function (responese) {
-                    _this.tableData = responese.data.tableData;
-                    _this.setPaginations();
-                })
-            },
+            },            
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
                 Y = date.getFullYear() + '-';
