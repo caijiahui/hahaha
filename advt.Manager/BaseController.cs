@@ -19,6 +19,7 @@ namespace advt.Manager
         protected string _AttachmentUploadDirectory = "~/Attachment";
         protected string _AttachmentUploadDirectory_temp = "~/Attachment/temp";
         protected string _AttachmentBankPic = "~/Attachment/BankPic";
+        protected string _AttachmentPractice = "~/Attachment/Practice";
         /// <summary>
         /// 是自适应站点
         /// </summary>

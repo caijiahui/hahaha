@@ -22,6 +22,10 @@ namespace advt.Data
         {
             return Get_All_ExamRule(null);
         }
+        public static List<Entity.ExamRule> Get_All_TypeNameExamRule(string TypeName)
+        {
+            return Get_All_ExamRule(new { TypeName= TypeName });
+        }
 
         public static Entity.ExamRule Get_ExamRule(object objparams)
         {

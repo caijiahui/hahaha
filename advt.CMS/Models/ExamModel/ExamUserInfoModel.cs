@@ -330,6 +330,10 @@ namespace advt.CMS.Models.ExamModel
         public bool IsExam { get; set; }//本次是否考试
         public DateTime? PlanExamDate { get; set; }//预计考试时间
         public bool IsApp { get; set; }//是否满级
+        public decimal PracticalID { get; set; }//实践主键
+        public string ExamStatus { get; set; }
+        public bool IsReview { get; set; }
+        public string RuleName { get; set; }
 
     }
 }
