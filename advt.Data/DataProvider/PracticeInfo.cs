@@ -21,12 +21,16 @@ namespace advt.Data
         {
             return Get_All_PracticeInfo(null);
         }
-
+        public static List<Entity.PracticeInfo> Get__All_PracticeInfo_UserCode(string UserCode, string SkillName)
+        {
+            return Get_All_PracticeInfo(new { UserCode = UserCode, SkillName = SkillName });
+        }
         public static Entity.PracticeInfo Get_PracticeInfo(object objparams)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_PracticeInfo(objparams);
             return SqlHelper.GetReaderToFirstOrDefault<Entity.PracticeInfo>(reader);
         }
+
 
         public static Entity.PracticeInfo Get_PracticeInfo(int ID)
         {

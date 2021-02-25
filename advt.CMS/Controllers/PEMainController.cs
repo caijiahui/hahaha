@@ -526,5 +526,75 @@ namespace advt.Web.Controllers
             model.GetUserInfo();
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult SupervisorAudit()
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult GetSupervisorAuditUser()
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            model.GetAllExamUserDetailInfo();
+            return Json(new { ListExamUserDetailInfos = model.ListDirectorUserInfos, LRules= model.LRules });
+        }
+        public JsonResult Upload_Supervisor(HttpPostedFileBase file)
+        {
+            string filepath = "";
+            string filenName = "";
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentPractice);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            return Json(new { fileName = filenName }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SearchPracticeByCode(string model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            models.SearchPracticeInfo(model);
+            return Json(new { LPracticeInfo = models.LPracticeInfo }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult SavePracticeInfo(PracticeInfo model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            models.InsertPracticeInfo(model);
+            return Json(new {}, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult InsertUserDetail(List<UserInfo> model)
+        {
+            var username = this.UserContextSubstring;
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            models.InsertUserDetail(model,username);
+
+            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SerachDetail(string model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            models.SerachDetailByUserCode(model);
+
+            return Json(new { LExamUserDetailInfo=models.LExamUserDetailInfo });
+        }
     }
 }

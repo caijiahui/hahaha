@@ -56,6 +56,8 @@ namespace advt.Entity
 
         public DateTime? UpdateDate { get; set; }
         public string ApplyLevel { get; set; }
+        public string HighestLevel { get; set; }
+        public bool IsAchievement { get; set; }
         #endregion
     }
 }
