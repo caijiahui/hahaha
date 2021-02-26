@@ -65,6 +65,7 @@ namespace advt.CMS.Models.ExamModel
                 DateTime LastExamTime = DateTime.Now;
                 DateTime PlanTime = DateTime.Now;
                 decimal? score = 0;
+                var  ExamStatus = "";
                 if (item.UserCode != null)
                 {
                     ListExamUserDetailInfo = Data.ExamUserInfo.GetExamUserDetail(item.UserCode);
@@ -74,6 +75,7 @@ namespace advt.CMS.Models.ExamModel
                         CurrentSkillLevel = ListExamUserDetailInfo.FirstOrDefault().SkillName;
                         LastExamTime =Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().ExamDate);
                         PlanTime = Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().PlanExamDate);
+                        ExamStatus = ListExamUserDetailInfo.FirstOrDefault().ExamStatus;
                         if (CurrentSkillLevel != null && LastExamTime != null)
                         {
                             //理论成绩（实践表）
@@ -199,7 +201,8 @@ namespace advt.CMS.Models.ExamModel
                     IsAchment= isach,
                     PlanExamDate=PlanTime,
                     IsExam=isexam,
-                    ApplicationLevel= ApplicationLevel
+                    ApplicationLevel= ApplicationLevel,
+                    ExamStatus=ExamStatus
                 });
             }
         }
