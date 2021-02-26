@@ -58,6 +58,10 @@ namespace advt.Entity
         public string ApplyLevel { get; set; }
         public string HighestLevel { get; set; }
         public bool IsAchievement { get; set; }
+        public bool IsStop { get; set; }
+        public string HRUpdateUser { get; set; }
+
+        public DateTime? HRUpdateDate { get; set; }
         #endregion
     }
 }

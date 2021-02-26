@@ -11,6 +11,7 @@ namespace advt.CMS.Models.ExamModel
         public List<UserInfo> ListDirectorUserInfos { get; set; }
         public List<ExamRule> LRules { get; set; }
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
+        public List<ExamUserDetailInfo> LSignedupUser { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public SupervisorAuditModel() : base()
         {
@@ -18,6 +19,7 @@ namespace advt.CMS.Models.ExamModel
             LRules = new List<ExamRule>();
             LExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LPracticeInfo = new List<PracticeInfo>();
+            LSignedupUser = new List<ExamUserDetailInfo>();
         }
         public void GetAllExamUserDetailInfo()
         {
@@ -32,10 +34,11 @@ namespace advt.CMS.Models.ExamModel
                 {
                     PracticalID = Convert.ToDecimal(Practical.FirstOrDefault().PracticeScore);
                 }
-                item.ExamStatus = "Signup";
+                //item.ExamStatus = "Signup";
                 item.PracticalID = PracticalID;
             }
             ListDirectorUserInfos = model.ListUserInfo;
+            LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus= "Signup", IsStop = false });
             LRules = Data.ExamRule.Get_All_TypeNameExamRule("技能等级考试");
            
 
@@ -51,41 +54,78 @@ namespace advt.CMS.Models.ExamModel
             Data.PracticeInfo.Insert_PracticeInfo(data, null, new string[] { "ID" });
           
         }
-        public void InsertUserDetail(List<UserInfo> data,string username)
+        public string InsertUserDetail(List<UserInfo> data,string username)
         {
-            var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
-            foreach (var item in data)
+            try
             {
-                ExamUserDetailInfo v = new ExamUserDetailInfo();
-                v.UserCode = item.UserCode;
-                v.UserName = item.UserName;
-                v.DepartCode = item.DepartCode;
-                v.PostName = item.PostName;
-                v.RankName = item.RankName;
-                v.SkillName = item.SkillLevel;
-                v.EntryDate = item.EntryDate;
-                v.Achievement = item.Achievement;
-                v.PracticeScore = item.PracticalID;
-                v.PlanExamDate = item.PlanExamDate;
-                v.ExamStatus = item.ExamStatus;
-                v.IsReview = item.IsReview;
-                v.RuleName = item.RuleName;
-                v.SubjectName = item.SubjectName;
-                v.TypeName = item.TypeName;
-                v.ApplyLevel = item.ApplicationLevel;
-                v.IsAchievement = item.IsApp;//是否满级
-                v.CreateUser = username;
-                v.CreateDate = DateTime.Now;
-                Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
-            };
-            GetAllExamUserDetailInfo();
+                var Result = "";
+                var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
+                foreach (var item in data)
+                {
+                    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { TypeName = item.TypeName, UserCode = item.UserCode, ExamStatus = "Signup", ApplyLevel = item.ApplicationLevel, IsStop=false });
+                    if (c != null)
+                    {
+                        Result +=item.UserName+"已报名，不可重复报名";
+                    }
+                    else
+                    {
+                        ExamUserDetailInfo v = new ExamUserDetailInfo();
+                        v.UserCode = item.UserCode;
+                        v.UserName = item.UserName;
+                        v.DepartCode = item.DepartCode;
+                        v.PostName = item.PostName;
+                        v.RankName = item.RankName;
+                        v.SkillName = item.SkillLevel;
+                        v.EntryDate = item.EntryDate;
+                        v.Achievement = item.Achievement;
+                        v.PracticeScore = item.PracticalID;
+                        v.PlanExamDate = item.PlanExamDate;
+                        v.ExamStatus = item.ExamStatus;
+                        v.IsReview = item.IsReview;
+                        v.RuleName = item.RuleName;
+                        v.SubjectName = item.SubjectName;
+                        v.TypeName = item.TypeName;
+                        v.ApplyLevel = item.ApplicationLevel;
+                        v.IsAchievement = item.IsApp;//是否满级
+                        v.CreateUser = username;
+                        v.CreateDate = DateTime.Now;
+                        Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
+                    }
 
+                };
+                GetAllExamUserDetailInfo();
+                return Result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
 
         public void SerachDetailByUserCode(string Code)
         {
             LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = Code });
             
+        }
+        public void Stopuser(string ID,string username)
+        {
+            try
+            {
+                var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
+                c.IsStop = true;
+                c.UpdateDate = DateTime.Now;
+                c.UpdateUser = username;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+                GetAllExamUserDetailInfo();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+          
         }
     }
 }

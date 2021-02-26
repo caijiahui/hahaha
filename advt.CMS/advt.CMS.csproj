@@ -182,6 +182,7 @@
     <Compile Include="Models\ExamModel\ExamRuleModel.cs" />
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
+    <Compile Include="Models\ExamModel\HrAuditModel.cs" />
     <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
     <Compile Include="Models\ExamModel\ExamUserInfoModel.cs" />
@@ -432,6 +433,7 @@
     <Content Include="Views\PEMain\ExamFinish.cshtml" />
     <Content Include="Views\PEMain\SupervisorAudit.cshtml" />
     <Content Include="Views\PEMain\MaintainExamUserInfo.cshtml" />
+    <Content Include="Views\PEMain\HrAudit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -518,7 +520,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2219</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2219/</IISUrl>
+          <IISUrl>http://localhost:2218/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
