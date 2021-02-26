@@ -1,4 +1,5 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using advt.Entity;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -24,6 +25,8 @@ namespace advt.CMS.Models.ExamModel
         public Entity.ExamUserDetailInfo VExamUserDetailInfo { get; set; }
         public List<Entity.ExamUserInfo> ListExamUserInfo { get; set; }
         public List<Entity.SkillInfo> ListSkillInfo { get; set; }
+        public List<PracticeInfo> LPracticeInfo { get; set; }
+        public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
         public ExamUserInfoModel() : base()
         {
             UserInfoList = new UserInfo();
@@ -36,6 +39,8 @@ namespace advt.CMS.Models.ExamModel
             VExamUserDetailInfo = new Entity.ExamUserDetailInfo();
             ListRank = new List<Entity.RankInfo>();
             ListSkillInfo = new List<Entity.SkillInfo>();
+            LPracticeInfo = new List<PracticeInfo>();
+            LExamUserDetailInfo = new List<ExamUserDetailInfo>();
 
         }
         public void GetUserInfo()
@@ -302,7 +307,15 @@ namespace advt.CMS.Models.ExamModel
             }
 
         }
+        public void SearchPracticeInfo(string code)
+        {
+            LPracticeInfo = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = code }).OrderByDescending(x => x.CreateDate).ToList();
+        }
 
+        public void SerachDetailByUserCode(string Code)
+        {
+            LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = Code });
+        }
     }
     public class UserInfo
     {

@@ -14,6 +14,9 @@
     <div>
 
         <template>
+            <a href="/Attachment/temp/Template/UserAchievement.xlsx">
+                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
+            </a>
             <el-upload class="upload-demo" style="margin-top:30px;"
                        ref="upload"
                        :multiple="false"
@@ -21,9 +24,6 @@
                        action="/PEMain/Upload_UserAch">
                 <el-button size="small" type="primary">EXCEL上传绩效</el-button>
             </el-upload>
-            <a href="/Attachment/temp/Template/UserAchievement.xlsx">
-                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
-            </a>
         </template>
 
         <el-table :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
@@ -63,33 +63,78 @@
                     <span>{{ChangeAch(scope.row.IsExam)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right">
-                <template slot="header" slot-scope="scope">
-                    <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:300px" />
-                </template>
+
+
+            <el-table-column fixed="right" label="操作" width="340">
+
                 <template slot-scope="scope">
                     <el-button size="mini"
                                @@click="handleEdit(scope.row.Id, scope.row)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.Id)">Delete</el-button>
+                    <el-button size="mini"
+                               @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践明细</el-button>
+                    <el-button size="mini"
+                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">明细</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
+        <!-- #region 上传实践弹窗 -->
+        <el-dialog title="上传实践" :visible.sync="dialogFormPractical">
+            <el-table :data="LPracticeInfo"
+                      style="width: 100%;margin-top:20px ">
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable
+                                 fixed>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
+                <el-table-column label="有效期"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ValidityDate!=''&&scope.row.ValidityDate!=null">{{changeDate(scope.row.ValidityDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="分数"
+                                 prop="PracticeScore" sortable>
+                </el-table-column>
+                <el-table-column label="备注"
+                                 prop="PracticeRemark" sortable>
+                </el-table-column>
+                <el-table-column label="附件"
+                                 prop="Enclosure" sortable>
+                </el-table-column>
+                <el-table-column label="技能"
+                                 prop="SkillName" sortable>
+                </el-table-column>
+                <el-table-column label="创建人"
+                                 prop="CreateUser" sortable>
+                </el-table-column>
+                <el-table-column label="创建时间"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.CreateDate!=''&&scope.row.CreateDate!=null">{{changeDate(scope.row.CreateDate)}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
 
+        </el-dialog>
+        <!-- #endregion -->
 
 
         <el-pagination @@size-change="handleSizeChange"
-                           @@current-change="handleCurrentChange"
-                           :current-page="paginations.page_index"
-                           :page-sizes="paginations.page_sizes"
-                           :page-size="paginations.page_size"
-                           :layout="paginations.layout"
-                           :total="paginations.total">
-            </el-pagination>
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
         <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
-            <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition">
+            <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                 <el-form-item label="工号" prop="UserCode">
                     <el-input v-model="VExamUserInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
@@ -127,6 +172,89 @@
             </div>
         </el-dialog>
 
+        <!-- #region 查看明细 -->
+        <el-dialog title="明细查看" :visible.sync="dialogSearchVisible">
+            <el-table :data="LExamUserDetailInfo"
+                      style="width: 100%;margin-top:20px ">
+                <el-table-column label="日期"
+                                 prop="CreateDate" sortable
+                                 fixed>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
+                <el-table-column label="职等"
+                                 prop="RankName" sortable>
+                </el-table-column>
+                <el-table-column label="技能"
+                                 prop="SkillName" sortable>
+                </el-table-column>
+                <el-table-column label="入职日"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.EntryDate!=''&&scope.row.EntryDate!=null">{{changeDate(scope.row.EntryDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="绩效"
+                                 prop="Achievement" sortable>
+                </el-table-column>
+                <el-table-column label="考试时间"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试成绩"
+                                 prop="ExamScore" sortable>
+                </el-table-column>
+                <el-table-column label="实践成绩"
+                                 prop="PracticeScore" sortable>
+                </el-table-column>
+                <el-table-column label="预计考试时间"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.PlanExamDate!=''&&scope.row.PlanExamDate!=null">{{changeDate(scope.row.PlanExamDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试地点"
+                                 prop="ExamPlace" sortable>
+                </el-table-column>
+                <el-table-column label="状态"
+                                 prop="ExamStatus" sortable>
+                </el-table-column>
+                <el-table-column label="复审"
+                                 prop="IsReview" sortable>
+                </el-table-column>
+                <el-table-column label="考试规则"
+                                 prop="RuleName" sortable>
+                </el-table-column>
+                <el-table-column label="科目"
+                                 prop="SubjectName" sortable>
+                </el-table-column>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="本次申请等级"
+                                 prop="ApplicationLevel" sortable>
+                </el-table-column>
+                <el-table-column label="最高可考技能"
+                                 prop="ApplicationLevel" sortable>
+                </el-table-column>
+                <el-table-column label="是否符合技能"
+                                 prop="IsAchment" sortable>
+                </el-table-column>
+
+            </el-table>
+
+        </el-dialog>
+
+
     </div>
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
@@ -142,7 +270,11 @@
             topicratioProps: { multiple: true, label: 'Text', },
             tableData: [],
             dialogFormVisible: false,
+            dialogFormPractical: false,
+            dialogSearchVisible: false,
             VExamUserInfo: [],
+            LPracticeInfo: [],
+            LExamUserDetailInfo:[],
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
@@ -158,6 +290,13 @@
             this.getdata();
         },
         methods: {
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(function (responese) {
+                    _this.tableData = responese.data.tableData;
+                    _this.setPaginations();
+                })
+            },
             setPaginations() {
                 var _this = this;
                 _this.paginations.total = _this.tableData.length; //数据的数量
@@ -195,6 +334,7 @@
                 })
 
             },
+           
             topicratioPropsFn: function (val) {
                 var _this = this;
                 _this.RuleGrList = [];
@@ -219,6 +359,30 @@
                 _this.dialogFormVisible = false;
 
             },
+            //上传实践操作
+            handlePractical(usercode, username) {
+                console.log(usercode, username,312);
+                var _this = this;
+                _this.VExamUserInfo.UserCode = usercode;
+                _this.VExamUserInfo.UserName = username;
+                axios.post('/PEMain/SearchPracticeInfo', {
+                    model: usercode
+                }).then(function (res) {
+                    _this.LPracticeInfo = res.data.LPracticeInfo;
+                });
+                _this.dialogFormPractical = true;
+            },
+            //查询明细
+            handleSearchDetail(usercode) {
+                var _this = this;
+                axios.post('/PEMain/SerachDetailInfo', {
+                    model: usercode
+                }).then(function (res) {
+                    _this.LExamUserDetailInfo = res.data.LExamUserDetailInfo;
+                   
+                });
+                _this.dialogSearchVisible = true;
+            },
             handleEdit(index, row) {
                 var _this = this;
                 axios.post('/PEMain/GetExamUser', {
@@ -237,14 +401,7 @@
                     _this.tableData = res.data.tableData;
                    _this.setPaginations();
                 });
-            },
-            getdata: function () {
-                var _this = this;
-                axios.post('/PEMain/GetUserInfo').then(function (responese) {
-                    _this.tableData = responese.data.tableData;
-                    _this.setPaginations();
-                })
-            },
+            },            
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
                 Y = date.getFullYear() + '-';
@@ -278,7 +435,7 @@
                     });
                 }
                 else {
-                    this.$message.error('上传成功');
+                    this.$message.error('上传失败');
                 }
             },
         },

@@ -650,5 +650,24 @@ namespace advt.Web.Controllers
             models.SearchPracticeUserDetail(model);
             return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo, LPracticeInfo = models.LPracticeInfo });
         }
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SearchPracticeInfo(string model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.SearchPracticeInfo(model);
+            return Json(new { LPracticeInfo = models.LPracticeInfo }, JsonRequestBehavior.AllowGet);
+        }
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SerachDetailInfo(string model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.SerachDetailByUserCode(model);
+
+            return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo });
+        }
     }
 }
