@@ -14,6 +14,9 @@
     <div>
 
         <template>
+            <a href="/Attachment/temp/Template/UserAchievement.xlsx">
+                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
+            </a>
             <el-upload class="upload-demo" style="margin-top:30px;"
                        ref="upload"
                        :multiple="false"
@@ -21,9 +24,6 @@
                        action="/PEMain/Upload_UserAch">
                 <el-button size="small" type="primary">EXCEL上传绩效</el-button>
             </el-upload>
-            <a href="/Attachment/temp/Template/UserAchievement.xlsx">
-                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
-            </a>
         </template>
 
         <el-table :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
@@ -134,7 +134,7 @@
                        :total="paginations.total">
         </el-pagination>
         <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
-            <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition">
+            <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                 <el-form-item label="工号" prop="UserCode">
                     <el-input v-model="VExamUserInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
@@ -435,7 +435,7 @@
                     });
                 }
                 else {
-                    this.$message.error('上传成功');
+                    this.$message.error('上传失败');
                 }
             },
         },
