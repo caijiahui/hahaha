@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/2/5 11:28:28
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate]";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[HRUpdateUser],[HRUpdateDate]";
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -42,7 +42,11 @@ namespace advt.Data.SqlServer
             new string[] {"CreateUser", "NVarChar", "500"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
-            new string[] {"UpdateDate", "DateTime", "16"}
+            new string[] {"UpdateDate", "DateTime", "16"},
+            new string[] { "HRUpdateUser", "NVarChar", "500"},
+            new string[] { "HRUpdateDate", "DateTime", "16"},
+            new string[] { "IsStop", "Bit", "1"},
+            new string[] { "ApplyLevel", "NVarChar", "500"},
         };
         #endregion
 

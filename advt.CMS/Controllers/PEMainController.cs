@@ -526,6 +526,7 @@ namespace advt.Web.Controllers
             model.GetUserInfo();
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
+        //主管审核
         [MyAuthorize]
         public ActionResult SupervisorAudit()
         {
@@ -538,7 +539,7 @@ namespace advt.Web.Controllers
         {
             SupervisorAuditModel model = new SupervisorAuditModel();
             model.GetAllExamUserDetailInfo();
-            return Json(new { ListExamUserDetailInfos = model.ListDirectorUserInfos, LRules= model.LRules });
+            return Json(new { ListExamUserDetailInfos = model.ListDirectorUserInfos, LRules= model.LRules, LSignedupUser=model.LSignedupUser });
         }
         public JsonResult Upload_Supervisor(HttpPostedFileBase file)
         {
@@ -583,9 +584,9 @@ namespace advt.Web.Controllers
         {
             var username = this.UserContextSubstring;
             SupervisorAuditModel models = new SupervisorAuditModel();
-            models.InsertUserDetail(model,username);
+            var Result=models.InsertUserDetail(model,username);
 
-            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos });
+            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos, LSignedupUser= models.LSignedupUser, Result });
         }
         [MyAuthorize]
         [HttpPost]
@@ -595,6 +596,59 @@ namespace advt.Web.Controllers
             models.SerachDetailByUserCode(model);
 
             return Json(new { LExamUserDetailInfo=models.LExamUserDetailInfo });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult StopUser(string model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            var username = this.UserContextSubstring;
+            models.Stopuser(model, username);
+
+
+            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos,  LSignedupUser = models.LSignedupUser });
+        }
+        //Hr审核
+        [MyAuthorize]
+        public ActionResult HrAudit()
+        {
+            HrAuditModel model = new HrAuditModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult GetHrAuditUser(string typename)
+        {
+            HrAuditModel model = new HrAuditModel();
+            model.GetHrAuditUser(typename);
+            return Json(new { ListHrAuditUser = model.ListHrAuditUser, ListHrAuditSuccessUser =model.ListHrAuditSuccessUser,LExamType=model.LExamType });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult UpdateHrAduitUser(List<ExamUserDetailInfo> model)
+        {
+            var username = this.UserContextSubstring;
+            HrAuditModel models = new HrAuditModel();
+             models.UpdateHrAduitUser(model, username);
+            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult StopHrAuditUser(string model)
+        {
+            HrAuditModel models = new HrAuditModel();
+            var username = this.UserContextSubstring;
+            models.StopHrAuditUser(model, username);
+            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SearchPracticeUserDetail(string model)
+        {
+            HrAuditModel models = new HrAuditModel();
+            var username = this.UserContextSubstring;
+            models.SearchPracticeUserDetail(model);
+            return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo, LPracticeInfo = models.LPracticeInfo });
         }
 
         [MyAuthorize]
