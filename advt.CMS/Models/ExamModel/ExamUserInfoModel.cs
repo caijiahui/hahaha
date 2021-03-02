@@ -146,7 +146,7 @@ namespace advt.CMS.Models.ExamModel
                     {
                         //不存在，就按照职等去技能表找对应的本职等级能
                         ListRankInfo = Data.ExamUserInfo.Get_ExamUserLevel(item.RankName);
-                        if (ListRankInfo != null)
+                        if (ListRankInfo != null&& ListRankInfo.Count()>0)
                         {
                             ApplicationLevel = ListRankInfo.FirstOrDefault().SkillName;
                             apps = true;
