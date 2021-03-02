@@ -107,6 +107,7 @@
                                         <el-menu-item index="1-2" @@click="OpenExamType('bank')">题库管理</el-menu-item>
                                         <el-menu-item index="1-2" @@click="OpenExamType('rule')">考试规则</el-menu-item>
                                         <el-menu-item index="1-2" @@click="OpenExamType('Page')">考试页面</el-menu-item>
+                                        <el-menu-item index="1-2" @@click="OpenExamType('UserInfo')">人员基本信息页面</el-menu-item>
                                         <el-menu-item index="1-2" @@click="OpenExamType('Director')">主管审核</el-menu-item>
                                         <el-menu-item index="1-2" @@click="OpenExamType('HrCheck')">HR审核</el-menu-item>
                                     </el-menu-item-group>
@@ -201,6 +202,7 @@
                      else if (ids == "rule") { window.location.href = "/PEMain/MaintainExamRule" }
                      else if (ids == "bank") { window.location.href = "/PEMain/MaintainExamBank" }
                      else if (ids == "Page") { window.location.href = "/PEMain/ExamPage" }
+                     else if (ids == "UserInfo") { window.location.href = "/PEMain/MaintainExamUserInfo" }
                      else if (ids == "Director") { window.location.href = "/PEMain/SupervisorAudit" }
                      else if (ids == "HrCheck") { window.location.href = "/PEMain/HrAudit" }
                  },
