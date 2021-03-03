@@ -25,20 +25,21 @@ namespace advt.CMS.Models.ExamModel
         {
             var model = new ExamUserInfoModel();
             model.GetUserInfo();
-            foreach (var item in model.ListUserInfo)
-            {
-                decimal PracticalID = 0;
-                var SkillName = item.SkillLevel;
-                var Practical = Data.PracticeInfo.Get__All_PracticeInfo_UserCode(item.UserCode, SkillName);
-                if (Practical.Count()!=0)
-                {
-                    PracticalID = Convert.ToDecimal(Practical.FirstOrDefault().PracticeScore);
-                }
-                //item.ExamStatus = "Signup";
-                item.PracticalID = PracticalID;
-            }
-            ListDirectorUserInfos = model.ListUserInfo;
-            LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus= "Signup", IsStop = false });
+            var c = model.ListUserInfo.Where(x => x.DepartCode == "KQ12").ToList();
+            //foreach (var item in c)
+            //{
+            //    decimal PracticalID = 0;
+            //    var SkillName = item.SkillLevel;
+            //    var Practical = Data.PracticeInfo.Get__All_PracticeInfo_UserCode(item.UserCode, SkillName);
+            //    if (Practical.Count()!=0)
+            //    {
+            //        PracticalID = Convert.ToDecimal(Practical.FirstOrDefault().PracticeScore);
+            //    }
+            //    //item.ExamStatus = "Signup";
+            //    item.PracticalID = PracticalID;
+            //}
+            ListDirectorUserInfos = c;
+            LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus= "Signup", IsStop = false, DepartCode= "KQ12" });
             LRules = Data.ExamRule.Get_All_TypeNameExamRule("技能等级考试");
            
 
@@ -62,10 +63,11 @@ namespace advt.CMS.Models.ExamModel
                 var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
-                    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { TypeName = item.TypeName, UserCode = item.UserCode, ExamStatus = "Signup", ApplyLevel = item.ApplicationLevel, IsStop=false });
+                    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { TypeName= item.TypeName,  UserCode = item.UserCode, ExamStatus = "Signup", ApplyLevel = item.ApplicationLevel, IsStop=false });
                     if (c != null)
                     {
-                        Result +=item.UserName+"已报名，不可重复报名";
+                        Result += item.UserName + "已报名，不可重复报名";
+
                     }
                     else
                     {
@@ -93,7 +95,7 @@ namespace advt.CMS.Models.ExamModel
                     }
 
                 };
-                GetAllExamUserDetailInfo();
+                LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, DepartCode = "KQ12" });
                 return Result;
             }
             catch (Exception ex)
@@ -118,7 +120,7 @@ namespace advt.CMS.Models.ExamModel
                 c.UpdateDate = DateTime.Now;
                 c.UpdateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-                GetAllExamUserDetailInfo();
+                LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, DepartCode = "KQ12" });
             }
             catch (Exception ex)
             {
