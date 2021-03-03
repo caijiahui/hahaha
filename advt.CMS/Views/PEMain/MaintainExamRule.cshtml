@@ -217,7 +217,8 @@
                     var _this = this;
                     axios.post('/PEMain/GetRuleInfo').then(res => {
                         _this.tableData = res.data.tableData;
-                        _this.setPaginations()
+                        _this.setPaginations();
+                        console.log(11,221);
                     })
                 },
                 setPaginations() {
