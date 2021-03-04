@@ -58,6 +58,7 @@ namespace advt.Entity
         public string ApplyLevel { get; set; }
         public string HighestLevel { get; set; }
         public bool IsAchievement { get; set; }
+        public string IsExam { get; set; }//是否可考
         public bool IsStop { get; set; }
         public string HRUpdateUser { get; set; }
 
