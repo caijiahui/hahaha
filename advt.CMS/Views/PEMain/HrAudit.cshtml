@@ -269,7 +269,12 @@
                 <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
                 </el-table-column>
-
+                <el-table-column label="中止"
+                                 prop="IsStop" sortable>
+                    <template slot-scope="scope">
+                        {{ChangeAch(scope.row.IsStop)}}
+                    </template>
+                </el-table-column>
             </el-table>
 
         </el-dialog>
@@ -425,6 +430,14 @@
                 var day = listDate.getDate();
                 //console.log(new Date(date).getFullYear())
                 return year + '-' + mon + '-' + day;
+            },
+            ChangeAch: function (ach) {
+                if (ach == false) {
+                    return "否";
+                }
+                else if (ach == true) {
+                    return "是";
+                }
             },
             getdata: function () {
                 var _this = this;
