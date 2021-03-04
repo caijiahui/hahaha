@@ -59,6 +59,16 @@ namespace advt.CMS.Models.ExamModel
             }
             foreach (DataRow row in result.Tables[0].Rows)
             {
+                decimal score = 0;
+                DateTime? now = null;
+                if (row["TheoreticalAchievement"].ToString()!= "")
+                {
+                    score =Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
+                }
+                if (row["LastExamTime"].ToString() != "")
+                {
+                    now = Convert.ToDateTime(row["LastExamTime"].ToString());
+                }
                 ListUserInfo.Add(new UserInfo
                 {
                     Id = Convert.ToInt32(row["ID"].ToString()),
@@ -77,9 +87,9 @@ namespace advt.CMS.Models.ExamModel
                     //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),
                     SkillLevel = row["SkillLevel"].ToString(),//本职等
                     HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级
-                    LastExamTime = DateTime.Now,//Convert.ToDateTime(row["ExamDate"])
-                    TheoreticalAchievement = 90,//理论成绩Convert.ToDecimal(row["PracticeScore"].ToString())
+                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级                   
+                    LastExamTime = now,                   
+                    TheoreticalAchievement = score,//理论成绩
                     ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级                    
                     IsAchment = row["IsAchment"].ToString(),
                     IsExam = row["IsExam"].ToString()

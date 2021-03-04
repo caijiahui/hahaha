@@ -26,7 +26,7 @@
             </el-upload>
         </template>
 
-        <el-table :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
+        <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'UserCode', order: 'CreateUser'}">
             <el-table-column fixed
                              prop="UserCode"
@@ -54,13 +54,17 @@
             <el-table-column label="是否符合绩效"
                              width="130">
                 <template slot-scope="scope">
-                    <span>{{ChangeAch(scope.row.IsAchment)}}</span>
+                    @*<span>{{ChangeAch(scope.row.IsAchment)}}</span>*@
+                    <i class="el-icon-check" v-if="scope.row.IsAchment=='true'" style="color:green"></i>
+                    <i class="el-icon-close" v-if="scope.row.IsAchment=='false'"></i>
                 </template>
             </el-table-column>
             <el-table-column label="本次是否考试"
                              width="130">
                 <template slot-scope="scope">
-                    <span>{{ChangeAch(scope.row.IsExam)}}</span>
+                    @*<span>{{ChangeAch(scope.row.IsExam)}}</span>*@
+                    <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
+                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
                 </template>
             </el-table-column>
 
@@ -123,16 +127,14 @@
 
         </el-dialog>
         <!-- #endregion -->
-
-
-        @*<el-pagination @@size-change="handleSizeChange"
-                       @@current-change="handleCurrentChange"
-                       :current-page="paginations.page_index"
-                       :page-sizes="paginations.page_sizes"
-                       :page-size="paginations.page_size"
-                       :layout="paginations.layout"
-                       :total="paginations.total">
-        </el-pagination>*@
+        <el-pagination @@size-change="handleSizeChange"
+                           @@current-change="handleCurrentChange"
+                           :current-page="paginations.page_index"
+                           :page-sizes="paginations.page_sizes"
+                           :page-size="paginations.page_size"
+                           :layout="paginations.layout"
+                           :total="paginations.total">
+            </el-pagination>
         <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
             <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                 <el-form-item label="工号" prop="UserCode">
@@ -256,6 +258,7 @@
 
 
     </div>
+   
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
@@ -278,13 +281,13 @@
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
-            //paginations: {
-            //    page_index: 1,
-            //    total: 0,
-            //    page_size: 10,
-            //    page_sizes: [10, 15, 20],
-            //    layout: 'total, sizes, prev, pager, next, jumper'
-            //}
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 10,
+                page_sizes: [10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
         },
         mounted: function () {
             this.getdata();
@@ -295,58 +298,58 @@
                 axios.post('/PEMain/GetUserInfo').then(function (responese) {
                     _this.tableData = responese.data.tableData;
                     console.log(297,297);
-                   // _this.setPaginations();
+                    _this.setPaginations();
                 })
             },
-            //setPaginations() {
-            //    var _this = this;
-            //    _this.paginations.total = _this.tableData.length; //数据的数量
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
 
-            //    _this.paginations.page_index = 1; //默认显示第一页
-            //    _this.paginations.page_size = 10; //每页显示多少数据
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 10; //每页显示多少数据
 
-            //    //显示数据
-            //    _this.tableData = _this.tableData.filter((item, index) => {
-            //        return index < _this.paginations.page_size;
-            //    })
-            //},
-            //handleSizeChange(page_size) {
-            //    var _this = this;
-            //    _this.paginations.page_index = 1; //第一页
-            //    _this.paginations.page_size = page_size; //每页先显示多少数据
-            //    _this.tableData = _this.tableData.filter((item, index) => {
-            //        return index < page_size
-            //    })
-            //},
-            //handleCurrentChange(page) {
-            //    var _this = this;
-            //    axios.post('/PEMain/GetUserInfo').then(res => {
-            //        _this.tableData = res.data.tableData;
-            //        let index = _this.paginations.page_size * (page - 1);
-            //        //获取总数
-            //        let allData = _this.paginations.page_size * page;
-            //        let tablist = [];
-            //        for (let i = index; i < allData; i++) {
-            //            if (_this.tableData[i]) {
-            //                tablist.push(_this.tableData[i]);
-            //            }
-            //        }
-            //        _this.tableData = tablist;
-            //    })
+                //显示数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+                    }
+                    _this.tableData = tablist;
+                })
 
-            //},
+            },
            
-            //topicratioPropsFn: function (val) {
-            //    var _this = this;
-            //    _this.RuleGrList = [];
-            //    val.forEach(function (lst, num) {
-            //        _this.ListTopicInfo.forEach(function (item, index) {
-            //            if (item.ID == lst)
-            //                _this.RuleGrList.push(item);
-            //        })
-            //    })
+            topicratioPropsFn: function (val) {
+                var _this = this;
+                _this.RuleGrList = [];
+                val.forEach(function (lst, num) {
+                    _this.ListTopicInfo.forEach(function (item, index) {
+                        if (item.ID == lst)
+                            _this.RuleGrList.push(item);
+                    })
+                })
 
-            //},
+            },
             handleSave: function () {
                 var _this = this;
                 var objs = {};
@@ -355,7 +358,7 @@
                     model: objs
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
-                   // _this.setPaginations();
+                    _this.setPaginations();
                 });
                 _this.dialogFormVisible = false;
 
@@ -401,7 +404,7 @@
                     model: index
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
-                  // _this.setPaginations();
+                  _this.setPaginations();
                 });
             },            
             changeDate: function (dates) {
