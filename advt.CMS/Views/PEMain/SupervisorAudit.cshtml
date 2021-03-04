@@ -229,9 +229,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
-                    <el-checkbox v-model="VAuditCheck.IsExam"></el-checkbox>
+                    <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
                 </el-form-item>
-            </el-form>
+            </el-form> 
             <div slot="footer" class="dialog-footer">
                 <template>
                     <el-button @@click="dialogUpdateVisible = false">取 消</el-button>
@@ -319,14 +319,13 @@
                 <el-table-column label="最高可考技能"
                                  prop="HighestLevel" sortable>
                 </el-table-column>
-                <el-table-column label="符合技能"
+                <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
                 </el-table-column>
                 <el-table-column label="中止"
                                  prop="IsStop" sortable>
                     <template slot-scope="scope">
-                        <i class="el-icon-check" v-if="scope.row.IsStop=='true'" style="color:green"></i>
-
+                        {{ChangeAch(scope.row.IsStop)}}
                     </template>
                 </el-table-column>
 
@@ -397,6 +396,7 @@
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
+                _this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
@@ -493,10 +493,10 @@
             },
             ChangeAch: function (ach) {
                 if (ach == false) {
-                    return "false";
+                    return "否";
                 }
-                if (ach == false) {
-                    return "true";
+                else if (ach == true) {
+                    return "是";
                 }
             },
             changeDate: function (dates) {

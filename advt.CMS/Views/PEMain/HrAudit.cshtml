@@ -260,13 +260,13 @@
                 <el-table-column label="考试类型"
                                  prop="TypeName" sortable>
                 </el-table-column>
-                <el-table-column label="本次申请等级"
-                                 prop="ApplicationLevel" sortable>
+                <el-table-column label="申请等级"
+                                 prop="ApplyLevel" sortable>
                 </el-table-column>
                 <el-table-column label="最高可考技能"
-                                 prop="ApplicationLevel" sortable>
+                                 prop="HighestLevel" sortable>
                 </el-table-column>
-                <el-table-column label="是否符合技能"
+                <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
                 </el-table-column>
 
@@ -322,6 +322,7 @@
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
+                _this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
