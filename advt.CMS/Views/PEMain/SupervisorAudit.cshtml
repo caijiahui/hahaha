@@ -407,7 +407,7 @@
                     if (res.data.Result != '') {
                         _this.$message.error(res.data.Result);
                     } else {
-                        _this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
+                        //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
                         _this.LSignedupUser = res.data.LSignedupUser;
                         _this.dialogUpdateVisible = false;
                     }
@@ -472,7 +472,7 @@
                 axios.post('/PEMain/StopUser', {
                     model: ID
                 }).then(function (res) {
-                    _this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
+                    //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
                     _this.LSignedupUser = res.data.LSignedupUser;
                 });
             },

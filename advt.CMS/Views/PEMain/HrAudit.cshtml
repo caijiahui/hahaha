@@ -386,8 +386,8 @@
                 axios.post('/PEMain/GetHrAuditUser', {
                     typename: _this.TypeName
                 }).then(function (res) {
-                    _this.ListHrAuditUser = responese.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = responese.data.ListHrAuditSuccessUser;
+                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
                 });
                 _this.dialogFormVisible = false
             },
