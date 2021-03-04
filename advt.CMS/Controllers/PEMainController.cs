@@ -476,6 +476,7 @@ namespace advt.Web.Controllers
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
             model.GetUserInfo();
+            
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)
