@@ -29,7 +29,7 @@
                              prop="IsExam">
                 <template slot-scope="scope">
                     <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
-                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'" ></i>
+                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
                 </template>
 
             </el-table-column>
@@ -56,6 +56,10 @@
                     <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
                 </template>
             </el-table-column>
+            <el-table-column label="实践成绩" prop="TheoreticalAchievement"
+                             sortable >
+              
+            </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
                              width="240">
@@ -69,12 +73,12 @@
             </el-table-column>
             @*<el-table-column align="right" fixed="right">
 
-                    <template slot-scope="scope">
-                        <el-button size="mini"
-                                   @@click="handleEdit()">Edit</el-button>
-                    </template>
+            <template slot-scope="scope">
+                <el-button size="mini"
+                           @@click="handleEdit()">Edit</el-button>
+            </template>
 
-                </el-table-column>*@
+        </el-table-column>*@
         </el-table>
 
         <el-divider content-position="left">已报名人员</el-divider>
@@ -320,6 +324,10 @@
                 </el-table-column>
                 <el-table-column label="中止"
                                  prop="IsStop" sortable>
+                    <template slot-scope="scope">
+                        <i class="el-icon-check" v-if="scope.row.IsStop=='true'" style="color:green"></i>
+
+                    </template>
                 </el-table-column>
 
             </el-table>
@@ -403,6 +411,7 @@
                     item['IsExam'] = _this.VAuditCheck.IsExam;
                     item['RuleName'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'Signup';
+                    item['EntryDate'] = _this.changeDate(item['EntryDate'] );
                 })
                 console.log(_this.checkBoxData, 333);
                 axios.post('/PEMain/InsertUserDetail', {
@@ -441,7 +450,7 @@
                 }).then(function (res) {
                     _this.VPracticeInfo = {};
                 });
-                _this.dialogFormVisible = false
+                _this.dialogFormPractical = false
             },
             handleAannexSuccess(Result) {
                 var _this = this;
@@ -481,6 +490,14 @@
                     //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
                     _this.LSignedupUser = res.data.LSignedupUser;
                 });
+            },
+            ChangeAch: function (ach) {
+                if (ach == false) {
+                    return "false";
+                }
+                if (ach == false) {
+                    return "true";
+                }
             },
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
