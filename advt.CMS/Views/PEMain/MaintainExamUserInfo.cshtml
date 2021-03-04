@@ -26,8 +26,8 @@
             </el-upload>
         </template>
 
-        <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100% " :default-sort="{prop: 'UserCode', order: 'CreateUser'}">
+        <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
+                  style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
             <el-table-column fixed
                              prop="UserCode"
                              label="工号"
@@ -70,7 +70,11 @@
 
 
             <el-table-column fixed="right" label="操作" width="340">
-
+                <template slot="header" slot-scope="scope">
+                    <el-input v-model="search"
+                              size="mini"
+                              placeholder="输入关键字搜索" />
+                </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
                                @@click="handleEdit(scope.row.Id, scope.row)">Edit</el-button>
