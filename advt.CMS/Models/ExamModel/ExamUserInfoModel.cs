@@ -5,6 +5,7 @@ using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -45,167 +46,211 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetUserInfo()
         {
-            var user = Data.ExamUserInfo.Get_All_ExamUserInfo();
-            foreach (var item in user)
+            var connectionString = "server=172.21.128.84;database=Exam2;uid=adminims;pwd=Ifs2015Pri";
+            DataSet result = new DataSet();
+            string sql = string.Format(@"SELECT * FROM [V_ExamUserDetail]");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
-                //本职等技能,最高渴考技能
-                var SkillLevel = "";
-                var maxskilllevel = "";
-                if (item.RankName != null)
+                using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    ListRankInfo = Data.ExamUserInfo.Get_ExamUserLevel(item.RankName);
-                    if (ListRankInfo != null&& ListRankInfo.Count()>0)
-                    {
-                        SkillLevel = ListRankInfo.FirstOrDefault().SkillName;
-                        maxskilllevel = ListRankInfo.FirstOrDefault().MaxSkillName;
-                    }
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    adp.Fill(result);
                 }
-                //目前技能等级,最近一次考试时间
-                var CurrentSkillLevel = "";
-                DateTime LastExamTime = DateTime.Now;
-                DateTime PlanTime = DateTime.Now;
-                decimal? score = 0;
-                var  ExamStatus = "";
-                if (item.UserCode != null)
-                {
-                    ListExamUserDetailInfo = Data.ExamUserInfo.GetExamUserDetail(item.UserCode);
-                    if (ListExamUserDetailInfo != null&& ListExamUserDetailInfo.Count()>0)
-                    {
-                        //目前技能
-                        CurrentSkillLevel = ListExamUserDetailInfo.FirstOrDefault().SkillName;
-                        LastExamTime =Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().ExamDate);
-                        PlanTime = Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().PlanExamDate);
-                        ExamStatus = ListExamUserDetailInfo.FirstOrDefault().ExamStatus;
-                        if (CurrentSkillLevel != null && LastExamTime != null)
-                        {
-                            //理论成绩（实践表）
-                            ListPracticeInfo = Data.ExamUserInfo.GetPraticeScore(item.UserCode, CurrentSkillLevel);
-                            if (ListPracticeInfo != null&& ListPracticeInfo.Count()>0)
-                            {
-                                score = ListPracticeInfo.FirstOrDefault().PracticeScore;
-                            }
-                        }
-                    }
-
-                }
-                //ApplicationLevel 本地申请等级
-                var ApplicationLevel = "";
-                bool apps = false;
-                if (item.UserCode != null)
-                {
-                    ListExamUserDetailInfo = Data.ExamUserInfo.GetExamUserDetail(item.UserCode);
-                    if (ListExamUserDetailInfo.Count() > 0)
-                    {
-                        var ap= "";
-                        var app = ListExamUserDetailInfo.FirstOrDefault().ApplyLevel;
-                        if (app != null)
-                        {
-                            if (app == "G1")
-                            {
-                                ap = "G2";
-                            }
-                            else if (app == "G2")
-                            {
-                                ap = "G3";
-                            }
-                            else if (app == "G3")
-                            {
-                                ap = "G4";
-                            }
-                            else if (app == "G4")
-                            {
-                                ap = "G5";
-                            }
-                            else if (app == "G5")
-                            {
-                                ap = "G6";
-                            }
-                            else if (app == "G6")
-                            {
-                                ap = "G7";
-                            }
-                            else if (app == "G7")
-                            {
-                                ap = "G8";
-                            }
-                            //本职等技能 + 1，如果去职等表里面查找不到，就显现满级，如果存在，就显示对应的职等技能
-                              ListRankInfo = Data.ExamUserInfo.GetRanKInfoSkill(ap);
-                            if (ListRankInfo != null&& ListRankInfo.Count()>0)
-                            {
-                                var s = ListRankInfo.FirstOrDefault().SkillName;
-                                ApplicationLevel = s;
-                               
-                            }
-                            else {
-                                ApplicationLevel = app;
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        //不存在，就按照职等去技能表找对应的本职等级能
-                        ListRankInfo = Data.ExamUserInfo.Get_ExamUserLevel(item.RankName);
-                        if (ListRankInfo != null&& ListRankInfo.Count()>0)
-                        {
-                            ApplicationLevel = ListRankInfo.FirstOrDefault().SkillName;
-                            apps = true;
-                        }
-
-                    }
-                }
-                //是否绩效
-                bool isach = false;
-                if (ApplicationLevel != null)
-                {
-                    ListSkillInfo = Data.ExamUserInfo.GetSkillAch(ApplicationLevel);
-                    if (ListSkillInfo != null&&ListSkillInfo.Count()>0)
-                    {
-                        var sk = ListSkillInfo.FirstOrDefault().AchRequire;
-                        if (sk == item.Achievement)
-                        {
-                            isach = true;
-                        }
-                       
-                    }
-                }
-
-                //本次是否考试
-                bool isexam = false;
-                if (apps == false && isach == true)
-                {
-                    isexam = true;
-                }
-
-                ListUserInfo.Add(new UserInfo {
-                    Id = item.ID,
-                    UserCode = item.UserCode,
-                    UserName = item.UserName,
-                    DepartCode = item.DepartCode,
-                    PostName = item.PostName,
-                    RankName = item.RankName,
-                    EntryDate = item.EntryDate,
-                    Achievement = item.Achievement,
-                    TypeName = item.TypeName,
-                    SubjectName = item.SubjectName,
-                    CreateUser = item.CreateUser,
-                    CreateDate = item.CreateDate,
-                    UpdateUser = item.UpdateUser,
-                    UpdateDate = item.UpdateDate,
-                    SkillLevel = SkillLevel,
-                    HighestTestSkill=maxskilllevel,
-                    CurrentSkillLevel= CurrentSkillLevel,
-                    LastExamTime= LastExamTime,
-                    TheoreticalAchievement=score,
-                    IsApp=apps,
-                    IsAchment= isach,
-                    PlanExamDate=PlanTime,
-                    IsExam=isexam,
-                    ApplicationLevel= ApplicationLevel,
-                    ExamStatus=ExamStatus
-                });
             }
-        }
+            foreach (DataRow row in result.Tables[0].Rows)
+            {
+                ListUserInfo.Add(new UserInfo
+                {
+                    Id = Convert.ToInt32(row["ID"].ToString()),
+                    UserCode = row["UserCode"].ToString(),
+                    UserName = row["UserName"].ToString(),
+                    DepartCode = row["DepartCode"].ToString(),
+                    PostName = row["PostName"].ToString(),
+                    RankName = row["RankName"].ToString(),
+                    EntryDate = Convert.ToDateTime(row["EntryDate"]),
+                    Achievement = row["Achievement"].ToString(),
+                    TypeName = row["TypeName"].ToString(),
+                    SubjectName = row["SubjectName"].ToString(),
+                    //CreateUser = row["CreateUser"].ToString(),
+                    //CreateDate = Convert.ToDateTime(row["CreateDate"]),
+                    //UpdateUser = row["UpdateUser"].ToString(),
+                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),
+                    SkillLevel = row["SkillLevel"].ToString(),//本职等
+                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
+                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级
+                    LastExamTime = DateTime.Now,//Convert.ToDateTime(row["ExamDate"])
+                    TheoreticalAchievement = 90,//理论成绩Convert.ToDecimal(row["PracticeScore"].ToString())
+                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级                    
+                    IsAchment = row["IsAchment"].ToString(),
+                    IsExam = row["IsExam"].ToString()
+                });
+                    
+                }
+
+
+            #region
+                //var user = Data.ExamUserInfo.Get_All_ExamUserInfo();
+                //foreach (var item in user)
+                //{
+                //    //本职等技能,最高渴考技能
+                //    var SkillLevel = "";
+                //    var maxskilllevel = "";
+                //    if (item.RankName != null)
+                //    {
+                //        ListRankInfo = Data.ExamUserInfo.Get_ExamUserLevel(item.RankName);
+                //        if (ListRankInfo != null&& ListRankInfo.Count()>0)
+                //        {
+                //            SkillLevel = ListRankInfo.FirstOrDefault().SkillName;
+                //            maxskilllevel = ListRankInfo.FirstOrDefault().MaxSkillName;
+                //        }
+                //    }
+                //    //目前技能等级,最近一次考试时间
+                //    var CurrentSkillLevel = "";
+                //    DateTime LastExamTime = DateTime.Now;
+                //    DateTime PlanTime = DateTime.Now;
+                //    decimal? score = 0;
+                //    var  ExamStatus = "";
+                //    if (item.UserCode != null)
+                //    {
+                //        ListExamUserDetailInfo = Data.ExamUserInfo.GetExamUserDetail(item.UserCode);
+                //        if (ListExamUserDetailInfo != null&& ListExamUserDetailInfo.Count()>0)
+                //        {
+                //            //目前技能
+                //            CurrentSkillLevel = ListExamUserDetailInfo.FirstOrDefault().SkillName;
+                //            LastExamTime =Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().ExamDate);
+                //            PlanTime = Convert.ToDateTime(ListExamUserDetailInfo.FirstOrDefault().PlanExamDate);
+                //            ExamStatus = ListExamUserDetailInfo.FirstOrDefault().ExamStatus;
+                //            if (CurrentSkillLevel != null && LastExamTime != null)
+                //            {
+                //                //理论成绩（实践表）
+                //                ListPracticeInfo = Data.ExamUserInfo.GetPraticeScore(item.UserCode, CurrentSkillLevel);
+                //                if (ListPracticeInfo != null&& ListPracticeInfo.Count()>0)
+                //                {
+                //                    score = ListPracticeInfo.FirstOrDefault().PracticeScore;
+                //                }
+                //            }
+                //        }
+
+                //    }
+                //    //ApplicationLevel 本地申请等级
+                //    var ApplicationLevel = "";
+                //    bool apps = false;
+                //    if (item.UserCode != null)
+                //    {
+                //        ListExamUserDetailInfo = Data.ExamUserInfo.GetExamUserDetail(item.UserCode);
+                //        if (ListExamUserDetailInfo.Count() > 0)
+                //        {
+                //            var ap= "";
+                //            var app = ListExamUserDetailInfo.FirstOrDefault().ApplyLevel;
+                //            if (app != null)
+                //            {
+                //                if (app == "G1")
+                //                {
+                //                    ap = "G2";
+                //                }
+                //                else if (app == "G2")
+                //                {
+                //                    ap = "G3";
+                //                }
+                //                else if (app == "G3")
+                //                {
+                //                    ap = "G4";
+                //                }
+                //                else if (app == "G4")
+                //                {
+                //                    ap = "G5";
+                //                }
+                //                else if (app == "G5")
+                //                {
+                //                    ap = "G6";
+                //                }
+                //                else if (app == "G6")
+                //                {
+                //                    ap = "G7";
+                //                }
+                //                else if (app == "G7")
+                //                {
+                //                    ap = "G8";
+                //                }
+                //                //本职等技能 + 1，如果去职等表里面查找不到，就显现满级，如果存在，就显示对应的职等技能
+                //                  ListRankInfo = Data.ExamUserInfo.GetRanKInfoSkill(ap);
+                //                if (ListRankInfo != null&& ListRankInfo.Count()>0)
+                //                {
+                //                    var s = ListRankInfo.FirstOrDefault().SkillName;
+                //                    ApplicationLevel = s;
+
+                //                }
+                //                else {
+                //                    ApplicationLevel = app;
+                //                }
+
+                //            }
+                //        }
+                //        else
+                //        {
+                //            //不存在，就按照职等去技能表找对应的本职等级能
+                //            ListRankInfo = Data.ExamUserInfo.Get_ExamUserLevel(item.RankName);
+                //            if (ListRankInfo != null&& ListRankInfo.Count()>0)
+                //            {
+                //                ApplicationLevel = ListRankInfo.FirstOrDefault().SkillName;
+                //                apps = true;
+                //            }
+
+                //        }
+                //    }
+                //    //是否绩效
+                //    bool isach = false;
+                //    if (ApplicationLevel != null)
+                //    {
+                //        ListSkillInfo = Data.ExamUserInfo.GetSkillAch(ApplicationLevel);
+                //        if (ListSkillInfo != null&&ListSkillInfo.Count()>0)
+                //        {
+                //            var sk = ListSkillInfo.FirstOrDefault().AchRequire;
+                //            if (sk == item.Achievement)
+                //            {
+                //                isach = true;
+                //            }
+
+                //        }
+                //    }
+
+                //    //本次是否考试
+                //    bool isexam = false;
+                //    if (apps == false && isach == true)
+                //    {
+                //        isexam = true;
+                //    }
+
+                //    ListUserInfo.Add(new UserInfo {
+                //        Id = item.ID,
+                //        UserCode = item.UserCode,
+                //        UserName = item.UserName,
+                //        DepartCode = item.DepartCode,
+                //        PostName = item.PostName,
+                //        RankName = item.RankName,
+                //        EntryDate = item.EntryDate,
+                //        Achievement = item.Achievement,
+                //        TypeName = item.TypeName,
+                //        SubjectName = item.SubjectName,
+                //        CreateUser = item.CreateUser,
+                //        CreateDate = item.CreateDate,
+                //        UpdateUser = item.UpdateUser,
+                //        UpdateDate = item.UpdateDate,
+                //        SkillLevel = SkillLevel,
+                //        HighestTestSkill=maxskilllevel,
+                //        CurrentSkillLevel= CurrentSkillLevel,
+                //        LastExamTime= LastExamTime,
+                //        TheoreticalAchievement=score,
+                //        IsApp=apps,
+                //        IsAchment= isach,
+                //        PlanExamDate=PlanTime,
+                //        IsExam=isexam,
+                //        ApplicationLevel= ApplicationLevel,
+                //        ExamStatus=ExamStatus
+                //    });
+                //}
+                #endregion
+            }
 
         public void UploadUser(string filepath)
         {
@@ -342,8 +387,8 @@ namespace advt.CMS.Models.ExamModel
         public decimal? TheoreticalAchievement { get; set; }//理论成绩
         public string HighestTestSkill { get; set; }//最高可考技能
         public string ApplicationLevel { get; set; }//本次申请等级
-        public bool IsAchment { get; set; }//是否符合绩效
-        public bool IsExam { get; set; }//本次是否考试
+        public string  IsAchment { get; set; }//是否符合绩效
+        public string  IsExam { get; set; }//本次是否考试
         public DateTime? PlanExamDate { get; set; }//预计考试时间
         public bool IsApp { get; set; }//是否满级
         public decimal PracticalID { get; set; }//实践主键
