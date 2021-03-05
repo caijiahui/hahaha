@@ -11,6 +11,8 @@ namespace advt.Entity
 
         public string ExamType { get; set; }
 
+        public string ExamSubject { get; set; }
+
         public string TopicMajor { get; set; }//C#
 
         public string TopicLevel { get; set; }//G1

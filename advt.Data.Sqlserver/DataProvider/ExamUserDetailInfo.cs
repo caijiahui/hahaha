@@ -14,10 +14,10 @@ namespace advt.Data.SqlServer
 {
     public partial class DataProvider : advt.Data.IDataProvider
     {
-        #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/2/5 11:28:28
+        #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[HRUpdateUser],[HRUpdateDate]";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[HRUpdateUser],[HRUpdateDate],[IsExam]";
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -43,10 +43,13 @@ namespace advt.Data.SqlServer
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
             new string[] {"UpdateDate", "DateTime", "16"},
-            new string[] { "HRUpdateUser", "NVarChar", "500"},
-            new string[] { "HRUpdateDate", "DateTime", "16"},
-            new string[] { "IsStop", "Bit", "1"},
-            new string[] { "ApplyLevel", "NVarChar", "500"},
+            new string[] {"ApplyLevel", "NVarChar", "500"},
+            new string[] {"HighestLevel", "NVarChar", "500"},
+            new string[] {"IsAchievement", "Bit", "1"},
+            new string[] {"IsStop", "Bit", "1"},
+            new string[] {"HRUpdateUser", "NVarChar", "500"},
+            new string[] {"HRUpdateDate", "DateTime", "16"},
+            new string[] {"IsExam", "NVarChar", "500"}
         };
         #endregion
 

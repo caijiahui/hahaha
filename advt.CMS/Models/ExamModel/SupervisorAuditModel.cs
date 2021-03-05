@@ -77,9 +77,9 @@ namespace advt.CMS.Models.ExamModel
                         v.DepartCode = item.DepartCode;
                         v.PostName = item.PostName;
                         v.RankName = item.RankName;
-                        v.SkillName = item.SkillLevel;
-                        v.EntryDate = item.EntryDate;
-                        v.Achievement = item.Achievement;
+                        v.SkillName = item.SkillLevel; //本职等技能G1
+                        v.EntryDate = item.EntryDate; //入职日期
+                        v.Achievement = item.Achievement;//绩效
                         v.PracticeScore = item.PracticalID;
                         v.PlanExamDate = item.PlanExamDate;
                         v.ExamStatus = item.ExamStatus;
@@ -87,9 +87,11 @@ namespace advt.CMS.Models.ExamModel
                         v.RuleName = item.RuleName;
                         v.SubjectName = item.SubjectName;
                         v.TypeName = item.TypeName;
-                        v.ApplyLevel = item.ApplicationLevel;
-                        v.IsAchievement = item.IsApp;//是否满级
-                        v.CreateUser = username;
+                        v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级
+                        //v.IsAchievement = item.IsApp;//是否满级
+                        v.IsAchievement = item.IsAchment;//是否符合绩效
+                        v.HighestLevel = item.HighestTestSkill;//最高可考技能
+                        v.IsExam = item.IsExam;
                         v.CreateDate = DateTime.Now;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                     }

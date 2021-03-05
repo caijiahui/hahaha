@@ -28,7 +28,8 @@
             <el-table-column label="本次是否可考"
                              prop="IsExam">
                 <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.IsExam=='true'">可考</el-tag>
+                    <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
+                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
                 </template>
 
             </el-table-column>
@@ -49,15 +50,15 @@
             <el-table-column label="本次申请等级"
                              prop="ApplicationLevel" sortable>
             </el-table-column>
-            <el-table-column label="考试时间"
+            <el-table-column label="预计考试时间"
                              sortable>
                 <template slot-scope="scope">
                     <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="考试规则"
-                             prop="ExamRule" sortable
-                             width="180">
+            <el-table-column label="实践成绩" prop="TheoreticalAchievement"
+                             sortable >
+              
             </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
@@ -72,12 +73,12 @@
             </el-table-column>
             @*<el-table-column align="right" fixed="right">
 
-                    <template slot-scope="scope">
-                        <el-button size="mini"
-                                   @@click="handleEdit()">Edit</el-button>
-                    </template>
+            <template slot-scope="scope">
+                <el-button size="mini"
+                           @@click="handleEdit()">Edit</el-button>
+            </template>
 
-                </el-table-column>*@
+        </el-table-column>*@
         </el-table>
 
         <el-divider content-position="left">已报名人员</el-divider>
@@ -102,10 +103,10 @@
             </el-table-column>
 
             <el-table-column label="最高可考技能"
-                             prop="HighestTestSkill" sortable>
+                             prop="HighestLevel" sortable>
             </el-table-column>
             <el-table-column label="本次申请等级"
-                             prop="ApplicationLevel" sortable>
+                             prop="ApplyLevel" sortable>
             </el-table-column>
             <el-table-column label="本次是否可考"
                              prop="IsExam" sortable>
@@ -228,9 +229,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
-                    <el-checkbox v-model="VAuditCheck.IsExam"></el-checkbox>
+                    <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
                 </el-form-item>
-            </el-form>
+            </el-form> 
             <div slot="footer" class="dialog-footer">
                 <template>
                     <el-button @@click="dialogUpdateVisible = false">取 消</el-button>
@@ -248,6 +249,9 @@
                 <el-table-column label="日期"
                                  prop="CreateDate" sortable
                                  fixed>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.CreateDate!=''&&scope.row.CreateDate!=null">{{changeDate(scope.row.CreateDate)}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="姓名"
                                  prop="UserName" sortable>
@@ -309,14 +313,20 @@
                 <el-table-column label="考试类型"
                                  prop="TypeName" sortable>
                 </el-table-column>
-                <el-table-column label="本次申请等级"
-                                 prop="ApplicationLevel" sortable>
+                <el-table-column label="申请等级"
+                                 prop="ApplyLevel" sortable>
                 </el-table-column>
                 <el-table-column label="最高可考技能"
-                                 prop="ApplicationLevel" sortable>
+                                 prop="HighestLevel" sortable>
                 </el-table-column>
-                <el-table-column label="是否符合技能"
+                <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
+                </el-table-column>
+                <el-table-column label="中止"
+                                 prop="IsStop" sortable>
+                    <template slot-scope="scope">
+                        {{ChangeAch(scope.row.IsStop)}}
+                    </template>
                 </el-table-column>
 
             </el-table>
@@ -386,6 +396,7 @@
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
+                _this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
@@ -400,7 +411,9 @@
                     item['IsExam'] = _this.VAuditCheck.IsExam;
                     item['RuleName'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'Signup';
+                    item['EntryDate'] = _this.changeDate(item['EntryDate'] );
                 })
+                console.log(_this.checkBoxData, 333);
                 axios.post('/PEMain/InsertUserDetail', {
                     model: _this.checkBoxData
                 }).then(function (res) {
@@ -410,6 +423,8 @@
                         //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
                         _this.LSignedupUser = res.data.LSignedupUser;
                         _this.dialogUpdateVisible = false;
+                        _this.VAuditCheck.IsExam = '';
+                        _this.VAuditCheck.RuleName='';
                     }
                    
                 });
@@ -435,7 +450,7 @@
                 }).then(function (res) {
                     _this.VPracticeInfo = {};
                 });
-                _this.dialogFormVisible = false
+                _this.dialogFormPractical = false
             },
             handleAannexSuccess(Result) {
                 var _this = this;
@@ -475,6 +490,14 @@
                     //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
                     _this.LSignedupUser = res.data.LSignedupUser;
                 });
+            },
+            ChangeAch: function (ach) {
+                if (ach == false) {
+                    return "否";
+                }
+                else if (ach == true) {
+                    return "是";
+                }
             },
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));

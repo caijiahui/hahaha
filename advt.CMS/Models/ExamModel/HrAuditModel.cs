@@ -26,12 +26,12 @@ namespace advt.CMS.Models.ExamModel
             if (string.IsNullOrEmpty(typename))
             {
                 ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup" }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck" }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop=false }).OrderByDescending(x => x.TypeName).ToList();
             }
             else
             {
                 ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup",TypeName= typename }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop=false }).OrderByDescending(x => x.TypeName).ToList();
             }
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())

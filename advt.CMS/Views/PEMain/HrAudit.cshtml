@@ -260,16 +260,21 @@
                 <el-table-column label="考试类型"
                                  prop="TypeName" sortable>
                 </el-table-column>
-                <el-table-column label="本次申请等级"
-                                 prop="ApplicationLevel" sortable>
+                <el-table-column label="申请等级"
+                                 prop="ApplyLevel" sortable>
                 </el-table-column>
                 <el-table-column label="最高可考技能"
-                                 prop="ApplicationLevel" sortable>
+                                 prop="HighestLevel" sortable>
                 </el-table-column>
-                <el-table-column label="是否符合技能"
+                <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
                 </el-table-column>
-
+                <el-table-column label="中止"
+                                 prop="IsStop" sortable>
+                    <template slot-scope="scope">
+                        {{ChangeAch(scope.row.IsStop)}}
+                    </template>
+                </el-table-column>
             </el-table>
 
         </el-dialog>
@@ -322,6 +327,7 @@
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
+                _this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
@@ -424,6 +430,14 @@
                 var day = listDate.getDate();
                 //console.log(new Date(date).getFullYear())
                 return year + '-' + mon + '-' + day;
+            },
+            ChangeAch: function (ach) {
+                if (ach == false) {
+                    return "否";
+                }
+                else if (ach == true) {
+                    return "是";
+                }
             },
             getdata: function () {
                 var _this = this;
