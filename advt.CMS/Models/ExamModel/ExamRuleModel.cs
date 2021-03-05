@@ -126,8 +126,31 @@ namespace advt.CMS.Models.ExamModel
                     ID=ss
                 });
             }
-        
+
         }
+        public void GetRuleSubjectList(string model)
+        {
+            ListTopicInfo = Data.ExamRule.GetTRuleSubjectInfo(model);
+
+            int ss = 0;
+            foreach (var item in ListTopicInfo)
+            {
+                ss++;
+                ListTopic.Add(new TopicInfo
+                {
+                    ExamType = item.ExamType,
+                    TopicMajor = item.TopicMajor,
+                    TopicLevel = item.TopicLevel,
+                    TopicNum = "0",
+                    TopicScore = 0,
+                    TopicType = item.TopicType,
+                    ID = ss
+                });
+            }
+
+        }
+
+        
         public void GetRuleType(string model)
         {
             if (model != null)

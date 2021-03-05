@@ -670,5 +670,19 @@ namespace advt.Web.Controllers
 
             return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo });
         }
+
+        public ActionResult GetRuleTypeName(string model)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            models.GetSubjectList(model);
+            return Json(new { ListSubjectName = models.ListExamSubject, ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetRuleSubjectName(string model)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            models.GetRuleSubjectList(model);
+            return Json(new { ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

@@ -98,7 +98,14 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@typname", (DbType)SqlDbType.NVarChar, 150, typname));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-      
+        public IDataReader GetTRuleSubjectInfo(string model)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select  [TopicMajor],[TopicLevel],[TopicType] from[dbo].[ExamBank] where ExamSubject =@model group by [TopicMajor],[TopicLevel],[TopicType]");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@model", (DbType)SqlDbType.NVarChar, 150, model));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
 
         #endregion
 
