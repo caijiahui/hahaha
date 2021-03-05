@@ -207,10 +207,12 @@
                     }).then(response => {
                         _this.ListSubjectName = response.data.ListSubjectName;
                         _this.ListTopicInfo = response.data.ListTopic;
+                        console.log(response.data.ListTopic);
                       });
                 },
                 'VExamRule.SubjectName': function (newval) {
                     var _this = this;
+                    _this.ListTopicInfo = [];
                     axios.post('/PEMain/GetRuleSubjectName', {
                         model: newval
                     }).then(response => {
