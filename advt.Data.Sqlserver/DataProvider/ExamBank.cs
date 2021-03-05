@@ -18,7 +18,7 @@ namespace advt.Data.SqlServer
         #region ExamBank , (Ver:2.3.8) at: 2021/1/12 15:44:47
         #region Var: 
         private string[] ExamBank_key_a = { "ID" };
-        private string ExamBank_item_str = "[ID],[ExamType],[TopicMajor],[TopicLevel],[TopicType],[TopicTitle],[TopicTitlePicNum],[RightKey],[Remark],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum]";
+        private string ExamBank_item_str = "[ID],[ExamType],[TopicMajor],[TopicLevel],[TopicType],[TopicTitle],[TopicTitlePicNum],[RightKey],[Remark],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum],[ExamSubject]";
         private string[][] ExamBank_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -44,6 +44,7 @@ namespace advt.Data.SqlServer
             new string[] {"OptionFPicNum", "NVarChar", "500"},
             new string[] {"CreateUser", "NVarChar", "50"},
             new string[] {"CreateDate", "DateTime", "16"},
+            new string[] { "ExamSubject", "NVarChar", "500" }
         };
         #endregion
 

@@ -58,6 +58,10 @@
                          prop="ExamType" sortable
                          width="180">
         </el-table-column>
+        <el-table-column label="考试科目"
+                         prop="ExamSuject" sortable
+                         width="180">
+        </el-table-column>
         <el-table-column label="题目专业"
                          prop="TopicMajor" sortable
                          width="180">
@@ -72,7 +76,7 @@
             <template slot-scope="scope">
                 <span> {{changeTopicType(scope.row.TopicType)}}</span>
             </template>
-           
+
         </el-table-column>
         <el-table-column label="题目内容"
                          prop="TopicTitle" sortable
@@ -117,6 +121,11 @@
             <el-form-item label="考试类型" :label-width="formLabelWidth">
                 <el-select v-model="VExamBank.ExamType" placeholder="请选择考试类型">
                     <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="考试科目" :label-width="formLabelWidth">
+                <el-select v-model="VExamBank.ExamSubject" placeholder="请选择考试类型">
+                    <el-option v-for="item in ListSubjectName" :key="item.Key" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="题目专业" :label-width="formLabelWidth">
@@ -211,6 +220,7 @@
                 LExamType: [],
                 search: '',
                 TypeName: '',
+                ListSubjectName:[],
                 dialogFormVisible: false,
                 formLabelWidth: '120px',
                 paginations: {
@@ -236,6 +246,16 @@
                     },
                 ]
 
+            },
+            watch: {
+                'VExamBank.ExamType': function (newval) {
+                    var _this = this;
+                    axios.post('/PEMain/GetSubjectName', {
+                        model: newval
+                    }).then(response => {
+                        _this.ListSubjectName = response.data.ListSubjectName;
+                    });
+                },
             },
             mounted: function () {
                 this.getdata();
