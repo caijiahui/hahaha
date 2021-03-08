@@ -68,7 +68,6 @@ namespace advt.Data.SqlServer
             commandText.AppendLine("INSERT INTO [ExamBank] (" + item_name + ") VALUES (" + item_value + ")");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
         public int Update_ExamBank(Entity.ExamBank info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();
