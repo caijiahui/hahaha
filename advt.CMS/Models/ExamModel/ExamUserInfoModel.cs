@@ -405,8 +405,7 @@ namespace advt.CMS.Models.ExamModel
                     v.IsReview = item.IsReview;
                     v.RuleName = item.RuleName;
                     v.TypeName = item.TypeName;
-                    v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级
-                                                         //v.IsAchievement = item.IsApp;//是否满级
+                    v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级                   
                     v.IsAchievement = item.IsAchment;//是否符合绩效
                     v.HighestLevel = item.HighestTestSkill;//最高可考技能
                     v.IsExam = item.IsExam;

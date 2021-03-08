@@ -12,19 +12,26 @@
 </style>
 <div id="app" style="margin-left:20px">
     <div>
+        <div style="margin-bottom:20px">
 
-        <template>
+            <div style="float:left;">
+                <template>
+
+                    <el-upload class="upload-demo" style="margin-top:30px;"
+                               ref="upload"
+                               :multiple="false"
+                               :on-success="handleExcelSuccess"
+                               action="/PEMain/Upload_UserAch">
+                        <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+                    </el-upload>
+                </template>
+            </div>
             <a href="/Attachment/temp/Template/UserAchievement.xlsx">
-                <el-button size="small" type="primary" style="margin-top:30px">人员绩效模板下载</el-button>
+                <el-button size="small" type="primary" style="margin-top:30px;margin-left:20px">人员绩效模板下载</el-button>
             </a>
-            <el-upload class="upload-demo" style="margin-top:30px;"
-                       ref="upload"
-                       :multiple="false"
-                       :on-success="handleExcelSuccess"
-                       action="/PEMain/Upload_UserAch">
-                <el-button size="small" type="primary">EXCEL上传绩效</el-button>
-            </el-upload>
-        </template>
+        </div>
+      
+
         <el-button @@click="handleInsert()">保存</el-button>
 
         <el-divider content-position="left">预名单</el-divider>
