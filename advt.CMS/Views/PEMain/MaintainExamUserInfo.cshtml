@@ -25,8 +25,77 @@
                 <el-button size="small" type="primary">EXCEL上传绩效</el-button>
             </el-upload>
         </template>
+        <el-button @@click="handleInsert()">保存</el-button>
 
-        <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
+        <el-divider content-position="left">预名单</el-divider>
+
+        <el-table :data="YListUserInfo"
+                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column fixed
+                             prop="UserCode"
+                             label="工号"
+                             width="120">
+            </el-table-column>
+            <el-table-column label="姓名" prop="UserName" sortable width="120"></el-table-column>
+            <el-table-column label="部门代码" prop="DepartCode" sortable width="120"></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable width="150"></el-table-column>
+            <el-table-column label="本职等技能" prop="SkillLevel" sortable width="120"></el-table-column>
+            <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable width="140"></el-table-column>
+            <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable width="140"></el-table-column>
+
+            <el-table-column label="本次是否考试"
+                             width="130">
+                <template slot-scope="scope">
+                    @*<span>{{ChangeAch(scope.row.IsExam)}}</span>*@
+                    <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
+                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
+                </template>
+            </el-table-column>
+
+        </el-table>
+
+
+        <el-divider content-position="left">已报名</el-divider>
+
+        <el-table :data="CPListUserInfo"
+                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column fixed
+                             prop="UserCode"
+                             label="工号"
+                             width="120">
+            </el-table-column>
+            <el-table-column label="状态"
+                             prop="ExamStatus">
+                <template slot-scope="scope">
+                    <el-tag type="success" v-if="scope.row.ExamStatus=='HrSignup'">已报名</el-tag>
+                </template>
+
+            </el-table-column>
+            <el-table-column label="姓名" prop="UserName" sortable width="120"></el-table-column>
+            <el-table-column label="部门代码" prop="DepartCode" sortable width="120"></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable width="150"></el-table-column>
+            <el-table-column label="本职等技能" prop="SkillLevel" sortable width="120"></el-table-column>
+            <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable width="140"></el-table-column>
+            <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable width="140"></el-table-column>
+
+            <el-table-column label="本次是否考试"
+                             width="130">
+                <template slot-scope="scope">
+                    @*<span>{{ChangeAch(scope.row.IsExam)}}</span>*@
+                    <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
+                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
+                </template>
+            </el-table-column>
+
+        </el-table>
+
+        <el-divider content-position="left">人员信息</el-divider>
+
+        <el-table height="600" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
             <el-table-column fixed
                              prop="UserCode"
@@ -44,7 +113,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="绩效" prop="Achievement" sortable width="120"></el-table-column>
-            <el-table-column label="考试类型" prop="TypeName" sortable width="120"></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable width="150"></el-table-column>
             <el-table-column label="科目" prop="SubjectName" sortable width="120"></el-table-column>
             <el-table-column label="本职等技能" prop="SkillLevel" sortable width="120"></el-table-column>
             <el-table-column label="目前技能等级" prop="CurrentSkillLevel" sortable width="130"></el-table-column>
@@ -67,7 +136,7 @@
                     <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
                 </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column fixed="right" label="操作" width="250">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search"
                               size="mini"
@@ -127,13 +196,13 @@
         </el-dialog>
         <!-- #endregion -->
         <el-pagination @@size-change="handleSizeChange"
-                           @@current-change="handleCurrentChange"
-                           :current-page="paginations.page_index"
-                           :page-sizes="paginations.page_sizes"
-                           :page-size="paginations.page_size"
-                           :layout="paginations.layout"
-                           :total="paginations.total">
-            </el-pagination>
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
         <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
             <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                 <el-form-item label="工号" prop="UserCode">
@@ -276,7 +345,10 @@
             dialogSearchVisible: false,
             VExamUserInfo: [],
             LPracticeInfo: [],
-            LExamUserDetailInfo:[],
+            LExamUserDetailInfo: [],
+            YListUserInfo: [],
+            CPListUserInfo: [],
+            checkBoxData: [],
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
@@ -292,10 +364,15 @@
             this.getdata();
         },
         methods: {
+            changeFun(val) {
+                var _this = this;
+                _this.checkBoxData = val;
+            },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetUserInfo').then(function (responese) {
                     _this.tableData = responese.data.tableData;
+                    _this.YListUserInfo = responese.data.YListUserInfo;
                     console.log(297,297);
                     _this.setPaginations();
                 })
@@ -386,6 +463,15 @@
                 });
                 _this.dialogSearchVisible = true;
             },
+            handleInsert() {
+                var _this = this;
+                console.log(_this.checkBoxData);
+                axios.post('/PEMain/InsertUserDetailInfo', {
+                    model: _this.checkBoxData
+                }).then(function (res) {                    
+                    _this.CPListUserInfo = res.data.CPListUserInfo;
+                });
+            }, 
             handleEdit(index, row) {
                 var _this = this;
                 console.log(index);
