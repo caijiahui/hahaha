@@ -92,7 +92,8 @@ namespace advt.CMS.Models.ExamModel
                         v.IsAchievement = item.IsAchment;//是否符合绩效
                         v.HighestLevel = item.HighestTestSkill;//最高可考技能
                         v.IsExam = item.IsExam;
-                        v.CreateDate = DateTime.Now;
+                        v.HrCheckCreateDate = DateTime.Now;
+                        v.HrCheckCreateUser = username;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                     }
 
@@ -119,8 +120,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
                 c.IsStop = true;
-                c.UpdateDate = DateTime.Now;
-                c.UpdateUser = username;
+                c.HrCheckCreateDate = DateTime.Now;
+                c.HrCheckCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                 LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, DepartCode = "KQ12" });
             }
