@@ -21,6 +21,8 @@ namespace advt.Data
 
         IDataReader GetSubjectList(string model);
         IDataReader GetTopicInfo(string model);
+        IDataReader GetTRuleSubjectInfo(string model);
+        
         #endregion
     }
 }

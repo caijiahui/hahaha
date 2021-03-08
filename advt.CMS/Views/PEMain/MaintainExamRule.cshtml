@@ -82,6 +82,8 @@
                             <el-table-column prop="TopicMajor" label="类型" width="80"></el-table-column>
                             <el-table-column prop="TopicLevel" label="等级" width="80"></el-table-column>
                             <el-table-column prop="TopicType" label="题型" width="80"></el-table-column>
+                           
+
                             <el-table-column prop="TopicNum" label="题数" width="80">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.TopicNum" class="topie"></el-input>
@@ -199,12 +201,23 @@
             watch: {
                 'VExamRule.TypeName': function (newval) {
                     var _this = this;
-                    axios.post('/PEMain/GetSubjectName', {
+                    //axios.post('/PEMain/GetSubjectName', {
+                   axios.post('/PEMain/GetRuleTypeName', {
                         model: newval
                     }).then(response => {
                         _this.ListSubjectName = response.data.ListSubjectName;
                         _this.ListTopicInfo = response.data.ListTopic;
+                        console.log(response.data.ListTopic);
                       });
+                },
+                'VExamRule.SubjectName': function (newval) {
+                    var _this = this;
+                    _this.ListTopicInfo = [];
+                    axios.post('/PEMain/GetRuleSubjectName', {
+                        model: newval
+                    }).then(response => {
+                         _this.ListTopicInfo = response.data.ListTopic;
+                    });
                 },
                
             },

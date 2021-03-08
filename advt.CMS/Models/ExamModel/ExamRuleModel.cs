@@ -111,9 +111,23 @@ namespace advt.CMS.Models.ExamModel
             ListExamSubject= Data.ExamRule.GetSubjectList(model);
             ListTopicInfo = Data.ExamRule.GetTopicInfo(model);
 
+
             int ss = 0;
             foreach (var item in ListTopicInfo)
             {
+                var type = "";
+                if (item.TopicType == "0")
+                {
+                    type = "单选";
+                }
+                else if (item.TopicType == "2")
+                {
+                    type = "问答";
+                }
+                else if (item.TopicType == "1")
+                {
+                    type ="多选";
+                }
                 ss++;
                 ListTopic.Add(new TopicInfo
                 {
@@ -122,12 +136,48 @@ namespace advt.CMS.Models.ExamModel
                     TopicLevel=item.TopicLevel,
                     TopicNum="0",
                     TopicScore=0,
-                    TopicType=item.TopicType,
+                    TopicType= type,
                     ID=ss
                 });
             }
-        
+
         }
+        public void GetRuleSubjectList(string model)
+        {
+            ListTopicInfo = Data.ExamRule.GetTRuleSubjectInfo(model);
+
+            int ss = 0;
+            foreach (var item in ListTopicInfo)
+            {
+                var type = "";
+                if (item.TopicType == "0")
+                {
+                    type = "单选";
+                }
+                else if (item.TopicType == "2")
+                {
+                    type = "问答";
+                }
+                else if (item.TopicType == "1")
+                {
+                    type = "多选";
+                }
+                ss++;
+                ListTopic.Add(new TopicInfo
+                {
+                    ExamType = item.ExamType,
+                    TopicMajor = item.TopicMajor,
+                    TopicLevel = item.TopicLevel,
+                    TopicNum = "0",
+                    TopicScore = 0,
+                    TopicType = type,
+                    ID = ss
+                });
+            }
+
+        }
+
+        
         public void GetRuleType(string model)
         {
             if (model != null)
