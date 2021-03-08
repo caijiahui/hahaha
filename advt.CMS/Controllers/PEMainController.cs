@@ -476,8 +476,9 @@ namespace advt.Web.Controllers
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
             model.GetUserInfo();
-            
-            return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
+            model.GetUserComInfo();
+
+            return Json(new { tableData = model.ListUserInfo, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)
         {
@@ -510,6 +511,16 @@ namespace advt.Web.Controllers
             var model = new ExamUserInfoModel();
             model.GetExamUser(ID);
             return Json(new { VExamUserInfo = model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult InsertUserDetailInfo(List<UserInfo> model)
+        {
+            var username = this.UserContextSubstring;
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.InsertUserDetail(model, username);
+
+            return Json(new { CPListUserInfo = models.ListDetailInfo });
         }
         [MyAuthorize]
         public ActionResult DeleteExamUserInfo(int model)

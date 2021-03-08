@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[UpdateUser],[UpdateDate],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate]";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate]";
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
