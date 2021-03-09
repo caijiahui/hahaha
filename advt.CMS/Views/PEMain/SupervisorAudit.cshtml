@@ -17,25 +17,21 @@
 
     </template>
     <div>
-        <el-button @@click="handleUpdate()">批量更新</el-button>
+        <template>
+            <el-button size="small" type="primary" @@click="handleUpdate()">批量更新</el-button>
 
-        <el-divider content-position="left">部门人员</el-divider>
-
-        <el-table :data="ListExamUserDetailInfos"
+            <el-divider content-position="left">部门人员</el-divider>
+        </template>
+        <el-table :data="LCheckAudtiUser"
                   style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column label="本次是否可考"
-                             prop="IsExam">
-                <template slot-scope="scope">
-                    <i class="el-icon-check" v-if="scope.row.IsExam=='true'" style="color:green"></i>
-                    <i class="el-icon-close" v-if="scope.row.IsExam=='false'"></i>
-                </template>
-
+            <el-table-column label="考试类型"
+                             prop="TypeName" sortable>
             </el-table-column>
             <el-table-column label="姓名"
                              prop="UserName" sortable
-                             fixed>
+                            >
             </el-table-column>
             <el-table-column label="部门"
                              prop="DepartCode" sortable>
@@ -45,20 +41,20 @@
             </el-table-column>
 
             <el-table-column label="最高可考技能"
-                             prop="HighestTestSkill" sortable>
+                             prop="HighestLevel" sortable>
             </el-table-column>
             <el-table-column label="本次申请等级"
-                             prop="ApplicationLevel" sortable>
+                             prop="ApplyLevel" sortable>
             </el-table-column>
             <el-table-column label="预计考试时间"
                              sortable>
-                <template slot-scope="scope">
-                    <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
-                </template>
+                @*<template slot-scope="scope">
+                <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+            </template>*@
             </el-table-column>
             <el-table-column label="实践成绩" prop="TheoreticalAchievement"
-                             sortable >
-              
+                             sortable>
+
             </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
@@ -68,7 +64,7 @@
                     <el-button size="mini"
                                @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">上传实践</el-button>
                     <el-button size="mini"
-                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">明细</el-button>
+                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史纪录</el-button>
                 </template>
             </el-table-column>
             @*<el-table-column align="right" fixed="right">
@@ -80,8 +76,10 @@
 
         </el-table-column>*@
         </el-table>
-
-        <el-divider content-position="left">已报名人员</el-divider>
+        <template>
+            <el-divider content-position="left">已报名人员</el-divider>
+        </template>
+       
         <el-table :data="LSignedupUser"
                   style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
             <el-table-column label="状态"
@@ -89,11 +87,12 @@
                 <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.ExamStatus=='Signup'">已报名</el-tag>
                 </template>
-
+            </el-table-column>
+            <el-table-column label="考试类型"
+                             prop="TypeName" sortable>
             </el-table-column>
             <el-table-column label="姓名"
-                             prop="UserName" sortable
-                             fixed>
+                             prop="UserName" sortable>
             </el-table-column>
             <el-table-column label="部门"
                              prop="DepartCode" sortable>
@@ -122,11 +121,13 @@
             </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
-                             width="100">
+                             >
                 <template slot-scope="scope">
 
                     <el-button size="mini"
                                @@click="handleStop(scope.row.ID)">取消</el-button>
+                    <el-button size="mini"
+                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
 
                 </template>
             </el-table-column>
@@ -159,7 +160,9 @@
                                :multiple="false"
                                :on-success="handleAannexSuccess"
                                action="/PEMain/Upload_Supervisor">
-                        <el-button size="small" type="primary">上传</el-button>
+                        <template>
+                            <el-button size="small" type="primary">上传</el-button>
+                        </template>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="备注" :label-width="formLabelWidth">
@@ -246,12 +249,11 @@
         <el-dialog title="明细查看" :visible.sync="dialogSearchVisible">
             <el-table :data="LExamUserDetailInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-                <el-table-column label="日期"
-                                 prop="CreateDate" sortable
-                                 fixed>
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.CreateDate!=''&&scope.row.CreateDate!=null">{{changeDate(scope.row.CreateDate)}}</span>
-                    </template>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="科目"
+                                 prop="SubjectName" sortable>
                 </el-table-column>
                 <el-table-column label="姓名"
                                  prop="UserName" sortable>
@@ -307,12 +309,6 @@
                 <el-table-column label="考试规则"
                                  prop="RuleName" sortable>
                 </el-table-column>
-                <el-table-column label="科目"
-                                 prop="SubjectName" sortable>
-                </el-table-column>
-                <el-table-column label="考试类型"
-                                 prop="TypeName" sortable>
-                </el-table-column>
                 <el-table-column label="申请等级"
                                  prop="ApplyLevel" sortable>
                 </el-table-column>
@@ -321,6 +317,33 @@
                 </el-table-column>
                 <el-table-column label="符合绩效"
                                  prop="IsAchment" sortable>
+                </el-table-column>
+                <el-table-column label="报名日期"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.HrCreateDate!=''&&scope.row.HrCreateDate!=null">{{changeDate(scope.row.HrCreateDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="报名人"
+                                 prop="HrCreateUser" sortable>
+                </el-table-column>
+                <el-table-column label="主管审核"
+                                 prop="DirectorCreateUser" sortable>
+                </el-table-column>
+                <el-table-column label="主管日期"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.DirectorCreateDate!=''&&scope.row.DirectorCreateDate!=null">{{changeDate(scope.row.DirectorCreateDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Hr审核"
+                                 prop="HrCheckCreateUser" sortable>
+                </el-table-column>
+                <el-table-column label="Hr日期"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.HrCheckCreateDate!=''&&scope.row.HrCheckCreateDate!=null">{{changeDate(scope.row.HrCheckCreateDate)}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="中止"
                                  prop="IsStop" sortable>
@@ -348,7 +371,7 @@
             dialogUpdateVisible: false,
             dialogSearchVisible: false,
             form: [],
-            ListExamUserDetailInfos:[],
+            LCheckAudtiUser:[],
             formLabelWidth: '120px',
             search: '',
             VPracticeInfo: {},
@@ -411,7 +434,7 @@
                     item['IsExam'] = _this.VAuditCheck.IsExam;
                     item['RuleName'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'Signup';
-                    item['EntryDate'] = _this.changeDate(item['EntryDate'] );
+                    //item['EntryDate'] = _this.changeDate(item['EntryDate'] );
                 })
                 console.log(_this.checkBoxData, 333);
                 axios.post('/PEMain/InsertUserDetail', {
@@ -420,7 +443,7 @@
                     if (res.data.Result != '') {
                         _this.$message.error(res.data.Result);
                     } else {
-                        //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
+                        _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
                         _this.LSignedupUser = res.data.LSignedupUser;
                         _this.dialogUpdateVisible = false;
                         _this.VAuditCheck.IsExam = '';
@@ -518,7 +541,7 @@
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetSupervisorAuditUser').then(function (responese) {
-                    _this.ListExamUserDetailInfos = responese.data.ListExamUserDetailInfos;
+                    _this.LCheckAudtiUser = responese.data.LCheckAudtiUser;
                     _this.LRules = responese.data.LRules;
                     _this.LSignedupUser = responese.data.LSignedupUser;
                 })

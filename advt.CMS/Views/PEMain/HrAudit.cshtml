@@ -17,18 +17,26 @@
 
     </template>
     <div>
-        <el-select v-model="TypeName" placeholder="请选择考试类型">
-            <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-        </el-select>
-        <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
-        <el-button @@click="handleUpdate()">批量更新</el-button>
-        <el-table :data="ListHrAuditUser"
-                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+      
+        <template>
+            <el-select v-model="TypeName" placeholder="请选择考试类型">
+                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+            </el-select>
+            <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
+            <el-button @@click="handleUpdate()">更新</el-button>
+        </template>
+
+
+
+        <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
+                  :data="ListHrAuditUser">
             <el-table-column type="selection">
             </el-table-column>
             <el-table-column label="考试类型"
-                             prop="TypeName" sortable
-                             fixed>
+                             prop="TypeName" sortable>
+            </el-table-column>
+            <el-table-column label="科目"
+                             prop="SubjectName" sortable>
             </el-table-column>
             <el-table-column label="工号"
                              prop="UserCode" sortable
@@ -40,15 +48,14 @@
             <el-table-column label="部门"
                              prop="DepartCode" sortable>
             </el-table-column>
-            <el-table-column label="科目"
-                             prop="SubjectName" sortable>
-            </el-table-column>
+
             <el-table-column label="等级"
                              prop="ApplyLevel" sortable>
             </el-table-column>
             <el-table-column fixed="right"
                              label="操作"
                              width="240">
+
                 <template slot-scope="scope">
 
                     <el-button size="mini"
@@ -58,8 +65,21 @@
                 </template>
             </el-table-column>
         </el-table>
+        <template>
+            <el-divider content-position="left">Hr审核通过人员</el-divider>
+            <div style="margin-bottom:20px">
+                <div style="float:left;">
+                    <template>
+                        <el-button size="small" type="primary">考试资格汇入</el-button>
 
-        <el-divider content-position="left">Hr审核通过人员</el-divider>
+                    </template>
+                </div>
+                <a href=" ">
+                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板</el-button>
+                </a>
+            </div>
+        </template>
+
         <el-table :data="ListHrAuditSuccessUser"
                   style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
             <el-table-column label="状态">
@@ -342,8 +362,9 @@
                     item['IsExam'] = _this.VAuditCheck.IsExam;
                     item['ValidityDate'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'HrCheck';
-                    item['ExamPlace'] = _this.VAuditCheck.ExamPlace;;
+                    item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
                 })
+                console.log(_this.checkBoxData, 2222);
                 axios.post('/PEMain/UpdateHrAduitUser', {
                     model: _this.checkBoxData
                 }).then(function (res) {

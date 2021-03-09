@@ -565,7 +565,7 @@ namespace advt.Web.Controllers
         {
             SupervisorAuditModel model = new SupervisorAuditModel();
             model.GetAllExamUserDetailInfo();
-            return Json(new { ListExamUserDetailInfos = model.ListDirectorUserInfos, LRules= model.LRules, LSignedupUser=model.LSignedupUser });
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser });
         }
         public JsonResult Upload_Supervisor(HttpPostedFileBase file)
         {
@@ -606,13 +606,13 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult InsertUserDetail(List<UserInfo> model)
+        public ActionResult InsertUserDetail(List<ExamUserDetailInfo> model)
         {
             var username = this.UserContextSubstring;
             SupervisorAuditModel models = new SupervisorAuditModel();
             var Result=models.InsertUserDetail(model,username);
 
-            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos, LSignedupUser= models.LSignedupUser, Result });
+            return Json(new { LCheckAudtiUser = models.LCheckAudtiUser, LSignedupUser= models.LSignedupUser, Result });
         }
        
         [MyAuthorize]
