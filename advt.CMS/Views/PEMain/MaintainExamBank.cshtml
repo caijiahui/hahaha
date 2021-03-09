@@ -145,6 +145,9 @@
             <el-form-item label="题目图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.TopicTitlePicNum" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item v-if="VExamBank.TopicTitlePicNum" label="选项A图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.TopicTitlePicNum" />
+            </el-form-item>
             <el-form-item label="正确答案" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.RightKey" autocomplete="off"></el-input>
             </el-form-item>
@@ -156,11 +159,9 @@
             </el-form-item>
             <el-form-item label="选项A图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionAPicNum" autocomplete="off"></el-input>
-
             </el-form-item>
-
             <el-form-item v-if="VExamBank.OptionAPicNum" label="选项A图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionAPicNum+'.png'" />
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionAPicNum" />
             </el-form-item>
 
             @*<el-form-item label="选项A图片" :label-width="formLabelWidth">
@@ -174,11 +175,17 @@
             <el-form-item label="选项B图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionBPicNum" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item v-if="VExamBank.OptionBPicNum" label="选项B图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionBPicNum" />
+            </el-form-item>
             <el-form-item label="选项C" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionC" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="选项C图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionCPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item v-if="VExamBank.OptionCPicNum" label="选项C图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionCPicNum" />
             </el-form-item>
             <el-form-item label="选项D" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionD" autocomplete="off"></el-input>
@@ -186,17 +193,26 @@
             <el-form-item label="选项D图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionDPicNum" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item v-if="VExamBank.OptionDPicNum" label="选项D图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionDPicNum" />
+            </el-form-item>
             <el-form-item label="选项E" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionE" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="选项E图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionEPicNum" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item v-if="VExamBank.OptionEPicNum" label="选项E图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionEPicNum" />
+            </el-form-item>
             <el-form-item label="选项F" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionE" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="选项F图片" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionFPicNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item v-if="VExamBank.OptionFPicNum" label="选项F图片" :label-width="formLabelWidth">
+                <img :src="'/Attachment/BankPic/'+VExamBank.OptionFPicNum" />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -233,15 +249,15 @@
                 allTableData: [],
                 LTopicType: [
                     {
-                        Key: 'L1',
+                        Key: '0',
                         Value:'单选'
                     },
                     {
-                        Key: 'L2',
+                        Key: '1',
                         Value: '多选'
                     },
                     {
-                        Key: 'L3',
+                        Key: '2',
                         Value: '问答'
                     },
                 ]
@@ -370,27 +386,21 @@
                     console.log(Result, 43);
                 },
                 handleExcelSuccess(Result, LExamBank) {
-                    console.log(Result,45454)
-                    if (Result == 'success') {
-                        var _this = this;
-                        _this.allTableData = LExamBank;
-                        this.$message({
-                            message: '恭喜你,上传成功',
-                            type: 'success'
-                        });
-                    }
-                    else {
-                        this.$message.error('上传失败');
-                    }
+                    var _this = this;
+                    _this.allTableData = Result.LExamBank;
+                    this.$message({
+                        message: Result.Result,
+                        type: 'success'
+                    });
                 },
                 changeTopicType(ids) {
-                    if (ids == "L1") {
+                    if (ids == "0") {
                         return '单选'
                     }
-                    else if (ids == "L2") {
+                    else if (ids == "1") {
                         return '多选'
                     }
-                    else if (ids == "L3") {
+                    else if (ids == "2") {
                         return '问答'
                     }
                 }

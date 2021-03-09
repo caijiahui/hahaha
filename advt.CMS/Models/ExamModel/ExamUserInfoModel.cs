@@ -19,7 +19,7 @@ namespace advt.CMS.Models.ExamModel
         public List<UserInfo> YListUserInfo { get; set; }
         public List<Entity.RankInfo> ListRankInfo { get; set; }
         public List<Entity.RankInfo> ListRank { get; set; }
-        
+
         public List<Entity.ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public List<Entity.ExamUserDetailInfo> ListDetailInfo { get; set; }
         public string Result { get; set; }
@@ -65,9 +65,9 @@ namespace advt.CMS.Models.ExamModel
             {
                 decimal score = 0;
                 DateTime? now = null;
-                if (row["TheoreticalAchievement"].ToString()!= "")
+                if (row["TheoreticalAchievement"].ToString() != "")
                 {
-                    score =Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
+                    score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
                 }
                 if (row["LastExamTime"].ToString() != "")
                 {
@@ -92,14 +92,14 @@ namespace advt.CMS.Models.ExamModel
                     SkillLevel = row["SkillLevel"].ToString(),//本职等
                     HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
                     CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级                   
-                    LastExamTime = now,                   
+                    LastExamTime = now,
                     TheoreticalAchievement = score,//理论成绩
                     ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级                    
                     IsAchment = row["IsAchment"].ToString(),
                     IsExam = row["IsExam"].ToString()
                 });
-                    
-                }
+
+            }
             //ListUserInfo.Where(x => x.IsExam == "true").ToList();
             YListUserInfo = ListUserInfo.Take(3).ToList();
 
@@ -326,14 +326,14 @@ namespace advt.CMS.Models.ExamModel
                             {
                                 UserCode = dr[0].ToString().Trim(),
                                 Achievement = dr[1].ToString().Trim(),
-                               
+
                             };
                     LBank = q.ToList();
                 }
                 foreach (var item in LBank)
                 {
                     //根据工号去更新绩效
-                    Data.ExamUserInfo.Get_UpdateExamUserInfo(item.UserCode,item.Achievement);
+                    Data.ExamUserInfo.Get_UpdateExamUserInfo(item.UserCode, item.Achievement);
                     Result = "success";
                 }
 
@@ -352,7 +352,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void DeleteExamUserInfo(int model)
         {
-            Data.ExamUserInfo.Delete_ExamUserInfo(model);           
+            Data.ExamUserInfo.Delete_ExamUserInfo(model);
         }
         public void SaveUserInfo(string username)
         {
@@ -386,7 +386,7 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-               
+
                 var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
@@ -409,16 +409,21 @@ namespace advt.CMS.Models.ExamModel
                     v.IsAchievement = item.IsAchment;//是否符合绩效
                     v.HighestLevel = item.HighestTestSkill;//最高可考技能
                     v.IsExam = item.IsExam;
-                    v.HRUpdateUser = username;
-                    v.HRUpdateDate = DateTime.Now;
+                    v.HrCreateUser = username;
+                    v.HrCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                 };
-                ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false});
-            }
+                           }
             catch (Exception ex)
             {
                 throw;
             }
+
+        }
+        public void GetUserComInfo()
+        {
+            ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
+
 
         }
     }
@@ -444,8 +449,8 @@ namespace advt.CMS.Models.ExamModel
         public decimal? TheoreticalAchievement { get; set; }//理论成绩
         public string HighestTestSkill { get; set; }//最高可考技能
         public string ApplicationLevel { get; set; }//本次申请等级
-        public string  IsAchment { get; set; }//是否符合绩效
-        public string  IsExam { get; set; }//本次是否考试
+        public string IsAchment { get; set; }//是否符合绩效
+        public string IsExam { get; set; }//本次是否考试
         public DateTime? PlanExamDate { get; set; }//预计考试时间
         public bool IsApp { get; set; }//是否满级
         public decimal PracticalID { get; set; }//实践主键

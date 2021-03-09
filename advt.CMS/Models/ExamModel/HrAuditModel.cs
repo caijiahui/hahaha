@@ -45,8 +45,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 foreach (var item in model)
                 {
-                    item.HRUpdateUser = username;
-                    item.HRUpdateDate = DateTime.Now;
+                    item.DirectorCreateUser = username;
+                    item.DirectorCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                 }
                 GetHrAuditUser();
@@ -65,8 +65,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = id });
                 c.IsStop = true;
-                c.UpdateDate = DateTime.Now;
-                c.UpdateUser = username;
+                c.StopCreateDate=DateTime.Now;
+                c.StopCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                 GetHrAuditUser();
             }

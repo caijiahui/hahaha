@@ -47,22 +47,19 @@ namespace advt.Entity
         public string SubjectName { get; set; }
 
         public string TypeName { get; set; }
-
-        public string CreateUser { get; set; }
-
-        public DateTime? CreateDate { get; set; }
-
-        public string UpdateUser { get; set; }
-
-        public DateTime? UpdateDate { get; set; }
         public string ApplyLevel { get; set; }
         public string HighestLevel { get; set; }
         public string IsAchievement { get; set; }
         public string IsExam { get; set; }//是否可考
         public bool IsStop { get; set; }
-        public string HRUpdateUser { get; set; }
-
-        public DateTime? HRUpdateDate { get; set; }
+        public string HrCreateUser { get; set; }
+        public DateTime? HrCreateDate { get; set; }
+        public string DirectorCreateUser { get; set; }
+        public DateTime? DirectorCreateDate { get; set; }
+        public string HrCheckCreateUser { get; set; }
+        public DateTime? HrCheckCreateDate { get; set; }
+        public string StopCreateUser { get; set; }
+        public DateTime? StopCreateDate { get; set; }
         #endregion
     }
 }

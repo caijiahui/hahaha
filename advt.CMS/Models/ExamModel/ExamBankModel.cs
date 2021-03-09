@@ -109,18 +109,20 @@ namespace advt.CMS.Models.ExamModel
                 };
                     LBank = q.ToList();
                 }
+                var successcount = 0;
                 foreach (var item in LBank)
                 {
-                    Data.ExamBank.Insert_ExamBank(item, null, new string[] { "ID" });
-                    LExamBank = Data.ExamBank.Get_All_ExamBank();
-                    Result = "success";
+                    var c =Data.ExamBank.Insert_ExamBank(item, null, new string[] { "ID" });
+                    successcount += c;
                 }
+                Result = successcount+"成功插入"+ successcount+"记录";
+                LExamBank = Data.ExamBank.Get_All_ExamBank();
 
             }
 
             catch (Exception ex)
             {
-               
+                Result = ex.Message;
                 files.Close();//关闭当前流并释放资源
             }
         }
