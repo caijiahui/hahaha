@@ -413,7 +413,9 @@ namespace advt.CMS.Models.ExamModel
                     v.HrCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                 };
-                           }
+                GetUserComInfo();
+            }
+
             catch (Exception ex)
             {
                 throw;

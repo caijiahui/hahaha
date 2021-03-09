@@ -13,35 +13,27 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
         public List<ExamUserDetailInfo> LSignedupUser { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
+        public List<ExamUserDetailInfo> LCheckAudtiUser { get; set; }
         public SupervisorAuditModel() : base()
         {
             ListDirectorUserInfos = new List<UserInfo>();
             LRules = new List<ExamRule>();
             LExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LPracticeInfo = new List<PracticeInfo>();
+            LCheckAudtiUser = new List<ExamUserDetailInfo>();
             LSignedupUser = new List<ExamUserDetailInfo>();
         }
         public void GetAllExamUserDetailInfo()
         {
-            var model = new ExamUserInfoModel();
-            model.GetUserInfo();
-            var c = model.ListUserInfo.Where(x => x.DepartCode == "KQ12").ToList();
-            //foreach (var item in c)
-            //{
-            //    decimal PracticalID = 0;
-            //    var SkillName = item.SkillLevel;
-            //    var Practical = Data.PracticeInfo.Get__All_PracticeInfo_UserCode(item.UserCode, SkillName);
-            //    if (Practical.Count()!=0)
-            //    {
-            //        PracticalID = Convert.ToDecimal(Practical.FirstOrDefault().PracticeScore);
-            //    }
-            //    //item.ExamStatus = "Signup";
-            //    item.PracticalID = PracticalID;
-            //}
-            ListDirectorUserInfos = c;
-            LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus= "Signup", IsStop = false, DepartCode= "KQ12" });
+            //var model = new ExamUserInfoModel();
+            //model.GetUserInfo();
+            //var c = model.ListUserInfo.Where(x => x.DepartCode == "KQ12").ToList();
+            //ListDirectorUserInfos = c;
+         
             LRules = Data.ExamRule.Get_All_TypeNameExamRule("技能等级考试");
-           
+            //主管需要审核的人员
+            LCheckAudtiUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
+            LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false});
 
         }
         public void SearchPracticeInfo(string code)
@@ -55,7 +47,7 @@ namespace advt.CMS.Models.ExamModel
             Data.PracticeInfo.Insert_PracticeInfo(data, null, new string[] { "ID" });
           
         }
-        public string InsertUserDetail(List<UserInfo> data,string username)
+        public string InsertUserDetail(List<ExamUserDetailInfo> data,string username)
         {
             try
             {
@@ -63,42 +55,12 @@ namespace advt.CMS.Models.ExamModel
                 var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
-                    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { TypeName= item.TypeName,  UserCode = item.UserCode, ExamStatus = "Signup", ApplyLevel = item.ApplicationLevel, IsStop=false });
-                    if (c != null)
-                    {
-                        Result += item.UserName + "已报名，不可重复报名";
-
-                    }
-                    else
-                    {
-                        ExamUserDetailInfo v = new ExamUserDetailInfo();
-                        v.UserCode = item.UserCode;
-                        v.UserName = item.UserName;
-                        v.DepartCode = item.DepartCode;
-                        v.PostName = item.PostName;
-                        v.RankName = item.RankName;
-                        v.SkillName = item.SkillLevel; //本职等技能G1
-                        v.EntryDate = item.EntryDate; //入职日期
-                        v.Achievement = item.Achievement;//绩效
-                        v.PracticeScore = item.PracticalID;
-                        v.PlanExamDate = item.PlanExamDate;
-                        v.ExamStatus = item.ExamStatus;
-                        v.IsReview = item.IsReview;
-                        v.RuleName = item.RuleName;
-                        v.SubjectName = item.SubjectName;
-                        v.TypeName = item.TypeName;
-                        v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级
-                        //v.IsAchievement = item.IsApp;//是否满级
-                        v.IsAchievement = item.IsAchment;//是否符合绩效
-                        v.HighestLevel = item.HighestTestSkill;//最高可考技能
-                        v.IsExam = item.IsExam;
-                        v.HrCheckCreateDate = DateTime.Now;
-                        v.HrCheckCreateUser = username;
-                        Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
-                    }
+                    item.DirectorCreateDate = DateTime.Now;
+                    item.DirectorCreateUser = username;
+                    Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
 
                 };
-                LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, DepartCode = "KQ12" });
+                GetAllExamUserDetailInfo();
                 return Result;
             }
             catch (Exception ex)

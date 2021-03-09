@@ -43,12 +43,12 @@
             <div style="margin-bottom:20px">
                 <div style="float:left;">
                     <template>
-                        <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+                        <el-button size="small" type="primary">批量汇入</el-button>
 
                     </template>
                 </div>
                 <a href=" ">
-                    <el-button size="small" type="primary" style="margin-left:20px">人员绩效模板下载</el-button>
+                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板</el-button>
                 </a>
             </div>
         </template>
@@ -56,8 +56,8 @@
 
         <el-table :data="CPListUserInfo"
                   style="width:100%;margin-top:20px;" border @@selection-change="changeFun">
-            <el-table-column type="selection">
-            </el-table-column>
+            @*<el-table-column type="selection">
+            </el-table-column>*@
             <el-table-column fixed
                              prop="UserCode"
                              label="工号"
@@ -98,12 +98,12 @@
                                    :multiple="false"
                                    :on-success="handleExcelSuccess"
                                    action="/PEMain/Upload_UserAch">
-                            <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+                            <el-button size="small" type="primary">绩效上传</el-button>
                         </el-upload>
                     </template>
                 </div>
                 <a href=" ">
-                    <el-button size="small" type="primary" style="margin-left:20px">人员绩效模板下载</el-button>
+                    <el-button size="small" type="primary" style="margin-left:20px">绩效模板</el-button>
                 </a>
             </div>
         </template>
@@ -477,6 +477,7 @@
                     model: _this.checkBoxData
                 }).then(function (res) {
                     _this.CPListUserInfo = res.data.CPListUserInfo;
+                    console.log(res.data.CPListUserInfo, 33333);
                 });
             },
             handleEdit(index, row) {
