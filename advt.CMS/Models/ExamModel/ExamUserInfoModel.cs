@@ -386,8 +386,6 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-
-                var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
                     ExamUserDetailInfo v = new ExamUserDetailInfo();
@@ -413,7 +411,7 @@ namespace advt.CMS.Models.ExamModel
                     v.HrCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                 };
-                           }
+            }
             catch (Exception ex)
             {
                 throw;
@@ -423,7 +421,23 @@ namespace advt.CMS.Models.ExamModel
         public void GetUserComInfo()
         {
             ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
+        }
 
+        public void StopComplete(string ID, string username)
+        {
+            try
+            {
+                var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
+                c.IsStop = true;
+                c.HrCheckCreateDate = DateTime.Now;
+                c.HrCheckCreateUser = username;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+                        }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
 
         }
     }

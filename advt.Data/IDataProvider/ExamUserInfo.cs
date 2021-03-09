@@ -20,12 +20,6 @@ namespace advt.Data
         int Delete_ExamUserInfo(int ID);
         int Get_UpdateExamUserInfo(string UserCode, string Achievement);
 
-        IDataReader Get_ExamUserLevel(string RankName);
-        IDataReader GetExamUserDetail(string UserCode);
-        IDataReader GetPraticeScore(string UserCode, string CurrentSkillLevel);
-        IDataReader GetRanKInfoID(string app);
-        IDataReader GetRanKInfoSkill(string add);
-        IDataReader GetSkillAch(string ApplicationLevel);
         #endregion
     }
 }

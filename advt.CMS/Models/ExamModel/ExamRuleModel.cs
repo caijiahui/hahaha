@@ -20,6 +20,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamBank> ListTopicInfo { get; set; }
         public List<ExamSubject> ListExamSubject { get; set; }
         public ExamRuleTopicType topictype { get; set; }
+        public List<ExamRule> ListExamRuleInfo { get; set; }
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
@@ -32,27 +33,46 @@ namespace advt.CMS.Models.ExamModel
             topictype = new ExamRuleTopicType();
             RuleTopicList = new List<ExamRuleTopicType>();
             RuleTopic = new List<ExamRuleTopicType>();
+            ListExamRuleInfo = new List<ExamRule>();
         }
        
 
-        public void SaveRuleInfo(string username)
+        public string SaveRuleInfo(string username)
         {
+            var Result = "";
             if (VExamRule.ID!=0)
             {
-                VExamRule.CreateUser = username;
-                VExamRule.CreateDate = DateTime.Now;
-                Data.ExamRule.Update_ExamRule(VExamRule, null, new string[] { "ID" });
+                ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
+                if (ListExamRuleInfo.Count() > 0 && ListExamRuleInfo != null)
+                {
+                    Result += VExamRule.RuleName + "此考试规则已存在";
+                }
+                else
+                {
+                    VExamRule.CreateUser = username;
+                    VExamRule.CreateDate = DateTime.Now;
+                    Data.ExamRule.Update_ExamRule(VExamRule, null, new string[] { "ID" });
+                }
             }
             else
             {
+                ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
+                if (ListExamRuleInfo.Count() > 0 && ListExamRuleInfo != null)
+                {
+                    Result += VExamRule.RuleName + "此考试规则已存在";
+                }
+                else
+                {
+                    VExamRule.CreateUser = username;
+                    VExamRule.CreateDate = DateTime.Now;
+                    Data.ExamRule.Insert_ExamRule(VExamRule, null, new string[] { "ID" });
+                }
 
-                VExamRule.CreateUser = username;
-                VExamRule.CreateDate = DateTime.Now;
-                Data.ExamRule.Insert_ExamRule(VExamRule, null, new string[] { "ID" });
                
             }
             
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
+            return Result;
         }
         public void SaveTopicInfo(int id)
         {

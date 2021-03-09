@@ -80,7 +80,15 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamSubject_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
+        public IDataReader Get_All_ExamSubjectInfo(string SubjectName,string TypeName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ExamSubject where SubjectName=@SubjectName and TypeName=@TypeName");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 150, SubjectName));
+            l_parms.Add(SqlHelper.MakeInParam("@TypeName", (DbType)SqlDbType.NVarChar, 150, TypeName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
         #endregion
     }
 }

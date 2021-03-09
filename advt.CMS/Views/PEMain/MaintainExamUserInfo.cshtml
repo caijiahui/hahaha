@@ -16,7 +16,7 @@
         <template>
             <el-divider content-position="left">预名单</el-divider>
 
-            <el-button size="small" type="primary" @@click="handleInsert()">保存</el-button>
+            <el-button size="small" type="primary" @@click="handlesert()">保存</el-button>
         </template>
 
         <el-table :data="YListUserInfo"
@@ -33,7 +33,7 @@
             <el-table-column label="本职等技能" prop="SkillLevel" sortable"></el-table-column>
             <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable"></el-table-column>
             <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable></el-table-column>
-
+          
 
         </el-table>
 
@@ -43,12 +43,12 @@
             <div style="margin-bottom:20px">
                 <div style="float:left;">
                     <template>
-                        <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+                        <el-button size="small" type="primary">批量汇入</el-button>
 
                     </template>
                 </div>
                 <a href=" ">
-                    <el-button size="small" type="primary" style="margin-left:20px">人员绩效模板下载</el-button>
+                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板</el-button>
                 </a>
             </div>
         </template>
@@ -56,32 +56,30 @@
 
         <el-table :data="CPListUserInfo"
                   style="width:100%;margin-top:20px;" border @@selection-change="changeFun">
-            <el-table-column type="selection">
-            </el-table-column>
+            @*<el-table-column type="selection">
+                </el-table-column>*@
             <el-table-column fixed
                              prop="UserCode"
-                             label="工号"
-                            >
+                             label="工号">
             </el-table-column>
             <el-table-column label="状态"
                              prop="ExamStatus">
-                <template slot-scope="scope" >
+                <template slot-scope="scope">
                     <el-tag type="success">已报名</el-tag>
                 </template>
 
             </el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
             <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
             <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
-            <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
             <el-table-column label="本职等技能" prop="SkillName" sortable></el-table-column>
             <el-table-column label="最高可考技能" prop="HighestLevel" sortable></el-table-column>
             <el-table-column label="本次申请等级" prop="ApplyLevel" sortable></el-table-column>
             <el-table-column fixed="right"
-                             label="操作"
-                          >
+                             label="操作">
                 <template slot-scope="scope">
 
-                    <el-button size="mini">取消</el-button>
+                    <el-button size="mini" @@click="StopComplete(scope.row.ID)">取消</el-button>
 
                 </template>
             </el-table-column>
@@ -98,30 +96,27 @@
                                    :multiple="false"
                                    :on-success="handleExcelSuccess"
                                    action="/PEMain/Upload_UserAch">
-                            <el-button size="small" type="primary">EXCEL上传绩效</el-button>
+                            <el-button size="small" type="primary">绩效上传</el-button>
                         </el-upload>
                     </template>
                 </div>
                 <a href=" ">
-                    <el-button size="small" type="primary" style="margin-left:20px">人员绩效模板下载</el-button>
+                    <el-button size="small" type="primary" style="margin-left:20px">绩效模板</el-button>
                 </a>
             </div>
         </template>
-       
+
 
         <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
-            <el-table-column 
-                             prop="UserCode"
-                             label="工号"
-                            >
+            <el-table-column prop="UserCode"
+                             label="工号">
             </el-table-column>
             <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
-            <el-table-column label="部门代码" prop="DepartCode" sortable ></el-table-column>
+            <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="职位" prop="PostName" sortable></el-table-column>
             <el-table-column label="职等" prop="RankName" sortable></el-table-column>
-            <el-table-column label="入职日"
-                            >
+            <el-table-column label="入职日">
                 <template slot-scope="scope">
                     <span>{{changeDate(scope.row.EntryDate)}}</span>
                 </template>
@@ -133,15 +128,14 @@
             <el-table-column label="理论成绩" prop="TheoreticalAchievement" sortable"></el-table-column>
             <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable"></el-table-column>
             <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable></el-table-column>
-            <el-table-column label="是否符合绩效"
-                           >
+            <el-table-column label="是否符合绩效">
                 <template slot-scope="scope">
                     @*<span>{{ChangeAch(scope.row.IsAchment)}}</span>*@
                     <i class="el-icon-check" v-if="scope.row.IsAchment=='true'" style="color:green"></i>
                     <i class="el-icon-close" v-if="scope.row.IsAchment=='false'"></i>
                 </template>
             </el-table-column>
-           
+
             <el-table-column label="操作" width="250">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search"
@@ -218,16 +212,16 @@
                     <el-input v-model="VExamUserInfo.UserName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="部门代码" prop="DepartCode">
-                    <el-input v-model="VExamUserInfo.DepartCode"></el-input>
+                    <el-input v-model="VExamUserInfo.DepartCode" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="职位" prop="PostName">
-                    <el-input v-model="VExamUserInfo.PostName"></el-input>
+                    <el-input v-model="VExamUserInfo.PostName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="职等" prop="RankName">
-                    <el-input v-model="VExamUserInfo.RankName"></el-input>
+                    <el-input v-model="VExamUserInfo.RankName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="入职日" prop="EntryDate">
-                    <el-input v-model="VExamUserInfo.EntryDate"></el-input>
+                    <el-input v-model="VExamUserInfo.EntryDate" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="绩效" prop="Achievement">
                     <el-input v-model="VExamUserInfo.Achievement"></el-input>
@@ -355,6 +349,7 @@
             YListUserInfo: [],
             CPListUserInfo: [],
             checkBoxData: [],
+            checkBoxData11:[],
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
@@ -372,6 +367,7 @@
         methods: {
             changeFun(val) {
                 var _this = this;
+                console.log(val);
                 _this.checkBoxData = val;
             },
             getdata: function () {
@@ -380,7 +376,7 @@
                     _this.tableData = responese.data.tableData;
                     _this.YListUserInfo = responese.data.YListUserInfo;
                     _this.CPListUserInfo = responese.data.CPListUserInfo;
-                    console.log(responese.data.CPListUserInfo);
+                    console.log(responese.data.YListUserInfo);
                     _this.setPaginations();
                 })
             },
@@ -470,18 +466,31 @@
                 });
                 _this.dialogSearchVisible = true;
             },
-            handleInsert() {
+            StopComplete(ID) {
                 var _this = this;
-                console.log(_this.checkBoxData);
-                axios.post('/PEMain/InsertUserDetailInfo', {
-                    model: _this.checkBoxData
+                axios.post('/PEMain/StopComplete', {
+                    model: ID
                 }).then(function (res) {
                     _this.CPListUserInfo = res.data.CPListUserInfo;
                 });
             },
+            handlesert() {
+                var _this = this;
+                _this.checkBoxData11 = [];
+                _this.checkBoxData.forEach(function (item, index) {
+                    item.EntryDate = _this.changeDate(item.EntryDate)
+                    _this.checkBoxData11.push(item);
+                })
+                axios.post('/PEMain/InsertUserDetailInfo', {
+                    model: _this.checkBoxData11
+                }).then(function (res) {
+                    _this.CPListUserInfo = res.data.CPListUserInfo;
+                    _this.tableData = res.data.tableData;
+                    _this.YListUserInfo = res.data.YListUserInfo;
+                });
+            },
             handleEdit(index, row) {
                 var _this = this;
-                console.log(index);
                 axios.post('/PEMain/GetExamUser', {
                     ID: index
                 }).then(function (res) {
@@ -490,7 +499,7 @@
                 });
                 _this.dialogFormVisible = true;
             },
-           
+
             handleDelete(index) {
                 var _this = this;
                 axios.post('/PEMain/DeleteExamUserInfo', {

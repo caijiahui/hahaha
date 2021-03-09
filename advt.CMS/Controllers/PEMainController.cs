@@ -255,8 +255,8 @@ namespace advt.Web.Controllers
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
         {
             var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
-            model.SaveSubject(username);
-            return Json(new { tableData = model.ListExamSubject }, JsonRequestBehavior.AllowGet);
+            var Result = model.SaveSubject(username);
+            return Json(new { Result, tableData = model.ListExamSubject }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult DeleteSubject(int model)
@@ -291,9 +291,9 @@ namespace advt.Web.Controllers
         public ActionResult SaveRuleInfo(ExamRuleModel model)
         {
             var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
-            model.SaveRuleInfo(username);
+           var Result= model.SaveRuleInfo(username);
             model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
-            return Json(new { tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
+            return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
           
         }
         [MyAuthorize]
@@ -519,8 +519,9 @@ namespace advt.Web.Controllers
             var username = this.UserContextSubstring;
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.InsertUserDetail(model, username);
-
-            return Json(new { CPListUserInfo = models.ListDetailInfo });
+            models.GetUserInfo();
+            models.GetUserComInfo();
+            return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo });
         }
         [MyAuthorize]
         public ActionResult DeleteExamUserInfo(int model)
@@ -538,6 +539,19 @@ namespace advt.Web.Controllers
             model.GetUserInfo();
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult StopComplete(string model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            var username = this.UserContextSubstring;
+            models.StopComplete(model, username);
+
+            models.GetUserComInfo();
+            return Json(new { CPListUserInfo = models.ListDetailInfo });
+        }
+
+
         //主管审核
         [MyAuthorize]
         public ActionResult SupervisorAudit()
@@ -600,6 +614,7 @@ namespace advt.Web.Controllers
 
             return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos, LSignedupUser= models.LSignedupUser, Result });
         }
+       
         [MyAuthorize]
         [HttpPost]
         public ActionResult SerachDetail(string model)
@@ -616,8 +631,6 @@ namespace advt.Web.Controllers
             SupervisorAuditModel models = new SupervisorAuditModel();
             var username = this.UserContextSubstring;
             models.Stopuser(model, username);
-
-
             return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos,  LSignedupUser = models.LSignedupUser });
         }
         //Hr审核
@@ -695,15 +708,6 @@ namespace advt.Web.Controllers
             return Json(new { ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
 
-        [MyAuthorize]
-        [HttpPost]
-        public ActionResult InsertUserDetailInfo(List<UserInfo> model)
-        {
-            var username = this.UserContextSubstring;
-            ExamUserInfoModel models = new ExamUserInfoModel();
-            models.InsertUserDetail(model, username);
-
-            return Json(new { CPListUserInfo = models.ListDetailInfo });
-        }
+       
     }
 }
