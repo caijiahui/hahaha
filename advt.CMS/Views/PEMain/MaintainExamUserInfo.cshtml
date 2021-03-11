@@ -136,18 +136,18 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="150">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search"
                               size="mini"
                               placeholder="输入关键字搜索" />
                 </template>
                 <template slot-scope="scope">
-                    <el-button size="mini"
-                               @@click="handleEdit(scope.row.Id, scope.row)">Edit</el-button>
-                    <el-button size="mini"
-                               @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践明细</el-button>
-                    <el-button size="mini"
+                    <el-button type="text" size="small"
+                               @@click="handleEdit(scope.row.Id, scope.row)">编辑</el-button>               
+                    <el-button type="text" size="small"
+                               @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
+                    <el-button type="text" size="small"
                                @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">明细</el-button>
                 </template>
             </el-table-column>
