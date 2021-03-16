@@ -472,13 +472,13 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult GetUserInfo()
+        public ActionResult GetUserInfo(string typename)
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
-            model.GetUserInfo();
+            model.GetUserInfo(typename);
             model.GetUserComInfo();
 
-            return Json(new { tableData = model.ListUserInfo, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = model.ListUserInfo11, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo, LExamType=model.LExamType }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)
         {
@@ -501,7 +501,7 @@ namespace advt.Web.Controllers
             }
             var model = new ExamUserInfoModel();
             model.UploadUser(filepath);
-            model.GetUserInfo();
+            model.GetUserInfo(null);
             return Json(new { Result = model.Result, tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
 
@@ -519,7 +519,7 @@ namespace advt.Web.Controllers
             var username = this.UserContextSubstring;
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.InsertUserDetail(model, username);
-            models.GetUserInfo();
+            models.GetUserInfo(null);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo });
         }
@@ -528,7 +528,7 @@ namespace advt.Web.Controllers
         {
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.DeleteExamUserInfo(model);
-            models.GetUserInfo();
+            models.GetUserInfo(null);
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -536,7 +536,7 @@ namespace advt.Web.Controllers
         {
             var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
             model.SaveUserInfo(username);
-            model.GetUserInfo();
+            model.GetUserInfo(null);
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -708,6 +708,30 @@ namespace advt.Web.Controllers
             return Json(new { ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
 
-       
+        public JsonResult Upload_UserInfo(HttpPostedFileBase file)
+        {
+            string filepath = "";
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new ExamUserInfoModel();
+            model.UploadUserInfo(filepath);   
+            
+            return Json(new { Result = model.Result, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

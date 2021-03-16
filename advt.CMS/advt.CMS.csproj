@@ -239,6 +239,7 @@
     </Content>
     <Content Include="Attachment\temp\Template\BankTemplate.xlsx" />
     <Content Include="Attachment\temp\Template\UserAchievement.xlsx" />
+    <Content Include="Attachment\temp\Template\ExamUser.xlsx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.disco" />
     <None Include="Connected Services\MembershipWebservice\configuration91.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\configuration.svcinfo" />
