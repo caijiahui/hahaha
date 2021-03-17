@@ -20,13 +20,11 @@
                 </el-tab-pane>
                 <el-tab-pane label="HR确认考试人员名单" name="second">
                 </el-tab-pane>
-
             </el-tabs>
         </template>
+
         <div v-show="activeName=='first'">
             <template>
-                <el-divider content-position="left">系统运算待考试人员名单</el-divider>
-
                 <el-button size="small" type="primary" @@click="handlesert()">保存</el-button>
             </template>
 
@@ -51,9 +49,6 @@
 
 
         <div v-show="activeName=='second'">
-            <template>
-                <el-divider content-position="left">HR确认考试人员名单</el-divider>
-            </template>
                 <div style="float:left;">
                     <template>
                         <el-upload class="upload-demo"
@@ -65,9 +60,12 @@
                         </el-upload>
                     </template>
                 </div>
+               <template>
                 <a href="/Attachment/temp/Template/ExamUser.xlsx">
                     <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">汇入模板</el-button>
                 </a>
+               </template>
+                
          
         <el-table :data="CPListUserInfo"
                   style="width:100%;margin-top:20px;">
@@ -110,28 +108,26 @@
                 </el-select>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
             </template>
-
-            <template>
-                <el-divider content-position="left">上传绩效成绩是否符合要求</el-divider>
-                <div style="margin-bottom:20px">
-                    <div style="float:left;">
-                        <template>
-                            <el-upload class="upload-demo"
-                                       ref="upload"
-                                       :multiple="false"
-                                       :on-success="handleExcelSuccess"
-                                       action="/PEMain/Upload_UserAch">
-                                <el-button size="small" type="primary">绩效上传</el-button>
-                            </el-upload>
-                        </template>
-                    </div>
+            <div style="margin-top:10px">
+                <div style="float:left;">
+                    <template>
+                        <el-upload class="upload-demo"
+                                   ref="upload"
+                                   :multiple="false"
+                                   :on-success="handleExcelSuccess"
+                                   action="/PEMain/Upload_UserAch">
+                            <el-button size="small" type="primary">绩效上传</el-button>
+                        </el-upload>
+                    </template>
+                </div>
+                <template>
                     <a href="/Attachment/temp/Template/UserAchievement.xlsx">
                         <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">绩效模板</el-button>
                     </a>
+                </template>
+               
 
-                </div>
-            </template>
-
+            </div>
 
             <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
                       style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
