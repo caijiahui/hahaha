@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="DataProvider\advt_Attachment.cs" />
     <Compile Include="DataProvider\advt_Attach_Files.cs" />
+    <Compile Include="DataProvider\advt_user_sheet.cs" />
     <Compile Include="DataProvider\ExamBank.cs" />
     <Compile Include="DataProvider\ExamRuleTopicType.cs" />
     <Compile Include="DataProvider\ExamRule.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="IDataProvider\advt_Attachment.cs" />
     <Compile Include="IDataProvider\advt_Attach_Files.cs" />
     <Compile Include="IDataProvider\advt_Category.cs" />
+    <Compile Include="IDataProvider\advt_user_sheet.cs" />
     <Compile Include="IDataProvider\ExamBank.cs" />
     <Compile Include="IDataProvider\ExamRuleTopicType.cs" />
     <Compile Include="IDataProvider\ExamRule.cs" />
