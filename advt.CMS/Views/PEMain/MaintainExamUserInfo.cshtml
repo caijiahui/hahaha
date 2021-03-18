@@ -26,8 +26,9 @@
         <div v-show="activeName=='first'">
             <template>
                 <el-button size="small" type="primary" @@click="handlesert()">保存</el-button>
-            </template>
 
+            </template>
+           
             <el-table :data="YListUserInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
                 <el-table-column type="selection" width="55">
@@ -49,56 +50,62 @@
 
 
         <div v-show="activeName=='second'">
-                <div style="float:left;">
-                    <template>
-                        <el-upload class="upload-demo"
-                                   ref="upload"
-                                   :multiple="false"
-                                   :on-success="handleExamSuccess"
-                                   action="/PEMain/Upload_UserInfo">
-                            <el-button size="small" type="primary">批量汇入</el-button>
-                        </el-upload>
-                    </template>
-                </div>
-               <template>
+            <div style="float:left;">
+                <template>
+                    <el-upload class="upload-demo"
+                               ref="upload"
+                               :multiple="false"
+                               :on-success="handleExamSuccess"
+                               action="/PEMain/Upload_UserInfo">
+                        <el-button size="small" type="primary">批量汇入</el-button>
+                    </el-upload>
+                </template>
+            </div>
+            <template>
                 <a href="/Attachment/temp/Template/ExamUser.xlsx">
                     <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">汇入模板</el-button>
                 </a>
-               </template>
-                
-         
-        <el-table :data="CPListUserInfo"
-                  style="width:100%;margin-top:20px;">
-            @*<el-table-column type="selection">
+            </template>
+            <template>
+                <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
+                    <a style="color:white" href="/PEMain/SignUpExamExcel">导出</a>
+                </el-button>
+
+            </template>
+
+
+            <el-table :data="CPListUserInfo"
+                      style="width:100%;margin-top:20px;">
+                @*<el-table-column type="selection">
             </el-table-column>*@
-            <el-table-column fixed
-                             prop="UserCode"
-                             label="工号">
-            </el-table-column>
-            <el-table-column label="状态"
-                             prop="ExamStatus">
-                <template slot-scope="scope">
-                    <el-tag type="success">已报名</el-tag>
-                </template>
+                <el-table-column fixed
+                                 prop="UserCode"
+                                 label="工号">
+                </el-table-column>
+                <el-table-column label="状态"
+                                 prop="ExamStatus">
+                    <template slot-scope="scope">
+                        <el-tag type="success">已报名</el-tag>
+                    </template>
 
-            </el-table-column>
-            <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
-            <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
-            <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
-            <el-table-column label="本职等技能" prop="SkillName" sortable></el-table-column>
-            <el-table-column label="最高可考技能" prop="HighestLevel" sortable></el-table-column>
-            <el-table-column label="本次申请等级" prop="ApplyLevel" sortable></el-table-column>
-            <el-table-column fixed="right"
-                             label="操作">
-                <template slot-scope="scope">
+                </el-table-column>
+                <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
+                <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
+                <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
+                <el-table-column label="本职等技能" prop="SkillName" sortable></el-table-column>
+                <el-table-column label="最高可考技能" prop="HighestLevel" sortable></el-table-column>
+                <el-table-column label="本次申请等级" prop="ApplyLevel" sortable></el-table-column>
+                <el-table-column fixed="right"
+                                 label="操作">
+                    <template slot-scope="scope">
 
-                    <el-button size="mini" @@click="StopComplete(scope.row.ID)">取消</el-button>
+                        <el-button size="mini" @@click="StopComplete(scope.row.ID)">取消</el-button>
 
-                </template>
-            </el-table-column>
+                    </template>
+                </el-table-column>
 
-        </el-table>
-    </div>
+            </el-table>
+        </div>
        
 
         <div v-show="activeName=='third'">
@@ -125,7 +132,11 @@
                         <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">绩效模板</el-button>
                     </a>
                 </template>
-               
+                <template>
+                    <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px"> 
+                    <a style="color:white" href="/PEMain/ShunFengExcel">导出</a></el-button>
+                  
+                </template>
 
             </div>
 

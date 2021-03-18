@@ -732,6 +732,116 @@ namespace advt.Web.Controllers
             
             return Json(new { Result = model.Result, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
         }
+        public FileResult ShunFengExcel()
+        {
+
+            try
+            {
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                ExamUserInfoModel models = new ExamUserInfoModel();
+                models.GetUserInfo(null);
+                //获取list数据
+                var tlst = models.ListUserInfo;
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("工号");
+                row1.CreateCell(1).SetCellValue("姓名");
+                row1.CreateCell(2).SetCellValue("入职日期");
+                row1.CreateCell(3).SetCellValue("职等");
+                row1.CreateCell(4).SetCellValue("职位");
+                row1.CreateCell(5).SetCellValue("本职等对应技能等级");
+                row1.CreateCell(6).SetCellValue("已经考取技能等级");
+                row1.CreateCell(7).SetCellValue("最近一次理论考试成绩");
+                row1.CreateCell(8).SetCellValue("最近一次通过理论时间");
+                row1.CreateCell(9).SetCellValue("最近一次实践成绩");
+                row1.CreateCell(10).SetCellValue("最近一次实践考核通过时间");
+                row1.CreateCell(11).SetCellValue("最高可考技能等级");
+                row1.CreateCell(12).SetCellValue("可申请技能等级");
+                row1.CreateCell(13).SetCellValue("最近一次绩效成绩要求");
+                //将数据逐步写入sheet1各个行
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].UserCode);//工号
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].UserName);//姓名
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].EntryDate.ToString());//入职日期
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].RankName);//职等
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].PostName);//职位
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].SkillLevel);//本职等对应技能等级
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);//已经考取技能等级
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].ExamScore);//最近一次理论考试成绩
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].LastExamTime.ToString());//最近一次通过理论时间
+                    rowtemp.CreateCell(9).SetCellValue(tlst[i].TheoreticalAchievement.ToString());//最近一次实践成绩
+                    rowtemp.CreateCell(10).SetCellValue(tlst[i].PracticeTime.ToString());//最近一次实践考核通过时间
+                    rowtemp.CreateCell(11).SetCellValue(tlst[i].HighestTestSkill);//最高可考技能等级
+                    rowtemp.CreateCell(12).SetCellValue(tlst[i].ApplicationLevel);//可申请技能等级
+                    rowtemp.CreateCell(13).SetCellValue(tlst[i].Achievement);//最近一次绩效成绩要求    
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", "人员信息" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public FileResult SignUpExamExcel()
+        {
+
+            try
+            {
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                ExamUserInfoModel models = new ExamUserInfoModel();
+                models.GetUserComInfo();
+                //获取list数据
+                var tlst = models.ListDetailInfo;
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("工号");
+                row1.CreateCell(1).SetCellValue("状态");
+                row1.CreateCell(2).SetCellValue("考试类型");
+                row1.CreateCell(3).SetCellValue("姓名");
+                row1.CreateCell(4).SetCellValue("部门代码");
+                row1.CreateCell(5).SetCellValue("本职等对应技能等级");
+                row1.CreateCell(6).SetCellValue("最高可考技能等级");
+                row1.CreateCell(7).SetCellValue("本次申请技能等级");
+                //将数据逐步写入sheet1各个行
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].UserCode);//工号
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].ExamStatus);//状态
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].TypeName);//考试类型
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].UserName);//姓名
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].DepartCode);//部门代码
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].SkillName);//本职等对应技能等级
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].HighestLevel);//最高可考技能等级
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].ApplyLevel);//本次申请技能等级
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", "HR确认考试人员名单" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
 
     }
 }

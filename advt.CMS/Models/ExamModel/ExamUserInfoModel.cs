@@ -87,29 +87,35 @@ namespace advt.CMS.Models.ExamModel
                 ListUserInfo.Add(new UserInfo
                 {
                     Id = Convert.ToInt32(row["ID"].ToString()),
+                    TypeName = row["TypeName"].ToString(),
                     UserCode = row["UserCode"].ToString(),
                     UserName = row["UserName"].ToString(),
-                    DepartCode = row["DepartCode"].ToString(),
-                    PostName = row["PostName"].ToString(),
-                    RankName = row["RankName"].ToString(),
                     EntryDate = Convert.ToDateTime(row["EntryDate"]),
+
+                    RankName = row["RankName"].ToString(),
+                    PostName = row["PostName"].ToString(),
+                    DepartCode = row["DepartCode"].ToString(),
+                    SkillLevel = row["SkillLevel"].ToString(),//本职等
+                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
+                    ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
+                    LastExamTime = now,//最后一次理论时间
+                    TheoreticalAchievement = score,//实践成绩
+                    PracticeTime = practicetime,//最后一次实践成绩
+                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
+                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
+                    IsAchment = row["IsAchment"].ToString(),
                     Achievement = row["Achievement"].ToString(),
-                    TypeName = row["TypeName"].ToString(),
+                
                     SubjectName = row["SubjectName"].ToString(),
                     //CreateUser = row["CreateUser"].ToString(),
                     //CreateDate = Convert.ToDateTime(row["CreateDate"]),
                     //UpdateUser = row["UpdateUser"].ToString(),
-                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),
-                    SkillLevel = row["SkillLevel"].ToString(),//本职等
-                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级                   
-                    LastExamTime = now,
-                    TheoreticalAchievement = score,//实践成绩
-                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级                    
-                    IsAchment = row["IsAchment"].ToString(),
-                    IsExam = row["IsExam"].ToString(),
-                    ExamScore = row["ExamScore"].ToString(),
-                    PracticeTime= practicetime
+                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),   
+                   
+                                 
+                    IsExam = row["IsExam"].ToString()
+                  
+                   
                 });
 
             }
