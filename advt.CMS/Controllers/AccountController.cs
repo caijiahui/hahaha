@@ -9,6 +9,7 @@ using advt.Manager;
 using System.Text.RegularExpressions;
 using advt.Common;
 using System.Text;
+using FormsAuth;
 
 namespace advt.Web.Controllers
 {
@@ -32,26 +33,115 @@ namespace advt.Web.Controllers
             return View();
         }
 
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public ActionResult Login(Model.LoginModel model, string returnUrl)
+        //{
+
+        //    Service.IProvider.IAuthorizationServices service= new Service.Provider.AuthorizationServices();
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        Entity.advt_users user = service.Authenticate(model.UserName, model.Password);
+        //        if (user != null) //验证通过
+        //        {
+        //            //写FormsAuthentication
+        //            SetUserAuthIn(user.id.ToString(), model.Password, string.Empty, false);
+
+        //            //写入Cookie，无需登入。
+        //            XUtils.WriteUserCookie(user, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
+        //            return Json(new { IsLogin = "Pass"}, JsonRequestBehavior.AllowGet);
+        //            //return RedirectToAction("index", "PEMain");
+        //        }
+        //    }
+
+        //    ModelState.AddModelError("", "用户名或者密码错误!");
+        //    return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
+        //}
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult Login(Model.LoginModel model, string returnUrl)
         {
-
-            Service.IProvider.IAuthorizationServices service= new Service.Provider.AuthorizationServices();
-
-            if (ModelState.IsValid)
+            try
             {
-                Entity.advt_users user = service.Authenticate(model.UserName, model.Password);
-                if (user != null) //验证通过
+                if (ModelState.IsValid)
                 {
-                    //写FormsAuthentication
-                    SetUserAuthIn(user.id.ToString(), model.Password, string.Empty, false);
 
-                    //写入Cookie，无需登入。
-                    XUtils.WriteUserCookie(user, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
-                    return Json(new { IsLogin = "Pass"}, JsonRequestBehavior.AllowGet);
-                    //return RedirectToAction("index", "PEMain");
+                    //Entity.advt_users user = service.Authenticate(model.UserName, model.Password);
+                    string[] SplitAccount = model.UserName.Trim().Split('\\');
+                    var user = SplitAccount[1];
+                    var UserAccount = SplitAccount[0] + '\\' + SplitAccount[1];
+                    //ResponseModel response = _accessRepository.GetAccess(user);
+                    if (SplitAccount.Length > 1)
+                    {
+                        String adPath = ""; //Fully-qualified Domain Name
+                        switch (SplitAccount[0].ToLower().Trim())
+                        {
+                            case "acn":
+                                adPath = "LDAP://acn.advantech.corp"; //acn
+                                break;
+                            case "aeu":
+                                adPath = "LDAP://aeu.advantech.corp"; //advantech
+                                break;
+                            case "aus":
+                                adPath = "LDAP://aus.advantech.corp"; //advantech
+                                break;
+                            case "advantech":
+                                adPath = "LDAP://advantech.corp";//advantech
+                                break;
+                            default:
+                                adPath = "LDAP://acn.advantech.corp"; //acn
+                                break;
+                        }
+                        LdapAuthentication adAuth = new LdapAuthentication(adPath);
+                        try
+                        {
+                            string password = model.Password.Trim();
+
+                            if (true == adAuth.IsAuthenticated(SplitAccount[0], SplitAccount[1], model.Password))
+                            {
+                                Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                                Entity.advt_users users = service.Authenticate(model.UserName, model.Password);
+                                //登陆成功
+                                //var advt = new advt_users();
+                                //advt = Data.advt_users.Get_advt_users(new { username = model.UserName });
+                                //if (advt == null)
+                                //{
+                                //    advt = new advt_users();
+                                //    advt.username = model.UserName;
+                                //    advt.createdate = DateTime.Now;
+                                //    advt.status = 2;
+                                //    advt.password = model.Password;
+                                //    Data.advt_users.Insert_advt_users(advt, null, new string[] { "id" });
+                                //}
+
+                                SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
+                                //写入Cookie，无需登入。
+                                XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
+                                return Json(new { IsLogin = "Pass" }, JsonRequestBehavior.AllowGet);
+
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // msg = "域账号密码验证失败，请重新登录！";
+                            //return Content("域账号密码验证失败，请重新登录！");
+                        }
+                    }
+                    else
+                    {
+                        //msg = "域账号密码验证失败，请重新登录！";
+                    }
+
                 }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
 
             ModelState.AddModelError("", "用户名或者密码错误!");

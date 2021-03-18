@@ -18,6 +18,8 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.Util;
 using System.Data;
 using advt.CMS.Models;
+using System.Text;
+using FormsAuth;
 
 namespace advt.Web.Controllers
 {
@@ -694,6 +696,7 @@ namespace advt.Web.Controllers
             models.GetRuleSubjectList(model);
             return Json(new { ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
-        
+
+
     }
 }
