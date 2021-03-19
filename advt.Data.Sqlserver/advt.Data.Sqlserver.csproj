@@ -66,6 +66,7 @@
     <Compile Include="DataProvider\advt_log.cs" />
     <Compile Include="DataProvider\advt_page.cs" />
     <Compile Include="DataProvider\advt_posts1.cs" />
+    <Compile Include="DataProvider\advt_user_sheet.cs" />
     <Compile Include="DataProvider\ExamBank.cs" />
     <Compile Include="DataProvider\ExamRuleTopicType.cs" />
     <Compile Include="DataProvider\ExamRule.cs" />

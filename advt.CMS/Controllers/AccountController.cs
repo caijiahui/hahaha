@@ -579,7 +579,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult GetUser()
         {
-            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            var username = this.UserNameContext;
             return Json(new { admin = username },JsonRequestBehavior.AllowGet);
         }
     }

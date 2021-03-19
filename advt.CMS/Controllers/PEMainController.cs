@@ -552,7 +552,8 @@ namespace advt.Web.Controllers
         public ActionResult GetSupervisorAuditUser()
         {
             SupervisorAuditModel model = new SupervisorAuditModel();
-            model.GetAllExamUserDetailInfo();
+            var name = this.UserNameContext;
+            model.GetAllExamUserDetailInfo(name);
             return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser });
         }
         public JsonResult Upload_Supervisor(HttpPostedFileBase file)
