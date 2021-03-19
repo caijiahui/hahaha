@@ -16,6 +16,7 @@ namespace advt.CMS.Models.ExamModel
     {
         public UserInfo UserInfoList { get; set; }
         public List<UserInfo> ListUserInfo { get; set; }
+        public List<UserInfo> ListUserInfo11 { get; set; }
         public List<UserInfo> YListUserInfo { get; set; }
         public List<Entity.RankInfo> ListRankInfo { get; set; }
         public List<Entity.RankInfo> ListRank { get; set; }
@@ -30,6 +31,7 @@ namespace advt.CMS.Models.ExamModel
         public List<Entity.SkillInfo> ListSkillInfo { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }
         public ExamUserInfoModel() : base()
         {
             UserInfoList = new UserInfo();
@@ -46,9 +48,12 @@ namespace advt.CMS.Models.ExamModel
             LPracticeInfo = new List<PracticeInfo>();
             LExamUserDetailInfo = new List<ExamUserDetailInfo>();
             ListDetailInfo = new List<ExamUserDetailInfo>();
+            LExamType = new List<KeyValuePair<string, string>>();
+            ListUserInfo11 = new List<UserInfo>();
+
 
         }
-        public void GetUserInfo()
+        public void GetUserInfo(string typename)
         {
             var connectionString = "server=172.21.128.84;database=Exam2;uid=adminims;pwd=Ifs2015Pri";
             DataSet result = new DataSet();
@@ -65,6 +70,7 @@ namespace advt.CMS.Models.ExamModel
             {
                 decimal score = 0;
                 DateTime? now = null;
+                DateTime? practicetime = null;
                 if (row["TheoreticalAchievement"].ToString() != "")
                 {
                     score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
@@ -73,36 +79,61 @@ namespace advt.CMS.Models.ExamModel
                 {
                     now = Convert.ToDateTime(row["LastExamTime"].ToString());
                 }
+                if (row["PariceDate"].ToString() != "")
+                {
+                    now = Convert.ToDateTime(row["PariceDate"].ToString());
+                }
+                
                 ListUserInfo.Add(new UserInfo
                 {
                     Id = Convert.ToInt32(row["ID"].ToString()),
+                    TypeName = row["TypeName"].ToString(),
                     UserCode = row["UserCode"].ToString(),
                     UserName = row["UserName"].ToString(),
-                    DepartCode = row["DepartCode"].ToString(),
-                    PostName = row["PostName"].ToString(),
-                    RankName = row["RankName"].ToString(),
                     EntryDate = Convert.ToDateTime(row["EntryDate"]),
+
+                    RankName = row["RankName"].ToString(),
+                    PostName = row["PostName"].ToString(),
+                    DepartCode = row["DepartCode"].ToString(),
+                    SkillLevel = row["SkillLevel"].ToString(),//本职等
+                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
+                    ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
+                    LastExamTime = now,//最后一次理论时间
+                    TheoreticalAchievement = score,//实践成绩
+                    PracticeTime = practicetime,//最后一次实践成绩
+                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
+                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
+                    IsAchment = row["IsAchment"].ToString(),
                     Achievement = row["Achievement"].ToString(),
-                    TypeName = row["TypeName"].ToString(),
+                
                     SubjectName = row["SubjectName"].ToString(),
                     //CreateUser = row["CreateUser"].ToString(),
                     //CreateDate = Convert.ToDateTime(row["CreateDate"]),
                     //UpdateUser = row["UpdateUser"].ToString(),
-                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),
-                    SkillLevel = row["SkillLevel"].ToString(),//本职等
-                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//目前技能等级                   
-                    LastExamTime = now,
-                    TheoreticalAchievement = score,//理论成绩
-                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级                    
-                    IsAchment = row["IsAchment"].ToString(),
+                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),   
+                   
+                                 
                     IsExam = row["IsExam"].ToString()
+                  
+                   
                 });
 
             }
-            //ListUserInfo.Where(x => x.IsExam == "true").ToList();
-            YListUserInfo = ListUserInfo.Take(3).ToList();
 
+            if (typename=="")
+            {
+                ListUserInfo11 = ListUserInfo.ToList(); }
+            else
+            {
+                ListUserInfo11 = ListUserInfo.Where(x => x.TypeName == typename).ToList();
+            }
+            YListUserInfo = ListUserInfo.Where(x => x.IsExam == "true").ToList();
+
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
+            {
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+            }
             #region
             //var user = Data.ExamUserInfo.Get_All_ExamUserInfo();
             //foreach (var item in user)
@@ -386,8 +417,6 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-
-                var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
                     ExamUserDetailInfo v = new ExamUserDetailInfo();
@@ -413,9 +442,7 @@ namespace advt.CMS.Models.ExamModel
                     v.HrCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                 };
-                GetUserComInfo();
             }
-
             catch (Exception ex)
             {
                 throw;
@@ -425,8 +452,108 @@ namespace advt.CMS.Models.ExamModel
         public void GetUserComInfo()
         {
             ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
+        }
 
+        public void StopComplete(string ID, string username)
+        {
+            try
+            {
+                var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
+                c.IsStop = true;
+                c.HrCheckCreateDate = DateTime.Now;
+                c.HrCheckCreateUser = username;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+                        }
+            catch (Exception ex)
+            {
 
+                throw;
+            }
+
+        }
+        public void UploadUserInfo(string filepath)
+        {
+            DataTable dt = new DataTable();
+            FileStream files = null;
+            IWorkbook Workbook = null;
+            var Ldetailinfo = new List<Entity.ExamUserDetailInfo>();
+            try
+            {
+
+                using (files = new FileStream(filepath, FileMode.Open, FileAccess.Read))//C#文件流读取文件
+                {
+                    if (filepath.IndexOf(".xlsx") > 0)
+                        //把xlsx文件中的数据写入Workbook中
+                        Workbook = new XSSFWorkbook(files);
+
+                    else if (filepath.IndexOf(".xls") > 0)
+                        //把xls文件中的数据写入Workbook中
+                        Workbook = new HSSFWorkbook(files);
+
+                    if (Workbook != null)
+                    {
+                        ISheet sheet = Workbook.GetSheetAt(0);//读取第一个sheet
+                        System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+                        //得到Excel工作表的行 
+                        IRow headerRow = sheet.GetRow(0);
+                        //得到Excel工作表的总列数  
+                        int cellCount = headerRow.LastCellNum;
+
+                        for (int j = 0; j < cellCount; j++)
+                        {
+                            //得到Excel工作表指定行的单元格  
+                            ICell cell = headerRow.GetCell(j);
+                            dt.Columns.Add(cell.ToString());
+                        }
+
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                        {
+                            IRow row = sheet.GetRow(i);
+                            DataRow dataRow = dt.NewRow();
+
+                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            {
+                                if (row.GetCell(j) != null)
+                                    dataRow[j] = row.GetCell(j).ToString();
+                            }
+                            dt.Rows.Add(dataRow);
+                        }
+                    }
+                }
+                using (var ds = dt)
+                {
+                    var q = from DataRow dr in ds.Rows
+
+                            select new Entity.ExamUserDetailInfo
+                            {
+                                UserCode = dr[0].ToString().Trim(),
+                                UserName= dr[1].ToString().Trim(),
+                                TypeName = dr[2].ToString().Trim(),
+                                SubjectName = dr[3].ToString().Trim()
+                            };
+                    Ldetailinfo = q.ToList();
+                }
+                foreach (var item in Ldetailinfo)
+                {
+                    ExamUserDetailInfo detail = new ExamUserDetailInfo();
+                    detail.UserCode = item.UserCode;
+                    detail.UserName = item.UserName;
+                    detail.TypeName = item.TypeName;
+                    detail.SubjectName = item.SubjectName;
+                    detail.ExamStatus = "HrSignUp";
+                    Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(detail, null, new string[] { "ID" });
+                    Result = "success";
+                }
+
+                ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
+
+            }
+
+            catch (Exception ex)
+            {
+
+                files.Close();//关闭当前流并释放资源
+            }
         }
     }
     public class UserInfo
@@ -459,6 +586,8 @@ namespace advt.CMS.Models.ExamModel
         public string ExamStatus { get; set; }
         public bool IsReview { get; set; }
         public string RuleName { get; set; }
+        public string ExamScore { get; set; }
+        public DateTime? PracticeTime { get; set; }// 最近一次实践考试时间
 
     }
 }

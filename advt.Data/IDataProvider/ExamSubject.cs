@@ -19,6 +19,7 @@ namespace advt.Data
 
         int Delete_ExamSubject(int ID);
         IDataReader GetSubjectList(object objparams);
+        IDataReader Get_All_ExamSubjectInfo(string SubjectName,string TypeName); 
 
         #endregion
     }

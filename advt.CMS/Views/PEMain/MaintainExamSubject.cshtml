@@ -186,8 +186,12 @@
                 axios.post('/PEMain/SaveSubjectInfo', {
                     model: objs
                 }).then(function (res) {
-                    _this.tableData = res.data.tableData;
-                    _this.setPaginations();
+                    if (res.data.Result != '') {
+                        _this.$message.error(res.data.Result);
+                    } else {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations();
+                    }
                 });
                 _this.dialogFormVisible = false;           
 

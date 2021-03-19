@@ -99,8 +99,14 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().GetTRuleSubjectInfo(model);
             return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
         }
+        public static List<Entity.ExamRule> Get_All_ExamRuleInfo(string RuleName)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamRuleInfo(RuleName);
+            return SqlHelper.GetReaderToList<Entity.ExamRule>(reader);
+        }
 
         
+
         #endregion
     }
 }

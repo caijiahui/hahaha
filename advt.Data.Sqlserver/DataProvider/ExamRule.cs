@@ -106,7 +106,15 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@model", (DbType)SqlDbType.NVarChar, 150, model));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public IDataReader Get_All_ExamRuleInfo(string RuleName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ExamRule where RuleName=@RuleName");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
+        }
         #endregion
 
 
