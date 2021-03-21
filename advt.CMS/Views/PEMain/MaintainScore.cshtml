@@ -9,42 +9,13 @@
             <i class="el-icon-location"></i>
             <span class="title">考试成绩</span>
         </template>
-        <div>
-       
-            <div>
-                <table  border="1">
-                    <tr>
-                        <td>考试类型</td>
-                        @*<td>{{item.TypeName}}</td>*@
-                        <td>技能等级考试</td>
-                    </tr>
-                    <tr>
-                        <td>考试时间</td>
-                        @*<td>{{item.CreateDate}}</td>*@
-                        <td>2020/03/8</td>
-                    </tr>
-                    <tr>
-                        <td>考试状态</td>
-                        <td>是</td>
-                    </tr>
-                    <tr>
-                        <td>考试分数</td>
-                        @*<td>{{item.PassScore}}</td>*@
-                        <td>80</td>
-                    </tr>
-                </table>
-              
-            </div>
-           
-        </div>
-        @*<el-table :data="tableData"
+        <el-table :data="tableData"
                   style="width: 100% ">
             <el-table-column label="考试类型"
-                             prop="TypeName" sortable
+                             prop="ExamSubject" sortable
                              width="180">
             </el-table-column>
-            <el-table-column label="考试时间"
-                             width="120">
+            <el-table-column label="考试时间">
                 <template slot-scope="scope">
                     <span>{{changeDate(scope.row.CreateDate)}}</span>
                 </template>
@@ -52,15 +23,27 @@
             <el-table-column label="考试状态"
                              sortable>
                 <template slot-scope="scope">
-                    <span v-if="scope.row.IsTest=='1'">是</span>
+                    <span v-if="scope.row.IsTest=='1'">已考</span>
                 </template>
             </el-table-column>
             <el-table-column label="考试分数"
-                             prop="PassScore" sortable
+                             prop="CorrectScore" sortable
                              width="180">
             </el-table-column>
+            <el-table-column label="考试通过"
+                             sortable>
+                <template slot-scope="scope">
+                    <span v-if="scope.row.CorrectScore">="scope.row.PassScore">通过</span>
 
-        </el-table>*@
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small"
+                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">查看</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
     </div>
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
@@ -99,6 +82,11 @@
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
                 return year + '-' + mon + '-' + day;
+            },
+            //查询明细
+            handleSearchDetail(usercode) {
+                var _this = this;
+                window.location.href = "/PEMain/ExamFinish";
             },
         }
 

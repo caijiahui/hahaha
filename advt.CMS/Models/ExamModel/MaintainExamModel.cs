@@ -21,12 +21,12 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetUserScore(string code)
         {
-            ListExamScore= Data.ExamScore.Get_All_ExamScore(new { CreateUser = code });
+            ListExamScore = Data.ExamScore.Get_All_ExamScore(new { CreateUser = code });
         }
         public string GetUserCode(string username)
         {
             var code = "";
-            Listadvt_user_sheet = Data.advt_user_sheet.Get_All_advt_user_sheet(new { UserDspName = username });
+            Listadvt_user_sheet = Data.advt_user_sheet.Get_All_advt_user_sheet(new { UserAccount = username });
             if (Listadvt_user_sheet.Count() > 0 && Listadvt_user_sheet != null)
             {
                 code = Listadvt_user_sheet.FirstOrDefault().UserCode;
@@ -34,4 +34,4 @@ namespace advt.CMS.Models.ExamModel
             return code;
         }
     }
-}
+    }
