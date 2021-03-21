@@ -23,6 +23,7 @@ namespace advt.CMS.Models
          public ExamUserInfo TestD { get; set; }
         public string ID { get; set; }
         public ExamScore VExamScore { get; set; }
+        public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public ExamPageModel() : base()
         {
             examList = new ExamView();
@@ -36,6 +37,7 @@ namespace advt.CMS.Models
             }
             VExamUserInfo = new ExamUserInfo();
             VExamUserInfo.LExamViews = new List<ExamView>();
+            ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
 
         public void GetListExam()
@@ -392,7 +394,22 @@ namespace advt.CMS.Models
                 { sc.CorrectNum = 0; }
                 sc.CorrectScore = score;
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
-                
+
+               
+                //根据人员，科目更新分数
+                 ListExamUserDetailInfo=Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode= model.VExamUserInfo.UserName, ExamStatus ="HrCheck"});
+                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
+                {
+                    foreach (var item in ListExamUserDetailInfo)
+                    {
+                        item.ExamScore = score;
+                        item.ExamDate = DateTime.Now;
+                        item.IsExam = "true";
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    }
+                   
+                }
+
             }
         }
         public void InsertRecoredData(ExamPageModel model)
