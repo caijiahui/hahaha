@@ -1,0 +1,85 @@
+﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
+
+@{
+                /**/
+
+                Layout = null;
+}
+<div id="app" style="margin-left:20px">
+    <div style="width:100%;margin-top:30px;">
+        <el-aside width="auto" style="height:100%">
+            <el-menu default-active="1"
+                     class="el-menu-vertical-demo"
+                     @@open="asideHandleOpen"
+                     @@close="asideHandleClose"
+                     :unique-opened='true'>
+
+                <el-submenu index="1">
+                    <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>
+                            <span class="title">考试科目</span>
+                        </span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item @@click="ShowSubject('exam')">考试1</el-menu-item>
+                      
+                    </el-menu-item-group>
+                </el-submenu>
+              
+            </el-menu>
+        </el-aside>
+    </div><el-table>
+        <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>
+                <span class="title">问卷调查</span>
+            </span>
+        </template>
+    </el-table>
+  
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            isMobileTurn: false,
+            mobileMenuDrawer: false,
+        },
+
+        mounted: function () {
+            var _this = this;
+
+            if (_this.isMobile()) {
+                _this.isMobileTurn = true
+            } else {
+                _this.isMobileTurn = false
+            }
+        },
+        methods: {
+            ShowSubject: function (ids) {
+                if (ids == "exam") { window.location.href = "/PEMain/MaintainSubset" }
+                if (ids == "score") { window.location.href = "/PEMain/MaintainScore" }
+            },
+            asideHandleOpen(key, keyPath) {
+
+            },
+            asideHandleClose(key, keyPath) {
+
+            },
+            isMobile() {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            }
+        }
+
+
+    })
+
+</script>
+

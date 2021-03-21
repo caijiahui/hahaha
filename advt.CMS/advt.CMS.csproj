@@ -184,6 +184,7 @@
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
     <Compile Include="Models\ExamModel\HrAuditModel.cs" />
+    <Compile Include="Models\ExamModel\MaintainExamModel.cs" />
     <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
     <Compile Include="Models\ExamModel\ExamUserInfoModel.cs" />
@@ -437,6 +438,9 @@
     <Content Include="Views\PEMain\SupervisorAudit.cshtml" />
     <Content Include="Views\PEMain\MaintainExamUserInfo.cshtml" />
     <Content Include="Views\PEMain\HrAudit.cshtml" />
+    <Content Include="Views\PEMain\MaintainExam.cshtml" />
+    <Content Include="Views\PEMain\MaintainSubset.cshtml" />
+    <Content Include="Views\PEMain\MaintainScore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
