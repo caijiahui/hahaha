@@ -1,6 +1,11 @@
 ﻿using advt.Entity;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -8,6 +13,7 @@ namespace advt.CMS.Models.ExamModel
 {
     public class HrAuditModel
     {
+        public string Result { get; set; }
         public List<ExamUserDetailInfo> ListHrAuditUser { get; set; }
         public List<ExamUserDetailInfo> ListHrAuditSuccessUser { get; set; }
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
@@ -25,7 +31,7 @@ namespace advt.CMS.Models.ExamModel
         {
             if (string.IsNullOrEmpty(typename))
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup" }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false }).OrderByDescending(x => x.TypeName).ToList();
                 ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop=false }).OrderByDescending(x => x.TypeName).ToList();
             }
             else
@@ -81,6 +87,90 @@ namespace advt.CMS.Models.ExamModel
         {
             LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = code });
             LPracticeInfo = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = code }).OrderByDescending(x => x.CreateDate).ToList();
+        }
+        public void Qualification(string filepath,string username)
+        {
+            DataTable dt = new DataTable();
+            FileStream files = null;
+            IWorkbook Workbook = null;
+            var LDetail = new List<ExamUserDetailInfo>();
+            try
+            {
+
+                using (files = new FileStream(filepath, FileMode.Open, FileAccess.Read))//C#文件流读取文件
+                {
+                    if (filepath.IndexOf(".xlsx") > 0)
+                        //把xlsx文件中的数据写入Workbook中
+                        Workbook = new XSSFWorkbook(files);
+
+                    else if (filepath.IndexOf(".xls") > 0)
+                        //把xls文件中的数据写入Workbook中
+                        Workbook = new HSSFWorkbook(files);
+
+                    if (Workbook != null)
+                    {
+                        ISheet sheet = Workbook.GetSheetAt(0);//读取第一个sheet
+                        System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+                        //得到Excel工作表的行 
+                        IRow headerRow = sheet.GetRow(0);
+                        //得到Excel工作表的总列数  
+                        int cellCount = headerRow.LastCellNum;
+
+                        for (int j = 0; j < cellCount; j++)
+                        {
+                            //得到Excel工作表指定行的单元格  
+                            ICell cell = headerRow.GetCell(j);
+                            dt.Columns.Add(cell.ToString());
+                        }
+
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                        {
+                            IRow row = sheet.GetRow(i);
+                            DataRow dataRow = dt.NewRow();
+
+                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            {
+                                if (row.GetCell(j) != null)
+                                    dataRow[j] = row.GetCell(j).ToString();
+                            }
+                            dt.Rows.Add(dataRow);
+                        }
+                    }
+                }
+                using (var ds = dt)
+                {
+                    var q = from DataRow dr in ds.Rows
+
+                            select new Entity.ExamUserDetailInfo
+                            {
+                                TypeName = dr[0].ToString().Trim(),
+                                SubjectName = dr[1].ToString().Trim(),
+                                UserCode = dr[2].ToString().Trim(),
+                                UserName = dr[3].ToString().Trim(),
+                                DepartCode = dr[4].ToString().Trim(),
+                                HrCheckCreateUser = username,
+                                HrCheckCreateDate = DateTime.Now,
+                                ExamStatus="HrCheck"
+                              
+                            };
+                    LDetail = q.ToList();
+                }
+                var successcount = 0;
+                foreach (var item in LDetail)
+                {
+                    var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    successcount += c;
+                }
+                GetHrAuditUser();
+                Result = successcount + "成功插入" + successcount + "记录";
+
+            }
+
+            catch (Exception ex)
+            {
+                Result = ex.Message;
+                files.Close();//关闭当前流并释放资源
+            }
         }
 
     }

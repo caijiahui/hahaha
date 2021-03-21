@@ -69,13 +69,16 @@
             <el-divider content-position="left">Hr审核通过人员</el-divider>
             <div style="margin-bottom:20px">
                 <div style="float:left;">
-                    <template>
+                    <el-upload class="upload-demo" style="margin-top:30px;"
+                               ref="upload"
+                               :multiple="false"
+                               :on-success="handleExcelSuccess"
+                               action="/PEMain/Upload_Qualification">
                         <el-button size="small" type="primary">考试资格汇入</el-button>
-
-                    </template>
+                    </el-upload>
                 </div>
-                <a href=" ">
-                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板</el-button>
+                <a href="/Attachment/temp/Template/QualificationTemplate.xlsx">
+                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板下载</el-button>
                 </a>
             </div>
         </template>
@@ -91,6 +94,9 @@
                              prop="TypeName" sortable
                              fixed>
             </el-table-column>
+            <el-table-column label="科目"
+                             prop="SubjectName" sortable>
+            </el-table-column>
             <el-table-column label="工号"
                              prop="UserCode" sortable
                              fixed>
@@ -101,9 +107,7 @@
             <el-table-column label="部门"
                              prop="DepartCode" sortable>
             </el-table-column>
-            <el-table-column label="科目"
-                             prop="SubjectName" sortable>
-            </el-table-column>
+
             <el-table-column label="等级"
                              prop="ApplyLevel" sortable>
             </el-table-column>
@@ -374,6 +378,15 @@
 
                 });
 
+            },
+            handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
+                var _this = this;
+                _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                this.$message({
+                    message: Result.Result,
+                    type: 'success'
+                });
             },
             //取消
             handleStop(ID) {

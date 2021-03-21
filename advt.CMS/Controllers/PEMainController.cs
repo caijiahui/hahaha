@@ -669,6 +669,33 @@ namespace advt.Web.Controllers
             models.StopHrAuditUser(model, username);
             return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
         }
+        //上传考试资格
+        public JsonResult Upload_Qualification(HttpPostedFileBase file)
+        {
+            string filepath = "";
+
+            var username = this.UserContextSubstring;
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new HrAuditModel();
+            model.Qualification(filepath, username);
+
+            return Json(new { Result = model.Result, ListHrAuditUser = model.ListHrAuditUser, ListHrAuditSuccessUser = model.ListHrAuditSuccessUser }, JsonRequestBehavior.AllowGet);
+        }
         [MyAuthorize]
         [HttpPost]
         public ActionResult SearchPracticeUserDetail(string model)
