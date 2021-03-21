@@ -18,6 +18,8 @@ namespace advt.CMS.Models
         public List<ExamScoreInfo> examList { get; set; }
         public List<ExamRecord> ListVexamRecord { get; set; }
         public int ID { get; set; }
+        public int ExamID { get; set; }
+        public List<advt_user_sheet> Listadvt_user_sheet { get; set; }
         public ExamFinishModel() : base()
         {
             VexamRecord = new ExamRecord();
@@ -29,6 +31,7 @@ namespace advt.CMS.Models
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
             {
                 var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
+
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
            
                 ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
@@ -37,11 +40,26 @@ namespace advt.CMS.Models
             }
            
         }
+
+        public void GetCsore(int ExamId)
+        {
+            if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
+            {
+                ExamID = ExamId;
+                var ss = Data.ExamScore.Get_All_ExamScore(new { ExamID = ExamId }).Max(x => x.ExamID);
+
+                VExamScore = Data.ExamScore.Get_ExamScore(ss);
+
+                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
+                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
+                ID = ss;
+            }
+        }
         public void GetExamListInfo(int id)
         {        
             if (id != 0)
             {                
-                foreach (var item in ListVexamRecord)
+                foreach (var item in ListVexamRecord.Where(x=>x.ExamID== id.ToString()))
                 {
                     var output = new string[] { };
                     var list= new string[] { };

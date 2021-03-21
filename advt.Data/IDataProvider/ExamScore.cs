@@ -19,6 +19,7 @@ namespace advt.Data
 
         int Delete_ExamScore(int ExamID);
 
+
         #endregion
     }
 }
