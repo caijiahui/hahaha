@@ -112,8 +112,10 @@
                                     axios.post('/Account/Login', {
                                         model: _this.loginForm
                                     }).then(function (res) {
+                                        console.log(res.data.IsLogin, 333);
                                         if (res.data.IsLogin == "Pass") {
-                                            window.location.href = "/PEMain/MaintainExamType"
+                                            window.location.href = "/PEMain/MaintainExamBank"
+                                           
                                         } else {
                                             window.location.href = "/Account/Login"
                                         }

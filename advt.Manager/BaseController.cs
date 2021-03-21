@@ -151,6 +151,14 @@ namespace advt.Manager
                 return username;
             }
         }
+        public String UserNameContext
+        {
+            get
+            {
+                var username = Login.UserContext.username;
+                return username;
+            }
+        }
         /// <summary>
         /// 用户ID(必须存在才可以登入)
         /// </summary>
