@@ -843,5 +843,35 @@ namespace advt.Web.Controllers
 
         }
 
+
+        [MyAuthorize]
+        public ActionResult MaintainExam()
+        {
+            MaintainExamModel model = new MaintainExamModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult MaintainSubset()
+        {
+            MaintainExamModel model = new MaintainExamModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult MaintainScore()
+        {
+            MaintainExamModel model = new MaintainExamModel();
+            return View(model);
+        }
+
+        [MyAuthorize]
+        public ActionResult GetUserScore()
+        {
+            MaintainExamModel model = new MaintainExamModel();
+            var username = this.UserContextSubstring;
+            var code=model.GetUserCode(username);
+            model.GetUserScore(code);
+            return View(model);
+        }
+
     }
 }

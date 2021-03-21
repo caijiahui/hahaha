@@ -1,0 +1,109 @@
+﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
+
+@{
+    Layout = null;
+}
+<div id="app" style="margin-left:20px">
+    <div style="text-align:center;">
+        <template slot="title">
+            <i class="el-icon-location"></i>
+            <span class="title">考试成绩</span>
+        </template>
+        <div>
+       
+            <div>
+                <table  border="1">
+                    <tr>
+                        <td>考试类型</td>
+                        @*<td>{{item.TypeName}}</td>*@
+                        <td>技能等级考试</td>
+                    </tr>
+                    <tr>
+                        <td>考试时间</td>
+                        @*<td>{{item.CreateDate}}</td>*@
+                        <td>2020/03/8</td>
+                    </tr>
+                    <tr>
+                        <td>考试状态</td>
+                        <td>是</td>
+                    </tr>
+                    <tr>
+                        <td>考试分数</td>
+                        @*<td>{{item.PassScore}}</td>*@
+                        <td>80</td>
+                    </tr>
+                </table>
+              
+            </div>
+           
+        </div>
+        @*<el-table :data="tableData"
+                  style="width: 100% ">
+            <el-table-column label="考试类型"
+                             prop="TypeName" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="考试时间"
+                             width="120">
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.CreateDate)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="考试状态"
+                             sortable>
+                <template slot-scope="scope">
+                    <span v-if="scope.row.IsTest=='1'">是</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="考试分数"
+                             prop="PassScore" sortable
+                             width="180">
+            </el-table-column>
+
+        </el-table>*@
+    </div>
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',       
+        data: {
+            tableData: [],
+        },
+
+        mounted: function () {
+            this.getdata();
+        },
+        methods: {
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserScore').then(function (responese) {
+                    _this.tableData = responese.data.tableData;
+                })
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+        }
+
+
+    })
+
+</script>
+
