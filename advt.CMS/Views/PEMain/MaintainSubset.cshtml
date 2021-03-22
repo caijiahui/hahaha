@@ -42,7 +42,7 @@
                     <span style="font-size:18px;color:white"><i class="el-icon-position"></i> {{item.ExamType}}</span>
 
                 </div>
-                <div class="text item" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName)"><i class="el-icon-arrow-right"></i>{{items.ExamSubject}}</div>
+                <div class="text item" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
             </el-card>
         </div>
         <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible">
@@ -69,7 +69,8 @@
             dialogFormTitle: '',
             RuleName: '',
             username: '',
-            usercode:''
+            usercode: '',
+            ExamDate:''
         },
 
         mounted: function () {
@@ -77,19 +78,39 @@
             this.getdata();
         },
         methods: {
-            OpenExam: function (data,RuleName) {
+            OpenExam: function (data, RuleName, EDate) {
                 var _this = this;
                 _this.dialogFormTitle = data;
                 _this.RuleName = RuleName;
-                console.log(RuleName, 122);
+                _this.ExamDate = EDate;
+                console.log(_this.ExamDate, 122);
                 _this.dialogFormVisible = true;
             },
             handleExam: function (data) {
                 var _this = this;
-                window.location.href = "/PEMain/ExamPage?IsTest=" + data + "&RuleName="+_this.RuleName;
+                var dates = _this.changeDate(_this.ExamDate);
+
+                console.log(dates, 122);
+                window.location.href = "/PEMain/ExamPage?IsTest=" + data + "&RuleName=" + _this.RuleName + "&ExamDate=" + dates;
+                //_this.ExamDate = '';
             },
             goBack: function () {
                 window.location.href = "/PEMain/MaintainExam"
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
             },
             getdata: function () {
                 var _this = this;
