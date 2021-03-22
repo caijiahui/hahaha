@@ -111,7 +111,8 @@
                 CorrectNum: '',   //答对题数
                 VExamScore: [],
                 VexamRecord:[],
-                examList: []
+                examList: [],
+                isQuestion: false,    //是否问卷调查
 
             },
             mounted: function () {
@@ -135,8 +136,7 @@
                             _this.isSuccess = true;
                         }
                         _this.examList = responese.data.examList;
-                        console.log(responese.data.examList);
-
+                      
                     })
                 },
                 isMobile: function () {

@@ -379,7 +379,7 @@ namespace advt.CMS.Models
             {
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
-                sc.TotalScore = model.VExamUserInfo.TotalScore;
+         
                 sc.CreateDate = DateTime.Now;
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
@@ -393,6 +393,7 @@ namespace advt.CMS.Models
 
                 //判断是不是问券调查
 
+                sc.TotalScore = model.VExamUserInfo.TotalScore;
                 foreach (var item in model.VExamUserInfo.LExamViews)
                 {
                     
@@ -416,6 +417,8 @@ namespace advt.CMS.Models
                 if (sc.CorrectNum== null)
                 { sc.CorrectNum = 0; }
                 sc.CorrectScore = score;
+
+
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
