@@ -60,6 +60,7 @@ namespace advt.Entity
         public DateTime? HrCheckCreateDate { get; set; }
         public string StopCreateUser { get; set; }
         public DateTime? StopCreateDate { get; set; }
+        public DateTime? UserExamDate { get; set; }
         #endregion
     }
 }

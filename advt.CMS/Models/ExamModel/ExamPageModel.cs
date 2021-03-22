@@ -414,15 +414,15 @@ namespace advt.CMS.Models
                 sc.CorrectScore = score;
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
-               
-                //根据人员，科目更新分数
-                 ListExamUserDetailInfo=Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode= model.VExamUserInfo.UserName, ExamStatus ="HrCheck"});
+
+                //根据人员,科目,ExamStatus更新分数,时间，isexam
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode= model.VExamUserInfo.UserName, ExamStatus ="HrCheck"});
                 if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                 {
                     foreach (var item in ListExamUserDetailInfo)
                     {
                         item.ExamScore = score;
-                        item.ExamDate = DateTime.Now;
+                        item.UserExamDate = DateTime.Now;
                         item.IsExam = "true";
                         Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
