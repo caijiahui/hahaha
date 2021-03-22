@@ -20,20 +20,23 @@
             </div>
             <div class="content">
                 <div>
-                    <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
-                    <div class="grade-show">
-                        <div>
-                            <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
-                            <div>总分 {{VExamScore.TotalScore}}</div>
-                        </div>
-                        <div>
+                    <div v-if="VExamScore.IsQuestion=='false'">
+                        <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
+                        <div class="grade-show">
                             <div>
-                                <div>{{VExamScore.CorrectNum}}</div>
-                                <p>答对题数</p>
+                                <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
+                                <div>总分 {{VExamScore.TotalScore}}</div>
                             </div>
-                            <div>共 {{VExamScore.TatalTopicNum}} 题</div>
+                            <div>
+                                <div>
+                                    <div>{{VExamScore.CorrectNum}}</div>
+                                    <p>答对题数</p>
+                                </div>
+                                <div>共 {{VExamScore.TatalTopicNum}} 题</div>
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="detail-show">
                         <div class="detail-divide">
                             答案解析: <i class="fa fa-angle-double-down"></i>
