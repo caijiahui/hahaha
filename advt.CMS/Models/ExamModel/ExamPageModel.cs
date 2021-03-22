@@ -371,6 +371,9 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 int sd = 0;
                 int score = 0;
+
+                //判断是不是问券调查
+
                 foreach (var item in model.VExamUserInfo.LExamViews)
                 {
                     
@@ -390,6 +393,7 @@ namespace advt.CMS.Models
                     }
                  
                 }
+               
                 if (sc.CorrectNum== null)
                 { sc.CorrectNum = 0; }
                 sc.CorrectScore = score;
