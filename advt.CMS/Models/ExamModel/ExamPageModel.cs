@@ -23,6 +23,8 @@ namespace advt.CMS.Models
          public ExamUserInfo TestD { get; set; }
         public string ID { get; set; }
         public ExamScore VExamScore { get; set; }
+        public string IsTest { get; set; }
+        public string RuleName { get; set; }
         public ExamPageModel() : base()
         {
             examList = new ExamView();
@@ -38,19 +40,32 @@ namespace advt.CMS.Models
             VExamUserInfo.LExamViews = new List<ExamView>();
         }
 
-        public void GetListExam()
+        public void GetListExam(string data,string RuleName,string username)
         {
             try
             {
                
                 var ListBanks = new List<ExamBankView>();
-                var Rule = Data.ExamRule.Get_ExamRule(26);
+
+                var Rule = Data.ExamRule.Get_ExamRule(new {RuleName });
+              var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username });
                 if (Rule != null)
                 {
                     VExamUserInfo.ExamType = Rule.TypeName;//考试名称
                     VExamUserInfo.TotalScore = Rule.TotalScore;//总分
-                    VExamUserInfo.UserName = "Q-19568";//工号
-                    VExamUserInfo.IsTest = true;//是否模拟
+                    if (usersheet != null)
+                    {
+                        VExamUserInfo.UserName = usersheet.UserCode;//工号
+                    }
+                    
+                    if (data == "formal")
+                    {
+                        VExamUserInfo.IsTest = false;//是否模拟
+                    }
+                    else if(data=="test")
+                    {
+                        VExamUserInfo.IsTest = true;//是否模拟
+                    }
                     VExamUserInfo.IsRead = Rule.IsRead;//是否审批
                     VExamUserInfo.TotalTime = Rule.TotalTime;
                     VExamUserInfo.StartDesc = Rule.StartDeac;
