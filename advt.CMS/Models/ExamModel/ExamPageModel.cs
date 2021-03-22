@@ -25,6 +25,7 @@ namespace advt.CMS.Models
         public ExamScore VExamScore { get; set; }
         public string IsTest { get; set; }
         public string RuleName { get; set; }
+        public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public ExamPageModel() : base()
         {
             examList = new ExamView();
