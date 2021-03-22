@@ -23,6 +23,7 @@
     }
     .el-card__header {
         background-color: #4e97a2;
+        padding: 10px 20px;
     }
     .el-card__body {
         border-radius: 2px
@@ -33,7 +34,7 @@
 <link href="~/Scripts/css/exam.css" rel="stylesheet" />
 <div id="app" style="margin-left:20px">
     <template>
-        <div style="width:100%;margin-top:30px;">
+        <div style="width:100%;margin-top:30px; margin-left:20px;margin-right:20px">
             <el-page-header @@back="goBack" content="考试科目列表">
             </el-page-header>
             <el-tag style="margin-top:20px"><i class="el-icon-user-solid"></i> {{usercode}} {{username}}</el-tag>
