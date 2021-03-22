@@ -17,121 +17,112 @@
 
     </template>
     <div>
-        <template>
-            <el-button size="small" type="primary" @@click="handleUpdate()">批量更新</el-button>
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="可报名人员" name="first">
+            </el-tab-pane>
+            <el-tab-pane label="主管审核通过人员" name="Two">
+            </el-tab-pane>
+        </el-tabs>
+        <div v-show="activeName=='first'">
+            <template>
+                <el-button size="small" type="primary" @@click="handleUpdate()">批量更新</el-button>
+                <el-table :data="LCheckAudtiUser"
+                          style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                    <el-table-column type="selection">
+                    </el-table-column>
+                    <el-table-column label="考试类型"
+                                     prop="TypeName" sortable>
+                    </el-table-column>
+                    <el-table-column label="姓名"
+                                     prop="UserName" sortable>
+                    </el-table-column>
+                    <el-table-column label="部门"
+                                     prop="DepartCode" sortable>
+                    </el-table-column>
+                    <el-table-column label="工号"
+                                     prop="UserCode" sortable>
+                    </el-table-column>
 
-            <el-divider content-position="left">部门人员</el-divider>
-        </template>
-        <el-table :data="LCheckAudtiUser"
-                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-            <el-table-column type="selection">
-            </el-table-column>
-            <el-table-column label="考试类型"
-                             prop="TypeName" sortable>
-            </el-table-column>
-            <el-table-column label="姓名"
-                             prop="UserName" sortable
-                            >
-            </el-table-column>
-            <el-table-column label="部门"
-                             prop="DepartCode" sortable>
-            </el-table-column>
-            <el-table-column label="工号"
-                             prop="UserCode" sortable>
-            </el-table-column>
+                    <el-table-column label="最高可考技能"
+                                     prop="HighestLevel" sortable>
+                    </el-table-column>
+                    <el-table-column label="本次申请等级"
+                                     prop="ApplyLevel" sortable>
+                    </el-table-column>
+                    <el-table-column label="预计考试时间"
+                                     sortable>
+                    </el-table-column>
+                    <el-table-column label="实践成绩" prop="TheoreticalAchievement"
+                                     sortable>
 
-            <el-table-column label="最高可考技能"
-                             prop="HighestLevel" sortable>
-            </el-table-column>
-            <el-table-column label="本次申请等级"
-                             prop="ApplyLevel" sortable>
-            </el-table-column>
-            <el-table-column label="预计考试时间"
-                             sortable>
-                @*<template slot-scope="scope">
-                <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
-            </template>*@
-            </el-table-column>
-            <el-table-column label="实践成绩" prop="TheoreticalAchievement"
-                             sortable>
+                    </el-table-column>
+                    <el-table-column fixed="right"
+                                     label="操作"
+                                     width="240">
+                        <template slot-scope="scope">
 
-            </el-table-column>
-            <el-table-column fixed="right"
-                             label="操作"
-                             width="240">
-                <template slot-scope="scope">
-
-                    <el-button size="mini"
-                               @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">上传实践</el-button>
-                    <el-button size="mini"
-                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史纪录</el-button>
-                </template>
-            </el-table-column>
-            @*<el-table-column align="right" fixed="right">
-
-            <template slot-scope="scope">
-                <el-button size="mini"
-                           @@click="handleEdit()">Edit</el-button>
+                            <el-button size="mini"
+                                       @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">上传实践</el-button>
+                            <el-button size="mini"
+                                       @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史纪录</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </template>
+        </div>
+        <div v-show="activeName=='Two'">
+            <el-table :data="LSignedupUser"
+                      style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                <el-table-column label="状态"
+                                 prop="ExamStatus">
+                    <template slot-scope="scope">
+                        <el-tag type="success" v-if="scope.row.ExamStatus=='Signup'">已报名</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
 
-        </el-table-column>*@
-        </el-table>
-        <template>
-            <el-divider content-position="left">已报名人员</el-divider>
-        </template>
-       
-        <el-table :data="LSignedupUser"
-                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-            <el-table-column label="状态"
-                             prop="ExamStatus">
-                <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.ExamStatus=='Signup'">已报名</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="考试类型"
-                             prop="TypeName" sortable>
-            </el-table-column>
-            <el-table-column label="姓名"
-                             prop="UserName" sortable>
-            </el-table-column>
-            <el-table-column label="部门"
-                             prop="DepartCode" sortable>
-            </el-table-column>
-            <el-table-column label="工号"
-                             prop="UserCode" sortable>
-            </el-table-column>
+                <el-table-column label="最高可考技能"
+                                 prop="HighestLevel" sortable>
+                </el-table-column>
+                <el-table-column label="本次申请等级"
+                                 prop="ApplyLevel" sortable>
+                </el-table-column>
+                <el-table-column label="本次是否可考"
+                                 prop="IsExam" sortable>
+                </el-table-column>
+                <el-table-column label="考试时间"
+                                 sortable>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试规则"
+                                 prop="RuleName" sortable>
+                </el-table-column>
+                <el-table-column fixed="right"
+                                 label="操作">
+                    <template slot-scope="scope">
 
-            <el-table-column label="最高可考技能"
-                             prop="HighestLevel" sortable>
-            </el-table-column>
-            <el-table-column label="本次申请等级"
-                             prop="ApplyLevel" sortable>
-            </el-table-column>
-            <el-table-column label="本次是否可考"
-                             prop="IsExam" sortable>
-            </el-table-column>
-            <el-table-column label="考试时间"
-                             sortable>
-                <template slot-scope="scope">
-                    <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="考试规则"
-                             prop="RuleName" sortable>
-            </el-table-column>
-            <el-table-column fixed="right"
-                             label="操作"
-                             >
-                <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="handleStop(scope.row.ID)">取消</el-button>
+                        <el-button size="mini"
+                                   @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
 
-                    <el-button size="mini"
-                               @@click="handleStop(scope.row.ID)">取消</el-button>
-                    <el-button size="mini"
-                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
-
-                </template>
-            </el-table-column>
-        </el-table>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <!-- #region 上传实践弹窗 -->
         <el-dialog title="上传实践" :visible.sync="dialogFormPractical">
             <el-form :model="VPracticeInfo" class="demo-form-inline" :inline="true">
@@ -234,7 +225,7 @@
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
                     <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
                 </el-form-item>
-            </el-form> 
+            </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
                     <el-button @@click="dialogUpdateVisible = false">取 消</el-button>
@@ -380,7 +371,8 @@
             VAuditCheck: {},
             LExamUserDetailInfo:[],
             LPracticeInfo: [],
-            LSignedupUser:[]
+            LSignedupUser: [],
+            activeName:''
         },
         mounted: function () {
             this.getdata();

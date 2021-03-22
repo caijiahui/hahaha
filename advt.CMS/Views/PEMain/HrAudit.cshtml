@@ -17,120 +17,131 @@
 
     </template>
     <div>
-      
+
         <template>
+
+        </template>
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="Hr审核" name="first">
+            </el-tab-pane>
+            <el-tab-pane label="Hr审核通过人员" name="Two">
+            </el-tab-pane>
+        </el-tabs>
+
+        <div v-show="activeName=='first'">
             <el-select v-model="TypeName" placeholder="请选择考试类型">
                 <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
             </el-select>
             <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
             <el-button @@click="handleUpdate()">更新</el-button>
-        </template>
+            <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
+                      :data="ListHrAuditUser">
+                <el-table-column type="selection">
+                </el-table-column>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="科目"
+                                 prop="SubjectName" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable
+                                 fixed>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
 
+                <el-table-column label="等级"
+                                 prop="ApplyLevel" sortable>
+                </el-table-column>
+                <el-table-column fixed="right"
+                                 label="操作"
+                                 width="240">
 
+                    <template slot-scope="scope">
 
-        <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
-                  :data="ListHrAuditUser">
-            <el-table-column type="selection">
-            </el-table-column>
-            <el-table-column label="考试类型"
-                             prop="TypeName" sortable>
-            </el-table-column>
-            <el-table-column label="科目"
-                             prop="SubjectName" sortable>
-            </el-table-column>
-            <el-table-column label="工号"
-                             prop="UserCode" sortable
-                             fixed>
-            </el-table-column>
-            <el-table-column label="姓名"
-                             prop="UserName" sortable>
-            </el-table-column>
-            <el-table-column label="部门"
-                             prop="DepartCode" sortable>
-            </el-table-column>
-
-            <el-table-column label="等级"
-                             prop="ApplyLevel" sortable>
-            </el-table-column>
-            <el-table-column fixed="right"
-                             label="操作"
-                             width="240">
-
-                <template slot-scope="scope">
-
-                    <el-button size="mini"
-                               @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">查看实践</el-button>
-                    <el-button size="mini"
-                               @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">查看明细</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <template>
-            <el-divider content-position="left">Hr审核通过人员</el-divider>
-            <div style="margin-bottom:20px">
-                <div style="float:left;">
-                    <el-upload class="upload-demo" style="margin-top:30px;"
-                               ref="upload"
-                               :multiple="false"
-                               :on-success="handleExcelSuccess"
-                               action="/PEMain/Upload_Qualification">
-                        <el-button size="small" type="primary">考试资格汇入</el-button>
-                    </el-upload>
+                        <el-button size="mini"
+                                   @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">查看实践</el-button>
+                        <el-button size="mini"
+                                   @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">查看明细</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <div v-show="activeName=='Two'">
+            <template>
+                <el-divider content-position="left">Hr审核通过人员</el-divider>
+                <div style="margin-bottom:20px">
+                    <div style="float:left;">
+                        <el-upload class="upload-demo"
+                                   ref="upload"
+                                   :multiple="false"
+                                   :on-success="handleExcelSuccess"
+                                   action="/PEMain/Upload_Qualification">
+                            <el-button size="small" type="primary">考试资格汇入</el-button>
+                        </el-upload>
+                    </div>
+                    <a href="/Attachment/temp/Template/QualificationTemplate.xlsx">
+                        <el-button size="small" type="primary" style="margin-left:20px">汇入模板下载</el-button>
+                    </a>
                 </div>
-                <a href="/Attachment/temp/Template/QualificationTemplate.xlsx">
-                    <el-button size="small" type="primary" style="margin-left:20px">汇入模板下载</el-button>
-                </a>
-            </div>
-        </template>
+                <el-table :data="ListHrAuditSuccessUser"
+                          style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                    <el-table-column label="状态">
+                        <template slot-scope="scope">
+                            <el-tag type="success">HR已审核</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="考试类型"
+                                     prop="TypeName" sortable
+                                     fixed>
+                    </el-table-column>
+                    <el-table-column label="科目"
+                                     prop="SubjectName" sortable>
+                    </el-table-column>
+                    <el-table-column label="工号"
+                                     prop="UserCode" sortable
+                                     fixed>
+                    </el-table-column>
+                    <el-table-column label="姓名"
+                                     prop="UserName" sortable>
+                    </el-table-column>
+                    <el-table-column label="部门"
+                                     prop="DepartCode" sortable>
+                    </el-table-column>
 
-        <el-table :data="ListHrAuditSuccessUser"
-                  style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-            <el-table-column label="状态">
-                <template slot-scope="scope">
-                    <el-tag type="success">HR已审核</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="考试类型"
-                             prop="TypeName" sortable
-                             fixed>
-            </el-table-column>
-            <el-table-column label="科目"
-                             prop="SubjectName" sortable>
-            </el-table-column>
-            <el-table-column label="工号"
-                             prop="UserCode" sortable
-                             fixed>
-            </el-table-column>
-            <el-table-column label="姓名"
-                             prop="UserName" sortable>
-            </el-table-column>
-            <el-table-column label="部门"
-                             prop="DepartCode" sortable>
-            </el-table-column>
+                    <el-table-column label="等级"
+                                     prop="ApplyLevel" sortable>
+                    </el-table-column>
+                    <el-table-column label="审核人"
+                                     prop="HRUpdateUser" sortable>
+                    </el-table-column>
+                    <el-table-column label="审核时间"
+                                     prop="HRUpdateDate" sortable>
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right"
+                                     label="操作"
+                                     width="100">
+                        <template slot-scope="scope">
 
-            <el-table-column label="等级"
-                             prop="ApplyLevel" sortable>
-            </el-table-column>
-            <el-table-column label="审核人"
-                             prop="HRUpdateUser" sortable>
-            </el-table-column>
-            <el-table-column label="审核时间"
-                             prop="HRUpdateDate" sortable>
-                <template slot-scope="scope">
-                    <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column fixed="right"
-                             label="操作"
-                             width="100">
-                <template slot-scope="scope">
+                            <el-button size="mini"
+                                       @@click="handleStop(scope.row.ID)">取消</el-button>
 
-                    <el-button size="mini"
-                               @@click="handleStop(scope.row.ID)">取消</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
 
-                </template>
-            </el-table-column>
-        </el-table>
+
+
         <!-- #region 批量更新 -->
         <el-dialog title="信息编辑" :visible.sync="dialogUpdateVisible">
             <el-form :model="VAuditCheck">
@@ -329,6 +340,7 @@
             search: '',
             VPracticeInfo: {},
             checkBoxData: [],
+            activeName: ''
           
         },
         mounted: function () {
