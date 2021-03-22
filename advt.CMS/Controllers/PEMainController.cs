@@ -923,7 +923,7 @@ namespace advt.Web.Controllers
             var model =new ExamUserSubject();
             var username = this.UserNameContext;
             model.GetListUsersubject(username);
-            return Json(new { ListUsersubject = model.ListUsersubject}, JsonRequestBehavior.AllowGet);
+            return Json(new { ListUsersubject = model.ListUsersubject, username,model.usercode}, JsonRequestBehavior.AllowGet);
         }
 
 
