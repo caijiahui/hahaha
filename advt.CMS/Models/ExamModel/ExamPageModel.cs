@@ -269,6 +269,9 @@ namespace advt.CMS.Models
                 sc.IsTest = model.VExamUserInfo.IsTest;
                 sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
                 sc.PassScore = model.VExamUserInfo.PassScore;
+                
+                //+科目
+
                 int sd = 0;
                 int score = 0;
 
