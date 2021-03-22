@@ -56,6 +56,8 @@ namespace advt.CMS.Models
                 {
                     VExamUserInfo.ExamType = Rule.TypeName;//考试名称
                     VExamUserInfo.TotalScore = Rule.TotalScore;//总分
+                    VExamUserInfo.ExamSubject = Rule.SubjectName;//考试科目
+                    VExamUserInfo.IsQuestion = Rule.IsQuestion;
                     if (usersheet != null)
                     {
                         VExamUserInfo.UserName = usersheet.UserCode;//工号
@@ -254,124 +256,6 @@ namespace advt.CMS.Models
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
 
         }
-        //public ExamUserInfo TestData()
-        //{
-         
-        //    TestD.LExamViews = new List<ExamView>();
-        //    var LAnsower = new List<LAnsower>();
-        //    TestD.IsTest = false;
-        //    TestD.ExamType = "技能等级考试";
-        //    TestD.TotalScore = 100;//总分
-        //    TestD.UserName = "Jiahui";
-        //    //单选
-        //    string[] selectItem = { "B" };
-        //    LAnsower.Add(new LAnsower
-        //    {
-
-        //        TopicType = "0",//单选题
-        //        ansower = "10>=a>=0",
-        //        ansowerpic = "",
-        //        ansowerflag = "A"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "0",//单选题
-        //        ansower = "a>=0 and a<=10",
-        //        ansowerpic = "",
-        //        ansowerflag = "B"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "0",//单选题
-        //        ansower = "a1223232",
-        //        ansowerpic = "",
-        //        ansowerflag = "C"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "0",//单选题
-        //        ansower = "a2",
-        //        ansowerpic = "",
-        //        ansowerflag = "D"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "0",//单选题
-        //        ansower = "a3",
-        //        ansowerpic = "",
-        //        ansowerflag = "D"
-        //    });
-        //    TestD.LExamViews.Add(new ExamView
-        //    {
-        //        TopicScore = 5,
-        //        RightKey = new string[] { "B"},//正确答案
-        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-        //        type = "0",//题目类型
-        //        selectItem = selectItem,//自己选择题选择的内容
-        //        ansowerList = LAnsower//题目选项信息
-        //    });
-        //    //多选题
-        //    selectItem = new string[] { "A", "C" };
-        //    LAnsower = new List<LAnsower>();
-        //    LAnsower.Add(new LAnsower
-        //    {
-
-        //        TopicType = "1",//多选题
-        //        ansower = "10>=a>=0",
-        //        ansowerpic = "",
-        //        ansowerflag = "A"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "1",//多选题
-        //        ansower = "a>=0 and a<=10",
-        //        ansowerpic = "",
-        //        ansowerflag = "B"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "1",//多选题
-        //        ansower = "a1223232",
-        //        ansowerpic = "",
-        //        ansowerflag = "C"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "1",//多选题
-        //        ansower = "a2",
-        //        ansowerpic = "",
-        //        ansowerflag = "D"
-        //    });
-        //    LAnsower.Add(new LAnsower
-        //    {
-        //        TopicType = "1",//多选题
-        //        ansower = "a3",
-        //        ansowerpic = "",
-        //        ansowerflag = "D"
-        //    });
-        //    TestD.LExamViews.Add(new ExamView
-        //    {
-        //        TopicScore = 5,
-        //        RightKey = new string[] { "A", "C" },//正确答案
-        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-        //        type = "1",//题目类型
-        //        selectItem = selectItem,//自己选择题选择的内容
-        //        ansowerList = LAnsower//题目选项信息
-        //    });
-        //    //填空题
-        //    var ans = "瞎填";
-        //    TestD.LExamViews.Add(new ExamView
-        //    {
-        //        TopicScore = 5,
-        //        RightKey = new string[] { "C", "D" },//正确答案
-        //        proName = "C# 中能正确表示逻辑关系：“10大于等于a大于等于0”的C语言表达式是",//题目内容
-        //        type = "2",//题目类型
-        //        selectItem = selectItem,//自己选择题选择的内容
-        //        ansowerList = LAnsower//题目选项信息
-        //    });
-        //    return TestD;
-        //}
-
         public void InsertScoreData(ExamPageModel model)
         {
 
@@ -595,7 +479,8 @@ namespace advt.CMS.Models
     }
     public class ExamUserInfo
     {
-        public string ExamType { get; set; }//考试科目
+        public string ExamType { get; set; }//考试类型
+        public string ExamSubject { get; set; }
         public bool IsTest { get; set; }//是否测试
         public bool IsRead { get; set; }//是否人工审批
         public decimal TotalScore { get; set; }//总分
@@ -605,5 +490,6 @@ namespace advt.CMS.Models
         public decimal TotalTime { get; set; }
         public List<ExamView> LExamViews { get; set; }//题目选项内容
         public decimal PassScore { get; set; }
+        public bool IsQuestion { get; set; }
     }
 }
