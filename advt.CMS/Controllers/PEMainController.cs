@@ -466,7 +466,7 @@ namespace advt.Web.Controllers
         {
             ExamFinishModel model = new ExamFinishModel();
             model.GetExamListInfo(model.ID);
-            return Json(new { VExamScore = model.VExamScore, examList=model.examList }, JsonRequestBehavior.AllowGet);
+            return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
 
         //考试个人基本信息
@@ -900,10 +900,21 @@ namespace advt.Web.Controllers
         public ActionResult GetUserScore()
         {
             MaintainExamModel model = new MaintainExamModel();
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             var code=model.GetUserCode(username);
             model.GetUserScore(code);
-            return View(model);
+
+            return Json(new { tableData = model.ListExamScore }, JsonRequestBehavior.AllowGet);
+          
+        }
+
+        [MyAuthorize]
+        public ActionResult ExamGetFinishInfo(string ID)
+        {
+            ExamFinishModel model = new ExamFinishModel();
+            model.GetCsore(Convert.ToInt32(ID));
+            model.GetExamListInfo(Convert.ToInt32(ID));
+            return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
         //个人考试科目
         [MyAuthorize]
@@ -914,6 +925,7 @@ namespace advt.Web.Controllers
             model.GetListUsersubject(username);
             return Json(new { ListUsersubject = model.ListUsersubject}, JsonRequestBehavior.AllowGet);
         }
+
 
     }
 }

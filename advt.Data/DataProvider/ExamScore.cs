@@ -64,10 +64,7 @@ namespace advt.Data
             return DatabaseProvider.GetInstance().Update_ExamScore(info, Include, Exclude);
         }
 
-        public static int Delete_ExamScore(int ExamID)
-        {
-            return DatabaseProvider.GetInstance().Delete_ExamScore(ExamID);
-        }
+        
         #endregion
     }
 }

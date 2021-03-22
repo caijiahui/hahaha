@@ -3,48 +3,51 @@
 @{
     Layout = null;
 }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩汇总</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+</head>
 <div id="app" style="margin-left:20px">
     <div style="text-align:center;">
         <template slot="title">
             <i class="el-icon-location"></i>
             <span class="title">考试成绩</span>
         </template>
-        <div>
-       
-            <div>
-                <table  border="1">
-                    <tr>
-                        <td>考试类型</td>
-                        @*<td>{{item.TypeName}}</td>*@
-                        <td>技能等级考试</td>
-                    </tr>
-                    <tr>
-                        <td>考试时间</td>
-                        @*<td>{{item.CreateDate}}</td>*@
-                        <td>2020/03/8</td>
-                    </tr>
-                    <tr>
-                        <td>考试状态</td>
-                        <td>是</td>
-                    </tr>
-                    <tr>
-                        <td>考试分数</td>
-                        @*<td>{{item.PassScore}}</td>*@
-                        <td>80</td>
-                    </tr>
-                </table>
-              
-            </div>
-           
+        <div style="margin-top:30px;width:70%;text-align:center" >
+            <el-card class="box-card" v-for="item in tableData">
+                <div class="clearfix" >
+                    <span style="flex:1">考试类型</span>
+                    <span style="flex:1"> {{item.ExamSubject}}</span>
+                </div>
+                <div class="clearfix" >
+                    <span style="flex:1">考试时间</span>
+                    <span style="flex:1">{{item.CreateDate}}</span>
+                </div>
+                <div class="clearfix">
+                    <span style="flex:1">考试状态</span>
+                    <span v-if="item.IsTest=='1'">已考</span>
+                </div>
+                <div class="clearfix">
+                    <span style="flex:1">考试分数</span>
+                    <span style="flex:1">{{item.CorrectScore}}</span>
+                </div>
+                <div class="clearfix">
+                    <span style="flex:1">考试通过</span>
+                    <span v-if="item.CorrectScore>=item.PassScore">通过</span>
+                </div>
+                <a @@click="handleSearchDetail(item.ExamID)">查看</a>
+            </el-card>
         </div>
         @*<el-table :data="tableData"
                   style="width: 100% ">
             <el-table-column label="考试类型"
-                             prop="TypeName" sortable
-                             width="180">
+                             prop="ExamSubject" sortable>
             </el-table-column>
-            <el-table-column label="考试时间"
-                             width="120">
+            <el-table-column label="考试时间">
                 <template slot-scope="scope">
                     <span>{{changeDate(scope.row.CreateDate)}}</span>
                 </template>
@@ -52,16 +55,107 @@
             <el-table-column label="考试状态"
                              sortable>
                 <template slot-scope="scope">
-                    <span v-if="scope.row.IsTest=='1'">是</span>
+                    <span v-if="scope.row.IsTest=='1'">已考</span>
                 </template>
             </el-table-column>
             <el-table-column label="考试分数"
-                             prop="PassScore" sortable
-                             width="180">
+                             prop="CorrectScore" sortable>
             </el-table-column>
+            <el-table-column label="考试通过"
+                             sortable>
+                <template slot-scope="scope">
+                    <span v-if="scope.row.CorrectScore>=scope.row.PassScore">通过</span>
 
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small"
+                               @@click="handleSearchDetail(scope.row.ExamID)">查看</el-button>
+                </template>
+            </el-table-column>
         </el-table>*@
     </div>
+
+    <el-dialog title="查看考试" :visible.sync="dialogFormVisible">
+        
+        <div class="wrap">
+            <div class="header">
+                <h1>{{VExamScore.ExamType}}</h1>
+            </div>
+            <div class="content">
+                <div>
+                    <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
+                    <div class="grade-show">
+                        <div>
+                            <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
+                            <div>总分 {{VExamScore.TotalScore}}</div>
+                        </div>
+                        <div>
+                            <div>
+                                <div>{{VExamScore.CorrectNum}}</div>
+                                <p>答对题数</p>
+                            </div>
+                            <div>共 {{VExamScore.TatalTopicNum}} 题</div>
+                        </div>
+                    </div>
+                    <div class="detail-show">
+                        <div class="detail-divide">
+                            答案解析: <i class="fa fa-angle-double-down"></i>
+                        </div>
+                        <div class="detail-list" v-for="(item,index) in examList">
+                            <div>
+                                <div class="detail-title">
+                                    {{index+1}}.{{item.TopicTitle}}
+                                    <span>分值{{item.TopicNum}}分</span>
+                                </div>
+                            </div>
+                            <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
+
+                            <div class="detail-content">
+                                <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
+                                    <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                    </el-radio>
+                                </el-radio-group>
+                                <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
+                                    <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                    </el-checkbox>
+                                </el-checkbox-group>
+                                <el-input v-if="item.Type==2"
+                                          v-model="item.WriteItem"
+                                          :disabled="true">
+                                </el-input>
+                                <div class="pro-judge" :class="{'isright':item.isright}">
+                                    <div>
+                                        <span>
+                                            <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
+                                        </span>
+                                        <span>{{item.isright?'回答正确':'回答错误'}}</span>
+                                    </div>
+
+                                    <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
+                                </div>
+                                <div class="judge-wrong" v-if="!item.isright">
+                                    <span>正确答案:{{item.CorrectAnsower}}</span>
+                                </div>
+                                <div class="judge-wrong">
+                                    <span>答案解析:{{item.Remark}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </el-dialog>
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
@@ -73,16 +167,38 @@
         el: '#app',       
         data: {
             tableData: [],
+            VExamScore: [],
+            VexamRecord: [],
+            examList: [],
+            examid: '',
+            dialogFormVisible: false,
+            isSuccess: false,    //是否通过考试
+            isMobileTurn: false,
         },
 
         mounted: function () {
+
+            if (this.isMobile()) {
+                this.isMobileTurn = true
+            } else {
+                this.isMobileTurn = false
+            }
             this.getdata();
         },
         methods: {
+
+            isMobile: function () {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetUserScore').then(function (responese) {
+
                     _this.tableData = responese.data.tableData;
+                    console.log(responese.data.tableData, 188);
+                    _this.tableData.CreateDate = _this.changeDate(responese.data.tableData.CreateDate)
+                 
                 })
             },
             changeDate: function (dates) {
@@ -99,6 +215,38 @@
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
                 return year + '-' + mon + '-' + day;
+            },
+            //查询明细
+            handleSearchDetail(ExamID) {
+                console.log(ExamID);
+                //window.location.href = "/PEMain/ExamFinish?ID=" + ExamID;
+                var _this = this;
+                axios.post('/PEMain/ExamGetFinishInfo', {
+                    ID: ExamID
+                }).then(function (responese) {
+                    _this.VExamScore = responese.data.VExamScore;
+                    console.log(responese.data.VExamScore.CorrectScore, responese.data.VExamScore.PassScore);
+                    if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                        _this.isSuccess = true;
+                    }
+                    _this.examList = responese.data.examList;
+                });
+                _this.dialogFormVisible = true;
+            },
+            abcChange: function (val) {
+                if (val == 0) {
+                    return 'A'
+                } else if (val == 1) {
+                    return 'B'
+                } else if (val == 2) {
+                    return 'C'
+                } else if (val == 3) {
+                    return 'D'
+                } else if (val == 4) {
+                    return 'E'
+                } else if (val == 5) {
+                    return 'F'
+                }
             },
         }
 
