@@ -1,80 +1,90 @@
 ﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
 
 @{
-                /**/
+    /**/
 
-                Layout = null;
+    Layout = null;
 }
+<style>
+    .text {
+        font-size: 14px;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+
+    .clearfix:after {
+        clear: both
+    }
+
+    .box-card {
+        width: 100%;
+    }
+</style>
+<link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+<link href="~/Scripts/css/exam.css" rel="stylesheet" />
 <div id="app" style="margin-left:20px">
     <div style="width:100%;margin-top:30px;">
-        <el-aside width="auto" style="height:100%">
-            <el-menu default-active="1"
-                     class="el-menu-vertical-demo"
-                     @@open="asideHandleOpen"
-                     @@close="asideHandleClose"
-                     :unique-opened='true'>
+        <el-card class="box-card" v-for="item in ListUsersubject">
+            <div slot="header" class="clearfix">
+                <span>{{item.ExamType}}</span>
 
-                <el-submenu index="1">
-                    <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>
-                            <span class="title">考试科目</span>
-                        </span>
-                    </template>
-                    <el-menu-item-group>
-                        <el-menu-item @@click="ShowSubject('exam')">考试1</el-menu-item>
-                      
-                    </el-menu-item-group>
-                </el-submenu>
-              
-            </el-menu>
-        </el-aside>
-    </div><el-table>
-        <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>
-                <span class="title">问卷调查</span>
-            </span>
-        </template>
-    </el-table>
-  
+            </div>
+            <div v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName)">{{items.ExamSubject}}</div>
+        </el-card>
+    </div>
+    <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible">
+        <span>
+            <el-button @@click="handleExam('formal')">正式</el-button>
+            <el-button @@click="handleExam('test')">模拟</el-button>
+        </span>
+
+    </el-dialog>
 </div>
-<script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/elementUI/lib/index.js"></script>
-
 <script src="~/Scripts/Vue/polyfill.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: '#app',
         data: {
-            isMobileTurn: false,
-            mobileMenuDrawer: false,
+            ListUsersubject: [],
+            dialogFormVisible: false,
+            dialogFormTitle: '',
+            RuleName:''
         },
 
         mounted: function () {
             var _this = this;
-
-            if (_this.isMobile()) {
-                _this.isMobileTurn = true
-            } else {
-                _this.isMobileTurn = false
-            }
+            this.getdata();
         },
         methods: {
-            ShowSubject: function (ids) {
-                if (ids == "exam") { window.location.href = "/PEMain/MaintainSubset" }
-                if (ids == "score") { window.location.href = "/PEMain/MaintainScore" }
+            OpenExam: function (data,RuleName) {
+                var _this = this;
+                _this.dialogFormTitle = data;
+                _this.RuleName = RuleName;
+                console.log(RuleName, 122);
+                _this.dialogFormVisible = true;
             },
-            asideHandleOpen(key, keyPath) {
+            handleExam: function (data) {
+                var _this = this;
+                window.location.href = "/PEMain/ExamPage?IsTest=" + data + "&RuleName="+_this.RuleName;
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserSubject').then(function (responese) {
+                    _this.ListUsersubject = responese.data.ListUsersubject;
+                })
 
-            },
-            asideHandleClose(key, keyPath) {
-
-            },
-            isMobile() {
-                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-                return flag
             }
         }
 

@@ -414,16 +414,19 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult ExamPage()
+        public ActionResult ExamPage(string IsTest=null, string RuleName=null)
         {
             var model = new ExamPageModel();
+            model.IsTest = IsTest;
+            model.RuleName = RuleName;
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult Test()
+        public ActionResult Test(string data,string RuleName)
         {
             var model = new ExamPageModel();
-            model.GetListExam();
+            var username = this.UserNameContext;
+            model.GetListExam(data, RuleName, username);
             return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total, model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -912,6 +915,15 @@ namespace advt.Web.Controllers
             model.GetCsore(Convert.ToInt32(ID));
             model.GetExamListInfo(Convert.ToInt32(ID));
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
+        }
+        //个人考试科目
+        [MyAuthorize]
+        public JsonResult GetUserSubject()
+        {
+            var model =new ExamUserSubject();
+            var username = this.UserNameContext;
+            model.GetListUsersubject(username);
+            return Json(new { ListUsersubject = model.ListUsersubject}, JsonRequestBehavior.AllowGet);
         }
 
 

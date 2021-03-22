@@ -21,7 +21,10 @@
     </style>
 </head>
 <body>
+
     <div id="app" v-cloak>
+        <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
+        <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
         <div class="wrap">
             <div class="header">
                 <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
@@ -37,12 +40,16 @@
                     <div class="text item">
                         <i class="el-icon-circle-check"></i>  {{VExamUserInfo.PassScore}}分<i class="el-icon-arrow-left"></i><i class="el-icon-user"></i><i class="el-icon-arrow-left"></i>{{VExamUserInfo.TotalScore}}分
                     </div>
-                    <div class="text item">
+                    <div>
+                        考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
+                        <span v-if="VExamUserInfo.IsTest==true">模拟</span>
+                    </div>
+                    <div class="text item" v-if="VExamUserInfo.IsTest==false">
                         <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
                     </div>
                 </el-card>
             </div>
-            
+
             <div class="content">
                 <div style="margin-bottom:20px">
                     <el-card class="box-card">
@@ -51,7 +58,7 @@
                     </el-card>
 
                 </div>
-               
+
                 <div class="pro-ansower">
                     <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                         <div class="pro-ans-con">
@@ -116,6 +123,7 @@
                 VExamUserInfo: {},
                 minutes: [],
                 seconds: 0,
+                IsTest:'',
                 //examList: {
 
                 //    selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
@@ -501,8 +509,14 @@
                 },
                 getdata: function () {
                     var _this = this;
-                    axios.post('/PEMain/Test').then(function (responese) {
-                        console.log(responese.data.examList, 23);
+
+                    var IsTest = _this.$refs.idtests.value;
+                    var RuleName = _this.$refs.idRuleName.value;
+                    console.log(IsTest, 333);
+                    axios.post('/PEMain/Test', {
+                        data: IsTest,
+                        RuleName: RuleName
+                    }).then(function (responese) {
                         _this.examList = responese.data.examList;
                         _this.VExamUserInfo = responese.data.VExamUserInfo;
                         if (_this.examList.selectItem == null) {
