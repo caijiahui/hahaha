@@ -263,43 +263,56 @@ namespace advt.CMS.Models
             {
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
-                sc.TotalScore = model.VExamUserInfo.TotalScore;
+         
                 sc.CreateDate = DateTime.Now;
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
                 sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
                 sc.PassScore = model.VExamUserInfo.PassScore;
-                
                 //+科目
+                sc.ExamSubject = model.VExamUserInfo.ExamSubject;
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
+               
 
                 int sd = 0;
                 int score = 0;
 
-                //判断是不是问券调查
-
-                foreach (var item in model.VExamUserInfo.LExamViews)
+                if (sc.IsQuestion == true)
                 {
-                    
-                    var ss = item.RightKey.OrderBy(x => x).ToArray();
-                    if(item.LselectItem!=null)
-                    {
-                        var sl = item.LselectItem.OrderBy(x => x).ToArray();
-                        //答对题数CorrectNum
+                    sc.CorrectScore = 0;
+                  
+                }
+                else
+                {  //判断是不是问券调查
 
-                        if (Enumerable.SequenceEqual(ss, sl))
+                    sc.TotalScore = model.VExamUserInfo.TotalScore;
+                    foreach (var item in model.VExamUserInfo.LExamViews)
+                    {
+
+                        var ss = item.RightKey.OrderBy(x => x).ToArray();
+                        if (item.LselectItem != null)
                         {
-                            sd++;
-                            sc.CorrectNum = sd;
-                            //答对分数CorrectScore
-                            score += item.TopicScore;
+                            var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                            //答对题数CorrectNum
+
+                            if (Enumerable.SequenceEqual(ss, sl))
+                            {
+                                sd++;
+                                sc.CorrectNum = sd;
+                                //答对分数CorrectScore
+                                score += item.TopicScore;
+                            }
                         }
+
                     }
-                 
+
+                    if (sc.CorrectNum == null)
+                    { sc.CorrectNum = 0; }
+                    sc.CorrectScore = score;
                 }
                
-                if (sc.CorrectNum== null)
-                { sc.CorrectNum = 0; }
-                sc.CorrectScore = score;
+
+
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 

@@ -12,175 +12,147 @@
     <link href="~/Scripts/css/exam.css" rel="stylesheet" />
 </head>
 <div id="app" style="margin-left:20px">
-    <div>
-        <div style="width:70%;">
-            <div style="background-color:beige;">
-                <span><i class="el-icon-back"></i></span>
-                <a style="width:100%;font-size:20px;color:#337AB7;font-weight:bold" class="pro-btn" href="/PEMain/MaintainExam">考试成绩查询</a>
-            </div>
-            <div>
-                <el-card class="box-card" style="background-color:#D9EDF7;font-size:17px;color:#31708F">
-                    <div class="clearfix">
-                        <span><i class="el-icon-s-custom"></i></span>
-                        <span>工号：{{UserCode}}</span>
-                        <span>姓名：{{Name}}</span>
-                    </div>
-                </el-card>
-            </div>
-
-            <div v-if="tableData!=null&&tableData!=''">
-                <el-card class="box-card" v-for="item in tableData" style=" font-size:14px">
-                    <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
-                        <span style="flex:1;background-color:#EEEEEE">考试科目：</span>
-                        <span style="flex:1;font-weight:500"> {{item.ExamSubject}}</span>
-                    </div>
-                    <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
-                        <span style="flex:1;background-color:#EEEEEE">考试时间：</span>
-                        <span style="flex:1">{{changeDate(item.CreateDate)}}</span>
-                    </div>
-                    <div class="clearfix" style="border:1px solid #808080;border-radius:4px;">
-                        <span style="flex:1;background-color:#EEEEEE">考试状态：</span>
-                        <span v-if="item.IsTest=='1'">已考</span>
-                    </div>
-                    <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
-                        <span style="flex:1;background-color:#EEEEEE">考试分数：</span>
-                        <span style="flex:1">{{item.CorrectScore}}</span>
-                    </div>
-                    <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
-                        <span style="flex:1;background-color:#EEEEEE">考试通过：</span>
-                        <span v-if="item.CorrectScore>=item.PassScore">通过</span>
-                        <span v-if="item.CorrectScore<item.PassScore">未通过</span>
-                    </div>
-                    <div>
-                        <el-button style="width:100%;background-color:#337AB7;font-size:15px;color:white" class="pro-btn" @@click="handleSearchDetail(item.ExamID)">查看</el-button>
-                    </div>
-                </el-card>
-            </div>
-
-
-
-            <div v-if="tableData==null||tableData==''">
-                <span style="font-size:20px">
-                    此工号未参加考试！
-                </span>
-            </div>
-
-
-        </div>
-        @*<el-table :data="tableData"
-                  style="width: 100% ">
-            <el-table-column label="考试类型"
-                             prop="ExamSubject" sortable>
-            </el-table-column>
-            <el-table-column label="考试时间">
-                <template slot-scope="scope">
-                    <span>{{changeDate(scope.row.CreateDate)}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="考试状态"
-                             sortable>
-                <template slot-scope="scope">
-                    <span v-if="scope.row.IsTest=='1'">已考</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="考试分数"
-                             prop="CorrectScore" sortable>
-            </el-table-column>
-            <el-table-column label="考试通过"
-                             sortable>
-                <template slot-scope="scope">
-                    <span v-if="scope.row.CorrectScore>=scope.row.PassScore">通过</span>
-
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" width="150">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small"
-                               @@click="handleSearchDetail(scope.row.ExamID)">查看</el-button>
-                </template>
-            </el-table-column>
-        </el-table>*@
-    </div>
-
-    <el-dialog title="查看考试" :visible.sync="dialogFormVisible">
-        
-        <div class="wrap">
-            <div class="header">
-                <h1>{{VExamScore.ExamType}}</h1>
-            </div>
-            <div class="content">
+    <template>
+        <div>
+            <div style="width:70%;">
+                <div style="background-color:beige;">
+                    <span><i class="el-icon-back"></i></span>
+                    <a style="width:100%;font-size:20px;color:#337AB7;font-weight:bold" class="pro-btn" href="/PEMain/MaintainExam">考试成绩查询</a>
+                </div>
                 <div>
-                    <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
-                    <div class="grade-show">
-                        <div>
-                            <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
-                            <div>总分 {{VExamScore.TotalScore}}</div>
+                    <el-card class="box-card" style="background-color:#D9EDF7;font-size:17px;color:#31708F">
+                        <div class="clearfix">
+                            <span><i class="el-icon-s-custom"></i></span>
+                            <span>工号：{{UserCode}}</span>
+                            <span>姓名：{{Name}}</span>
+                        </div>
+                    </el-card>
+                </div>
+                <div v-if="tableData!=null&&tableData!=''">
+                    <el-card class="box-card" v-for="item in tableData" style=" font-size:14px">
+                        <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试科目：</span>
+                            <span style="flex:1;font-weight:500"> {{item.ExamSubject}}</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试时间：</span>
+                            <span style="flex:1">{{changeDate(item.CreateDate)}}</span>
+                        </div>
+                        <div class="clearfix" style="border:1px solid #808080;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试状态：</span>
+                            <span v-if="item.IsTest=='1'">已考</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试分数：</span>
+                            <span style="flex:1">{{item.CorrectScore}}</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #808080;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试通过：</span>
+                            <span v-if="item.CorrectScore>=item.PassScore">通过</span>
+                            <span v-if="item.CorrectScore<item.PassScore">未通过</span>
                         </div>
                         <div>
+                            <el-button style="width:100%;background-color:#337AB7;font-size:15px;color:white" class="pro-btn" @@click="handleSearchDetail(item.ExamID)">查看</el-button>
+                        </div>
+                    </el-card>
+                </div>
+
+
+
+                <div v-if="tableData==null||tableData==''">
+                    <span style="font-size:20px">
+                        <template>
+                            此工号未参加考试！
+                        </template>
+                    </span>
+                </div>
+
+
+            </div>
+           
+        </div>
+
+        <el-dialog title="查看考试" :visible.sync="dialogFormVisible">
+
+            <div class="wrap">
+                <div class="header">
+                    <h1>{{VExamScore.ExamType}}</h1>
+                </div>
+                <div class="content">
+                    <div>
+                        <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
+                        <div class="grade-show">
                             <div>
-                                <div>{{VExamScore.CorrectNum}}</div>
-                                <p>答对题数</p>
+                                <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
+                                <div>总分 {{VExamScore.TotalScore}}</div>
                             </div>
-                            <div>共 {{VExamScore.TatalTopicNum}} 题</div>
-                        </div>
-                    </div>
-                    <div class="detail-show">
-                        <div class="detail-divide">
-                            答案解析: <i class="fa fa-angle-double-down"></i>
-                        </div>
-                        <div class="detail-list" v-for="(item,index) in examList">
                             <div>
-                                <div class="detail-title">
-                                    {{index+1}}.{{item.TopicTitle}}
-                                    <span>分值{{item.TopicNum}}分</span>
+                                <div>
+                                    <div>{{VExamScore.CorrectNum}}</div>
+                                    <p>答对题数</p>
                                 </div>
+                                <div>共 {{VExamScore.TatalTopicNum}} 题</div>
                             </div>
-                            <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
-
-                            <div class="detail-content">
-                                <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
-                                    <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
-                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
-
-                                    </el-radio>
-                                </el-radio-group>
-                                <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
-                                    <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                        <div>{{abcChange(index)}}.{{list.ansower}}</div>
-                                        <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
-
-                                    </el-checkbox>
-                                </el-checkbox-group>
-                                <el-input v-if="item.Type==2"
-                                          v-model="item.WriteItem"
-                                          :disabled="true">
-                                </el-input>
-                                <div class="pro-judge" :class="{'isright':item.isright}">
-                                    <div>
-                                        <span>
-                                            <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
-                                        </span>
-                                        <span>{{item.isright?'回答正确':'回答错误'}}</span>
+                        </div>
+                        <div class="detail-show">
+                            <div class="detail-divide">
+                                答案解析: <i class="fa fa-angle-double-down"></i>
+                            </div>
+                            <div class="detail-list" v-for="(item,index) in examList">
+                                <div>
+                                    <div class="detail-title">
+                                        {{index+1}}.{{item.TopicTitle}}
+                                        <span>分值{{item.TopicNum}}分</span>
                                     </div>
+                                </div>
+                                <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
 
-                                    <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
-                                </div>
-                                <div class="judge-wrong" v-if="!item.isright">
-                                    <span>正确答案:{{item.CorrectAnsower}}</span>
-                                </div>
-                                <div class="judge-wrong">
-                                    <span>答案解析:{{item.Remark}}</span>
+                                <div class="detail-content">
+                                    <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
+                                        <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                            <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                            <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                        </el-radio>
+                                    </el-radio-group>
+                                    <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
+                                        <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                            <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                            <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                    <el-input v-if="item.Type==2"
+                                              v-model="item.WriteItem"
+                                              :disabled="true">
+                                    </el-input>
+                                    <div class="pro-judge" :class="{'isright':item.isright}">
+                                        <div>
+                                            <span>
+                                                <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
+                                            </span>
+                                            <span>{{item.isright?'回答正确':'回答错误'}}</span>
+                                        </div>
+
+                                        <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
+                                    </div>
+                                    <div class="judge-wrong" v-if="!item.isright">
+                                        <span>正确答案:{{item.CorrectAnsower}}</span>
+                                    </div>
+                                    <div class="judge-wrong">
+                                        <span>答案解析:{{item.Remark}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-        </div>
+        </el-dialog>
+    </template>
 
-    </el-dialog>
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
