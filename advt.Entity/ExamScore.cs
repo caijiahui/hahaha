@@ -26,6 +26,7 @@ namespace advt.Entity
         public int? TatalTopicNum {get; set; }
         public decimal? PassScore { get; set; }
         public string ExamSubject { get; set; }
+        public bool? IsQuestion { get; set; }
         #endregion
     }
 }
