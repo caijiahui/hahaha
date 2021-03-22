@@ -11,6 +11,7 @@ namespace advt.CMS.Models.ExamModel
         public ExamType VexamType { get; set; }
         public List<ExamType> LexamType { get; set; }
         public string ExamName { get; set; }
+        public string Result { get; set; }
         public ExamTypeModel() : base()
         {
             VexamType = new ExamType();
@@ -22,20 +23,36 @@ namespace advt.CMS.Models.ExamModel
         }
         public void SaveType(string username)
         {
-            VexamType.CreateDate = DateTime.Now;
-            VexamType.CreateUser = username;
-            if (VexamType.ID==0)
+            try
             {
-                // null, new string[] { "id" }
-                VexamType.TypeName = ExamName;
-                Data.ExamType.Insert_ExamType(VexamType,null, new string[] { "ID" });
-                //Data.ExamType.Insert_ExamType(VexamType);
+                VexamType.CreateDate = DateTime.Now;
+                VexamType.CreateUser = username;
+                if (VexamType.ID == 0)
+                {
+                    var repeat = Data.ExamType.Get_ExamType(new { TypeName = ExamName });
+                    if (repeat != null)
+                    {
+                        Result = "考试类型不可重复添加";
+                    }
+                    else
+                    {
+                        VexamType.TypeName = ExamName;
+                        Data.ExamType.Insert_ExamType(VexamType, null, new string[] { "ID" });
+                    }
+
+                }
+                else
+                {
+                    Data.ExamType.Update_ExamType(VexamType, null, new string[] { "ID" });
+                }
+                LexamType = Data.ExamType.Get_All_ExamType();
             }
-            else
+            catch (Exception ex)
             {
-                Data.ExamType.Update_ExamType(VexamType,null,new string[] { "ID"});
+
+                throw;
             }
-            LexamType = Data.ExamType.Get_All_ExamType();
+            
         }
         public void DeleteType(string ID)
         {

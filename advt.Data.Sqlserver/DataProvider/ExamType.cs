@@ -21,8 +21,8 @@ namespace advt.Data.SqlServer
         private string[][] ExamType_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
-            new string[] {"TypeName", "NText", "2147483646"},
-            new string[] {"CreateUser", "NText", "2147483646"},
+            new string[] {"TypeName", "NVarChar", "10000"},
+            new string[] {"CreateUser", "NVarChar", "10000"},
             new string[] {"CreateDate", "DateTime", "16"}
         };
         #endregion

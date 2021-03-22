@@ -10,13 +10,7 @@
             <el-breadcrumb separator="/" style="margin-bottom:20px">
                 <el-breadcrumb-item>考试管理</el-breadcrumb-item>
                 <el-breadcrumb-item>题库管理</el-breadcrumb-item>
-            </el-breadcrumb>
-            <el-steps :active="2" style="margin-bottom:20px">
-                <el-step title="考试类型"></el-step>
-                <el-step title="考试科目"></el-step>
-                <el-step title="题库上传"></el-step>
-            </el-steps>
-           
+            </el-breadcrumb>           
         </template>
 
         <div style="float:left">
@@ -163,12 +157,6 @@
             <el-form-item v-if="VExamBank.OptionAPicNum" label="选项A图片" :label-width="formLabelWidth">
                 <img :src="'/Attachment/BankPic/'+VExamBank.OptionAPicNum" />
             </el-form-item>
-
-            @*<el-form-item label="选项A图片" :label-width="formLabelWidth">
-            <img v-bind:src="~/Attachment/BankPic/12.png"/>
-        </el-form-item>*@
-            @*<img v-if="VExamBank.OptionAPicNum.length>0" :src="~/Attachment/BankPic/12.png" />*@
-
             <el-form-item label="选项B" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionB" autocomplete="off"></el-input>
             </el-form-item>
@@ -216,8 +204,10 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="handleSave('save')">确 定</el-button>
+            <template>
+                <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @@click="handleSave('save')">确 定</el-button>
+            </template>
         </div>
     </el-dialog>
 

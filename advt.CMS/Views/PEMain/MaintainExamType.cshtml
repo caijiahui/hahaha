@@ -16,11 +16,6 @@
                 <el-breadcrumb-item>考试管理</el-breadcrumb-item>
                 <el-breadcrumb-item>考试类型</el-breadcrumb-item>
             </el-breadcrumb>
-            <el-steps :active="0" style="margin-bottom:20px">
-                <el-step title="考试类型"></el-step>
-                <el-step title="考试科目"></el-step>
-                <el-step title="题库上传"></el-step>
-            </el-steps>
             <el-input placeholder="请输入需要新增的考试类型" v-model="ExamName" class="input-with-select" style="width:30%;">
                 <el-button slot="append" @@click="handleSave('Edit')">新增</el-button>
             </el-input>
@@ -124,9 +119,14 @@
                 axios.post('/PEMain/SaveTypeInfo', {
                     model: objs
                 }).then(function (res) {
-                    _this.LexamType = res.data.LexamType;
-                    this.VexamType = {};
-                    _this.ExamName = '';
+                    if (res.data.Result != null || res.data.Result != '') {
+                        _this.$message.error(res.data.Result);
+                    } else {
+                        _this.LexamType = res.data.LexamType;
+                        this.VexamType = {};
+                        _this.ExamName = '';
+                    }
+
                 });
                 _this.dialogFormVisible = false
             },

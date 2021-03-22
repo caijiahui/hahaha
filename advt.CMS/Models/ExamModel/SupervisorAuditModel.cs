@@ -45,7 +45,7 @@ namespace advt.CMS.Models.ExamModel
                     var auditdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, UserCode = item.UserCode });
                     if (auditdata != null && auditdata.Count() != 0)
                     {
-                        LSignedupUser.AddRange(data);
+                        LSignedupUser.AddRange(auditdata);
                     }
                 }
             }

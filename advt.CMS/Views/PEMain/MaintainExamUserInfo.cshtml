@@ -11,6 +11,12 @@
     }
 </style>
 <div id="app" style="margin-left:20px;margin-right:20px">   
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>考试科目</el-breadcrumb-item>
+        </el-breadcrumb>
+    </template>
     <div style="margin-top:20px">
         <template>
             <el-tabs v-model="activeName">
@@ -388,7 +394,7 @@
         data: {
             topicratioProps: { multiple: true, label: 'Text', },
             tableData: [],
-            activeName: '',
+            activeName: 'third',
             TypeName:'',
             dialogFormVisible: false,
             dialogFormPractical: false,

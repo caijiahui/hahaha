@@ -30,7 +30,7 @@ namespace advt.Web.Controllers
         {
             tname = "Engineering";
             Model.PageModel.PEModel model = new Model.PageModel.PEModel();
-            model.username = this.UserContext.username.Substring(0,this.UserContext.username.Length-17);
+            model.username = this.UserNameContext.Substring(0,this.UserNameContext.Length-17);
             if (tid == 0)
             {
                 return PartialView("IndexLogin",model);
@@ -63,7 +63,7 @@ namespace advt.Web.Controllers
         public ActionResult Classify(string tid)
         {
             Model.PageModel.PEModel model = new Model.PageModel.PEModel();
-            model.username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            model.username = this.UserNameContext;
             if(!string.IsNullOrEmpty(tid))
             {
                 model.tname = tid;
@@ -128,7 +128,7 @@ namespace advt.Web.Controllers
         {
             var result = false;
             V_topics.updatedt = DateTime.Now;//更新时间
-            V_topics.username = this.UserContext.username;
+            V_topics.username = this.UserNameContext;
             var info = Data.advt_topics.Update_advt_topics(V_topics, null, new string[] { "id","createdt" });
             if (info == 1)
                 result = true;
@@ -167,7 +167,7 @@ namespace advt.Web.Controllers
             ViewBag.Index = page ?? 1;
             ViewBag.PageSize = 10;
             Model.PageModel.PEModel model = new Model.PageModel.PEModel();
-            model.username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            model.username = this.UserNameContext;
             model.L_usertype = Data.advt_users_type.Get_advt_users_type_join_user(ViewBag.PageSize, ViewBag.Index,userid);
             ViewBag.RecordCount = Data.advt_users_type.Get_advt_users_type_join_user(0, 0, userid).Count;
             model.L_Location = BLL.PEBLL.Get_All_Location();
@@ -193,9 +193,9 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult SaveTypeInfo(ExamTypeModel model)
         {
-            var username = this.UserContext.username;
+            var username = this.UserNameContext;
             model.SaveType(username);
-            return Json(new { model.LexamType }, JsonRequestBehavior.AllowGet);
+            return Json(new { model.LexamType,model.Result }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
@@ -256,7 +256,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
         {
-            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            var username = this.UserNameContext;
             var Result = model.SaveSubject(username);
             return Json(new { Result, tableData = model.ListExamSubject }, JsonRequestBehavior.AllowGet);
         }
@@ -292,7 +292,8 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult SaveRuleInfo(ExamRuleModel model)
         {
-            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            
+            var username = this.UserNameContext;
            var Result= model.SaveRuleInfo(username);
             model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
             return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
@@ -336,7 +337,7 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult SaveBankInfo(ExamBankModel model)
         {
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             model.SaveBankInfo(username);
             return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
@@ -534,7 +535,7 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult InsertUserDetailInfo(List<UserInfo> model)
         {
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.InsertUserDetail(model, username);
             models.GetUserInfo(null);
@@ -552,7 +553,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
         {
-            var username = this.UserContext.username.Substring(0, this.UserContext.username.Length - 17);
+            var username = this.UserNameContext;
             model.SaveUserInfo(username);
             model.GetUserInfo(null);
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
@@ -562,7 +563,7 @@ namespace advt.Web.Controllers
         public ActionResult StopComplete(string model)
         {
             ExamUserInfoModel models = new ExamUserInfoModel();
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             models.StopComplete(model, username);
 
             models.GetUserComInfo();
@@ -627,7 +628,7 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult InsertUserDetail(List<ExamUserDetailInfo> model)
         {
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             SupervisorAuditModel models = new SupervisorAuditModel();
             var Result=models.InsertUserDetail(model,username);
 
@@ -648,7 +649,7 @@ namespace advt.Web.Controllers
         public ActionResult StopUser(string model)
         {
             SupervisorAuditModel models = new SupervisorAuditModel();
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             models.Stopuser(model, username);
             return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos,  LSignedupUser = models.LSignedupUser });
         }
@@ -671,7 +672,7 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult UpdateHrAduitUser(List<ExamUserDetailInfo> model)
         {
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             HrAuditModel models = new HrAuditModel();
              models.UpdateHrAduitUser(model, username);
             return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
@@ -681,7 +682,7 @@ namespace advt.Web.Controllers
         public ActionResult StopHrAuditUser(string model)
         {
             HrAuditModel models = new HrAuditModel();
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             models.StopHrAuditUser(model, username);
             return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
         }
@@ -690,7 +691,7 @@ namespace advt.Web.Controllers
         {
             string filepath = "";
 
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             if (file != null)
             {
                 string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
@@ -717,7 +718,7 @@ namespace advt.Web.Controllers
         public ActionResult SearchPracticeUserDetail(string model)
         {
             HrAuditModel models = new HrAuditModel();
-            var username = this.UserContextSubstring;
+            var username = this.UserNameContext;
             models.SearchPracticeUserDetail(model);
             return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo, LPracticeInfo = models.LPracticeInfo });
         }

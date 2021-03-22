@@ -1,8 +1,6 @@
 ﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
 <style>
-    .text {
-        font-size: 16px;
-    }
+
 
     .item {
         margin-bottom: 18px;
@@ -22,8 +20,9 @@
         width: 100%;
     }
     .el-card__header {
-        background-color: #4e97a2;
-        padding: 10px 20px;
+        background-color: #337ab7 !important;
+        height: 48px !important;
+        padding: 10px 10px !important;
     }
     .el-card__body {
         border-radius: 2px
@@ -34,17 +33,17 @@
 <link href="~/Scripts/css/exam.css" rel="stylesheet" />
 <div id="app" style="margin-left:20px">
     <template>
-        <div style="width:100%;margin-top:30px; margin-left:20px;margin-right:20px">
+        <div style="width:90%;margin-top:30px; margin-left:20px;margin-right:20px">
             <el-page-header @@back="goBack" content="考试科目列表">
             </el-page-header>
-            <el-tag style="margin-top:20px"><i class="el-icon-user-solid"></i> {{usercode}} {{username}}</el-tag>
-            <el-card class="box-card" v-for="item in ListUsersubject" style="margin-top:20px">
-                <div slot="header" class="clearfix">
-                    <span style="font-size:18px;color:white"><i class="el-icon-position"></i> {{item.ExamType}}</span>
+            <el-tag style="margin-top:20px;"><i class="el-icon-user-solid"></i> {{usercode}} {{username}}</el-tag>
+                <el-card class="box-card" v-for="item in ListUsersubject" style="margin-top:20px">
+                    <div slot="header" class="clearfix">
+                        <span style="font-size:18px;color:white"><i class="el-icon-position"></i> {{item.ExamType}}</span>
 
-                </div>
-                <div class="text item" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
-            </el-card>
+                    </div>
+                    <div class="text item" style="font-size:16px;" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
+                </el-card>
         </div>
         <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible">
             <span>
@@ -71,12 +70,15 @@
             RuleName: '',
             username: '',
             usercode: '',
-            ExamDate:''
+            ExamDate: '',
+            activeNames:[]
         },
 
         mounted: function () {
             var _this = this;
             this.getdata();
+            this.opened();
+            console.log(_this.activeNames, 33333);
         },
         methods: {
             OpenExam: function (data, RuleName, EDate) {
@@ -121,6 +123,12 @@
                     _this.usercode = responese.data.usercode;
                 })
 
+            },
+            opened: function () {
+                var _this = this;
+                return _this.ListUsersubject.map((i) => {
+                    activeNames= i.ExamType;
+                });
             }
         }
 

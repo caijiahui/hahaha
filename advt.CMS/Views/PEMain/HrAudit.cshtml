@@ -29,48 +29,51 @@
         </el-tabs>
 
         <div v-show="activeName=='first'">
-            <el-select v-model="TypeName" placeholder="请选择考试类型">
-                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-            </el-select>
-            <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
-            <el-button @@click="handleUpdate()">更新</el-button>
-            <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
-                      :data="ListHrAuditUser">
-                <el-table-column type="selection">
-                </el-table-column>
-                <el-table-column label="考试类型"
-                                 prop="TypeName" sortable>
-                </el-table-column>
-                <el-table-column label="科目"
-                                 prop="SubjectName" sortable>
-                </el-table-column>
-                <el-table-column label="工号"
-                                 prop="UserCode" sortable
-                                 fixed>
-                </el-table-column>
-                <el-table-column label="姓名"
-                                 prop="UserName" sortable>
-                </el-table-column>
-                <el-table-column label="部门"
-                                 prop="DepartCode" sortable>
-                </el-table-column>
+            <template>
+                <el-select v-model="TypeName" placeholder="请选择考试类型">
+                    <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                </el-select>
+                <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
+                <el-button @@click="handleUpdate()">更新</el-button>
+                <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
+                          :data="ListHrAuditUser">
+                    <el-table-column type="selection">
+                    </el-table-column>
+                    <el-table-column label="考试类型"
+                                     prop="TypeName" sortable>
+                    </el-table-column>
+                    <el-table-column label="科目"
+                                     prop="SubjectName" sortable>
+                    </el-table-column>
+                    <el-table-column label="工号"
+                                     prop="UserCode" sortable
+                                     fixed>
+                    </el-table-column>
+                    <el-table-column label="姓名"
+                                     prop="UserName" sortable>
+                    </el-table-column>
+                    <el-table-column label="部门"
+                                     prop="DepartCode" sortable>
+                    </el-table-column>
 
-                <el-table-column label="等级"
-                                 prop="ApplyLevel" sortable>
-                </el-table-column>
-                <el-table-column fixed="right"
-                                 label="操作"
-                                 width="240">
+                    <el-table-column label="等级"
+                                     prop="ApplyLevel" sortable>
+                    </el-table-column>
+                    <el-table-column fixed="right"
+                                     label="操作"
+                                     width="240">
 
-                    <template slot-scope="scope">
+                        <template slot-scope="scope">
 
-                        <el-button size="mini"
-                                   @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">查看实践</el-button>
-                        <el-button size="mini"
-                                   @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">查看明细</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+                            <el-button size="mini"
+                                       @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">查看实践</el-button>
+                            <el-button size="mini"
+                                       @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">查看明细</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+            
         </div>
         <div v-show="activeName=='Two'">
             <template>
@@ -340,7 +343,7 @@
             search: '',
             VPracticeInfo: {},
             checkBoxData: [],
-            activeName: ''
+            activeName: 'first'
           
         },
         mounted: function () {
