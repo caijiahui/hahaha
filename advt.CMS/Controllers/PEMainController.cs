@@ -414,11 +414,24 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult ExamPage(string IsTest=null, string RuleName=null)
+        public ActionResult ExamPage(string IsTest=null, string RuleName=null,string ExamDate=null)
         {
             var model = new ExamPageModel();
             model.IsTest = IsTest;
             model.RuleName = RuleName;
+            var dtdate = DateTime.Now.ToString("yyyy-MM-dd");
+            if (!string.IsNullOrEmpty(ExamDate))
+            {
+                ExamDate =Convert.ToDateTime(ExamDate).ToString("yyyy-MM-dd");
+            }
+            if(string.IsNullOrEmpty(ExamDate) || dtdate!= ExamDate)
+            {
+                model.IsExam = "false";
+            }
+            else
+            {
+                model.IsExam = "true";
+            }
             return View(model);
         }
         [MyAuthorize]
@@ -923,7 +936,7 @@ namespace advt.Web.Controllers
             var model =new ExamUserSubject();
             var username = this.UserNameContext;
             model.GetListUsersubject(username);
-            return Json(new { ListUsersubject = model.ListUsersubject}, JsonRequestBehavior.AllowGet);
+            return Json(new { ListUsersubject = model.ListUsersubject, username,model.usercode}, JsonRequestBehavior.AllowGet);
         }
 
 

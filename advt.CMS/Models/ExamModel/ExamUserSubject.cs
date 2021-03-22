@@ -14,13 +14,13 @@ namespace advt.CMS.Models.ExamModel
     public class ExamUserSubject
     {
         public List<UserSubjectModel> ListUsersubject;
+        public string usercode { get; set; }
         public ExamUserSubject() : base()
         {
             ListUsersubject = new List<UserSubjectModel>();
         }
         public void GetListUsersubject(string username)
         {
-            var usercode = "";
             var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username});
             if (usersheet != null)
             {
@@ -30,7 +30,7 @@ namespace advt.CMS.Models.ExamModel
             var group = data.GroupBy(p => new { p.TypeName }).Select(a => new { ExamType = a.Key.TypeName });
             foreach (var item in group)
             {
-                var Lsubject = data.Where(x => x.TypeName == item.ExamType).ToList().Select(d=>new UserSubjectRule { ExamSubject= d.SubjectName,RuleName= d.RuleName }).ToList();
+                var Lsubject = data.Where(x => x.TypeName == item.ExamType).ToList().Select(d=>new UserSubjectRule { ExamSubject= d.SubjectName,RuleName= d.RuleName, ExamDate=d.ExamDate }).ToList();
                 ListUsersubject.Add(new UserSubjectModel
                 {
                     ExamType = item.ExamType,
@@ -49,5 +49,6 @@ namespace advt.CMS.Models.ExamModel
     {
         public string ExamSubject { get; set; }
         public string RuleName { get; set; }
+        public DateTime? ExamDate { get; set; }
     }
 }

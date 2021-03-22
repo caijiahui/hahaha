@@ -25,6 +25,7 @@
     <div id="app" v-cloak>
         <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
         <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
+        <input type="text" value="@Model.IsExam" ref="idisexam" hidden="hidden" />
         <div class="wrap">
             <div class="header">
                 <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
@@ -509,39 +510,47 @@
                 },
                 getdata: function () {
                     var _this = this;
-
+                    var IsExams = _this.$refs.idisexam.value;
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
-                    console.log(IsTest, 333);
-                    axios.post('/PEMain/Test', {
-                        data: IsTest,
-                        RuleName: RuleName
-                    }).then(function (responese) {
-                        _this.examList = responese.data.examList;
-                        _this.VExamUserInfo = responese.data.VExamUserInfo;
-                        if (_this.examList.selectItem == null) {
-                            _this.examList.selectItem = []
-                        }
-                        if (responese.data.examList.type == 1) {
-                            _this.examList.selectItem = []
-                        }
-                        else if (responese.data.examList.type == 0) {
-                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                        }
-                        else {
-                            _this.examList.selectItem = ''
-                        }
-                        if (_this.examList.LselectItem == null) {
-                            _this.examList.LselectItem = []
-                        }
-                        _this.minutes = responese.data.VExamUserInfo.TotalTime;
+                    if (IsExams == "true") {
+                        axios.post('/PEMain/Test', {
+                            data: IsTest,
+                            RuleName: RuleName
+                        }).then(function (responese) {
+                            _this.examList = responese.data.examList;
+                            _this.VExamUserInfo = responese.data.VExamUserInfo;
+                            if (_this.examList.selectItem == null) {
+                                _this.examList.selectItem = []
+                            }
+                            if (responese.data.examList.type == 1) {
+                                _this.examList.selectItem = []
+                            }
+                            else if (responese.data.examList.type == 0) {
+                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                            }
+                            else {
+                                _this.examList.selectItem = ''
+                            }
+                            if (_this.examList.LselectItem == null) {
+                                _this.examList.LselectItem = []
+                            }
+                            _this.minutes = responese.data.VExamUserInfo.TotalTime;
 
-                        _this.total = responese.data.total;
-                        _this.nowItem = responese.data.nowItem;
-                        _this.ListBankView = responese.data.ListBankView
-                        console.log(responese.model);
-                    })
-                }
+                            _this.total = responese.data.total;
+                            _this.nowItem = responese.data.nowItem;
+                            _this.ListBankView = responese.data.ListBankView
+                            console.log(responese.model);
+                        })
+                    }
+                    else {
+                        this.$alert('未到考试时间', '提示', {
+                            dangerouslyUseHTMLString: true
+                        });
+                        window.location.href = "/PEMain/MaintainExam";
+                    }
+                    }
+                    
             }
 
         })

@@ -23,6 +23,7 @@ namespace advt.CMS.Models
          public ExamUserInfo TestD { get; set; }
         public string ID { get; set; }
         public ExamScore VExamScore { get; set; }
+        public string IsExam { get; set; }//是否可考
         public string IsTest { get; set; }
         public string RuleName { get; set; }
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
@@ -50,7 +51,7 @@ namespace advt.CMS.Models
                 var ListBanks = new List<ExamBankView>();
 
                 var Rule = Data.ExamRule.Get_ExamRule(new {RuleName });
-              var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username });
+                var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username });
                 if (Rule != null)
                 {
                     VExamUserInfo.ExamType = Rule.TypeName;//考试名称
