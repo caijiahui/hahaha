@@ -256,7 +256,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
         {
-            var username = this.UserNameContext;
+            var username =this.UserNameContext;
             var Result = model.SaveSubject(username);
             return Json(new { Result, tableData = model.ListExamSubject }, JsonRequestBehavior.AllowGet);
         }
@@ -292,9 +292,8 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult SaveRuleInfo(ExamRuleModel model)
         {
-            
             var username = this.UserNameContext;
-           var Result= model.SaveRuleInfo(username);
+            var Result= model.SaveRuleInfo(username);
             model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
             return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
           

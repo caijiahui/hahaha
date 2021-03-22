@@ -31,7 +31,7 @@
 
         <div v-show="activeName=='first'">
             <template>
-                <el-button size="small" type="primary" @@click="handlesert()">保存</el-button>
+                <el-button size="small" type="primary" @@click="handlesert()">报名</el-button>
 
             </template>
            
@@ -549,9 +549,15 @@
                 axios.post('/PEMain/InsertUserDetailInfo', {
                     model: _this.checkBoxData11
                 }).then(function (res) {
-                    _this.CPListUserInfo = res.data.CPListUserInfo;
-                    _this.tableData = res.data.tableData;
-                    _this.YListUserInfo = res.data.YListUserInfo;
+                    if (res.data.Results != '') {
+                        _this.$message.error(res.data.Results);
+                    } else {
+                        _this.CPListUserInfo = res.data.CPListUserInfo;
+                        _this.tableData = res.data.tableData;
+                        _this.YListUserInfo = res.data.YListUserInfo;
+                    }
+
+
                 });
             },
             handleEdit(index, row) {

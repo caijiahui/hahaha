@@ -32,6 +32,8 @@ namespace advt.CMS.Models.ExamModel
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public string Results { get; set; }
+        public bool IsHrSign { get; set; }
         public ExamUserInfoModel() : base()
         {
             UserInfoList = new UserInfo();
@@ -128,6 +130,9 @@ namespace advt.CMS.Models.ExamModel
                 ListUserInfo11 = ListUserInfo.Where(x => x.TypeName == typename).ToList();
             }
             YListUserInfo = ListUserInfo.Where(x => x.IsExam == "true").ToList();
+            
+
+
 
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -413,41 +418,55 @@ namespace advt.CMS.Models.ExamModel
             LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = Code });
         }
 
-        public void InsertUserDetail(List<UserInfo> data, string username)
+        public string InsertUserDetail(List<UserInfo> data, string username)
         {
+            var result = "";
             try
             {
                 foreach (var item in data)
                 {
-                    ExamUserDetailInfo v = new ExamUserDetailInfo();
-                    v.UserCode = item.UserCode;
-                    v.UserName = item.UserName;
-                    v.DepartCode = item.DepartCode;
-                    v.PostName = item.PostName;
-                    v.RankName = item.RankName;
-                    v.SkillName = item.SkillLevel; //本职等技能G1
-                    v.EntryDate = item.EntryDate; //入职日期
-                    v.Achievement = item.Achievement;//绩效
-                    v.PracticeScore = item.PracticalID;
-                    v.PlanExamDate = item.PlanExamDate;
-                    v.ExamStatus = "HrSignUp";
-                    v.IsReview = item.IsReview;
-                    v.RuleName = item.RuleName;
-                    v.TypeName = item.TypeName;
-                    v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级                   
-                    v.IsAchievement = item.IsAchment;//是否符合绩效
-                    v.HighestLevel = item.HighestTestSkill;//最高可考技能
-                    v.IsExam = item.IsExam;
-                    v.HrCreateUser = username;
-                    v.HrCreateDate = DateTime.Now;
-                    Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
+                    //判断是否再继续报名
+
+                    var listuserdatail = new List<ExamUserDetailInfo>();
+                    listuserdatail = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode=item.UserCode,SubjectName=item.SubjectName,IsStop=false });
+                    if (listuserdatail != null && listuserdatail.Count() > 0)
+                    {
+                        result += "此工号已报名,不可重复报名";
+                    }
+                    else
+                    {
+                        ExamUserDetailInfo v = new ExamUserDetailInfo();
+                        v.UserCode = item.UserCode;
+                        v.UserName = item.UserName;
+                        v.DepartCode = item.DepartCode;
+                        v.PostName = item.PostName;
+                        v.RankName = item.RankName;
+                        v.SkillName = item.SkillLevel; //本职等技能G1
+                        v.EntryDate = item.EntryDate; //入职日期
+                        v.Achievement = item.Achievement;//绩效
+                        v.PracticeScore = item.PracticalID;
+                        v.PlanExamDate = item.PlanExamDate;
+                        v.ExamStatus = "HrSignUp";
+                        v.IsReview = item.IsReview;
+                        v.RuleName = item.RuleName;
+                        v.TypeName = item.TypeName;
+                        v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级                   
+                        v.IsAchievement = item.IsAchment;//是否符合绩效
+                        v.HighestLevel = item.HighestTestSkill;//最高可考技能
+                        v.IsExam = item.IsExam;
+                        v.HrCreateUser = username;
+                        v.HrCreateDate = DateTime.Now;
+                        v.SubjectName = item.SubjectName;
+                        Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
+                    }
+                   
                 };
             }
             catch (Exception ex)
             {
                 throw;
             }
-
+            return result;
         }
         public void GetUserComInfo()
         {
