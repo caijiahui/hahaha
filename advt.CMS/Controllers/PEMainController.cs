@@ -917,7 +917,7 @@ namespace advt.Web.Controllers
             var code=model.GetUserCode(username);
             model.GetUserScore(code);
 
-            return Json(new { tableData = model.ListExamScore }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = model.ListExamScore ,Name= model.Name,UserCode=model.UserCode}, JsonRequestBehavior.AllowGet);
           
         }
 

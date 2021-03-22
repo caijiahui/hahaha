@@ -31,6 +31,8 @@ namespace advt.Entity
         public string CreateUser { get; set; }
 
         public DateTime? CreateDate { get; set; }
+
+        public bool IsQuestion { get; set; }
         #endregion
     }
 }
