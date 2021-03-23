@@ -536,10 +536,10 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
-            models.InsertUserDetail(model, username);
+            var result=models.InsertUserDetail(model, username);
             models.GetUserInfo(null);
             models.GetUserComInfo();
-            return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo });
+            return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }
         [MyAuthorize]
         public ActionResult DeleteExamUserInfo(int model)
@@ -938,6 +938,15 @@ namespace advt.Web.Controllers
             model.GetListUsersubject(username);
             return Json(new { ListUsersubject = model.ListUsersubject, username,model.usercode}, JsonRequestBehavior.AllowGet);
         }
+
+        //发送邮件
+        public ActionResult SendEmail()
+        {
+            var model = new EmailHelper();
+            var result= model.SendEmail();
+            return Json(new { Result= result }, JsonRequestBehavior.AllowGet);
+        }
+
 
 
     }

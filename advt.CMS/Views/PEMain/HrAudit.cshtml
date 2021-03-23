@@ -34,7 +34,7 @@
                     <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
                 </el-select>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
-                <el-button @@click="handleUpdate()">更新</el-button>
+                <el-button @@click="handleUpdate()">维护考试时间、地点</el-button>
                 <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
                           :data="ListHrAuditUser">
                     <el-table-column type="selection">

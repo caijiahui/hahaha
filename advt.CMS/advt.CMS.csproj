@@ -178,6 +178,7 @@
     </Compile>
     <Compile Include="infrastructure\IsAdminAttribute.cs" />
     <Compile Include="infrastructure\Pagination.cs" />
+    <Compile Include="Models\ExamModel\EmailHelper.cs" />
     <Compile Include="Models\ExamModel\ExamUserSubject.cs" />
     <Compile Include="Models\ExamModel\ExamFinishModel.cs" />
     <Compile Include="Models\ExamModel\ExamPageModel.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Models\ExamModel\ExamSubjectModel.cs" />
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
     <Compile Include="Models\ExamModel\HrAuditModel.cs" />
+    <Compile Include="Models\ExamModel\ImportCheckEmail.cs" />
     <Compile Include="Models\ExamModel\MaintainExamModel.cs" />
     <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
@@ -244,6 +246,7 @@
     <Content Include="Attachment\temp\Template\BankTemplate.xlsx" />
     <Content Include="Attachment\temp\Template\UserAchievement.xlsx" />
     <Content Include="Attachment\temp\Template\ExamUser.xlsx" />
+    <Content Include="Attachment\temp\Template\QualificationTemplate.xlsx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.disco" />
     <None Include="Connected Services\MembershipWebservice\configuration91.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\configuration.svcinfo" />

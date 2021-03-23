@@ -424,7 +424,6 @@
         methods: {
             changeFun(val) {
                 var _this = this;
-                console.log(val,389);
                 _this.checkBoxData = val;
             },
             getdata: function () {
@@ -549,15 +548,13 @@
                 axios.post('/PEMain/InsertUserDetailInfo', {
                     model: _this.checkBoxData11
                 }).then(function (res) {
+                    console.log(res.data.Results);
                     if (res.data.Results != '') {
                         _this.$message.error(res.data.Results);
-                    } else {
-                        _this.CPListUserInfo = res.data.CPListUserInfo;
                         _this.tableData = res.data.tableData;
                         _this.YListUserInfo = res.data.YListUserInfo;
-                    }
-
-
+                        _this.CPListUserInfo = res.data.CPListUserInfo;
+                    } 
                 });
             },
             handleEdit(index, row) {
