@@ -42,6 +42,9 @@
     .el-card__header {
         background-color: #4e97a2;
     }
+    .el-collapse-item__arrow el-icon-arrow-right {
+        color: white !important
+    }
 </style>
 <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
@@ -49,7 +52,7 @@
 <div id="app" style="width:90%;">
     <div style="margin-top:30px;margin-left:20px;margin-right:20px">
         <template>
-            <el-collapse v-model="activeNames" @@change="handleChange">
+            <el-collapse v-model="activeNames">
                 <el-collapse-item name="1">
                     <template slot="title">
                         <span style="font-size:18px;color:white;margin-left:10px"> <i class="el-icon-position"></i> 考试</span>

@@ -91,10 +91,15 @@
             },
             handleExam: function (data) {
                 var _this = this;
-                var dates = _this.changeDate(_this.ExamDate);
-
-                console.log(dates, 122);
-                window.location.href = "/PEMain/ExamPage?IsTest=" + data + "&RuleName=" + _this.RuleName + "&ExamDate=" + dates;
+                
+                var datd = '';
+                console.log(_this.ExamDate, 111);
+                if (_this.ExamDate != null) {
+                    console.log(23111);
+                    datd = _this.changeDate(_this.ExamDate);
+                }
+                console.log(datd, 122);
+                window.location.href = "/PEMain/ExamPage?IsTest=" + data + "&RuleName=" + _this.RuleName + "&ExamDate=" + datd;
                 //_this.ExamDate = '';
             },
             goBack: function () {

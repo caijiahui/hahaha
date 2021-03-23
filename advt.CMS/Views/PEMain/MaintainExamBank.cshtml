@@ -4,7 +4,7 @@
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
 <div id="app" style="margin-left:20px">
-    <div style="width:100%;margin-top:30px">
+    <div style="width:100%;margin-top:30px;">
 
         <template>
             <el-breadcrumb separator="/" style="margin-bottom:20px">
@@ -13,7 +13,7 @@
             </el-breadcrumb>           
         </template>
 
-        <div style="float:left">
+        <div style="float:left;margin-bottom:20px">
             <template>
 
                 <el-select v-model="TypeName" placeholder="请选择考试类型">
@@ -21,23 +21,35 @@
                 </el-select>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
                 <el-button @@click="createTopic">新增</el-button>
-                <el-upload class="upload-demo" style="margin-top:30px;"
-                           ref="upload"
-                           :multiple="false"
-                           :on-success="handleExcelSuccess"
-                           action="/PEMain/Upload_TEL_MASTER">
-                    <el-button size="small" type="primary">EXCEL上传题库</el-button>
-                </el-upload>
-                <el-upload class="upload-demo" style="margin-top:30px"
-                           ref="upload"
-                           :multiple="false"
-                           :on-success="handleSuccess"
-                           action="/PEMain/Upload_BankPic">
-                    <el-button size="small" type="primary">上传图片</el-button>
-                </el-upload>
-                <a href="/Attachment/temp/Template/BankTemplate.xlsx">
-                    <el-button size="small" type="primary" style="margin-top:30px">题库模板下载</el-button>
-                </a>
+                <div style="margin-bottom:20px">
+                    <div style="float:left;">
+                        <el-upload class="upload-demo" style="margin-top:30px;"
+                                   ref="upload"
+                                   :multiple="false"
+                                   :on-success="handleExcelSuccess"
+                                   action="/PEMain/Upload_TEL_MASTER">
+                            <el-button size="small" type="primary">EXCEL上传题库</el-button>
+                        </el-upload>
+
+                    </div>
+                    <div style="float:left;margin-left:20px">
+                        <a href="/Attachment/temp/Template/BankTemplate.xlsx">
+                            <el-button size="small" type="primary" style="margin-top:30px">题库模板下载</el-button>
+                        </a>
+                    </div>
+                    <div style="float:left;margin-left:20px">
+                        <el-upload class="upload-demo" style="margin-top:30px"
+                                   ref="upload"
+                                   :multiple="false"
+                                   :on-success="handleSuccess"
+                                   action="/PEMain/Upload_BankPic">
+                            <el-button size="small" type="primary">上传图片</el-button>
+                        </el-upload>
+                    </div>
+
+
+                </div>
+
             </template>
         </div>
 
@@ -45,71 +57,73 @@
 
 
     </div>
+    <div style="margin-top:20px;clear:both;">
+        <el-table :data="allTableData.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
+                  style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border>
+            <el-table-column label="考试类型"
+                             prop="ExamType" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="考试科目"
+                             prop="ExamSuject" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目专业"
+                             prop="TopicMajor" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目等级"
+                             prop="TopicLevel" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="题目类型"
+                             sortable
+                             width="180">
+                <template slot-scope="scope">
+                    <span> {{changeTopicType(scope.row.TopicType)}}</span>
+                </template>
 
-    <el-table :data="allTableData.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
-              style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border>
-        <el-table-column label="考试类型"
-                         prop="ExamType" sortable
-                         width="180">
-        </el-table-column>
-        <el-table-column label="考试科目"
-                         prop="ExamSuject" sortable
-                         width="180">
-        </el-table-column>
-        <el-table-column label="题目专业"
-                         prop="TopicMajor" sortable
-                         width="180">
-        </el-table-column>
-        <el-table-column label="题目等级"
-                         prop="TopicLevel" sortable
-                         width="180">
-        </el-table-column>
-        <el-table-column label="题目类型"
-                         sortable
-                         width="180">
-            <template slot-scope="scope">
-                <span> {{changeTopicType(scope.row.TopicType)}}</span>
-            </template>
+            </el-table-column>
+            <el-table-column label="题目内容"
+                             prop="TopicTitle" sortable
+                             width="180">
+            </el-table-column>
+            @*<el-table-column label="上传时间"
+                             prop="CreateDate" sortable
+                             width="180">
+            </el-table-column>
+            <el-table-column label="上传人"
+                             prop="CreateUser" sortable
+                             width="180">
+            </el-table-column>*@
+            <el-table-column align="right">
+                <template slot="header" slot-scope="scope">
 
-        </el-table-column>
-        <el-table-column label="题目内容"
-                         prop="TopicTitle" sortable
-                         width="180">
-        </el-table-column>
-        @*<el-table-column label="上传时间"
-                         prop="CreateDate" sortable
-                         width="180">
-        </el-table-column>
-        <el-table-column label="上传人"
-                         prop="CreateUser" sortable
-                         width="180">
-        </el-table-column>*@
-        <el-table-column align="right">
-            <template slot="header" slot-scope="scope">
+                    <el-input v-model="search"
+                              size="mini"
+                              placeholder="输入关键字搜索" />
+                </template>
 
-                <el-input v-model="search"
-                          size="mini"
-                          placeholder="输入关键字搜索" />
-            </template>
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.ID)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.ID)">Delete</el-button>
+                </template>
 
-            <template slot-scope="scope">
-                <el-button size="mini"
-                           @@click="handleEdit(scope.row.ID)">Edit</el-button>
-                <el-button size="mini"
-                           type="danger"
-                           @@click="handleDelete(scope.row.ID)">Delete</el-button>
-            </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination @@size-change="handleSizeChange"
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
+    </div>
 
-        </el-table-column>
-    </el-table>
-    <el-pagination @@size-change="handleSizeChange"
-                   @@current-change="handleCurrentChange"
-                   :current-page="paginations.page_index"
-                   :page-sizes="paginations.page_sizes"
-                   :page-size="paginations.page_size"
-                   :layout="paginations.layout"
-                   :total="paginations.total">
-    </el-pagination>
     <el-dialog title="题目编辑" :visible.sync="dialogFormVisible">
         <el-form :model="VExamBank">
             <el-form-item label="考试类型" :label-width="formLabelWidth">
