@@ -42,7 +42,7 @@
                         <span style="font-size:18px;color:white"><i class="el-icon-position"></i> {{item.ExamType}}</span>
 
                     </div>
-                    <div class="text item" style="font-size:16px;" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
+                    <div class="text item" style="font-size:16px;cursor:pointer;" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
                 </el-card>
         </div>
         <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible">

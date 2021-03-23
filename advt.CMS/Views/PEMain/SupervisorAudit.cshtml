@@ -25,7 +25,8 @@
         </el-tabs>
         <div v-show="activeName=='first'">
             <template>
-                <el-button size="small" type="primary" @@click="handleUpdate()">批量更新</el-button>
+                <el-button size="small" type="primary" @@click="handleUpdate()">报名</el-button>
+                <el-button size="small" type="primary" @@click="">批量实践</el-button>
                 <el-table :data="LCheckAudtiUser"
                           style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
                     <el-table-column type="selection">
@@ -62,9 +63,11 @@
                         <template slot-scope="scope">
 
                             <el-button size="mini"
-                                       @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">上传实践</el-button>
+                                       @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
                             <el-button size="mini"
-                                       @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史纪录</el-button>
+                                       @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
+                            <el-button size="mini"
+                                       @@click="handleStop(scope.row.ID)">取消</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

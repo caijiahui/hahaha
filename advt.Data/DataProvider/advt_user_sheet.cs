@@ -27,6 +27,11 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_user_sheet(objparams);
             return SqlHelper.GetReaderToFirstOrDefault<Entity.advt_user_sheet>(reader);
         }
+        public static List<Entity.advt_user_sheet> Get_advt_user_sheet_UserJobTitle(string UserAccount)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_advt_user_sheet_UserJobTitle(UserAccount);
+            return SqlHelper.GetReaderToList<Entity.advt_user_sheet>(reader);
+        }
 
         public static int Insert_advt_user_sheet(Entity.advt_user_sheet info)
         {
