@@ -432,6 +432,7 @@ namespace advt.CMS.Models.ExamModel
                     if (listuserdatail != null && listuserdatail.Count() > 0)
                     {
                         result += "此工号已报名,不可重复报名";
+                      
                     }
                     else
                     {
@@ -458,6 +459,8 @@ namespace advt.CMS.Models.ExamModel
                         v.HrCreateDate = DateTime.Now;
                         v.SubjectName = item.SubjectName;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
+                        result += "已报名成功!";
+                       
                     }
                    
                 };
