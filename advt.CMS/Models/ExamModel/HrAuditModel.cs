@@ -148,6 +148,9 @@ namespace advt.CMS.Models.ExamModel
                                 UserCode = dr[2].ToString().Trim(),
                                 UserName = dr[3].ToString().Trim(),
                                 DepartCode = dr[4].ToString().Trim(),
+                                RuleName=dr[5].ToString().Trim(),
+                                ExamDate=Convert.ToDateTime(dr[6].ToString().Trim()),
+                                ExamPlace=dr[7].ToString().Trim(),
                                 HrCheckCreateUser = username,
                                 HrCheckCreateDate = DateTime.Now,
                                 ExamStatus="HrCheck"
@@ -158,8 +161,13 @@ namespace advt.CMS.Models.ExamModel
                 var successcount = 0;
                 foreach (var item in LDetail)
                 {
-                    var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
-                    successcount += c;
+                    var d = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = item.TypeName, SubjectName = item.SubjectName, IsStop = false });
+                    if (d == null)
+                    {
+                        var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                        successcount += c;
+                    }
+
                 }
                 GetHrAuditUser();
                 Result = successcount + "成功插入" + successcount + "记录";

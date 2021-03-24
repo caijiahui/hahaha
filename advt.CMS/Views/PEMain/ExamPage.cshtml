@@ -512,7 +512,7 @@
                     var IsExams = _this.$refs.idisexam.value;
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
-                    if (IsExams == "true") {
+                    if (IsExams == "true" || IsTest=="test") {
                         axios.post('/PEMain/Test', {
                             data: IsTest,
                             RuleName: RuleName
@@ -544,9 +544,11 @@
                     }
                     else {
                         this.$alert('未到考试时间', '提示', {
-                            dangerouslyUseHTMLString: true
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                window.location.href = "/PEMain/MaintainExam";
+                            }
                         });
-                        window.location.href = "/PEMain/MaintainExam";
                     }
                     }
                     

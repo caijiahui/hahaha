@@ -43,6 +43,13 @@ namespace advt.CMS.Models.ExamModel
                 }
                 else
                 {
+                    var repeat = Data.ExamType.Get_ExamType(new { TypeName = VexamType.TypeName });
+                    if (repeat != null)
+                    {
+                        Result = "考试类型不可重复添加";
+                    }
+                    VexamType.CreateUser = username;
+                    VexamType.CreateDate = DateTime.Now;
                     Data.ExamType.Update_ExamType(VexamType, null, new string[] { "ID" });
                 }
                 LexamType = Data.ExamType.Get_All_ExamType();

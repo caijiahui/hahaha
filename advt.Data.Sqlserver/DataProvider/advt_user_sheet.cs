@@ -50,6 +50,17 @@ namespace advt.Data.SqlServer
             commandText.AppendLine("INSERT INTO [advt_user_sheet] (" + item_name + ") VALUES (" + item_value + ")");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        //Get_advt_user_sheet_UserJobTitle
+        public IDataReader Get_advt_user_sheet_UserJobTitle(string UserAccount)
+        {
+            StringBuilder commandText = new StringBuilder();
+            List<DbParameter> l_parms = new List<DbParameter>();
+            commandText.AppendLine(" SELECT " + advt_user_sheet_item_str + "");
+            commandText.AppendLine("   FROM [advt_user_sheet] where  UserAccount=@UserAccount and (UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%') ");
+            //List<DbParameter> l_parms = SqlHelper.Get_List_Params(advt_user_sheet_item_prop_a, UserAccount);
+            l_parms.Add(SqlHelper.MakeInParam("@UserAccount", (DbType)SqlDbType.NVarChar, 50, UserAccount));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms);
+        }
         #endregion
     }
 }

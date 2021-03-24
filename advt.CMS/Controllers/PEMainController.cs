@@ -340,6 +340,7 @@ namespace advt.Web.Controllers
             model.SaveBankInfo(username);
             return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
+        //Excel上传题库
         public JsonResult Upload_TEL_MASTER(HttpPostedFileBase file)
         {
             string filepath = "";
@@ -364,6 +365,31 @@ namespace advt.Web.Controllers
             model.UploadBank(filepath);
 
             return Json(new {Result=model.Result, model.LExamBank }, JsonRequestBehavior.AllowGet);
+        }
+        //Excel上传实践
+        public JsonResult Upload_TEL_Practice(HttpPostedFileBase file)
+        {
+            string filepath = "";
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+
+                    Directory.CreateDirectory(path);
+
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new SupervisorAuditModel();
+            model.UploadPractice(filepath);
+
+            return Json(new { Result = model.Result}, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_BankPic(HttpPostedFileBase file)
         {

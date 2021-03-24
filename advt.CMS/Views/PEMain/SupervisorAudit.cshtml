@@ -24,51 +24,77 @@
             </el-tab-pane>
         </el-tabs>
         <div v-show="activeName=='first'">
-            <template>
-                <el-button size="small" type="primary" @@click="handleUpdate()">批量更新</el-button>
-                <el-table :data="LCheckAudtiUser"
-                          style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-                    <el-table-column type="selection">
-                    </el-table-column>
-                    <el-table-column label="考试类型"
-                                     prop="TypeName" sortable>
-                    </el-table-column>
-                    <el-table-column label="姓名"
-                                     prop="UserName" sortable>
-                    </el-table-column>
-                    <el-table-column label="部门"
-                                     prop="DepartCode" sortable>
-                    </el-table-column>
-                    <el-table-column label="工号"
-                                     prop="UserCode" sortable>
-                    </el-table-column>
+            <div style="float:left;margin-bottom:20px">
+                <template>
+                    <div style="float:left;">
+                        <el-upload class="upload-demo"
+                                   ref="upload"
+                                   :multiple="false"
+                                   :on-success="handleExcelSuccess"
+                                   action="/PEMain/Upload_TEL_Practice">
+                            <el-button size="small" type="primary"><i class="el-icon-folder-add"></i> 汇入实践</el-button>
+                        </el-upload>
 
-                    <el-table-column label="最高可考技能"
-                                     prop="HighestLevel" sortable>
-                    </el-table-column>
-                    <el-table-column label="本次申请等级"
-                                     prop="ApplyLevel" sortable>
-                    </el-table-column>
-                    <el-table-column label="预计考试时间"
-                                     sortable>
-                    </el-table-column>
-                    <el-table-column label="实践成绩" prop="TheoreticalAchievement"
-                                     sortable>
+                    </div>
+                    <div style="float:left;margin-left:20px">
+                        <a href="/Attachment/temp/Template/Importpractice.xlsx">
+                            <el-button size="small" type="primary" ><i class="el-icon-download"></i> 实践模板</el-button>
+                        </a>
+                    </div>
+                    <div style="float:left;margin-left:20px">
+                        <el-button size="small" type="primary" @@click="handleUpdate()">报名</el-button>
+                    </div>
+                </template>
+            </div>
+            <div style="clear:both">
+                <template>
+                    <el-table :data="LCheckAudtiUser"
+                              style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                        <el-table-column type="selection">
+                        </el-table-column>
+                        <el-table-column label="考试类型"
+                                         prop="TypeName" sortable>
+                        </el-table-column>
+                        <el-table-column label="姓名"
+                                         prop="UserName" sortable>
+                        </el-table-column>
+                        <el-table-column label="部门"
+                                         prop="DepartCode" sortable>
+                        </el-table-column>
+                        <el-table-column label="工号"
+                                         prop="UserCode" sortable>
+                        </el-table-column>
 
-                    </el-table-column>
-                    <el-table-column fixed="right"
-                                     label="操作"
-                                     width="240">
-                        <template slot-scope="scope">
+                        <el-table-column label="最高可考技能"
+                                         prop="HighestLevel" sortable>
+                        </el-table-column>
+                        <el-table-column label="本次申请等级"
+                                         prop="ApplyLevel" sortable>
+                        </el-table-column>
+                        <el-table-column label="预计考试时间"
+                                         sortable>
+                        </el-table-column>
+                        <el-table-column label="实践成绩" prop="TheoreticalAchievement"
+                                         sortable>
 
-                            <el-button size="mini"
-                                       @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">上传实践</el-button>
-                            <el-button size="mini"
-                                       @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史纪录</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+                        </el-table-column>
+                        <el-table-column fixed="right"
+                                         label="操作"
+                                         width="240">
+                            <template slot-scope="scope">
+
+                                <el-button size="mini"
+                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
+                                <el-button size="mini"
+                                           @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
+                                <el-button size="mini"
+                                           @@click="handleStop(scope.row.ID)">取消</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+
         </div>
         <div v-show="activeName=='Two'">
             <el-table :data="LSignedupUser"
@@ -420,6 +446,18 @@
 
                 })
             }, 
+            //批量上传实践
+            handleImportPrac() {
+                var _this = this;
+
+            },
+            handleExcelSuccess(Result) {
+                var _this = this;
+                this.$message({
+                    message: Result.Result,
+                    type: 'success'
+                });
+            },
             handleSave() {
                 var _this = this;
                 _this.checkBoxData.forEach(function (item) {
