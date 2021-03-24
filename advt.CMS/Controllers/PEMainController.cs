@@ -939,14 +939,6 @@ namespace advt.Web.Controllers
             return Json(new { ListUsersubject = model.ListUsersubject, username,model.usercode}, JsonRequestBehavior.AllowGet);
         }
 
-        //发送邮件
-        public ActionResult SendEmail()
-        {
-            var model = new EmailHelper();
-            var result= model.SendEmail();
-            return Json(new { Result= result }, JsonRequestBehavior.AllowGet);
-        }
-
 
 
     }
