@@ -1,6 +1,11 @@
 ﻿using advt.Entity;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -14,6 +19,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LSignedupUser { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public List<ExamUserDetailInfo> LCheckAudtiUser { get; set; }
+        public string Result { get; set; }
         public SupervisorAuditModel() : base()
         {
             ListDirectorUserInfos = new List<UserInfo>();
@@ -43,7 +49,7 @@ namespace advt.CMS.Models.ExamModel
                         {
                             LCheckAudtiUser.AddRange(data);
                         }
-                        var auditdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, UserCode = item.UserCode });
+                        var auditdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, UserCode = item.UserCode,IsExam=true });
                         if (auditdata != null && auditdata.Count() != 0)
                         {
                             LSignedupUser.AddRange(auditdata);
@@ -96,7 +102,7 @@ namespace advt.CMS.Models.ExamModel
                     Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
 
                 };
-                GetAllExamUserDetailInfo();
+                GetAllExamUserDetailInfo(username);
                 return Result;
             }
             catch (Exception ex)
@@ -129,6 +135,87 @@ namespace advt.CMS.Models.ExamModel
                 throw;
             }
           
+        }
+        public void UploadPractice(string filepath)
+        {
+            DataTable dt = new DataTable();
+            FileStream files = null;
+            IWorkbook Workbook = null;
+            var LPrac = new List<PracticeInfo>();
+            try
+            {
+
+                using (files = new FileStream(filepath, FileMode.Open, FileAccess.Read))//C#文件流读取文件
+                {
+                    if (filepath.IndexOf(".xlsx") > 0)
+                        //把xlsx文件中的数据写入Workbook中
+                        Workbook = new XSSFWorkbook(files);
+
+                    else if (filepath.IndexOf(".xls") > 0)
+                        //把xls文件中的数据写入Workbook中
+                        Workbook = new HSSFWorkbook(files);
+
+                    if (Workbook != null)
+                    {
+                        ISheet sheet = Workbook.GetSheetAt(0);//读取第一个sheet
+                        System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+                        //得到Excel工作表的行 
+                        IRow headerRow = sheet.GetRow(0);
+                        //得到Excel工作表的总列数  
+                        int cellCount = headerRow.LastCellNum;
+
+                        for (int j = 0; j < cellCount; j++)
+                        {
+                            //得到Excel工作表指定行的单元格  
+                            ICell cell = headerRow.GetCell(j);
+                            dt.Columns.Add(cell.ToString());
+                        }
+
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                        {
+                            IRow row = sheet.GetRow(i);
+                            DataRow dataRow = dt.NewRow();
+
+                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            {
+                                if (row.GetCell(j) != null)
+                                    dataRow[j] = row.GetCell(j).ToString();
+                            }
+                            dt.Rows.Add(dataRow);
+                        }
+                    }
+                }
+                
+                using (var ds = dt)
+                {
+                    var q = from DataRow dr in ds.Rows
+
+                            select new Entity.PracticeInfo
+                            {
+                                UserCode = dr[0].ToString().Trim(),
+                                UserName = dr[1].ToString().Trim(),
+                                ValidityDate = Convert.ToDateTime(dr[2].ToString()),
+                                PracticeScore = Convert.ToDecimal(dr[3].ToString()),
+                                PracticeRemark = dr[4].ToString().Trim(),
+                                SkillName = dr[5].ToString().Trim(),
+                            };
+                    LPrac = q.ToList();
+                }
+                var successcount = 0;
+                foreach (var item in LPrac)
+                {
+                    var c = Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
+                    successcount += c;
+                }
+                Result = successcount + "成功插入" + successcount + "记录";
+
+            }
+
+            catch (Exception ex)
+            {
+                Result = ex.Message;
+                files.Close();//关闭当前流并释放资源
+            }
         }
     }
 }

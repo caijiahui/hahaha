@@ -76,70 +76,96 @@
             
         </div>
         <div v-show="activeName=='Two'">
-            <template>
-                <div style="margin-bottom:20px">
-                    <div style="float:left;">
-                        <el-upload class="upload-demo"
-                                   ref="upload"
-                                   :multiple="false"
-                                   :on-success="handleExcelSuccess"
-                                   action="/PEMain/Upload_Qualification">
-                            <el-button size="small" type="primary">考试资格汇入</el-button>
-                        </el-upload>
+            <div style="margin-bottom:20px; float:left;">
+                <template>
+                    <div style="margin-bottom:20px;clear:both">
+                        <div style="float:left;">
+                            <el-upload class="upload-demo"
+                                       ref="upload"
+                                       :multiple="false"
+                                       :on-success="handleExcelSuccess"
+                                       action="/PEMain/Upload_Qualification">
+                                <el-button size="small" type="primary">考试资格汇入</el-button>
+                            </el-upload>
+                        </div>
+                        <div style="float:left">
+                            <a href="/Attachment/temp/Template/QualificationTemplate.xlsx">
+                                <el-button size="small" type="primary" style="margin-left:20px">汇入模板下载</el-button>
+                            </a>
+                        </div>
+                        <div style="float:left;margin-left:20px">
+                            <el-button size="small" type="primary" @@click="handleUpdate()">维护考试时间、地点</el-button>
+                        </div>
                     </div>
-                    <a href="/Attachment/temp/Template/QualificationTemplate.xlsx">
-                        <el-button size="small" type="primary" style="margin-left:20px">汇入模板下载</el-button>
-                    </a>
-                </div>
-                <el-table :data="ListHrAuditSuccessUser"
-                          style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
-                    <el-table-column label="状态">
-                        <template slot-scope="scope">
-                            <el-tag type="success">HR已审核</el-tag>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="考试类型"
-                                     prop="TypeName" sortable
-                                     fixed>
-                    </el-table-column>
-                    <el-table-column label="科目"
-                                     prop="SubjectName" sortable>
-                    </el-table-column>
-                    <el-table-column label="工号"
-                                     prop="UserCode" sortable
-                                     fixed>
-                    </el-table-column>
-                    <el-table-column label="姓名"
-                                     prop="UserName" sortable>
-                    </el-table-column>
-                    <el-table-column label="部门"
-                                     prop="DepartCode" sortable>
-                    </el-table-column>
+                </template>
+            </div>
+            <div style="margin-top:20px;clear:both">
+                <template>
 
-                    <el-table-column label="等级"
-                                     prop="ApplyLevel" sortable>
-                    </el-table-column>
-                    <el-table-column label="审核人"
-                                     prop="HRUpdateUser" sortable>
-                    </el-table-column>
-                    <el-table-column label="审核时间"
-                                     prop="HRUpdateDate" sortable>
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column fixed="right"
-                                     label="操作"
-                                     width="100">
-                        <template slot-scope="scope">
+                    <el-table :data="ListHrAuditSuccessUser"
+                              style="width: 100%;margin-top:20px;clear:both " border @@selection-change="changeFun">
+                        <el-table-column type="selection">
+                        </el-table-column>
+                        <el-table-column label="状态">
+                            <template slot-scope="scope">
+                                <el-tag type="success">HR已审核</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="考试类型"
+                                         prop="TypeName" sortable
+                                         fixed>
+                        </el-table-column>
+                        <el-table-column label="科目"
+                                         prop="SubjectName" sortable>
+                        </el-table-column>
+                        <el-table-column label="工号"
+                                         prop="UserCode" sortable
+                                         fixed>
+                        </el-table-column>
+                        <el-table-column label="姓名"
+                                         prop="UserName" sortable>
+                        </el-table-column>
+                        <el-table-column label="部门"
+                                         prop="DepartCode" sortable>
+                        </el-table-column>
+                        <el-table-column label="等级"
+                                         prop="ApplyLevel" sortable>
+                        </el-table-column>
+                        <el-table-column label="考试规则"
+                                         prop="RuleName" sortable>
+                        </el-table-column>
+                        <el-table-column label="考试时间"
+                                         sortable>
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="考试地点"
+                                         prop="ExamPlace" sortable>
+                        </el-table-column>
+                        <el-table-column label="审核人"
+                                         prop="HRUpdateUser" sortable>
+                        </el-table-column>
+                        <el-table-column label="审核时间"
+                                         prop="HRUpdateDate" sortable>
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column fixed="right"
+                                         label="操作"
+                                         width="100">
+                            <template slot-scope="scope">
 
-                            <el-button size="mini"
-                                       @@click="handleStop(scope.row.ID)">取消</el-button>
+                                <el-button size="mini"
+                                           @@click="handleStop(scope.row.ID)">取消</el-button>
 
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+
         </div>
 
 
@@ -162,7 +188,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
-                    <el-button @@click="dialogUpdateVisible = false">取 消</el-button>
+                    <el-button @@click="handleclose">取 消</el-button>
                     <el-button type="primary" @@click="handleSave()">确 定</el-button>
                 </template>
 
@@ -361,7 +387,6 @@
             },
             //批量更新操作
             handleUpdate() {
-
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
@@ -374,6 +399,10 @@
 
                 })
             },
+            handleclose() {
+                var _this = this;
+                _this.dialogUpdateVisible = false;
+            },
             handleSave() {
                 var _this = this;
                 _this.checkBoxData.forEach(function (item) {
@@ -382,7 +411,6 @@
                     item['ExamStatus'] = 'HrCheck';
                     item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
                 })
-                console.log(_this.checkBoxData, 2222);
                 axios.post('/PEMain/UpdateHrAduitUser', {
                     model: _this.checkBoxData
                 }).then(function (res) {
