@@ -79,7 +79,7 @@ namespace advt.CMS.Models
                     var topicnum = Data.ExamRuleTopicType.Get_All_ExamRuleTopicType_RuleId(Rule.ID);
                     foreach (var item in topicnum)
                     {
-                        var banks = Data.ExamBank.Get_All_ExamBank_ExamType_Rule(item.TopicType, item.TopicMajor, item.TopicLevel);
+                        var banks = Data.ExamBank.Get_All_ExamBank_ExamType_Rule(item.TopicType, item.TopicMajor, item.TopicLevel, Rule.SubjectName);
                         int TopicNum = Convert.ToInt32(item.TopicNum);
                         var bank = banks.OrderBy(y => Guid.NewGuid()).Take(TopicNum);
                         foreach (var items in bank)

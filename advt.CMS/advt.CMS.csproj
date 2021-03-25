@@ -445,6 +445,7 @@
     <Content Include="Views\PEMain\MaintainExam.cshtml" />
     <Content Include="Views\PEMain\MaintainSubset.cshtml" />
     <Content Include="Views\PEMain\MaintainScore.cshtml" />
+    <Content Include="Views\Shared\HrCheckEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -390,7 +390,7 @@
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
-                _this.VAuditCheck.IsExam = true;
+                //_this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
@@ -406,7 +406,7 @@
             handleSave() {
                 var _this = this;
                 _this.checkBoxData.forEach(function (item) {
-                    item['IsExam'] = _this.VAuditCheck.IsExam;
+                    //item['IsExam'] = _this.VAuditCheck.IsExam;
                     item['ValidityDate'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'HrCheck';
                     item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
@@ -423,10 +423,10 @@
             },
             handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
                 var _this = this;
-                _this.ListHrAuditUser = res.data.ListHrAuditUser;
-                _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                _this.ListHrAuditUser = Result.data.ListHrAuditUser;
+                _this.ListHrAuditSuccessUser = Result.data.ListHrAuditSuccessUser;
                 this.$message({
-                    message: Result.Result,
+                    message: Result.data.Result,
                     type: 'success'
                 });
             },

@@ -57,6 +57,19 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamBank_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public IDataReader Get_All_ExamBank_ExamType_Rule(string TopicType, string TopicMajor, string TopicLevel,string ExamSubject)
+        {
+            StringBuilder commandText = new StringBuilder();
+            List<DbParameter> l_parms = new List<DbParameter>();
+            commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
+            commandText.AppendLine("   FROM [ExamBank]");
+            commandText.AppendLine("where  TopicType=@TopicType and TopicMajor=@TopicMajor and TopicLevel =@TopicLevel and ExamSubject like N'%"+ ExamSubject +"%' ");
+            l_parms.Add(SqlHelper.MakeInParam("@TopicType", (DbType)SqlDbType.NVarChar, 500, TopicType));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicMajor", (DbType)SqlDbType.NVarChar, 500, TopicMajor));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
+            l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
 
         public int Insert_ExamBank(Entity.ExamBank info, string[] Include, string[] Exclude)
         {
