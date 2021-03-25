@@ -67,6 +67,9 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamUserDetailInfo(ID);
         }
+
+       
+        
         #endregion
     }
 }

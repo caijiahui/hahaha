@@ -25,6 +25,9 @@ namespace advt.Entity
         public string UpdateUser { get; set; }
 
         public DateTime? UpdateDate { get; set; }
+        public string CorrespondingLevel { get; set; }//对应等级可晋升
+        public string NewPromotion { get; set; }//新晋升职等
+        public int PromotionBonus { get; set; }//晋升加给
         #endregion
     }
 }

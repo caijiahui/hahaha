@@ -188,6 +188,7 @@
     <Compile Include="Models\ExamModel\HrAuditModel.cs" />
     <Compile Include="Models\ExamModel\ImportCheckEmail.cs" />
     <Compile Include="Models\ExamModel\MaintainExamModel.cs" />
+    <Compile Include="Models\ExamModel\MaintainExamPageModel.cs" />
     <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
     <Compile Include="Models\ExamModel\ExamTypeModel.cs" />
     <Compile Include="Models\ExamModel\ExamUserInfoModel.cs" />
@@ -247,6 +248,7 @@
     <Content Include="Attachment\temp\Template\UserAchievement.xlsx" />
     <Content Include="Attachment\temp\Template\ExamUser.xlsx" />
     <Content Include="Attachment\temp\Template\QualificationTemplate.xlsx" />
+    <Content Include="Attachment\temp\Template\Importpractice.xlsx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.disco" />
     <None Include="Connected Services\MembershipWebservice\configuration91.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\configuration.svcinfo" />
@@ -445,6 +447,7 @@
     <Content Include="Views\PEMain\MaintainExam.cshtml" />
     <Content Include="Views\PEMain\MaintainSubset.cshtml" />
     <Content Include="Views\PEMain\MaintainScore.cshtml" />
+    <Content Include="Views\PEMain\MaintainExamPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

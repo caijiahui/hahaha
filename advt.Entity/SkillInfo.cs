@@ -23,6 +23,8 @@ namespace advt.Entity
         public string UpdateUser { get; set; }
 
         public DateTime? UpdateDate { get; set; }
+
+        public int SkillAllowance { get; set; }
         #endregion
     }
 }

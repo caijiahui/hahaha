@@ -473,7 +473,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetUserComInfo()
         {
-            ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, IsExam=false });
+            ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false });
         }
 
         public void StopComplete(string ID, string username)

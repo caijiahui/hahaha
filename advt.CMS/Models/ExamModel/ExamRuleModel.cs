@@ -21,6 +21,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamSubject> ListExamSubject { get; set; }
         public ExamRuleTopicType topictype { get; set; }
         public List<ExamRule> ListExamRuleInfo { get; set; }
+        public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
@@ -34,6 +35,7 @@ namespace advt.CMS.Models.ExamModel
             RuleTopicList = new List<ExamRuleTopicType>();
             RuleTopic = new List<ExamRuleTopicType>();
             ListExamRuleInfo = new List<ExamRule>();
+            ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
        
 
@@ -42,10 +44,11 @@ namespace advt.CMS.Models.ExamModel
             var Result = "";
             if (VExamRule.ID!=0)
             {
-                ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
-                if (ListExamRuleInfo.Count() > 0 && ListExamRuleInfo != null)
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { RuleName = VExamRule.RuleName });
+
+                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                 {
-                    Result += VExamRule.RuleName + "此考试规则已存在";
+                    Result += VExamRule.RuleName + "此考试规则已被使用,不可更新";
                 }
                 else
                 {
@@ -59,7 +62,7 @@ namespace advt.CMS.Models.ExamModel
                 ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
                 if (ListExamRuleInfo.Count() > 0 && ListExamRuleInfo != null)
                 {
-                    Result += VExamRule.RuleName + "此考试规则已存在";
+                    Result += VExamRule.RuleName + "此考试规则名已存在";
                 }
                 else
                 {
