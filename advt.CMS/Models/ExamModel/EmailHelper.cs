@@ -27,11 +27,11 @@ namespace advt.CMS.Models.ExamModel
         {
             var result = "";
             System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
-            msg.To.Add("yin.chen@advantech.com.cn");//发送
+            msg.To.Add("jiahui.cai@advantech.com.cn");//发送
             msg.CC.Add("yin.chen@advantech.com.cn");//抄送           
-            msg.From = new MailAddress("yin.chen@advantech.com.cn");
+            msg.From = new MailAddress("Exam@advantech.com.cn");
             /* 上面3个参数分别是发件人地址（可以随便写），发件人姓名，编码*/
-            msg.Subject = "考试人员";//邮件标题
+            msg.Subject = "考试通知";//邮件标题
             msg.SubjectEncoding = System.Text.Encoding.UTF8;//邮件标题编码
             //拼接字符
             string text = "<table><tr><td>EmpId</td><td>Emp name</td><td>age</td></tr><tr><td>value</td><td>value</td><td>value</td></tr></table>";

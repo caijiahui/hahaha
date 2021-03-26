@@ -26,9 +26,10 @@ namespace advt.Data
         {
             return Get_All_ExamBank(new { ExamType = ExamType });
         }
-        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Rule(string TopicType,string TopicMajor,string TopicLevel)
+        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Rule(string TopicType,string TopicMajor,string TopicLevel,string ExamSubject)
         {
-            return Get_All_ExamBank(new { TopicType=TopicType, TopicMajor=TopicMajor, TopicLevel= TopicLevel });
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Rule(TopicType,TopicMajor,TopicLevel, ExamSubject);
+            return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
         }
 
         public static Entity.ExamBank Get_ExamBank(object objparams)

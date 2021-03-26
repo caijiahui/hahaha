@@ -31,13 +31,13 @@ namespace advt.CMS.Models.ExamModel
         {
             if (string.IsNullOrEmpty(typename))
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop=false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, IsExam=false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop=false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
             }
             else
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup",TypeName= typename }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop=false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup",TypeName= typename, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop=false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
             }
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -55,6 +55,8 @@ namespace advt.CMS.Models.ExamModel
                     item.DirectorCreateDate = DateTime.Now;
                     Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                 }
+                //EmailHelper v = new EmailHelper();
+                //v.SendEmail();
                 GetHrAuditUser();
             }
             catch (Exception ex)
@@ -153,6 +155,8 @@ namespace advt.CMS.Models.ExamModel
                                 ExamPlace=dr[7].ToString().Trim(),
                                 HrCheckCreateUser = username,
                                 HrCheckCreateDate = DateTime.Now,
+                                IsExam="false",
+                                IsStop=false,
                                 ExamStatus="HrCheck"
                               
                             };
