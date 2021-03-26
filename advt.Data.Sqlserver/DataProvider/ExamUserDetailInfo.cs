@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam";
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -52,7 +52,8 @@ namespace advt.Data.SqlServer
             new string[] { "HrCheckCreateDate", "DateTime", "16"},
               new string[] { "StopCreateUser", "NVarChar", "500"},
             new string[] { "StopCreateDate", "DateTime", "16"},
-             new string[] { "UserExamDate", "DateTime", "16"}
+             new string[] { "UserExamDate", "DateTime", "16"},
+              new string[] { "IsUserExam", "NVarChar", "500"}
         };
         #endregion
 
@@ -99,7 +100,14 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
-        
+        public IDataReader Get_All_ExamUserInfo(DateTime date)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select *  from ExamUserDetailInfo where convert(char(10), UserExamDate,120)=@date");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.DateTime, 150, date));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
         #endregion
     }
 }

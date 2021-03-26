@@ -61,6 +61,7 @@ namespace advt.Entity
         public string StopCreateUser { get; set; }
         public DateTime? StopCreateDate { get; set; }
         public DateTime? UserExamDate { get; set; }
+        public string IsUserExam { get; set; }
         #endregion
     }
 }

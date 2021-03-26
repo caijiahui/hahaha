@@ -113,26 +113,24 @@ namespace advt.CMS.Models.ExamModel
                     //CreateDate = Convert.ToDateTime(row["CreateDate"]),
                     //UpdateUser = row["UpdateUser"].ToString(),
                     //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),   
-                   
-                                 
-                    IsExam = row["IsExam"].ToString()
+
+
+                    IsUserExam = row["IsUserExam"].ToString()
                   
                    
                 });
 
             }
 
-            if (typename=="")
+            if (string.IsNullOrEmpty(typename))
             {
-                ListUserInfo11 = ListUserInfo.ToList(); }
+                ListUserInfo11 = ListUserInfo.ToList();
+            }
             else
             {
                 ListUserInfo11 = ListUserInfo.Where(x => x.TypeName == typename).ToList();
             }
-            YListUserInfo = ListUserInfo.Where(x => x.IsExam == "true").ToList();
-            
-
-
+            YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
 
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -454,7 +452,8 @@ namespace advt.CMS.Models.ExamModel
                         v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级                   
                         v.IsAchievement = item.IsAchment;//是否符合绩效
                         v.HighestLevel = item.HighestTestSkill;//最高可考技能
-                        v.IsExam = item.IsExam;
+                        v.IsExam ="false";
+                        v.IsUserExam = item.IsUserExam;
                         v.HrCreateUser = username;
                         v.HrCreateDate = DateTime.Now;
                         v.SubjectName = item.SubjectName;
@@ -610,6 +609,7 @@ namespace advt.CMS.Models.ExamModel
         public string RuleName { get; set; }
         public string ExamScore { get; set; }
         public DateTime? PracticeTime { get; set; }// 最近一次实践考试时间
+        public string IsUserExam { get; set; }
 
     }
 }

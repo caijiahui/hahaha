@@ -12,7 +12,7 @@
     }
 </style>
 <div id="app" style="margin-left:20px">
-    <div>
+    <div style="margin-top:20px">
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="工号">
                 <el-input v-model="UserCode" ></el-input>
@@ -21,10 +21,13 @@
                 <el-input v-model="SubjectName" ></el-input>
             </el-form-item>
             <el-form-item label="日期">
-                <el-input v-model="ExamDate"></el-input>
+                <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+                </el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
+                <template>
+                    <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
+                </template>
             </el-form-item>
         </el-form>
     </div>
@@ -118,7 +121,7 @@
                     return year + '-' + mon + '-' + day;
                 },
                 SearchDetailInfo() {
-                var _this = this;
+                    var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
                     UserCode: _this.UserCode,
                     SubjectName: _this.SubjectName,

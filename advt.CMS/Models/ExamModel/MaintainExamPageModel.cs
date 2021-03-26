@@ -18,7 +18,7 @@ namespace advt.CMS.Models.ExamModel
             ListPageInfo = new List<PageInfo>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
-        public void GetPageInfo(string UserCode ="" ,string SubjectName ="")
+        public void GetPageInfo(string UserCode ="" ,string SubjectName ="",string ExamDate="")
         {
             if (!string.IsNullOrEmpty(UserCode) && !string.IsNullOrEmpty(SubjectName))
             {
@@ -32,8 +32,11 @@ namespace advt.CMS.Models.ExamModel
             {
                 ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = SubjectName });
             }
-
-
+            else if (!string.IsNullOrEmpty(ExamDate))
+            {
+                DateTime date = Convert.ToDateTime(ExamDate);
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserInfo(date);
+            }
             if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
             {
                 foreach (var item in ListExamUserDetailInfo)
@@ -64,8 +67,8 @@ namespace advt.CMS.Models.ExamModel
                         CurrentLevel = item.SkillName,//本职等技能
                         ApplyLevel = item.ApplyLevel,//目前技能等级
                         CurrectExamDate = item.UserExamDate,//最近一次考试时间
-                                                            //PostState="在职",
-                                                            //PostJob="BPE",
+                         //PostState="在职",
+                         //PostJob="BPE",
                         SubjectName = item.SubjectName,
                         ExamScore = item.ExamScore,//最近一次理论成绩
                         PracticeScore = item.PracticeScore,

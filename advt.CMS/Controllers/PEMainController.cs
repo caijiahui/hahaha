@@ -977,7 +977,7 @@ namespace advt.Web.Controllers
         public ActionResult GetMaintainExamPage(string UserCode,string SubjectName,string ExamDate)
         {
             MaintainExamPageModel model = new MaintainExamPageModel();
-            model.GetPageInfo(UserCode, SubjectName);
+            model.GetPageInfo(UserCode, SubjectName,ExamDate);
             return Json(new { tableData=model.ListPageInfo });
         }
     }

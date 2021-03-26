@@ -67,9 +67,13 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamUserDetailInfo(ID);
         }
+        public static List<Entity.ExamUserDetailInfo> Get_All_ExamUserInfo(DateTime date)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserInfo(date);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
 
-       
-        
+
         #endregion
     }
 }

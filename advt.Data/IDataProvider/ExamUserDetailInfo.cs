@@ -18,7 +18,7 @@ namespace advt.Data
         int Update_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude);
 
         int Delete_ExamUserDetailInfo(int ID);
-
+        IDataReader Get_All_ExamUserInfo(DateTime date);
         #endregion
     }
 }
