@@ -316,26 +316,25 @@ namespace advt.CMS.Models
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
-                //根据人员,科目,ExamStatus更新分数,时间，isexam
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
-                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
+
+                //判断模拟就不插入数据
+                if (model.VExamUserInfo.IsTest == false)
                 {
-                    foreach (var item in ListExamUserDetailInfo)
+                    //根据人员,科目,ExamStatus更新分数,时间，isexam
+                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
+                    if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                     {
-                        item.ExamScore = score;
-                        item.UserExamDate = DateTime.Now;
-                        if (model.VExamUserInfo.IsTest == true)
+                        foreach (var item in ListExamUserDetailInfo)
                         {
-                            item.IsExam = "false";
-                        }
-                        else
-                        {
+                            item.ExamScore = score;
+                            item.UserExamDate = DateTime.Now;
                             item.IsExam = "true";
+                            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                         }
-                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+
                     }
-                   
                 }
+                   
 
             }
         }
