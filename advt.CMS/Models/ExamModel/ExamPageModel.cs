@@ -271,8 +271,7 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 //+科目
                 sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
-               
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;               
 
                 int sd = 0;
                 int score = 0;
