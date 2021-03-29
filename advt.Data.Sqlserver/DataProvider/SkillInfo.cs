@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region SkillInfo , (Ver:2.3.8) at: 2021/2/5 11:37:14
         #region Var: 
         private string[] SkillInfo_key_a = { "ID" };
-        private string SkillInfo_item_str = "[ID],[SKillName],[AchRequire],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate]";
+        private string SkillInfo_item_str = "[ID],[SKillName],[AchRequire],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],SkillAllowance";
         private string[][] SkillInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -26,7 +26,8 @@ namespace advt.Data.SqlServer
             new string[] {"CreateUser", "NVarChar", "500"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
-            new string[] {"UpdateDate", "DateTime", "16"}
+            new string[] {"UpdateDate", "DateTime", "16"},
+             new string[] { "SkillAllowance", "Int", "4"}
         };
         #endregion
 

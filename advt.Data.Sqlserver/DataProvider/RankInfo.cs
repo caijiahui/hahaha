@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region RankInfo , (Ver:2.3.8) at: 2021/2/5 11:33:07
         #region Var: 
         private string[] RankInfo_key_a = { "ID" };
-        private string RankInfo_item_str = "[ID],[RankName],[SkillName],[MaxSkillName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate]";
+        private string RankInfo_item_str = "[ID],[RankName],[SkillName],[MaxSkillName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],CorrespondingLevel,NewPromotion,PromotionBonus";
         private string[][] RankInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -27,7 +27,10 @@ namespace advt.Data.SqlServer
             new string[] {"CreateUser", "NVarChar", "500"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
-            new string[] {"UpdateDate", "DateTime", "16"}
+            new string[] {"UpdateDate", "DateTime", "16"},
+            new string[] {"CorrespondingLevel", "NVarChar", "500"},
+            new string[] {"NewPromotion", "NVarChar", "500"},
+            new string[] {"PromotionBonus", "Int", "500"}
         };
         #endregion
 

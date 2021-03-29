@@ -134,7 +134,6 @@
                     var _this = this;
                     axios.post('/PEMain/ExamFinishInfo').then(function (responese) {
                         _this.VExamScore = responese.data.VExamScore;
-                        console.log(responese.data.VExamScore.CorrectScore, responese.data.VExamScore.PassScore);
                         if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                             _this.isSuccess = true;
                         }

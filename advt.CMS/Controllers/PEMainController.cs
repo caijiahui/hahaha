@@ -240,7 +240,7 @@ namespace advt.Web.Controllers
 
         [MyAuthorize]
         public ActionResult GetSubjectInfo()
-        {
+        {            
             var subjectInfo = Data.ExamSubject.Get_All_ExamSubject();
             ExamSubjectModel model = new ExamSubjectModel();
             return Json(new { tableData = subjectInfo, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
@@ -965,7 +965,20 @@ namespace advt.Web.Controllers
             return View(model);
         }
 
-
-
+        //总页面报表
+        [MyAuthorize]
+        public ActionResult MaintainExamPage()
+        {
+            MaintainExamPageModel model = new MaintainExamPageModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult GetMaintainExamPage(string UserCode,string SubjectName,string ExamDate)
+        {
+            MaintainExamPageModel model = new MaintainExamPageModel();
+            model.GetPageInfo(UserCode, SubjectName,ExamDate);
+            return Json(new { tableData=model.ListPageInfo });
+        }
     }
 }

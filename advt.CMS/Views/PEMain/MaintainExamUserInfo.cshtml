@@ -548,13 +548,18 @@
                 axios.post('/PEMain/InsertUserDetailInfo', {
                     model: _this.checkBoxData11
                 }).then(function (res) {
-                    console.log(res.data.Results);
-                    if (res.data.Results != '') {
-                        _this.$message.error(res.data.Results);
+                    if (res.data.Results =='已报名成功!') {
+                        _this.$message({
+                            message: res.data.Results,
+                            type: 'success'
+                        });   
                         _this.tableData = res.data.tableData;
                         _this.YListUserInfo = res.data.YListUserInfo;
                         _this.CPListUserInfo = res.data.CPListUserInfo;
-                    } 
+                    }
+                    else {
+                        _this.$message.error(res.data.Results);
+                    }                 
                 });
             },
             handleEdit(index, row) {
