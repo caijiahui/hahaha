@@ -315,25 +315,26 @@ namespace advt.CMS.Models
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
-
-                //判断模拟就不插入数据
-                if (model.VExamUserInfo.IsTest == false)
+                //根据人员,科目,ExamStatus更新分数,时间，isexam
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
+                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                 {
-                    //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
-                    if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
+                    foreach (var item in ListExamUserDetailInfo)
                     {
-                        foreach (var item in ListExamUserDetailInfo)
+                        item.ExamScore = score;
+                        item.UserExamDate = DateTime.Now;
+                        if (model.VExamUserInfo.IsTest == true)
                         {
-                            item.ExamScore = score;
-                            item.UserExamDate = DateTime.Now;
-                            item.IsExam = "true";
-                            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                            item.IsExam = "false";
                         }
-
+                        else
+                        {
+                            item.IsExam = "true";
+                        }
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
-                }
                    
+                }
 
             }
         }

@@ -9,14 +9,14 @@ namespace advt.CMS.Models.ExamModel
 {
     public class ExamRuleModel
     {
-        public ExamRule VExamRule { get; set; }        
+        public ExamRule VExamRule { get; set; }
         public List<ExamRuleTopicType> RuleGrList { get; set; }
         public List<ExamRuleTopicType> RuleTopic { get; set; }
         public List<ExamRuleTopicType> RuleTopicList { get; set; }
         public List<ExamRule> ListExamRule { get; set; }
 
         public TopicInfo TopicInfoList { get; set; }
-        public List<TopicInfo> ListTopic{ get; set; }
+        public List<TopicInfo> ListTopic { get; set; }
         public List<ExamBank> ListTopicInfo { get; set; }
         public List<ExamSubject> ListExamSubject { get; set; }
         public ExamRuleTopicType topictype { get; set; }
@@ -37,12 +37,12 @@ namespace advt.CMS.Models.ExamModel
             ListExamRuleInfo = new List<ExamRule>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
-       
+
 
         public string SaveRuleInfo(string username)
         {
             var Result = "";
-            if (VExamRule.ID!=0)
+            if (VExamRule.ID != 0)
             {
                 ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { RuleName = VExamRule.RuleName });
 
@@ -71,15 +71,15 @@ namespace advt.CMS.Models.ExamModel
                     Data.ExamRule.Insert_ExamRule(VExamRule, null, new string[] { "ID" });
                 }
 
-               
+
             }
-            
+
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
             return Result;
         }
         public void SaveTopicInfo(int id)
         {
-            ExamRuleTopicType type= new ExamRuleTopicType();
+            ExamRuleTopicType type = new ExamRuleTopicType();
             if (RuleGrList != null)
             {
                 foreach (var item in RuleGrList)
@@ -101,8 +101,8 @@ namespace advt.CMS.Models.ExamModel
                         var ee = Data.ExamRuleTopicType.Get_ExamRuleInfo(item.TopicLevel, item.TopicMajor, type.TopicType, id);
                         type.TopicLevel = item.TopicLevel;
                         type.TopicMajor = item.TopicMajor;
-                        type.RuleId = id;                        
-                       
+                        type.RuleId = id;
+
                         if (ee.Count() > 0)
                         {
                             type.ID = item.ID;
@@ -117,7 +117,7 @@ namespace advt.CMS.Models.ExamModel
                             Data.ExamRuleTopicType.Insert_ExamRuleTopicType(type, null, new string[] { "ID" });
 
                         }
-                        
+
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetSubjectList(string model)
         {
-            ListExamSubject= Data.ExamRule.GetSubjectList(model);
+            ListExamSubject = Data.ExamRule.GetSubjectList(model);
             ListTopicInfo = Data.ExamRule.GetTopicInfo(model);
 
 
@@ -149,18 +149,18 @@ namespace advt.CMS.Models.ExamModel
                 }
                 else if (item.TopicType == "1")
                 {
-                    type ="多选";
+                    type = "多选";
                 }
                 ss++;
                 ListTopic.Add(new TopicInfo
                 {
-                    ExamType=item.ExamType,
-                    TopicMajor=item.TopicMajor,
-                    TopicLevel=item.TopicLevel,
-                    TopicNum="0",
-                    TopicScore=0,
-                    TopicType= type,
-                    ID=ss
+                    ExamType = item.ExamType,
+                    TopicMajor = item.TopicMajor,
+                    TopicLevel = item.TopicLevel,
+                    TopicNum = "0",
+                    TopicScore = 0,
+                    TopicType = type,
+                    ID = ss
                 });
             }
 
@@ -200,12 +200,12 @@ namespace advt.CMS.Models.ExamModel
 
         }
 
-        
+
         public void GetRuleType(string model)
         {
             if (model != null)
             {
-                RuleTopic  = Data.ExamRuleTopicType.Get_ExamRuleTopic(model);
+                RuleTopic = Data.ExamRuleTopicType.Get_ExamRuleTopic(model);
                 if (RuleTopic.Count() > 0)
                 {
                     foreach (var item in RuleTopic)
@@ -223,18 +223,19 @@ namespace advt.CMS.Models.ExamModel
                         {
                             type = "多选";
                         }
-                        RuleTopicList.Add(new ExamRuleTopicType {
+                        RuleTopicList.Add(new ExamRuleTopicType
+                        {
                             TopicMajor = item.TopicMajor,
                             TopicLevel = item.TopicLevel,
                             TopicNum = item.TopicNum,
-                            TopicScore =item.TopicScore,
+                            TopicScore = item.TopicScore,
                             TopicType = type,
                             ID = item.ID,
-                            RuleId=item.RuleId
+                            RuleId = item.RuleId
                         });
                     }
                 }
-               
+
             }
         }
     }
