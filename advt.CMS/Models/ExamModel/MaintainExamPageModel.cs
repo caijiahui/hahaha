@@ -37,6 +37,11 @@ namespace advt.CMS.Models.ExamModel
                 DateTime date = Convert.ToDateTime(ExamDate);
                 ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserInfo(date);
             }
+             if (string.IsNullOrEmpty(UserCode) &&string.IsNullOrEmpty(SubjectName)&&string.IsNullOrEmpty(ExamDate))
+            {
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
+            }
+
             if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
             {
                 foreach (var item in ListExamUserDetailInfo)
@@ -50,7 +55,7 @@ namespace advt.CMS.Models.ExamModel
 
                     ////技能等级通过后可晋升的新职等
                     //var NewRankName = "";
-
+                    
                     ////晋升加给
                     //var PromotionBonus = "";
                     //var Bonus = Data.RankInfo.get(new { SkillName = SkillName });
@@ -74,7 +79,6 @@ namespace advt.CMS.Models.ExamModel
                         PracticeScore = item.PracticeScore,
                         PracticeDate = DateTime.Now,//最近一次实践成绩通过时间
                         FullScale = "是"
-
                     });
                 }
             }
