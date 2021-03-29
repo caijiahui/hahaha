@@ -188,7 +188,13 @@
                             _this.seconds = 59
                             _this.minutes -= 1
                         } else if (_this.minutes === 0 && _this.seconds === 0) {
-                            _this.seconds = 0
+                            _this.seconds = 0;
+                            this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    window.location.href = "/PEMain/MaintainExam";
+                                }
+                            });
                             window.clearInterval(time)
 
                         } else {
@@ -241,10 +247,7 @@
                                 _this.examList.LselectItem = _this.examList.selectItem;
                             }
                             console.log(_this.examList.selectItem, 343);
-                            console.log(_this.examList.type,344);
-                            //判断是否是模拟
-                            _this.VExamUserInfo.IsTest = true;
-     
+                            console.log(_this.examList.type,344);     
                             if (_this.VExamUserInfo.IsTest) {
                                 //单选多选判断对错,填空直接往下
                                 if (_this.examList.type == 1 || _this.examList.type == 0) {

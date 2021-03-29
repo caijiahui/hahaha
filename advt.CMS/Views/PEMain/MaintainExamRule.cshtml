@@ -304,7 +304,7 @@
                             _this.RuleGrList.forEach(function (item, index) {
                                 numscore += item.TopicNum * item.TopicScore;
                             })
-                            if (numscore == 100) {
+                            if (numscore = _this.VExamRule.TotalScore) {
                                 var objs = {};
                                 objs.VExamRule = _this.VExamRule;
                                 objs.RuleGrList = _this.RuleGrList;
@@ -321,7 +321,7 @@
                                 });
                                 _this.dialogFormVisible = false;
                             }
-                            else { _this.$alert('填入的题数分数之和不可超过100分,请检查') }
+                            else { _this.$alert('题目类型总分不等于设定的总分，请检查') }
                           
                         } else {
                             console.log('error submit!!');

@@ -923,12 +923,6 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult MaintainSubset()
-        {
-            MaintainExamModel model = new MaintainExamModel();
-            return View(model);
-        }
-        [MyAuthorize]
         public ActionResult MaintainScore()
         {
             MaintainExamModel model = new MaintainExamModel();
@@ -963,6 +957,12 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             model.GetListUsersubject(username);
             return Json(new { ListUsersubject = model.ListUsersubject, username,model.usercode}, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult MaintainSubset()
+        {
+            var model = new ExamUserSubject();
+            return View(model);
         }
 
 

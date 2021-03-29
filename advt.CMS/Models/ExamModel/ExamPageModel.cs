@@ -324,7 +324,14 @@ namespace advt.CMS.Models
                     {
                         item.ExamScore = score;
                         item.UserExamDate = DateTime.Now;
-                        item.IsExam = "true";
+                        if (model.VExamUserInfo.IsTest == true)
+                        {
+                            item.IsExam = "false";
+                        }
+                        else
+                        {
+                            item.IsExam = "true";
+                        }
                         Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
                    

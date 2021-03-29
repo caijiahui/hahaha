@@ -26,7 +26,7 @@ namespace advt.CMS.Models.ExamModel
             {
                 usercode = usersheet.UserCode;
             }
-            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop =false, UserCode = usercode });
+            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop =false, UserCode = usercode, IsExam ="false"});
             var group = data.GroupBy(p => new { p.TypeName }).Select(a => new { ExamType = a.Key.TypeName });
             foreach (var item in group)
             {

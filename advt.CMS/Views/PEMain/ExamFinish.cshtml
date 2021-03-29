@@ -20,7 +20,7 @@
             </div>
             <div class="content">
                 <div>
-                    <div v-if="VExamScore.IsQuestion=='false'">
+                    <div v-if="VExamScore.IsQuestion==false">
                         <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
                         <div class="grade-show">
                             <div>
@@ -138,6 +138,7 @@
                         if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                             _this.isSuccess = true;
                         }
+                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
                         _this.examList = responese.data.examList;
                       
                     })

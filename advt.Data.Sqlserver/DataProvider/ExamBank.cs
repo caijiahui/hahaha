@@ -63,7 +63,20 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = new List<DbParameter>();
             commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
             commandText.AppendLine("   FROM [ExamBank]");
-            commandText.AppendLine("where  TopicType=@TopicType and TopicMajor=@TopicMajor and TopicLevel =@TopicLevel and ExamSubject like N'%"+ ExamSubject +"%' ");
+            var texts = "where TopicType=@TopicType";
+            if (!string.IsNullOrEmpty(TopicLevel))
+            {
+                texts += " and TopicLevel=@TopicLevel";
+            }
+            else if (!string.IsNullOrEmpty(TopicMajor))
+            {
+                texts += " and TopicMajor=@TopicMajor";
+            }
+            else if (!string.IsNullOrEmpty(ExamSubject))
+            {
+                texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
+            }
+            commandText.AppendLine(texts);
             l_parms.Add(SqlHelper.MakeInParam("@TopicType", (DbType)SqlDbType.NVarChar, 500, TopicType));
             l_parms.Add(SqlHelper.MakeInParam("@TopicMajor", (DbType)SqlDbType.NVarChar, 500, TopicMajor));
             l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
