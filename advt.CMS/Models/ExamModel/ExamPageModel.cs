@@ -183,7 +183,7 @@ namespace advt.CMS.Models
                             id = item.ID.ToString(),
                             type = item.TopicType,//题目类型
                             proName = item.TopicTitle,//题目标题
-                            ansowerList = answ,//选项内容List
+                            ansowerList = answ.OrderBy(y => Guid.NewGuid()).ToList(),//选项内容List
                             index = index,//下标
                             RightKey = item.RightKey,//正确答案
                             Remark = item.Remark,//答案解析
