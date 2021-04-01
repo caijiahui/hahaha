@@ -312,10 +312,10 @@ namespace advt.Web.Controllers
             return View();
         }
         [MyAuthorize]
-        public ActionResult GetBankInfo(string ExamType)
+        public ActionResult GetBankInfo(string ExamType,string ExamSubject)
         {
             var model = new ExamBankModel();
-            model.GetBankInfo(ExamType);
+            model.GetBankInfo(ExamType, ExamSubject);
             return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
