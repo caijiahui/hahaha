@@ -17,6 +17,7 @@ namespace advt.Entity
 
         public string TopicNum { get; set; }
 
+        public int Bcount { get; set; }
         public decimal? TopicScore { get; set; }
 
         public int? RuleId { get; set; }

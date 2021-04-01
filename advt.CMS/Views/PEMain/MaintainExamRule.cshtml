@@ -72,7 +72,7 @@
                         <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
                             <el-option v-for="item in ListTopicInfo"
                                        :key="item.ID"
-                                       :label="item.TopicMajor+item.TopicLevel+item.TopicType"
+                                       :label="item.TopicMajor+item.TopicLevel+item.TopicType+item.Bcount"
                                        :value="item.ID">
                             </el-option>
                         </el-select>
@@ -158,6 +158,7 @@
                 topicratioProps: { multiple: true, label: 'Text', },
                 tableData: [],
                 dialogFormVisible: false,
+                iscount: false,
                 ListTypeName: [],
                 VExamRule: [],
                 VRuleGrList: [],
@@ -297,31 +298,49 @@
                 },                  
                 handleSave: function () {
                     var _this = this;
-                    _this.$refs.dialogForm.validate(function (valid) {
-                        if (valid) {         
-                            //判读题数分数之和
-                            var numscore = 0;
-                            _this.RuleGrList.forEach(function (item, index) {
-                                numscore += item.TopicNum * item.TopicScore;
-                            })
-                            if (numscore = _this.VExamRule.TotalScore) {
-                                var objs = {};
-                                objs.VExamRule = _this.VExamRule;
-                                objs.RuleGrList = _this.RuleGrList;
-                                axios.post('/PEMain/SaveRuleInfo', {
-                                    model: objs,
-                                }).then(function (res) {
-                                    if (res.data.Result != '') {
-                                        _this.$message.error(res.data.Result);
-                                    } else {
-                                        _this.tableData = res.data.tableData;
-                                        _this.RuleGrList = res.data.RuleGrList;
-                                        _this.setPaginations();
+                    _this.$refs.dialogForm.validate(function (valid) {                       
+                        if (valid) {
+                            _this.iscount = false;
+                            //题数配比                             
+                            _this.ListTopicInfo.forEach(item => {
+                                _this.RuleGrList.forEach(o => {
+                                    if (item.TopicMajor == o.TopicMajor && item.TopicLevel == o.TopicLevel && item.TopicType == o.TopicType) {                                     
+                                        if (o.TopicNum > item.Bcount) {
+                                            _this.iscount = true;
+                                            _this.$alert('题目类型设置的题数不可大于题库对应下的题数!')
+                                        }
+                                       
                                     }
-                                });
-                                _this.dialogFormVisible = false;
-                            }
-                            else { _this.$alert('题目类型总分不等于设定的总分，请检查') }
+                                })
+                            })
+
+                            if (_this.iscount == false) {
+                                //判读题数分数之和
+                                var numscore = 0;
+                                _this.RuleGrList.forEach(function (item, index) {
+                                    numscore += item.TopicNum * item.TopicScore;
+                                })
+                                if (numscore = _this.VExamRule.TotalScore) {
+                                    var objs = {};
+                                    objs.VExamRule = _this.VExamRule;
+                                    objs.RuleGrList = _this.RuleGrList;
+                                    axios.post('/PEMain/SaveRuleInfo', {
+                                        model: objs,
+                                    }).then(function (res) {
+                                        if (res.data.Result != '') {
+                                            _this.$message.error(res.data.Result);
+                                        } else {
+                                            _this.tableData = res.data.tableData;
+                                            _this.RuleGrList = res.data.RuleGrList;
+                                            _this.setPaginations();
+                                        }
+                                    });
+                                    _this.dialogFormVisible = false;
+                                    _this.RuleGrList = [];
+                                    _this.ListTopicInfo = [];
+                                }
+                                else { _this.$alert('题目类型总分不等于设定的总分，请检查') } }
+                            
                           
                         } else {
                             console.log('error submit!!');

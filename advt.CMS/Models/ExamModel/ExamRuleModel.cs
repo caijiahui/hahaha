@@ -191,6 +191,7 @@ namespace advt.CMS.Models.ExamModel
                     ExamType = item.ExamType,
                     TopicMajor = item.TopicMajor,
                     TopicLevel = item.TopicLevel,
+                    Bcount=item.Bcount,
                     TopicNum = "0",
                     TopicScore = 0,
                     TopicType = type,
@@ -229,6 +230,7 @@ namespace advt.CMS.Models.ExamModel
                             TopicLevel = item.TopicLevel,
                             TopicNum = item.TopicNum,
                             TopicScore = item.TopicScore,
+                            Bcount=item.Bcount,
                             TopicType = type,
                             ID = item.ID,
                             RuleId = item.RuleId
@@ -245,11 +247,13 @@ namespace advt.CMS.Models.ExamModel
         public string TopicMajor { get; set; }//题目类型
         public string TopicLevel { get; set; }//题目等级
         public string TopicType { get; set; }
+        public int Bcount { get; set; }
         public string TopicNum { get; set; }
 
         public decimal? TopicScore { get; set; }
 
         public int? RuleId { get; set; }
         public int ID { get; set; }
+      
     }
 }

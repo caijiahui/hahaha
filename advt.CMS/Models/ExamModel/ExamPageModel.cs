@@ -282,8 +282,7 @@ namespace advt.CMS.Models
                   
                 }
                 else
-                {  //判断是不是问券调查
-
+                {  
                     sc.TotalScore = model.VExamUserInfo.TotalScore;
                     foreach (var item in model.VExamUserInfo.LExamViews)
                     {
