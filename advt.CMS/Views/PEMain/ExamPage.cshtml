@@ -206,60 +206,46 @@
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
                     return flag
                 },
-                submitForm: function (formName) {
+                submitForm: function (formName, ii) {
+                    
                     var _this = this;
+                    
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             _this.examList.LselectItem = [];
+                            console.log(_this.examList.selectItem, 1234);
+                            console.log(_this.examList.ansowerList, 456);
                             if (_this.examList.type == 1) {
                                 for (var i = 0; i < _this.examList.selectItem.length; i++) {
-                                    if (_this.examList.selectItem[i] == '0') {
-                                        _this.examList.LselectItem.push('A')
-                                    } else if (_this.examList.selectItem[i] == '1') {
-                                        _this.examList.LselectItem.push('B')
-                                    } else if (_this.examList.selectItem[i] == '2') {
-                                        _this.examList.LselectItem.push('C')
-                                    } else if (_this.examList.selectItem[i] == '3') {
-                                        _this.examList.LselectItem.push('D')
-                                    } else if (_this.examList.selectItem[i] == '4') {
-                                        _this.examList.LselectItem.push('E')
-                                    } else if (_this.examList.selectItem[i] == '5') {
-                                        _this.examList.LselectItem.push('F')
-                                    }
+                                    var c = _this.examList.selectItem[i];
+                                    _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
                                 }
                             }
                             else if (_this.examList.type == 0) {
-                                if (_this.examList.selectItem == 0) {
-                                    _this.examList.LselectItem.push('A')
-                                } else if (_this.examList.selectItem == 1) {
-                                    _this.examList.LselectItem.push('B')
-                                } else if (_this.examList.selectItem == 2) {
-                                    _this.examList.LselectItem.push('C')
-                                } else if (_this.examList.selectItem == 3) {
-                                    _this.examList.LselectItem.push('D')
-                                } else if (_this.examList.selectItem == 4) {
-                                    _this.examList.LselectItem.push('E')
-                                } else if (_this.examList.selectItem == 5) {
-                                    _this.examList.LselectItem.push('F')
-                                }
+                                var c = _this.examList.selectItem;
+                                _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
                             }
                             else if (_this.examList.type == 2) {
                                 _this.examList.LselectItem = _this.examList.selectItem;
                             }
-                            console.log(_this.examList.selectItem, 343);
-                            console.log(_this.examList.type,344);     
+
+                            console.log(_this.examList.LselectItem, 343);
+                            console.log(_this.examList.LselectItem.sort().toString(), 344);
+                            console.log(_this.examList.RightKey.sort().toString(), 345);
                             if (_this.VExamUserInfo.IsTest) {
                                 //单选多选判断对错,填空直接往下
                                 if (_this.examList.type == 1 || _this.examList.type == 0) {
+                                    var next = "";
                                     if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
-                                        console.log(_this.examList.LselectItem.sort().toString(), 1111)
-                                        console.log(_this.examList.RightKey.sort().toString(), 222)
-                                        console.log("答案不正确", 333);
-                                        //_this.$alert('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
-                                        //    dangerouslyUseHTMLString: true
-                                        //});
-                                        //return;
-                                        _this.$confirm('答案解析:<br>' + _this.examList.Remark, '正确答案:' + _this.examList.RightKey.sort().toString(), {
+                                        for (var i = 0; i < _this.examList.ansowerList.length; i++) {
+                                            var cc = _this.examList.ansowerList[i].ansowerflag;
+
+                                            if (_this.examList.RightKey.indexOf(cc)!=-1) {
+                                                console.log(cc,2322);
+                                                next += _this.examList.ansowerList[i].ansower;
+                                            }
+                                        }
+                                        _this.$confirm('答案解析:<br>' + _this.examList.Remark, '正确答案:' + next, {
                                             confirmButtonText: '下一题',
                                             cancelButtonText: '取消',
                                         }).then(() => {

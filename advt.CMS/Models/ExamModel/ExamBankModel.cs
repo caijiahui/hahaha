@@ -17,10 +17,12 @@ namespace advt.CMS.Models.ExamModel
         public ExamBank VExamBank { get; set; }
         //public List<ExamType> LExamType { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public List<KeyValuePair<string, string>> LExamSubject { get; set; }
         public List<KeyValuePair<string, string>> LTopicType { get; set; }
         public string Result { get; set; }
         public ExamBankModel() : base()
         {
+            LExamSubject = new List<KeyValuePair<string, string>>();
             LExamBank = new List<ExamBank>();
             LExamType = new List<KeyValuePair<string, string>>();
             VExamBank = new ExamBank();
@@ -126,24 +128,30 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
-        public void GetBankInfo(string ExamType)
+        public void GetBankInfo(string ExamType,string ExamSubject)
         {
-            if (!string.IsNullOrEmpty(ExamType))
+            try
             {
-                LExamBank = Data.ExamBank.Get_All_ExamBank_ExamType(ExamType);
+                if (!string.IsNullOrEmpty(ExamType))
+                {
+                    LExamBank = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(ExamType, ExamSubject);
+                }
+                else
+                {
+                    LExamBank = Data.ExamBank.Get_All_ExamBank();
+                }
+                LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+                foreach (var item in Data.ExamType.Get_All_ExamType())
+                {
+                    LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                LExamBank = Data.ExamBank.Get_All_ExamBank();
+
+                throw;
             }
-            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
-            foreach (var item in Data.ExamType.Get_All_ExamType())
-            {
-                LExamType.Add(new KeyValuePair<string, string>(item.TypeName,item.TypeName));
-            }
-            //var examtypes=
-            //LExamType = Data.ExamType.Get_All_ExamType();
-            //LExamType.Add(new ExamType { TypeName = "" });
+
         }
         public void DeleteBankInfo(int id)
         {
