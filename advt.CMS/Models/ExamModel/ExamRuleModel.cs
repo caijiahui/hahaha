@@ -44,18 +44,9 @@ namespace advt.CMS.Models.ExamModel
             var Result = "";
             if (VExamRule.ID != 0)
             {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { RuleName = VExamRule.RuleName });
-
-                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
-                {
-                    Result += VExamRule.RuleName + "此考试规则已被使用,不可更新";
-                }
-                else
-                {
-                    VExamRule.CreateUser = username;
-                    VExamRule.CreateDate = DateTime.Now;
-                    Data.ExamRule.Update_ExamRule(VExamRule, null, new string[] { "ID" });
-                }
+                VExamRule.CreateUser = username;
+                VExamRule.CreateDate = DateTime.Now;
+                Data.ExamRule.Update_ExamRule(VExamRule, null, new string[] { "ID" });
             }
             else
             {
