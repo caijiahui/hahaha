@@ -326,7 +326,7 @@ namespace advt.CMS.Models
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
-                if (VExamUserInfo.IsTest == true)
+                if (VExamUserInfo.IsTest == false)
                 { 
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
                     ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
