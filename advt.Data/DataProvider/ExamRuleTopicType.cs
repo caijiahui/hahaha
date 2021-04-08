@@ -89,7 +89,16 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleInfo(TopicLevel,TopicMajor,TopicType,id);
             return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
         }
-        
+
+        public static int DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, int RuleName)
+        {
+            return DatabaseProvider.GetInstance().DeleteRuleTopicInfo(TopicMajor, TopicLevel, TopicType, RuleName);
+        }
+        public static int DeleteRuleLeTopicInfo(string TopicMajor, string TopicType, int RuleName)
+        {
+            return DatabaseProvider.GetInstance().DeleteRuleLeTopicInfo(TopicMajor, TopicType, RuleName);
+        }
+
         #endregion
     }
 }

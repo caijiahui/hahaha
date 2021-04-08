@@ -120,6 +120,59 @@ namespace advt.CMS.Models.ExamModel
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
 
         }
+        public string DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType,string RuleName)
+        {
+            var result = "";
+            var type = "";
+            if (TopicType == "单选")
+            {
+                type = "0";
+            }
+            else if (TopicType == "问答")
+            {
+                type = "2";
+            }
+            else if (TopicType == "多选")
+            {
+                type = "1";
+            }
+            int rule = 0;
+            var ruled= Data.ExamRule.Get_All_ExamRuleInfo(RuleName);
+            if (ruled != null)
+            {
+                rule = ruled.FirstOrDefault().ID;
+            }
+            if (!string.IsNullOrEmpty(TopicLevel))
+            {
+                var ss=  Data.ExamRuleTopicType.Get_All_ExamRuleTopicType(new { TopicMajor= TopicMajor, TopicLevel= TopicLevel, TopicType=type, RuleId=rule });
+                if (ss != null && ss.Count() > 0)
+                {
+                    Data.ExamRuleTopicType.DeleteRuleTopicInfo(TopicMajor, TopicLevel, type, rule);
+                }
+                else
+                {
+                    result = "否";
+                }
+          
+            }
+            else
+            {
+                var ss = Data.ExamRuleTopicType.Get_All_ExamRuleTopicType(new { TopicMajor = TopicMajor, TopicType = type, RuleId = rule });
+                if (ss != null&&ss.Count()>0)
+                {
+                    Data.ExamRuleTopicType.DeleteRuleLeTopicInfo(TopicMajor, type, rule);
+                }
+                else
+                {
+                    result = "否";
+                }
+
+            }
+            GetRuleType(rule.ToString());
+            return result;
+        }
+
+        
         public void GetSubjectList(string model)
         {
             ListExamSubject = Data.ExamRule.GetSubjectList(model);

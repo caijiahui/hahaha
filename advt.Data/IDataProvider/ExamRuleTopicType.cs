@@ -20,7 +20,10 @@ namespace advt.Data
         int Delete_ExamRuleTopicType(int ID);
 
         IDataReader Get_ExamRuleTopic(string model);
-        IDataReader Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType, int id); 
+        IDataReader Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType, int id);
+
+        int DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, int RuleName);
+        int DeleteRuleLeTopicInfo(string TopicMajor, string TopicType, int RuleName);
         #endregion
     }
 }
