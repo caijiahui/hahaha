@@ -22,6 +22,9 @@
                 <el-select v-model="ExamSubject" placeholder="请选择考试科目">
                     <el-option v-for="item in ListSearchSubject" :key="item.Key" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                 </el-select>
+                <el-select v-model="TopicLevel" placeholder="请选择题目等级">
+                    <el-option v-for="item in ListTopicLevel" :key="item.Key" :label="item.TopicLevel" :value="item.TopicLevel"></el-option>
+                </el-select>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
                 <el-button @@click="createTopic">新增</el-button>
                 <div style="margin-bottom:20px">
@@ -49,8 +52,18 @@
                             <el-button size="small" type="primary">上传图片</el-button>
                         </el-upload>
                     </div>
-                    <div style="float:left;margin-left:20px">
-                        <el-button size="small" typeof="primary"></el-button>
+                    <div style="float:left;margin-left:20px;margin-top:30px">
+                        <a style="color:white" :href="'/PEMain/SignUpBankExcel?TypeName='+TypeName+'&ExamSubject='+ExamSubject+'&TopicLevel='+TopicLevel">
+                            <el-button size="small" type="primary">
+                                导出
+                            </el-button>
+
+                        </a>
+                    </div>
+                    <div style="float:left;margin-left:20px;margin-top:30px">
+                        <el-button size="small" type="primary" @@click="DeleteBank">
+                            删除
+                        </el-button>
                     </div>
 
 
@@ -64,6 +77,7 @@
 
     </div>
     <div style="margin-top:20px;clear:both;">
+        <el-divider content-position="left" v-model="BankRemark">{{BankRemark}}</el-divider>
         <el-table :data="allTableData.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border @@selection-change="changeFun">
             <el-table-column type="selection">
@@ -73,7 +87,7 @@
                              width="180">
             </el-table-column>
             <el-table-column label="考试科目"
-                             prop="ExamSuject" sortable
+                             prop="ExamSubject" sortable
                              width="180">
             </el-table-column>
             <el-table-column label="题目专业"
@@ -248,9 +262,12 @@
                 LExamType: [],
                 search: '',
                 TypeName: '',
-                ExamSubject:'',
+                ExamSubject: '',
+                TopicLevel: '',
+                ListTopicLevel:[],
                 ListSubjectName: [],
-                ListSearchSubject:[],
+                ListSearchSubject: [],
+                BankRemark:'',
                 dialogFormVisible: false,
                 formLabelWidth: '120px',
                 paginations: {
@@ -289,16 +306,27 @@
                 },
                 'TypeName': function (newval) {
                     var _this = this;
-                    axios.post('/PEMain/GetSubjectName', {
-                        model: newval
+                    axios.post('/PEMain/GetBankTypeSujectLevel', {
+                        typename: newval
                     }).then(response => {
                         _this.ListSearchSubject = response.data.ListSubjectName;
+                        _this.ListTopicLevel = response.data.ListTopicLevel;
+                    });
+                },
+                 'ExamSubject': function (newval) {
+                    var _this = this;
+                     axios.post('/PEMain/GetBankTypeSujectLevel', {
+                         typename: _this.TypeName,
+                         subjectname: newval
+                    }).then(response => {
+                        _this.ListSearchSubject = response.data.ListSubjectName;
+                        _this.ListTopicLevel = response.data.ListTopicLevel;
                     });
                 }
             },
             mounted: function () {
                 this.getdata();
-                this.getInfoList();
+                //this.getInfoList();
             },
             methods: {
                 changeFun(val) {
@@ -307,20 +335,38 @@
                 },
                 getdata: function () {
                     var _this = this;
-                    axios.post('/PEMain/GetBankInfo').then(function (responese) {
+                    axios.post('/PEMain/GetBankInfo', {
+
+                    }).then(function (responese) {
                         _this.allTableData = responese.data.LExamBank;
                         _this.LExamType = responese.data.LExamType;
+                        _this.BankRemark = responese.data.BankRemark;
                         _this.setPaginations();
                     })
                     
                 },
-                getInfoList() {
+                //getInfoList() {
+                //    var _this = this;
+                //    axios.post('/PEMain/GetBankInfo').then(res => {
+                //        const data = res.data.LExamBank;
+                //        _this.allTableData = data;
+                //        _this.setPaginations()
+                //    })
+                //},
+                DeleteBank() {
                     var _this = this;
-                    axios.post('/PEMain/GetBankInfo').then(res => {
-                        const data = res.data.LExamBank;
-                        _this.allTableData = data;
-                        _this.setPaginations()
-                    })
+                    axios.post('/PEMain/DeleteBankInfo', {
+                        ID: 0,
+                        TypeName: _this.TypeName,
+                        ExamSubject: _this.ExamSubject,
+                        TopicLevel: _this.TopicLevel
+                    }).then(function (res) {
+                        _this.$alert('已成功删除' + res.data.Result+"条记录", '删除信息', {
+                            confirmButtonText: '确定'
+                        });
+                        _this.allTableData = res.data.LExamBank;
+                        _this.setPaginations();
+                    });
                 },
                 setPaginations() {
                     var _this = this;
@@ -364,9 +410,12 @@
                     var _this = this;
                     axios.post('/PEMain/GetBankInfo', {
                         ExamType: _this.TypeName,
-                        ExamSubject: _this.ExamSubject
+                        ExamSubject: _this.ExamSubject,
+                        TopicLevel: _this.TopicLevel
                     }).then(function (res) {
                         _this.allTableData = res.data.LExamBank;
+                        _this.BankRemark = res.data.BankRemark;
+                        _this.setPaginations();
                     });
                     _this.dialogFormVisible = false
                 },
@@ -416,6 +465,7 @@
                 handleExcelSuccess(Result, LExamBank) {
                     var _this = this;
                     _this.allTableData = Result.LExamBank;
+                    _this.setPaginations();
                     this.$message({
                         message: Result.Result,
                         type: 'success'
@@ -436,6 +486,5 @@
             
 
         })
-
     </script>
 

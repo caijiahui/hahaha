@@ -22,9 +22,9 @@ namespace advt.Data
         {
             return Get_All_ExamBank(null);
         }
-        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Subject(string ExamType,string ExamSubject)
+        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Subject(string ExamType,string ExamSubject,string TopicLevel)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Subject(ExamType,ExamSubject);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Subject(ExamType,ExamSubject, TopicLevel);
             return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
         }
         public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Rule(string TopicType,string TopicMajor,string TopicLevel,string ExamSubject)
@@ -78,6 +78,10 @@ namespace advt.Data
         public static int Delete_ExamBank(int ID)
         {
             return DatabaseProvider.GetInstance().Delete_ExamBank(ID);
+        }
+        public static int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel)
+        {
+            return DatabaseProvider.GetInstance().Delete_ExamBank_TypeName_ExamSubject_Level(TypeName, ExamSubject, TopicLevel);
         }
         #endregion
     }
