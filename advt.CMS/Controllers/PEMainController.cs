@@ -295,7 +295,7 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             var Result= model.SaveRuleInfo(username);
             model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
-            return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleGrList}, JsonRequestBehavior.AllowGet);
+            return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleTopicList }, JsonRequestBehavior.AllowGet);
           
         }
         [MyAuthorize]
@@ -305,6 +305,17 @@ namespace advt.Web.Controllers
             models.Delete_ExamRule(model);
             return Json(new { tableData = models.ListExamRule }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, string RuleName)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            var Result = models.DeleteRuleTopicInfo(TopicMajor, TopicLevel, TopicType, RuleName);
+            return Json(new { Result, RuleGrList = models.RuleTopicList }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
         [MyAuthorize]
         public ActionResult MaintainExamBank()
         {

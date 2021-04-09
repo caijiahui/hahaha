@@ -27,6 +27,7 @@ namespace advt.CMS.Models
         public string IsTest { get; set; }
         public string RuleName { get; set; }
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
+        public string Remark { get; set; }
         public ExamPageModel() : base()
         {
             examList = new ExamView();
@@ -271,8 +272,7 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 //+科目
                 sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
-               
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;               
 
                 int sd = 0;
                 int score = 0;
@@ -283,8 +283,7 @@ namespace advt.CMS.Models
                   
                 }
                 else
-                {  //判断是不是问券调查
-
+                {  
                     sc.TotalScore = model.VExamUserInfo.TotalScore;
                     foreach (var item in model.VExamUserInfo.LExamViews)
                     {
@@ -302,6 +301,17 @@ namespace advt.CMS.Models
                                 //答对分数CorrectScore
                                 score += item.TopicScore;
                             }
+                            else
+                            {
+                                foreach (var ii in item.RightKey)
+                                {
+                                    if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
+                                    {
+                                        Remark += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
+                                    }
+                                }
+
+                            }
                         }
 
                     }
@@ -316,34 +326,42 @@ namespace advt.CMS.Models
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
-                //根据人员,科目,ExamStatus更新分数,时间，isexam
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
-                if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
-                {
-                    foreach (var item in ListExamUserDetailInfo)
+                if (model.VExamUserInfo.IsTest == false)
+                { 
+                    //根据人员,科目,ExamStatus更新分数,时间，isexam
+                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
+                    if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                     {
-                        item.ExamScore = score;
-                        item.UserExamDate = DateTime.Now;
-                        if (model.VExamUserInfo.IsTest == true)
+                        foreach (var item in ListExamUserDetailInfo)
                         {
-                            item.IsExam = "false";
+                            item.ExamScore = score;
+                            item.UserExamDate = DateTime.Now;
+                            if (model.VExamUserInfo.IsTest == true)
+                            {
+                                item.IsExam = "false";
+                            }
+                            else
+                            {
+                                item.IsExam = "true";
+                            }
+                            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                         }
-                        else
-                        {
-                            item.IsExam = "true";
-                        }
-                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+
                     }
-                   
                 }
+                   
 
             }
         }
         public void InsertRecoredData(ExamPageModel model)
         {
             var ee = Data.ExamScore.Get_All_ExamScore().Max(x=>x.ExamID);
+            
+            
             foreach (var item in model.VExamUserInfo.LExamViews)
             {
+                var RightMeno = string.Empty;
+                var IsRight = false;
                 ExamRecord record = new ExamRecord();
 
                 record.ExamID = ee.ToString();
@@ -356,14 +374,33 @@ namespace advt.CMS.Models
                 record.TopicNum = Convert.ToInt32(item.TopicScore);
                 record.Type = item.type;
                 record.Remark = item.Remark;
-                if (item.LselectItem!=null)
+                if (item.selectItem != null)
                 {
-                    foreach (var ss in item.LselectItem)
+                    foreach (var ss in item.selectItem)
                     {
+                        var sr = "";
+                        if (ss =="0")
+                        {
+                            sr = "A";
+                        }
+                        if (ss == "1")
+                        {
+                            sr = "B";
+                        }
+                        if (ss== "2")
+                        {
+                            sr = "C";
+                        }
+                        if (ss== "3")
+                        {
+                            sr = "D";
+                        }
+
                         //选择的答案
-                        record.WriteAnsower += ss + ';';
+                        record.WriteAnsower += sr + ';';
                     }
                 }
+               
                 if (item.RightKey.Count() > 0)
                 {
                     foreach (var sr in item.RightKey)
@@ -372,42 +409,62 @@ namespace advt.CMS.Models
                         record.CorrectAnsower += sr + ';';
                     }
                 }
-                if (item.ansowerList!=null&&item.ansowerList.Count()>0)
+                var sss = item.RightKey.OrderBy(x => x).ToArray();
+                if (item.LselectItem != null)
                 {
-                    foreach (var items in item.ansowerList)
+                    var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                    //答错的情况把正确答案捞出
+                    if (!Enumerable.SequenceEqual(sss, sl))
                     {
-                        if (items.ansowerflag == "A")
+                        foreach (var ii in item.RightKey)
                         {
-                            record.OptionA = items.ansower;
-                            record.OptionAPicNum = items.ansowerpic;
-                        }
-                        if (items.ansowerflag == "B")
-                        {
-                            record.OptionB = items.ansower;
-                            record.OptionBPicNum = items.ansowerpic;
-                        }
-                        if (items.ansowerflag == "C")
-                        {
-                            record.OptionC = items.ansower;
-                            record.OptionCPicNum = items.ansowerpic;
-                        }
-                        if (items.ansowerflag == "D")
-                        {
-                            record.OptionD = items.ansower;
-                            record.OptionDPicNum = items.ansowerpic;
-                        }
-                        if (items.ansowerflag == "E")
-                        {
-                            record.OptionE = items.ansower;
-                            record.OptionEPicNum = items.ansowerpic;
-                        }
-                        if (items.ansowerflag == "F")
-                        {
-                            record.OptionF = items.ansower;
-                            record.OptionFPicNum = items.ansowerpic;
+                            if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
+                            {
+                                RightMeno += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
+                            }
                         }
                     }
+                    if (string.IsNullOrEmpty(RightMeno))
+                    {
+                        IsRight = true;
+                    }
                 }
+                if (item.ansowerList!=null&&item.ansowerList.Count()>0)
+                {
+                    for (int i = 0; i < item.ansowerList.Count();)
+                    {
+                         if (item.ansowerList[0]!=null)
+                        {
+                            record.OptionA = item.ansowerList[0].ansower;
+                            record.OptionAPicNum = item.ansowerList[0].ansowerpic;                        
+                        }
+
+                        if (item.ansowerList[1] != null)
+                        {
+                            record.OptionB = item.ansowerList[1].ansower;
+                            record.OptionBPicNum = item.ansowerList[1].ansowerpic;
+                          
+                        }
+                        if (item.ansowerList[2] != null)
+                        {
+                            record.OptionC = item.ansowerList[2].ansower;
+                            record.OptionCPicNum = item.ansowerList[2].ansowerpic;
+                           
+                        }
+                        if (item.ansowerList[3] != null)
+                        {
+                            record.OptionD = item.ansowerList[3].ansower;
+                            record.OptionDPicNum = item.ansowerList[3].ansowerpic;
+                           
+                        }
+                       
+                        i++;
+                    }
+                   
+                }
+
+                record.IsRight = IsRight;
+                record.DaRemark = RightMeno;
                 record.CreateUser = model.VExamUserInfo.UserName;
                 record.CreateDate = DateTime.Now;
                 Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });

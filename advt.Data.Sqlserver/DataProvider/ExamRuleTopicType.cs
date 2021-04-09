@@ -92,7 +92,31 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@id", (DbType)SqlDbType.NVarChar, 150, id));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-        
+
+        public int DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, int RuleName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" delete from ExamRuleTopicType where TopicMajor=@TopicMajor and TopicLevel=@TopicLevel and TopicType=@TopicType and RuleId=@RuleName");
+          
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@TopicMajor", (DbType)SqlDbType.NVarChar, 150, TopicMajor));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 150, TopicLevel));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicType", (DbType)SqlDbType.NVarChar, 150, TopicType));
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.Int, 4, RuleName));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public int DeleteRuleLeTopicInfo(string TopicMajor, string TopicType, int RuleName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("delete from ExamRuleTopicType where TopicMajor=@TopicMajor and TopicType=@TopicType and RuleId=@RuleName");
+           
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@TopicMajor", (DbType)SqlDbType.NVarChar, 150, TopicMajor));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicType", (DbType)SqlDbType.NVarChar, 150, TopicType));
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.Int, 4, RuleName));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+
         #endregion
 
 

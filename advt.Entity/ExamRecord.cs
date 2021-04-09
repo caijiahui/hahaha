@@ -19,27 +19,29 @@ namespace advt.Entity
         public string TopicTitlePicNum { get; set; }
 
         public string OptionA { get; set; }
+      
 
         public string OptionAPicNum { get; set; }
 
         public string OptionB { get; set; }
+     
 
         public string OptionBPicNum { get; set; }
 
         public string OptionC { get; set; }
-
+       
         public string OptionCPicNum { get; set; }
 
         public string OptionD { get; set; }
-
+     
         public string OptionDPicNum { get; set; }
 
         public string OptionE { get; set; }
-
+      
         public string OptionEPicNum { get; set; }
 
         public string OptionF { get; set; }
-
+      
         public string OptionFPicNum { get; set; }
 
         public DateTime? CreateDate { get; set; }
@@ -53,6 +55,8 @@ namespace advt.Entity
         public string Type { get; set; }
 
         public string Remark { get; set; }
+        public string DaRemark { get; set; }
+        public bool IsRight { get; set; }
         #endregion
     }
 }

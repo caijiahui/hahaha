@@ -256,8 +256,9 @@
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
-                                            console.log(_this.examList.selectItem, 345);
+                                            console.log(_this.VExamUserInfo,273333)
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+
                                                 obj.examList = _this.examList;
                                                 obj.ListBankView = _this.ListBankView;
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
@@ -269,7 +270,9 @@
                                                 window.location.href = "/PEMain/ExamFinish";
 
                                             } else {
+
                                                 obj.PreNext = "Next";
+                                                console.log(290);
                                                 axios.post('/PEMain/NextTopic', {
                                                     model: obj
                                                 }).then(function (res) {
@@ -335,7 +338,6 @@
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
-                                            console.log(_this.examList.selectItem, 345);
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
                                                 obj.examList = _this.examList;
                                                 obj.ListBankView = _this.ListBankView;
@@ -391,7 +393,6 @@
                                 obj.ListBankView = _this.ListBankView;
                                 obj.VExamUserInfo = _this.VExamUserInfo;
                                 obj.LselectItem = _this.LselectItem;
-                                console.log(_this.examList.selectItem, 345);
                                 if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
                                     obj.examList = _this.examList;
                                     obj.ListBankView = _this.ListBankView;
@@ -527,8 +528,7 @@
 
                             _this.total = responese.data.total;
                             _this.nowItem = responese.data.nowItem;
-                            _this.ListBankView = responese.data.ListBankView
-                            console.log(responese.model);
+                            _this.ListBankView = responese.data.ListBankView;
                         })
                     }
                     else {

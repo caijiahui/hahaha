@@ -63,12 +63,12 @@ namespace advt.CMS.Models
                 {
                     var output = new string[] { };
                     var list= new string[] { };
-                    bool isright = false;
+                  
                     var option = "";
-                    if (item.CorrectAnsower == item.WriteAnsower)
-                    {
-                        isright = true;
-                    }
+                    //if (item.CorrectAnsower == item.HideAnsower)
+                    //{
+                    //    isright = true;
+                    //}
                     List<LAnsower> answ = new List<LAnsower>();
                     if (item.OptionA != null||item.OptionAPicNum!=null)
                     {
@@ -205,7 +205,7 @@ namespace advt.CMS.Models
                         TopicTitle = item.TopicTitle,
                         TopicNum = item.TopicNum,
                         ansowerList= answ,
-                        isright= isright,
+                        isright= item.IsRight,
                         Type=item.Type,
                         selectItem=output,
                         selectOption=option,
@@ -213,7 +213,8 @@ namespace advt.CMS.Models
                         WriteItem=item.WriteAnsower,
                         TopicTitlePicNum=item.TopicTitlePicNum,
                         Remark=item.Remark,
-                        TopicTitlePic=item.TopicTitlePicNum
+                        TopicTitlePic=item.TopicTitlePicNum,
+                        DeRemark=item.DaRemark
                     });
                 }
             }
@@ -265,6 +266,7 @@ namespace advt.CMS.Models
         public string WriteItem { get; set; }
         public string Remark { get; set; }
         public string TopicTitlePic { get; set; }
+        public string DeRemark { get; set; }
     }
    
 
