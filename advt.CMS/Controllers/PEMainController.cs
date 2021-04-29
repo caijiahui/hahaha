@@ -322,12 +322,18 @@ namespace advt.Web.Controllers
             var model = new ExamBankModel();
             return View();
         }
+        public ActionResult GetBankTypeSujectLevel(string typename, string subjectname)
+        {
+            ExamBankModel models = new ExamBankModel();
+            models.GetSubjectList(typename,subjectname);
+            return Json(new { ListSubjectName = models.ListExamSubject, ListTopicLevel = models.ListTopicLevel }, JsonRequestBehavior.AllowGet);
+        }
         [MyAuthorize]
-        public ActionResult GetBankInfo(string ExamType,string ExamSubject)
+        public ActionResult GetBankInfo(string ExamType,string ExamSubject,string TopicLavel)
         {
             var model = new ExamBankModel();
-            model.GetBankInfo(ExamType, ExamSubject);
-            return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType }, JsonRequestBehavior.AllowGet);
+            model.GetBankInfo(ExamType, ExamSubject, TopicLavel);
+            return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType, BankRemark=model.BankRemark }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult GetTopic(int ID)
@@ -337,11 +343,11 @@ namespace advt.Web.Controllers
             return Json(new { VExamBank = model.VExamBank}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult DeleteBankInfo(int ID)
+        public ActionResult DeleteBankInfo(int ID,string TypeName,string ExamSubject,string TopicLevel)
         {
             var model = new ExamBankModel();
-            model.DeleteBankInfo(ID);
-            return Json(new { Result="Pass",model.LExamBank}, JsonRequestBehavior.AllowGet);
+            var count=model.DeleteBankInfo(ID,TypeName,ExamSubject,TopicLevel);
+            return Json(new { Result= count, model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
@@ -351,6 +357,15 @@ namespace advt.Web.Controllers
             model.SaveBankInfo(username);
             return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
+        public FileResult SignUpBankExcel(string TypeName, string ExamSubject,string TopicLevel)
+        {
+            var model = new ExamBankModel();
+           var ms= model.SignUpBank(TypeName, ExamSubject, TopicLevel);
+            return File(ms, "application/vnd.ms-excel", TypeName + ExamSubject + "题库" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+        }
+
+
         //Excel上传题库
         public JsonResult Upload_TEL_MASTER(HttpPostedFileBase file)
         {
@@ -925,6 +940,7 @@ namespace advt.Web.Controllers
             }
 
         }
+
 
 
         [MyAuthorize]

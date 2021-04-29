@@ -83,7 +83,7 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-        public IDataReader Get_All_ExamBank_ExamType_Subject(string ExamType, string ExamSubject)
+        public IDataReader Get_All_ExamBank_ExamType_Subject(string ExamType, string ExamSubject,string TopicLevel)
         {
             StringBuilder commandText = new StringBuilder();
             List<DbParameter> l_parms = new List<DbParameter>();
@@ -94,8 +94,13 @@ namespace advt.Data.SqlServer
             {
                 texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
             }
+            if (!string.IsNullOrEmpty(TopicLevel))
+            {
+                texts += " and TopicLevel =@TopicLevel ";
+            }
             commandText.AppendLine(texts);
             l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 500, ExamType));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
             l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
@@ -132,6 +137,27 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" DELETE FROM [ExamBank]");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            var texts = " where ExamType=@ExamType ";
+            if (!string.IsNullOrEmpty(ExamSubject))
+            {
+                texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
+            }
+            if (!string.IsNullOrEmpty(TopicLevel))
+            {
+                texts += " and TopicLevel =@TopicLevel ";
+            }
+            commandText.AppendLine(texts);
+            l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 500, TypeName));
+            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
+            l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        
         #endregion
 
 
