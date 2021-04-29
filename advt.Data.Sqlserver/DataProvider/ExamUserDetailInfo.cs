@@ -103,7 +103,7 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_ExamUserInfo(DateTime date)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select *  from ExamUserDetailInfo where convert(char(10), UserExamDate,120)=@date");
+            commandText.AppendLine(" select *  from ExamUserDetailInfo where convert(char(10), UserExamDate,120)=@date and IsExam='true'");
             List<DbParameter> l_parms = new List<DbParameter>();
             l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.DateTime, 150, date));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());

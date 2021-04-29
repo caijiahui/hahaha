@@ -111,6 +111,7 @@
                                         <el-menu-item index="1-7" @@click="OpenExamType('Director')">主管审核</el-menu-item>
                                         <el-menu-item index="1-8" @@click="OpenExamType('HrCheck')">HR审核</el-menu-item>
                                         <el-menu-item index="1-9" @@click="OpenExamType('ViewCheck')">考试页面</el-menu-item>
+                                        <el-menu-item index="1-9" @@click="OpenExamType('MaintainExamPage')">考试报表</el-menu-item>
                                     </el-menu-item-group>
                                 </el-submenu>
                             </el-menu>
@@ -207,6 +208,7 @@
                      else if (ids == "Director") { window.location.href = "/PEMain/SupervisorAudit" }
                      else if (ids == "HrCheck") { window.location.href = "/PEMain/HrAudit" }
                      else if (ids == "ViewCheck") { window.location.href = "/PEMain/MaintainExam" }
+                     else if (ids == "MaintainExamPage") { window.location.href = "/PEMain/MaintainExamPage" }
                      
                  },
                 isMobile() {

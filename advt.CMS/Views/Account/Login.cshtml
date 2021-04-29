@@ -69,10 +69,12 @@
                                                       :rules="[
                                    { required: true, message: '请输入密码', trigger: 'blur' }
                                  ]">
-                                            <el-input v-model="loginForm.Password" show-password></el-input>
+                                            <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
                                         </el-form-item>
+                                      
+                                        <h5>如Xiaoee.wang，密码为开机密码</h5>
                                         <el-form-item class="loginBtn">
-                                            <el-button type="primary" @@click="submitForm('loginForm')">登  录</el-button>
+                                            <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
                                         </el-form-item>
                                     </el-form>
                                 </div>
@@ -95,7 +97,7 @@
                     el: "#app",
                     data: {
                         loginForm: {
-                            UserName: '',
+                            UserName:'ACN\\',
                             Password: '',
                             CookieTime:0
                         }
@@ -128,6 +130,13 @@
                         }
                     }
                 })
+                var input = document.getElementById("TxtPas");
+                input.addEventListener("keyup", function (event) {
+                    event.preventDefault();
+                    if (event.keyCode === 13) {
+                        document.getElementById("txtsumit").click();
+                    }
+                });
             </script>
         </body>
         </html>

@@ -22,15 +22,15 @@ namespace advt.CMS.Models.ExamModel
         {
             if (!string.IsNullOrEmpty(UserCode) && !string.IsNullOrEmpty(SubjectName))
             {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode, SubjectName = SubjectName });
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode, SubjectName = SubjectName, IsExam="true" });
             }
             else if(!string.IsNullOrEmpty(UserCode))
             {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode });
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode, IsExam = "true" });
             }
             else if (!string.IsNullOrEmpty(SubjectName))
             {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = SubjectName });
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = SubjectName, IsExam = "true" });
             }
             else if (!string.IsNullOrEmpty(ExamDate))
             {
@@ -39,7 +39,7 @@ namespace advt.CMS.Models.ExamModel
             }
              if (string.IsNullOrEmpty(UserCode) &&string.IsNullOrEmpty(SubjectName)&&string.IsNullOrEmpty(ExamDate))
             {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
+                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsExam = "true" });
             }
 
             if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)

@@ -315,7 +315,7 @@
                     axios.post('/PEMain/GetBankInfo').then(res => {
                         const data = res.data.LExamBank;
                         _this.allTableData = data;
-                        _this.setPaginations()
+                        _this.setPaginations();
                     })
                 },
                 setPaginations() {

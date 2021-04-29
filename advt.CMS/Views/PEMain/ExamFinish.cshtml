@@ -65,11 +65,9 @@
 
                                     </el-checkbox>
                                 </el-checkbox-group>
-                                <el-input v-if="item.Type==2"
-                                          v-model="item.WriteItem"
-                                          :disabled="true">
-                                </el-input>
-                                <div class="pro-judge" :class="{'isright':item.isright}">
+                                <el-input type="textarea"  :disabled="true" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
+                               
+                                <div class="pro-judge" :class="{'isright':item.isright}" v-if="VExamScore.IsQuestion==false">
                                     <div>
                                         <span>
                                             <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
@@ -79,10 +77,10 @@
 
                                     <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
                                 </div>
-                                <div class="judge-wrong">
+                                <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
                                     <span>正确答案:{{item.DeRemark}}</span>
                                 </div>
-                                <div class="judge-wrong">
+                                <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
                                     <span>答案解析:{{item.Remark}}</span>
                                 </div>
                             </div>

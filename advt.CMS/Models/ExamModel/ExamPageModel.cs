@@ -395,6 +395,10 @@ namespace advt.CMS.Models
                         {
                             sr = "D";
                         }
+                        if (ss == "4")
+                        {
+                            sr = "E";
+                        }
 
                         //选择的答案
                         record.WriteAnsower += sr + ';';
@@ -456,6 +460,14 @@ namespace advt.CMS.Models
                             record.OptionD = item.ansowerList[3].ansower;
                             record.OptionDPicNum = item.ansowerList[3].ansowerpic;
                            
+                        }
+                        if (item.ansowerList.Count() == 4)
+                        {
+                            if (item.ansowerList[4] != null)
+                            {
+                                record.OptionE = item.ansowerList[4].ansower;
+                                record.OptionEPicNum = item.ansowerList[4].ansowerpic;
+                            }
                         }
                        
                         i++;
