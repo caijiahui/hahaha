@@ -1,6 +1,8 @@
 ﻿@model advt.CMS.Models.ExamPageModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Layout = null;
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -15,14 +17,30 @@
         .pro-ans-con .el-radio__input, .pro-ans-con .el-checkbox__input {
             vertical-align: top;
         }
-        .pro-ans-con .el-radio-group label, .pro-ans-con .el-checkbox-group label{
+
+        .pro-ans-con .el-radio-group label, .pro-ans-con .el-checkbox-group label {
             display: block !important;
+        }
+
+        @@media screen and ( max-width: 700px ) {
+            .el-message-box {
+                width: 70%
+            }
         }
     </style>
 </head>
 <body>
 
     <div id="app" v-cloak>
+        {{isMobileTurn}}
+        <div v-if="isMobileTurn=='true'">
+            @{
+
+                Layout = null;
+
+            }
+
+        </div>
         <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
         <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
         <input type="text" value="@Model.IsExam" ref="idisexam" hidden="hidden" />
@@ -30,7 +48,7 @@
             <div class="header">
                 <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
             </div>
-            <div style="width:30%;">
+            <div style="width:100%;">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <span>温馨提示：{{VExamUserInfo.StartDesc}}</span>
@@ -123,7 +141,7 @@
                 VExamUserInfo: {},
                 minutes: [],
                 seconds: 0,
-                IsTest:'',
+                IsTest: '',
                 //examList: {
 
                 //    selectItem: '',   //用户答案 type为0时 类型为''   type为1时 类型为[]   type为2时 类型为''
@@ -189,10 +207,20 @@
                             _this.minutes -= 1
                         } else if (_this.minutes === 0 && _this.seconds === 0) {
                             _this.seconds = 0;
-                            this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
+                            _this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    window.location.href = "/PEMain/MaintainExam";
+                                    var obj = {};
+                                    obj.examList = _this.examList;
+                                    obj.ListBankView = _this.ListBankView;
+                                    obj.VExamUserInfo = _this.VExamUserInfo;
+                                    axios.post('/PEMain/InsertScore', {
+                                        model: obj
+                                    }).then(function (res) {
+
+                                    });
+                                    window.location.href = "/PEMain/ExamFinish";
+                                    //window.location.href = "/PEMain/MaintainExam";
                                 }
                             });
                             window.clearInterval(time)
@@ -207,9 +235,9 @@
                     return flag
                 },
                 submitForm: function (formName, ii) {
-                    
+
                     var _this = this;
-                    
+
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             _this.examList.LselectItem = [];
@@ -240,8 +268,8 @@
                                         for (var i = 0; i < _this.examList.ansowerList.length; i++) {
                                             var cc = _this.examList.ansowerList[i].ansowerflag;
 
-                                            if (_this.examList.RightKey.indexOf(cc)!=-1) {
-                                                console.log(cc,2322);
+                                            if (_this.examList.RightKey.indexOf(cc) != -1) {
+                                                console.log(cc, 2322);
                                                 next += _this.examList.ansowerList[i].ansower;
                                             }
                                         }
@@ -256,7 +284,7 @@
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
-                                            console.log(_this.VExamUserInfo,273333)
+                                            console.log(_this.VExamUserInfo, 273333)
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
 
                                                 obj.examList = _this.examList;
@@ -331,61 +359,61 @@
                                         //});
                                     }
                                     else {
-                                            var obj = {};
+                                        var obj = {};
+                                        obj.examList = _this.examList;
+                                        obj.nowItem = _this.nowItem;
+                                        obj.total = _this.total;
+                                        obj.ListBankView = _this.ListBankView;
+                                        obj.VExamUserInfo = _this.VExamUserInfo;
+                                        obj.LselectItem = _this.LselectItem;
+                                        if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
                                             obj.examList = _this.examList;
-                                            obj.nowItem = _this.nowItem;
-                                            obj.total = _this.total;
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
-                                            obj.LselectItem = _this.LselectItem;
-                                            if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-                                                obj.examList = _this.examList;
-                                                obj.ListBankView = _this.ListBankView;
-                                                obj.VExamUserInfo = _this.VExamUserInfo;
-                                                axios.post('/PEMain/InsertScore', {
-                                                    model: obj
-                                                }).then(function (res) {
-                                                    window.location.href = "/PEMain/ExamFinish";
-                                                });
-                                               
-
-                                            } else {
-                                                obj.PreNext = "Next";
-                                                axios.post('/PEMain/NextTopic', {
-                                                    model: obj
-                                                }).then(function (res) {
-                                                    _this.examList = res.data.examList;
-
-                                                    _this.total = res.data.total;
-                                                    _this.nowItem = res.data.nowItem;
-                                                    _this.ListBankView = res.data.ListBank;
-                                                    _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                    console.log(_this.examList, 6565);
-                                                    if (_this.examList.selectItem == null) {
-                                                        _this.examList.selectItem = []
-                                                    }
-                                                    if (_this.examList.LselectItem == null) {
-                                                        _this.examList.LselectItem = []
-                                                    }
-                                                    if (res.data.examList.type == 1) {
-                                                        _this.examList.selectItem = []
-                                                    }
-                                                    else if (res.data.examList.type == 0) {
-                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                                    }
-                                                    else {
-                                                        _this.examList.selectItem = '';
-                                                    }
+                                            axios.post('/PEMain/InsertScore', {
+                                                model: obj
+                                            }).then(function (res) {
+                                                window.location.href = "/PEMain/ExamFinish";
+                                            });
 
 
-                                                });
-                                            }
+                                        } else {
+                                            obj.PreNext = "Next";
+                                            axios.post('/PEMain/NextTopic', {
+                                                model: obj
+                                            }).then(function (res) {
+                                                _this.examList = res.data.examList;
+
+                                                _this.total = res.data.total;
+                                                _this.nowItem = res.data.nowItem;
+                                                _this.ListBankView = res.data.ListBank;
+                                                _this.VExamUserInfo = res.data.VExamUserInfo;
+                                                console.log(_this.examList, 6565);
+                                                if (_this.examList.selectItem == null) {
+                                                    _this.examList.selectItem = []
+                                                }
+                                                if (_this.examList.LselectItem == null) {
+                                                    _this.examList.LselectItem = []
+                                                }
+                                                if (res.data.examList.type == 1) {
+                                                    _this.examList.selectItem = []
+                                                }
+                                                else if (res.data.examList.type == 0) {
+                                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                }
+                                                else {
+                                                    _this.examList.selectItem = '';
+                                                }
+
+
+                                            });
+                                        }
                                     }
                                 }
 
-                              
+
                             }
-                            if (_this.VExamUserInfo.IsTest == false || _this.examList.type==2) {
+                            if (_this.VExamUserInfo.IsTest == false || _this.examList.type == 2) {
                                 var obj = {};
                                 obj.examList = _this.examList;
                                 obj.nowItem = _this.nowItem;
@@ -436,7 +464,7 @@
                                     });
                                 }
                             }
-                           
+
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -473,10 +501,10 @@
                         else if (res.data.examList.type == 0) {
                             _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                         }
-                        else if (res.data.examList.type==2) {
+                        else if (res.data.examList.type == 2) {
                             _this.examList.selectItem = _this.examList.selectItem[0].toString();
                         }
-                        console.log(_this.examList.selectItem,999);
+                        console.log(_this.examList.selectItem, 999);
 
 
 
@@ -502,7 +530,9 @@
                     var IsExams = _this.$refs.idisexam.value;
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
-                    if (IsExams == "true" || IsTest=="test") {
+                    console.log(IsExams, 12)
+                    console.log(IsTest, 34)
+                    if (IsExams == "true" || IsTest == "test") {
                         axios.post('/PEMain/Test', {
                             data: IsTest,
                             RuleName: RuleName
@@ -532,15 +562,15 @@
                         })
                     }
                     else {
-                        this.$alert('未到考试时间', '提示', {
+                        _this.$alert('未到考试时间', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 window.location.href = "/PEMain/MaintainExam";
                             }
                         });
                     }
-                    }
-                    
+                }
+
             }
 
         })

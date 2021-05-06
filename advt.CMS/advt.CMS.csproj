@@ -187,6 +187,7 @@
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
     <Compile Include="Models\ExamModel\HrAuditModel.cs" />
     <Compile Include="Models\ExamModel\ImportCheckEmail.cs" />
+    <Compile Include="Models\ExamModel\UserManagerModel.cs" />
     <Compile Include="Models\ExamModel\MaintainExamModel.cs" />
     <Compile Include="Models\ExamModel\MaintainExamPageModel.cs" />
     <Compile Include="Models\ExamModel\SupervisorAuditModel.cs" />
@@ -449,12 +450,14 @@
     <Content Include="Views\PEMain\MaintainScore.cshtml" />
     <Content Include="Views\Shared\HrCheckEmail.cshtml" />
     <Content Include="Views\PEMain\MaintainExamPage.cshtml" />
+    <Content Include="Views\PEMain\UserManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

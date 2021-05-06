@@ -58,9 +58,9 @@
                                 <div>
                                     <el-form :model="loginForm" ref="loginForm" class="demo-dynamic">
                                         <el-form-item prop="UserName"
-                                                      label="用户名"
+                                                      label="用户名/工号"
                                                       :rules="[
-                                   { required: true, message: '请输入用户名', trigger: 'blur' }
+                                   { required: true, message: '请输入用户名或工号', trigger: 'blur' }
                                  ]">
                                             <el-input v-model="loginForm.UserName"></el-input>
                                         </el-form-item>
@@ -72,7 +72,7 @@
                                             <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
                                         </el-form-item>
                                       
-                                        <h5>如Xiaoee.wang，密码为开机密码</h5>
+                                        <h5>如Xiaoee.wang/Q-XXXXX，密码为开机密码</h5>
                                         <el-form-item class="loginBtn">
                                             <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
                                         </el-form-item>
@@ -97,7 +97,7 @@
                     el: "#app",
                     data: {
                         loginForm: {
-                            UserName:'ACN\\',
+                            UserName:'',
                             Password: '',
                             CookieTime:0
                         }

@@ -77,7 +77,10 @@
 
     </div>
     <div style="margin-top:20px;clear:both;">
-        <el-divider content-position="left" v-model="BankRemark">{{BankRemark}}</el-divider>
+        <template>
+            <el-divider content-position="left" v-model="BankRemark">{{BankRemark}}</el-divider>
+        </template>
+      
         <el-table :data="allTableData.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border @@selection-change="changeFun">
             <el-table-column type="selection">

@@ -16,5 +16,6 @@ namespace advt.Cache
         public const string CMS_LOV = "/CMS/WB_LOV";
         public const string CMS_ADVT_PAGE = "/CMS/ADVT_PAGE";
         public const string CMS_ADVT_USER_GROUP = "/CMS/ADVT_USER_GROUP";
+        public const string LOCK_FLAG = "/CMS/LOCK_FLAG";
     }
 }

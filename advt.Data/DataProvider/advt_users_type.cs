@@ -34,7 +34,16 @@ namespace advt.Data
         {
             return Get_All_advt_users_type(null);
         }
-
+        //public static List<Entity.ExamRuleTopicType> Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType, int id)
+        //{
+        //    IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleInfo(TopicLevel, TopicMajor, TopicType, id);
+        //    return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
+        //}
+        public static List<Entity.advt_users_type> Get_All_advt_users_join_type()
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_join_type();
+            return SqlHelper.GetReaderToList<Entity.advt_users_type>(reader);
+        }
         public static Entity.advt_users_type Get_advt_users_type(object objparams)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_type(objparams);

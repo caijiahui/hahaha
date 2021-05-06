@@ -72,6 +72,13 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(advt_users_type_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        //Get_All_advt_users_join_type
+        public IDataReader Get_All_advt_users_join_type()
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("select b.id,a.username,b.[type],b.[location] from advt_users a left join advt_users_type  b on a.username = b.username");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
 
         public int Insert_advt_users_type(Entity.advt_users_type info, string[] Include, string[] Exclude)
         {

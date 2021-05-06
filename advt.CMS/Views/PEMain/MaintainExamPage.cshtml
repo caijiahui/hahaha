@@ -1,8 +1,4 @@
 ﻿@model advt.CMS.Models.ExamModel.MaintainExamPageModel
-
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
     <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-ui.min.js"></script>
     <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
@@ -15,10 +11,10 @@
     <div style="margin-top:20px">
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="工号">
-                <el-input v-model="UserCode" ></el-input>
+                <el-input v-model="UserCode"></el-input>
             </el-form-item>
             <el-form-item label="科目">
-                <el-input v-model="SubjectName" ></el-input>
+                <el-input v-model="SubjectName"></el-input>
             </el-form-item>
             <el-form-item label="日期">
                 <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
@@ -31,7 +27,7 @@
             </el-form-item>
         </el-form>
     </div>
-  
+
     <div>
         <el-table :data="tableData"
                   style="width: 100% ">
@@ -61,16 +57,16 @@
             </el-table-column>
 
             @*<el-table-column label="在职状态" prop="PostState" sortable></el-table-column>
-        <el-table-column label="本职岗位" prop="PostJob" sortable></el-table-column>
-        <el-table-column label="考核岗位" prop="SubjectName" sortable></el-table-column>
-        <el-table-column label="申请等级" prop="SkillName" sortable></el-table-column>
-        <el-table-column label="理论考核" prop="ExamScore" sortable></el-table-column>
-        <el-table-column label="实践考核" prop="PracticeScore" sortable></el-table-column>
-        <el-table-column label="标准等级津贴" prop="SkillAllowance" sortable></el-table-column>
-        <el-table-column label="技能等级通过后可晋升的新职等" prop="NewRankName" sortable></el-table-column>
-        <el-table-column label="晋升加给" prop="PromotionBonus" sortable></el-table-column>
-        <el-table-column label="此次上调金额" prop="ToatlBonus" sortable></el-table-column>
-        <el-table-column label="薪资调整月份" prop="CurrentMonth" sortable></el-table-column>*@
+                <el-table-column label="本职岗位" prop="PostJob" sortable></el-table-column>
+                <el-table-column label="考核岗位" prop="SubjectName" sortable></el-table-column>
+                <el-table-column label="申请等级" prop="SkillName" sortable></el-table-column>
+                <el-table-column label="理论考核" prop="ExamScore" sortable></el-table-column>
+                <el-table-column label="实践考核" prop="PracticeScore" sortable></el-table-column>
+                <el-table-column label="标准等级津贴" prop="SkillAllowance" sortable></el-table-column>
+                <el-table-column label="技能等级通过后可晋升的新职等" prop="NewRankName" sortable></el-table-column>
+                <el-table-column label="晋升加给" prop="PromotionBonus" sortable></el-table-column>
+                <el-table-column label="此次上调金额" prop="ToatlBonus" sortable></el-table-column>
+                <el-table-column label="薪资调整月份" prop="CurrentMonth" sortable></el-table-column>*@
         </el-table>
     </div>
 </div>
@@ -91,7 +87,8 @@
                 search: '',
                 UserCode: '',
                 SubjectName:'',
-                ExamDate:'',
+                ExamDate: ''
+             
             },         
             mounted: function () {
                 this.getdata();             
@@ -104,6 +101,7 @@
                         _this.tableData = responese.data.tableData;
                         
                     })
+                   
                 },
                 changeDate: function (dates) {
                     var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));

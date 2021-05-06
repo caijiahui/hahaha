@@ -50,29 +50,61 @@
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             //base.AuthorizeCore(httpContext); //基础信息
-            if (Login.Isadmin)
-            { 
-                authorizeflag = true;
-                return authorizeflag;
-            }
+            //if (Login.Isadmin)
+            //{
+            //    authorizeflag = true;
+            //    return authorizeflag;
+            //}
+            //if (authorizeflag && (int)m_role != 0) //允许的用户角色
+            //{
+            //    if (((Login.UserContext.roles ?? 0) & (int)m_role) == 0)
+            //        authorizeflag = false;
+            //}
 
-            if (Login.UserContext == null) //登录验证
+            //if (authorizeflag && Validata_InUserGroup)
+            //{
+            //    int usergroupid = Login.UserContext.usergroupid ?? 0;
+
+            //    authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
+            //}
+
+            var user = advt.Data.advt_users.Get_advt_users(new { username = Login.UserContext.username });
+            var c = httpContext.Request.Cookies["ALock"].Value.ToString();
+            if (httpContext.Request.Cookies["ALock"].Value.ToString() != user.msn) //登录验证
             {
+                ////FormsAuthentication.SignOut();
+                XUtils.ClearCookie();
+                advt.Manager.Login.ClearSession();
                 authorizeflag = false;
             }
-
-            if (authorizeflag && (int)m_role != 0) //允许的用户角色
+            else
             {
-                if (((Login.UserContext.roles ?? 0) & (int)m_role) == 0)
-                    authorizeflag = false;
+                if (Login.Isadmin)
+                {
+                    authorizeflag = true;
+                    return authorizeflag;
+                }
+                if (authorizeflag && (int)m_role != 0) //允许的用户角色
+                {
+                    if (((Login.UserContext.roles ?? 0) & (int)m_role) == 0)
+                        authorizeflag = false;
+                }
+
+                if (authorizeflag && Validata_InUserGroup)
+                {
+                    int usergroupid = Login.UserContext.usergroupid ?? 0;
+
+                    authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
+                }
             }
 
-            if (authorizeflag && Validata_InUserGroup)
-            {
-                int usergroupid = Login.UserContext.usergroupid ?? 0;
 
-                authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
-            }
+            //else if (Login.UserContext.msn == null) //登录验证
+            //{
+            //    authorizeflag = false;
+            //}
+
+
 
             return authorizeflag;
 
@@ -99,8 +131,9 @@
         {
             base.HandleUnauthorizedRequest(filterContext);
             if (!authorizeflag && Validata_InUserGroup)
-                filterContext.Result = new RedirectResult("~/Home/NoPower");
-
+                filterContext.Result = new RedirectResult("~/Account/Login");
+            if(authorizeflag==false)
+                filterContext.Result = new RedirectResult("~/Account/Login");
             if (filterContext.HttpContext.Response.StatusCode == 403)
                 filterContext.Result = new RedirectResult("~/Home/Err403");
 

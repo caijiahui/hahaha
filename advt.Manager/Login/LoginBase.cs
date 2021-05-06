@@ -66,6 +66,7 @@ namespace advt.Manager
                     {
                         if (userinfo.password.Equals(pwd) && userinfo.status != (int)Entity.Status.Normal.Disable)
                         {
+
                             httpContext.Session["UserContext"] = userinfo;
                             Data.advt_users.Update_advt_users_LastIP(userinfo.id, Common.wbRequest.GetIP());
                         }
@@ -81,7 +82,9 @@ namespace advt.Manager
                 {
 
                     Entity.advt_users advt_users = httpContext.Session["UserContext"] as Entity.advt_users;
-
+                    //var guids = Guid.NewGuid().ToString();
+                    //advt_users.msn = Guid.NewGuid().ToString();
+                    //Data.advt_users.Update_advt_users(advt_users, null, new string[] { "id" });
                     if (!httpContext.User.Identity.IsAuthenticated)
                     {
                         string nickname = advt_users.nickname;

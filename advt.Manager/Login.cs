@@ -10,6 +10,31 @@ namespace advt.Manager
 
     public class Login
     {
+        public static string Lock_Flag {
+            get {
+                var CacheKey = Cache.CacheKeys.LOCK_FLAG + UserID;
+                Cache.WbCache wc = Cache.WbCache.GetCacheService();
+                var CacheValue = wc.RetrieveObject(CacheKey) as string;
+                return CacheValue;
+            }
+            set
+            {
+                var CacheKey = Cache.CacheKeys.LOCK_FLAG + UserID;
+                Cache.WbCache wc = Cache.WbCache.GetCacheService();
+                wc.AddObject(CacheKey, value, 3600000);
+            }
+        }
+
+        public static string Vflag
+        {
+            get
+            {
+
+                return Common.Utils.GetCookie("ALock");
+            }
+        }
+
+
         private static iLogin ilogin;
 
         static Login()

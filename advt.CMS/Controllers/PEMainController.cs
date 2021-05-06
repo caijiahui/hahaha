@@ -1007,5 +1007,28 @@ namespace advt.Web.Controllers
             model.GetPageInfo(UserCode, SubjectName,ExamDate);
             return Json(new { tableData=model.ListPageInfo });
         }
+        //权限管控
+        [MyAuthorize]
+        public ActionResult UserManager()
+        {
+            UserManagerModel model = new UserManagerModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult GetUserInfo()
+        {
+            UserManagerModel model = new UserManagerModel();
+            model.GetUser();
+            return Json(new { ListUsers = model.ListUsers, ListType=model.ListType });
+        }
+        [MyAuthorize]
+        public ActionResult EditUserType(int id,string type, string username)
+        {
+            UserManagerModel model = new UserManagerModel();
+            model.EditUserType(id, type, username);
+            return Json(new { ListUsers = model.ListUsers, ListType = model.ListType });
+
+        }
     }
 }

@@ -67,9 +67,29 @@ namespace advt.Web.Controllers
                 {
 
                     //Entity.advt_users user = service.Authenticate(model.UserName, model.Password);
-                    string[] SplitAccount = model.UserName.Trim().Split('\\');
-                    var user = SplitAccount[1];
-                    var UserAccount = SplitAccount[0] + '\\' + SplitAccount[1];
+                    string[] SplitAccount=new string[] { };
+                    var username = "";
+                    //var user = SplitAccount[1];
+                    //var UserAccount = SplitAccount[0] + '\\' + SplitAccount[1];
+                    //var account = "";
+                    if (model.UserName.Contains("-"))
+                    {
+                        var vuser = Data.advt_user_sheet.Get_advt_user_sheet(new { UserCode = model.UserName });
+                        if (vuser != null)
+                        {
+                            SplitAccount = vuser.UserAccount.Trim().Split('\\');
+                            username = vuser.UserAccount;
+                        }
+                    }
+                    else
+                    {
+                        var vusers = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = model.UserName });
+                        if (vusers != null)
+                        {
+                            SplitAccount = vusers.UserAccount.Trim().Split('\\');
+                            username = vusers.UserAccount;
+                        }
+                    }
                     //ResponseModel response = _accessRepository.GetAccess(user);
                     if (SplitAccount.Length > 1)
                     {
@@ -100,7 +120,8 @@ namespace advt.Web.Controllers
                             if (true == adAuth.IsAuthenticated(SplitAccount[0], SplitAccount[1], model.Password))
                             {
                                 Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
-                                Entity.advt_users users = service.Authenticate(model.UserName, model.Password);
+                                Entity.advt_users users = service.Authenticate(username, model.Password);
+
                                 //登陆成功
                                 //var advt = new advt_users();
                                 //advt = Data.advt_users.Get_advt_users(new { username = model.UserName });
@@ -116,6 +137,14 @@ namespace advt.Web.Controllers
 
                                 SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
                                 //写入Cookie，无需登入。
+
+                                var LF = Guid.NewGuid().ToString();
+                                //写内存
+                                Manager.Login.Lock_Flag = LF;
+                                //写本地
+                                Utils.WriteCookie("ALock", LF);
+                                users.msn = LF;
+                                advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
                                 XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
                                 return Json(new { IsLogin = "Pass" }, JsonRequestBehavior.AllowGet);
 
@@ -155,6 +184,8 @@ namespace advt.Web.Controllers
             {
                 FormsAuthentication.SignOut();
             }
+            //this.UserContext.msn = "";
+            //Data.advt_users.Update_advt_users(this.UserContext, null, new string[] { "id" });
             XUtils.ClearCookie();
             Manager.Login.ClearSession();
             return RedirectToAction("Login", "Account");
@@ -580,7 +611,13 @@ namespace advt.Web.Controllers
         public ActionResult GetUser()
         {
             var username = this.UserNameContext;
-            return Json(new { admin = username },JsonRequestBehavior.AllowGet);
+            var type = string.Empty;
+            var info = Data.advt_users_type.Get_advt_users_type(new { username=username });
+            if (info != null)
+            {
+                type = info.type;
+            }
+            return Json(new { admin = username, type= type },JsonRequestBehavior.AllowGet);
         }
     }
 }

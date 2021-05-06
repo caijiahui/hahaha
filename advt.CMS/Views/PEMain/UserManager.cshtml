@@ -1,0 +1,216 @@
+﻿@model advt.CMS.Models.ExamModel.UserManagerModel
+
+@{
+ Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="app" style="margin-left:20px">
+    <div style="width:100%;margin-top:30px;">
+        <template>
+            <el-breadcrumb separator="/" style="margin-bottom:20px">
+                <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+                <el-breadcrumb-item>题库管理</el-breadcrumb-item>
+            </el-breadcrumb>
+        </template>
+        <div style="margin-top:20px;clear:both;">
+            <el-table :data="ListUsers.filter(data => !search || data.username.toLowerCase().includes(search.toLowerCase()))"
+                      style="width: 100%;margin-top:20px ">
+                <el-table-column label="姓名"
+                                 prop="username" sortable >
+                </el-table-column>
+                <el-table-column label="角色"
+                                 prop="type" sortable>
+                </el-table-column>
+                <el-table-column align="right">
+                    <template slot="header" slot-scope="scope">
+
+                        <el-input v-model="search"
+                                  size="mini"
+                                  placeholder="输入关键字搜索" />
+                    </template>
+
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="handleEdit(scope.row.username,scope.row.type,scope.row.id)">Edit</el-button>
+                    </template>
+
+                </el-table-column>
+            </el-table>
+            @*<el-pagination @@size-change="handleSizeChange"
+                           @@current-change="handleCurrentChange"
+                           :current-page="paginations.page_index"
+                           :page-sizes="paginations.page_sizes"
+                           :page-size="paginations.page_size"
+                           :layout="paginations.layout"
+                           :total="paginations.total">
+            </el-pagination>*@
+        </div>
+
+        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible">
+            <el-form :model="VUserInfo">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="VUserInfo.username" autocomplete="off" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="角色" :label-width="formLabelWidth">
+                    <el-select v-model="VUserInfo.type" placeholder="请选择角色类型">
+                        <el-option v-for="item in ListType" :key="item.key" :label="item" :value="item"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave('save')">确 定</el-button>
+                </template>
+            </div>
+        </el-dialog>
+    </div>
+
+
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            ListUsers: [],
+            ListType: [],
+            VUserInfo: {},
+            search: '',
+            dialogFormVisible: false,
+            formLabelWidth: '120px',
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 5,
+                page_sizes: [5, 10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
+
+        },
+        watch: {
+           
+        },
+        mounted: function () {
+            this.getdata();
+            //this.getInfoList();
+        },
+        methods: {
+            changeFun(val) {
+                var _this = this;
+                _this.checkBoxData = val;
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo', {
+
+                }).then(function (responese) {
+                    _this.ListType = responese.data.ListType;
+                    console.log(responese.data.ListType, 123);
+                    _this.ListUsers = responese.data.ListUsers;
+                    //_this.setPaginations();
+                })
+
+            },
+            handleEdit(username,type,id) {
+                var _this = this;
+                _this.VUserInfo.username = username;
+                _this.VUserInfo.id = id;
+                //_this.VUserInfo.type = type;
+                _this.dialogFormVisible = true;
+                //axios.post('/PEMain/EditUserType', {
+                //    ID: ID
+                //}).then(function (res) {
+                //    _this.ListType = responese.data.ListType;
+                //    _this.ListUsers = responese.data.ListUsers;
+                //});
+                _this.dialogFormVisible = true;
+            },
+            handleSave() {
+                var _this = this;
+                axios.post('/PEMain/EditUserType', {
+                    id: _this.VUserInfo.id,
+                    type: _this.VUserInfo.type,
+                    username: _this.VUserInfo.username
+                }).then(function (res) {
+                    _this.ListType = res.data.ListType;
+                    _this.ListUsers = res.data.ListUsers;
+                    console.log(_this.ListUsers);
+                });
+                _this.dialogFormVisible = false
+            },
+            DeleteBank() {
+                var _this = this;
+                axios.post('/PEMain/DeleteBankInfo', {
+                    ID: 0,
+                    TypeName: _this.TypeName,
+                    ExamSubject: _this.ExamSubject,
+                    TopicLevel: _this.TopicLevel
+                }).then(function (res) {
+                    _this.$alert('已成功删除' + res.data.Result + "条记录", '删除信息', {
+                        confirmButtonText: '确定'
+                    });
+                    _this.ListUsers = res.data.LExamBank;
+                    _this.setPaginations();
+                });
+            },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.ListUsers.length; //数据的数量
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 5; //每页显示多少数据
+
+                //显示数据
+                _this.ListUsers = _this.ListUsers.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.ListUsers = _this.ListUsers.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo').then(function (res) {
+                    _this.ListUsers = res.data.ListUsers;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.ListUsers[i]) {
+                            tablist.push(_this.ListUsers[i]);
+                        }
+                    }
+                    _this.ListUsers = tablist;
+                })
+
+            },
+            //SearchinByTypeName() {
+            //    var _this = this;
+            //    axios.post('/PEMain/GetBankInfo', {
+            //        ExamType: _this.TypeName,
+            //        ExamSubject: _this.ExamSubject,
+            //        TopicLevel: _this.TopicLevel
+            //    }).then(function (res) {
+            //        _this.allTableData = res.data.LExamBank;
+            //        _this.BankRemark = res.data.BankRemark;
+            //        _this.setPaginations();
+            //    });
+            //    _this.dialogFormVisible = false
+            //},
+
+        }
+
+
+    })
+</script>
+
+
