@@ -294,7 +294,7 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             var Result= model.SaveRuleInfo(username);
-            model.SaveTopicInfo(model.ListExamRule.LastOrDefault().ID);
+            model.SaveTopicInfo(model.VExamRule.ID);
             return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleTopicList }, JsonRequestBehavior.AllowGet);
           
         }

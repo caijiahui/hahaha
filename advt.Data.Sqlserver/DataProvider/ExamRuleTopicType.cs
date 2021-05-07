@@ -84,12 +84,22 @@ namespace advt.Data.SqlServer
         public IDataReader Get_ExamRuleInfo(string TopicLevel, string TopicMajor, string TopicType,int id)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select * from ExamRuleTopicType where TopicMajor=@TopicMajor and TopicLevel =@TopicLevel  and RuleId =@id and TopicType =@TopicType");
+
             List<DbParameter> l_parms = new List<DbParameter>();
-            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 150, TopicLevel));
+            if (TopicLevel != null)
+            {
+                commandText.AppendLine(" select * from ExamRuleTopicType where TopicMajor=@TopicMajor and TopicLevel =@TopicLevel  and RuleId =@id and TopicType =@TopicType");
+
+                l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 150, TopicLevel));
+            }
+
+            else
+            {
+                commandText.AppendLine(" select * from ExamRuleTopicType where TopicMajor=@TopicMajor and RuleId =@id and TopicType =@TopicType");
+            }
             l_parms.Add(SqlHelper.MakeInParam("@TopicMajor", (DbType)SqlDbType.NVarChar, 150, TopicMajor));
             l_parms.Add(SqlHelper.MakeInParam("@TopicType", (DbType)SqlDbType.NVarChar, 150, TopicType));
-            l_parms.Add(SqlHelper.MakeInParam("@id", (DbType)SqlDbType.NVarChar, 150, id));
+            l_parms.Add(SqlHelper.MakeInParam("@id", (DbType)SqlDbType.Int, 4, id));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
