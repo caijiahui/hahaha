@@ -27,17 +27,17 @@ namespace advt.CMS.Models.ExamModel
             LPracticeInfo = new List<PracticeInfo>();
             LExamType = new List<KeyValuePair<string, string>>();
         }
-        public void GetHrAuditUser(string typename="")
+        public void GetHrAuditUser(string typename = "")
         {
             if (string.IsNullOrEmpty(typename))
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, IsExam=false }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop=false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
             }
             else
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup",TypeName= typename, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop=false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = typename, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
             }
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -67,13 +67,13 @@ namespace advt.CMS.Models.ExamModel
 
 
         }
-        public void StopHrAuditUser(string id,string username)
+        public void StopHrAuditUser(string id, string username)
         {
             try
             {
                 var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = id });
                 c.IsStop = true;
-                c.StopCreateDate=DateTime.Now;
+                c.StopCreateDate = DateTime.Now;
                 c.StopCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                 GetHrAuditUser();
@@ -90,7 +90,7 @@ namespace advt.CMS.Models.ExamModel
             LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = code });
             LPracticeInfo = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = code }).OrderByDescending(x => x.CreateDate).ToList();
         }
-        public void Qualification(string filepath,string username)
+        public void Qualification(string filepath, string username)
         {
             DataTable dt = new DataTable();
             FileStream files = null;
@@ -129,38 +129,45 @@ namespace advt.CMS.Models.ExamModel
                         {
                             IRow row = sheet.GetRow(i);
                             DataRow dataRow = dt.NewRow();
-
-                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            if (row != null)
                             {
-                                if (row.GetCell(j) != null)
-                                    dataRow[j] = row.GetCell(j).ToString();
+                                for (int j = row.FirstCellNum; j < cellCount; j++)
+                                {
+                                    if (row.GetCell(j) != null)
+                                        dataRow[j] = row.GetCell(j);
+                                }
+                                dt.Rows.Add(dataRow);
                             }
-                            dt.Rows.Add(dataRow);
+
                         }
                     }
                 }
                 using (var ds = dt)
                 {
-                    var q = from DataRow dr in ds.Rows
+                    var data = new ExamUserDetailInfo();
+                    for (int i = 0; i < ds.Rows.Count; i++)
+                    {
+                        if (!string.IsNullOrEmpty(ds.Rows[i][6].ToString()))
+                        {
 
-                            select new Entity.ExamUserDetailInfo
+                            LDetail.Add(new ExamUserDetailInfo
                             {
-                                TypeName = dr[0].ToString().Trim(),
-                                SubjectName = dr[1].ToString().Trim(),
-                                UserCode = dr[2].ToString().Trim(),
-                                UserName = dr[3].ToString().Trim(),
-                                DepartCode = dr[4].ToString().Trim(),
-                                RuleName=dr[5].ToString().Trim(),
-                                ExamDate=Convert.ToDateTime(dr[6].ToString().Trim()),
-                                ExamPlace=dr[7].ToString().Trim(),
+                                TypeName = ds.Rows[i][0].ToString().Trim(),
+                                SubjectName = ds.Rows[i][1].ToString().Trim(),
+                                UserCode = ds.Rows[i][2].ToString().Trim(),
+                                UserName = ds.Rows[i][3].ToString().Trim(),
+                                DepartCode = ds.Rows[i][4].ToString().Trim(),
+                                RuleName = ds.Rows[i][5].ToString().Trim(),
+                                ExamDate = Convert.ToDateTime(ds.Rows[i][6].ToString()),
+                                ExamPlace = ds.Rows[i][7].ToString().Trim(),
                                 HrCheckCreateUser = username,
                                 HrCheckCreateDate = DateTime.Now,
-                                IsExam="false",
-                                IsStop=false,
-                                ExamStatus="HrCheck"
-                              
-                            };
-                    LDetail = q.ToList();
+                                IsExam = "false",
+                                IsStop = false,
+                                ExamStatus = "HrCheck"
+                            });
+                        }
+                    }
                 }
                 var successcount = 0;
                 foreach (var item in LDetail)
