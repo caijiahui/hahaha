@@ -441,7 +441,6 @@
     <Content Include="Views\PEMain\MaintainExamRule.cshtml" />
     <Content Include="Views\PEMain\MaintainExamBank.cshtml" />
     <Content Include="Views\PEMain\ExamPage.cshtml" />
-    <Content Include="Views\PEMain\ExamFinish.cshtml" />
     <Content Include="Views\PEMain\SupervisorAudit.cshtml" />
     <Content Include="Views\PEMain\MaintainExamUserInfo.cshtml" />
     <Content Include="Views\PEMain\HrAudit.cshtml" />
@@ -451,6 +450,7 @@
     <Content Include="Views\Shared\HrCheckEmail.cshtml" />
     <Content Include="Views\PEMain\MaintainExamPage.cshtml" />
     <Content Include="Views\PEMain\UserManager.cshtml" />
+    <Content Include="Views\PEMain\ExamFinish.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

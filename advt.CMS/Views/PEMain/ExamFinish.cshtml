@@ -1,6 +1,8 @@
 ﻿@model advt.CMS.Models.ExamFinishModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Layout = null;
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -11,8 +13,10 @@
     <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
     <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
     <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+    
 </head>
 <body>
+
     <div id="app" v-cloak>
         <div class="wrap">
             <div class="header">
@@ -36,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="detail-show">
                         <div class="detail-divide">
                             答案解析: <i class="fa fa-angle-double-down"></i>
@@ -49,7 +53,7 @@
                                 </div>
                             </div>
                             <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
-                           
+
                             <div class="detail-content">
                                 <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
                                     <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
@@ -65,8 +69,8 @@
 
                                     </el-checkbox>
                                 </el-checkbox-group>
-                                <el-input type="textarea"  :disabled="true" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
-                               
+                                <el-input type="textarea" :disabled="true" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
+
                                 <div class="pro-judge" :class="{'isright':item.isright}" v-if="VExamScore.IsQuestion==false">
                                     <div>
                                         <span>
@@ -111,7 +115,7 @@
                 CorrectScore: '',      //答题分数
                 CorrectNum: '',   //答对题数
                 VExamScore: [],
-                VexamRecord:[],
+                VexamRecord: [],
                 examList: [],
                 isQuestion: false,    //是否问卷调查
 
@@ -137,7 +141,7 @@
                         }
                         _this.isQuestion = responese.data.VExamScore.IsQuestion;
                         _this.examList = responese.data.examList;
-                      
+
                     })
                 },
                 isMobile: function () {
@@ -159,7 +163,7 @@
                         return 'F'
                     }
                 },
-                
+
             }
         })
     </script>

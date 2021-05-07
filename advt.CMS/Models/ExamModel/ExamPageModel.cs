@@ -447,21 +447,27 @@ namespace advt.CMS.Models
                         {
                             record.OptionB = item.ansowerList[1].ansower;
                             record.OptionBPicNum = item.ansowerList[1].ansowerpic;
-                          
+
                         }
-                        if (item.ansowerList[2] != null)
+                        if (item.ansowerList.Count() ==3)
                         {
-                            record.OptionC = item.ansowerList[2].ansower;
-                            record.OptionCPicNum = item.ansowerList[2].ansowerpic;
-                           
-                        }
-                        if (item.ansowerList[3] != null)
-                        {
-                            record.OptionD = item.ansowerList[3].ansower;
-                            record.OptionDPicNum = item.ansowerList[3].ansowerpic;
-                           
+                            if (item.ansowerList[2] != null)
+                            {
+                                record.OptionC = item.ansowerList[2].ansower;
+                                record.OptionCPicNum = item.ansowerList[2].ansowerpic;
+
+                            }
                         }
                         if (item.ansowerList.Count() == 4)
+                        {
+                            if (item.ansowerList[3] != null)
+                            {
+                                record.OptionD = item.ansowerList[3].ansower;
+                                record.OptionDPicNum = item.ansowerList[3].ansowerpic;
+
+                            }
+                        }
+                        if (item.ansowerList.Count() ==5)
                         {
                             if (item.ansowerList[4] != null)
                             {
