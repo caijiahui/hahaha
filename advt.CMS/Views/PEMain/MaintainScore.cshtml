@@ -12,66 +12,74 @@
     <link href="~/Scripts/css/exam.css" rel="stylesheet" />
 </head>
 <div id="app" style="margin-left:20px">
+    <div v-if="isMobileTurn=='true'">
+        @{
+
+            Layout = null;
+
+        }
+
+    </div>
     <template>
         <div>
-            <div style="width:70%;">
+            <div style="width:100%;">
                 <div style="margin-top:20px">
                     <el-page-header @@back="goBack" content="考试成绩查询">
                 </div>
-                    <div style="margin-top:20px"> 
-                        <el-card class="box-card" style="background-color:#D9EDF7;font-size:17px;color:#31708F">
-                            <div class="clearfix">
-                                <span><i class="el-icon-s-custom"></i></span>
-                                <span>工号：{{UserCode}}</span>
-                                <span>姓名：{{Name}}</span>
-                            </div>
-                        </el-card>
-                    </div>
-                    <div v-if="tableData!=null&&tableData!=''">
-                        <el-card class="box-card" v-for="item in tableData" style=" font-size:14px">
-                            <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;">
-                                <span style="flex:1;background-color:#EEEEEE">考试科目：</span>
-                                <span style="flex:1;font-weight:500"> {{item.ExamSubject}}</span>
-                            </div>
-                            <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
-                                <span style="flex:1;background-color:#EEEEEE">考试时间：</span>
-                                <span style="flex:1">{{changeDate(item.CreateDate)}}</span>
-                            </div>
-                            <div class="clearfix" style="border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
-                                <span style="flex:1;background-color:#EEEEEE">考试状态：</span>
-                                <span v-if="item.IsTest=='1'">已考</span>
-                            </div>
-                            <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
-                                <span style="flex:1;background-color:#EEEEEE">考试分数：</span>
-                                <span style="flex:1">{{item.CorrectScore}}</span>
-                            </div>
-                            <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
-                                <span style="flex:1;background-color:#EEEEEE">考试通过：</span>
-                                <span v-if="item.CorrectScore>=item.PassScore">通过</span>
-                                <span v-if="item.CorrectScore<item.PassScore">未通过</span>
-                            </div>
-                            <div>
-                                <el-button style="width:100%;background-color:#337AB7;font-size:15px;color:white" class="pro-btn" @@click="handleSearchDetail(item.ExamID)">查看</el-button>
-                            </div>
-                        </el-card>
-                    </div>
+                <div style="margin-top:20px">
+                    <el-card class="box-card" style="background-color:#D9EDF7;font-size:15px;color:#31708F;width:95%">
+                        <div class="clearfix">
+                            <span><i class="el-icon-s-custom"></i></span>
+                            <span>工号：{{UserCode}}</span>
+                            <span>姓名：{{Name}}</span>
+                        </div>
+                    </el-card>
+                </div>
+                <div v-if="tableData!=null&&tableData!=''">
+                    <el-card class="box-card" v-for="item in tableData" style=" font-size:14px">
+                        <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;">
+                            <span style="flex:1;background-color:#EEEEEE">考试科目：</span>
+                            <span style="flex:1;font-weight:500"> {{item.ExamSubject}}</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
+                            <span style="flex:1;background-color:#EEEEEE">考试时间：</span>
+                            <span style="flex:1">{{changeDate(item.CreateDate)}}</span>
+                        </div>
+                        <div class="clearfix" style="border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
+                            <span style="flex:1;background-color:#EEEEEE">考试状态：</span>
+                            <span v-if="item.IsTest=='1'">已考</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
+                            <span style="flex:1;background-color:#EEEEEE">考试分数：</span>
+                            <span style="flex:1">{{item.CorrectScore}}</span>
+                        </div>
+                        <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
+                            <span style="flex:1;background-color:#EEEEEE">考试通过：</span>
+                            <span v-if="item.CorrectScore>=item.PassScore">通过</span>
+                            <span v-if="item.CorrectScore<item.PassScore">未通过</span>
+                        </div>
+                        <div>
+                            <el-button style="width:100%;background-color:#337AB7;font-size:15px;color:white" class="pro-btn" @@click="handleSearchDetail(item.ExamID)">查看</el-button>
+                        </div>
+                    </el-card>
+                </div>
 
 
 
-                    <div v-if="tableData==null||tableData==''">
-                        <span style="font-size:20px">
-                            <template>
-                                此工号未参加考试！
-                            </template>
-                        </span>
-                    </div>
+                <div v-if="tableData==null||tableData==''">
+                    <span style="font-size:20px">
+                        <template>
+                            此工号未参加考试！
+                        </template>
+                    </span>
+                </div>
 
 
             </div>
-           
+
         </div>
 
-        <el-dialog title="查看考试" :visible.sync="dialogFormVisible">
+        <el-dialog title="查看考试" :visible.sync="dialogFormVisible" width="80%" style="height:auto">
 
             <div class="wrap">
                 <div class="header">

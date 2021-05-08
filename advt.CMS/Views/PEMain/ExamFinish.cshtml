@@ -18,6 +18,14 @@
 <body>
 
     <div id="app" v-cloak>
+        <div v-if="isMobileTurn=='true'">
+            @{
+
+                Layout = null;
+
+            }
+
+        </div>
         <div class="wrap">
             <div class="header">
                 <h1>{{VExamScore.ExamType}}</h1>
