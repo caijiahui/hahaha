@@ -1,0 +1,248 @@
+﻿@model advt.CMS.Models.ExamModel.ExamRoleModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+
+
+<div id="app" style="margin-left:20px">
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-button @@click="createRole">新增角色</el-button>
+    </template>
+
+
+    <div style="margin-top:20px">
+        <template>
+            <el-input placeholder="请输入需要查询的角色名称" v-model="ExamRoleName" class="input-with-select" style="width:30%;">
+                <el-button slot="append" @@click="handleSearch">查询</el-button>
+            </el-input>
+        </template>
+       
+        <el-table :data="tableData"
+                  style="width: 100% ">
+            <el-table-column label="角色名称" prop="RoleName" ></el-table-column>
+            <el-table-column label="更新用户" prop="CreateUser"></el-table-column>
+            <el-table-column label="更新时间"
+                            >
+                <template slot-scope="scope">
+                    <span>{{changeDate(scope.row.CreateDate)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column align="right">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.RoleName,scope.row.ID)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.RoleName)">Delete</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination @@size-change="handleSizeChange"
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
+        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible">
+            <template>
+                <el-form ref="dialogForm">
+                    角色名称： <el-input placeholder="请输入需要新增的角色" v-model="RoleName" class="input-with-select" style="width:30%;">
+                    </el-input>
+                    <div style="margin-top:20px;width:70%">
+                        <el-checkbox-group v-model="checkRole">
+                            <el-checkbox v-for="role in LRole" :label="role" :key="role">{{role}}</el-checkbox>
+                        </el-checkbox-group>
+                    </div>
+
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <template>
+                        <el-button type="primary" @@click="handleSave">确 定</el-button>
+                    </template>
+
+                </div>
+            </template>
+          
+           
+        </el-dialog>
+
+    </div>
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            tableData: [],
+            dialogFormVisible: false,
+            LRole: ['权限管控', '考试类型', '考试科目', '题库管理','考试规则','人员信息','HR审核','考试页面','考试报表','角色设定'],
+            checkRole: [],
+            RoleName: '',
+            RoleID:'',
+            ExamRoleName: '',
+            formLabelWidth: '120px',
+            search: '',
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 10,
+                page_sizes: [10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
+        },
+        mounted: function () {
+            var _this = this;
+            _this.getdata();
+        },
+        methods: {
+            createRole: function () {
+                var _this = this;
+                _this.RoleID = '';
+                _this.RoleName = '';
+                _this.checkRole = [];
+                _this.dialogFormVisible = true;
+            },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 10; //每页显示多少数据
+
+                //显示数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSearch: function () {
+                var _this = this;
+                axios.post('/PEMain/GetExamRole', {
+                    ExamRoleName: _this.ExamRoleName
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                });
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetExamRole', {
+                    ExamRoleName: _this.ExamRoleName
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.tableData, 133);
+
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+                    }
+                    _this.tableData = tablist;
+                })
+
+
+            },
+            handleEdit(index,ID) {
+                var _this = this;
+                _this.RoleID = ID;
+                _this.RoleName = '';
+                _this.checkRole = [];
+                axios.post('/PEMain/GetExamRole', {
+                    ExamRoleName: index
+                }).then(function (res) {
+                    _this.RoleName = index;
+                    _this.checkRole = res.data.checkRole;
+                   
+                    _this.dialogFormVisible = true;
+
+                });
+              
+            },
+            handleDelete(index) {
+                var _this = this;
+                axios.post('/PEMain/DeleteExamRole', {
+                    ExamRoleName: index
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                });
+            },
+            //弹窗保存
+            handleSave: function () {
+                var _this = this;
+                var objs = {};
+                objs.RoleName = _this.RoleName;
+                objs.checkRole = _this.checkRole;
+                objs.RoleID = _this.RoleID;
+                axios.post('/PEMain/SaveRoleInfo', {
+                    model: objs
+                }).then(function (res) {
+                    if (res.data.Result != '') {
+                        _this.$message.error(res.data.Result);
+                    } else {
+                        _this.tableData = res.data.ListExamRole;
+                        _this.setPaginations();
+                    }
+                    _this.RoleName = '';
+                    _this.checkRole = [];
+                });
+                _this.dialogFormVisible = false;        
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetExamRole', {
+                    ExamRoleName: _this.ExamRoleName
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+
+                })
+            }
+        
+        
+        }
+
+    })
+
+</script>
+
+
+

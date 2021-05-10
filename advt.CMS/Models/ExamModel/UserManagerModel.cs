@@ -15,10 +15,27 @@ namespace advt.CMS.Models.ExamModel
         {
             ListUsers = new List<advt_users_type>();
         }
-        public void GetUser()
+        public void GetUser(string username)
         {
-            ListType =UserBLL.Get_All_L_type();
-            ListUsers = Data.advt_users_type.Get_All_advt_users_join_type();
+            try
+            {
+                ListType = Data.ExamRole.Get_All_ExamRole().Select(y => y.RoleName).ToList();
+                if (!string.IsNullOrEmpty(username))
+                {
+                    ListUsers = Data.advt_users_type.Get_All_advt_users_join_type(username);
+                }
+                else
+                {
+                    ListUsers = Data.advt_users_type.Get_All_advt_users_join_type("");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            
         }
         public void EditUserType(int id,string type,string username)
         {
@@ -36,7 +53,7 @@ namespace advt.CMS.Models.ExamModel
                 info.type = type;
                 Data.advt_users_type.Update_advt_users_type(info, null, new string[] { "id" });
             }
-            GetUser();
+            GetUser("");
         }
     }
     }

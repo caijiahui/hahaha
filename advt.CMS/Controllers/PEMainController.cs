@@ -1022,10 +1022,10 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetUserInfos()
+        public ActionResult GetUserManagerInfo(string username)
         {
             UserManagerModel model = new UserManagerModel();
-            model.GetUser();
+            model.GetUser(username);
             return Json(new { ListUsers = model.ListUsers, ListType=model.ListType });
         }
         [MyAuthorize]
@@ -1035,6 +1035,33 @@ namespace advt.Web.Controllers
             model.EditUserType(id, type, username);
             return Json(new { ListUsers = model.ListUsers, ListType = model.ListType });
 
+        }
+        [MyAuthorize]
+        public ActionResult MaintainExamRole()
+        {
+            var model = new ExamRoleModel();
+            return View(model);
+        }
+        [MyAuthorize]
+        public ActionResult SaveRoleInfo(ExamRoleModel model)
+        {
+            var username = this.UserNameContext;
+            var Result = model.SaveExamRole(username);
+            return Json(new { Result, ListExamRole=model.ListExamRole }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetExamRole(string ExamRoleName)
+        {
+            var model = new ExamRoleModel();
+            var roles=model.GetExamRole(ExamRoleName);
+            return Json(new { tableData = roles, checkRole = model.checkRole }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult DeleteExamRole(string ExamRoleName)
+        {
+            var model = new ExamRoleModel();
+            var result = model.DeleteExamRole(ExamRoleName);
+            return Json(new { result , tableData=model.ListExamRole }, JsonRequestBehavior.AllowGet);
         }
     }
 }

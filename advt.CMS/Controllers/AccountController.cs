@@ -613,11 +613,9 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             var type = string.Empty;
             var info = Data.advt_users_type.Get_advt_users_type(new { username=username });
-            if (info != null)
-            {
-                type = info.type;
-            }
-            return Json(new { admin = username, type= type },JsonRequestBehavior.AllowGet);
+            List<string> LRole = Data.ExamRolePart.Get_All_ExamRolePart(new { RoleName = info.type }).Select(y=>y.PartName).ToList();
+          
+            return Json(new { admin = username, LRole = LRole },JsonRequestBehavior.AllowGet);
         }
     }
 }

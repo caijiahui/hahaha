@@ -39,9 +39,9 @@ namespace advt.Data
         //    IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleInfo(TopicLevel, TopicMajor, TopicType, id);
         //    return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
         //}
-        public static List<Entity.advt_users_type> Get_All_advt_users_join_type()
+        public static List<Entity.advt_users_type> Get_All_advt_users_join_type(string username)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_join_type();
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_join_type(username);
             return SqlHelper.GetReaderToList<Entity.advt_users_type>(reader);
         }
         public static Entity.advt_users_type Get_advt_users_type(object objparams)
