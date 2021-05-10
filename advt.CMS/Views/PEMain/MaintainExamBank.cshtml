@@ -393,7 +393,11 @@
                 },
                 handleCurrentChange(page) {
                     var _this = this;
-                    axios.post('/PEMain/GetBankInfo').then(function (res) {
+                    axios.post('/PEMain/GetBankInfo', {
+                        ExamType: _this.TypeName,
+                        ExamSubject: _this.ExamSubject,
+                        TopicLevel: _this.TopicLevel
+                    }).then(function (res) {
                         _this.allTableData = res.data.LExamBank;
                         let index = _this.paginations.page_size * (page - 1);
                         //获取总数
@@ -406,8 +410,7 @@
                             }
                         }
                         _this.allTableData = tablist;
-                    })
-                    
+                    });                    
                 },
                 SearchinByTypeName() {
                     var _this = this;

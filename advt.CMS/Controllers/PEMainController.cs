@@ -950,6 +950,12 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
+        public ActionResult MaintainExamPC()
+        {
+            MaintainExamModel model = new MaintainExamModel();
+            return View(model);
+        }
+        [MyAuthorize]
         public ActionResult MaintainScore()
         {
             MaintainExamModel model = new MaintainExamModel();

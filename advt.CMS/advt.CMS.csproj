@@ -451,6 +451,7 @@
     <Content Include="Views\PEMain\MaintainExamPage.cshtml" />
     <Content Include="Views\PEMain\UserManager.cshtml" />
     <Content Include="Views\PEMain\ExamFinish.cshtml" />
+    <Content Include="Views\PEMain\MaintainExamPC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
