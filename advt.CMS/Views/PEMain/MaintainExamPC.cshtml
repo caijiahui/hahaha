@@ -1,0 +1,132 @@
+﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题页</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+    <style>
+        .el-collapse-item__header {
+            background-color: #337ab7 !important;
+            border-radius: 4px
+        }
+
+        .el-collapse-item {
+            border: 1px solid #d7dae2 !important;
+            border-radius: 2px;
+            border-top: 0px;
+            margin-top: 20px;
+        }
+
+        .el-collapse-item__wrap {
+            border-top: 0px;
+        }
+
+        .text {
+            font-size: 16px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 100%;
+        }
+
+        .el-card__header {
+            background-color: #4e97a2;
+        }
+
+        .el-collapse-item__arrow el-icon-arrow-right {
+            color: white !important
+        }
+    </style>
+</head>
+
+
+<link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+<link href="~/Scripts/css/exam.css" rel="stylesheet" />
+<div id="app" style="width:90%;margin:0 auto">
+    <div style="margin-top:30px;margin-left:20px;margin-right:20px">
+        <template>
+            <el-collapse v-model="activeNames">
+                <el-collapse-item name="1">
+                    <template slot="title">
+                        <span style="font-size:18px;color:white;margin-left:10px"> <i class="el-icon-position"></i> 考试</span>
+                    </template>
+                    <div @@click="ShowSubject('exam')" style="height:30px;font-size:16px;margin-left:10px;margin-top:10px;cursor:pointer;"> <i class="el-icon-thumb"></i> 考试科目列表</div>
+                    <div @@click="ShowSubject('score')" style="height:30px;font-size:16px;margin-left:10px;margin-top:10px;cursor:pointer;"><i class="el-icon-thumb"></i> 考试成绩查询</div>
+                </el-collapse-item>
+                <el-collapse-item name="2">
+                    <template slot="title">
+                        <span style="font-size:18px;color:white;margin-left:10px"> <i class="el-icon-position"></i> 问卷调查</span>
+                    </template>
+                    <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"> <i class="el-icon-thumb;cursor:pointer;"></i> Test1</div>
+                    <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"><i class="el-icon-thumb;cursor:pointer;"></i> Test2</div>
+                </el-collapse-item>
+                <el-collapse-item name="3">
+                    <template slot="title">
+                        <span style="font-size:18px;color:white;margin-left:10px"> <i class="el-icon-position"></i> 社团</span>
+                    </template>
+                    <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"> <i class="el-icon-thumb;cursor:pointer;"></i> Test1</div>
+                    <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"><i class="el-icon-thumb;cursor:pointer;"></i> Test2</div>
+                </el-collapse-item>
+        </template>
+    </div>
+
+</div>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            activeNames: ['1', '2', '3'],
+            isMobileTurn: false
+        },
+
+        mounted: function () {
+            if (this.isMobile()) {
+                this.isMobileTurn = true
+            } else {
+                this.isMobileTurn = false
+            }
+        },
+        methods: {
+            isMobile: function () {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            },
+            ShowSubject: function (ids) {
+                if (ids == "exam") { window.location.href = "/PEMain/MaintainSubset" }
+                if (ids == "score") { window.location.href = "/PEMain/MaintainScore" }
+            },
+            asideHandleOpen(key, keyPath) {
+
+            },
+            asideHandleClose(key, keyPath) {
+
+            }
+        }
+
+
+    })
+
+</script>
+

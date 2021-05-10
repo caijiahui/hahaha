@@ -150,6 +150,7 @@ namespace advt.CMS.Models.ExamModel
                         if (!string.IsNullOrEmpty(ds.Rows[i][6].ToString()))
                         {
 
+                            var ss = ds.Rows[i][0].ToString().Trim();
                             LDetail.Add(new ExamUserDetailInfo
                             {
                                 TypeName = ds.Rows[i][0].ToString().Trim(),

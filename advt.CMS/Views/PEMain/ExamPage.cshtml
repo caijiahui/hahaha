@@ -32,7 +32,6 @@
 <body>
 
     <div id="app" v-cloak>
-        {{isMobileTurn}}
         <div v-if="isMobileTurn=='true'">
             @{
 
@@ -530,9 +529,7 @@
                     var IsExams = _this.$refs.idisexam.value;
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
-                    console.log(IsExams, 12)
-                    console.log(IsTest, 34)
-                    if (IsExams == "true" || IsTest == "test") {
+                    if ( IsTest == "test") {
                         axios.post('/PEMain/Test', {
                             data: IsTest,
                             RuleName: RuleName
@@ -562,12 +559,14 @@
                         })
                     }
                     else {
-                        _this.$alert('未到考试时间', '提示', {
-                            confirmButtonText: '确定',
-                            callback: action => {
-                                window.location.href = "/PEMain/MaintainExam";
-                            }
-                        });
+                        if (IsExams == "false") {
+                                _this.$alert('未到考试时间', '提示', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        window.location.href = "/PEMain/MaintainExam";
+                                    }
+                                });
+                        }
                     }
                 }
 

@@ -1,34 +1,6 @@
-﻿@*@model advt.Model.LoginModel*@
-
-@{
-    //ViewBag.Title = "用户登陆";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
     Layout = null;
-
-    //List<advt.Model.Global.ActionInfo> lnav = new List<advt.Model.Global.ActionInfo>();
-    //lnav.Add(new advt.Model.Global.ActionInfo("用户登录"));
 }
-
-@*@section head{
-    @Styles.Render("~/Content/nlogin")
-}
-<link href="~/Scripts/style.css" rel="stylesheet" />
-@using (Html.BeginForm(null, null, new { }, FormMethod.Post, new { @class = "form-signin" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.Hidden("returnUrl")
-    <div class="main">
-        <div class="login">
-            <div class="login-top">
-                <img src="~/Images/p.png" />
-            </div>
-            <h1>用户登陆</h1>
-            <div class="login-bottom">
-                <input type="text" id="inputUserName" name="UserName" class="login_input" placeholder="请输入用户名">
-                <input type="password" id="inputPassword" name="Password" class="password" placeholder="密码">
-                <input type="submit" value="登 陆">
-                @*<a href="@Url.Action("Register", "Account")"><p>注册账号? Click Here</p></a>*@
-
     <!doctype html>
         <html>
         <head>
@@ -41,12 +13,23 @@
             <link href="~/Scripts/css2/font-awesome.css" rel="stylesheet" />
             <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
             <link href="~/Scripts/css2/layout.css" rel="stylesheet" />
+            <style>
+                @@media screen and (max-width:700px){
+                    .loginWrap .login_R{
+                        width:100vw;
+                    }
+                        .loginWrap .login_R .loginBox{
+                            width:auto;
+                        }
+                }
+            </style>
         </head>
+
         <body>
             <div id="app" v-cloak>
                 <div class="boxWrap" id="container">
                     <div class="loginWrap">
-                        <div class="login_L">
+                        <div class="login_L" v-if="isMobileTurn==false">
                             <h2>研华考试平台</h2>
                             <div class="logo">
                                 <img src="~/Images/logo.png" />
@@ -71,7 +54,7 @@
                                  ]">
                                             <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
                                         </el-form-item>
-                                      
+
                                         <h5>如Xiaoee.wang/Q-XXXXX，密码为开机密码</h5>
                                         <el-form-item class="loginBtn">
                                             <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
@@ -99,13 +82,25 @@
                         loginForm: {
                             UserName:'',
                             Password: '',
-                            CookieTime:0
-                        }
+                            CookieTime: 0
+                            
+                        },
+                        isMobileTurn: false
                     },
                     mounted: function () {
-
+                      
+                        if (this.isMobile()) {
+                            this.isMobileTurn = true
+                        } else {
+                            this.isMobileTurn = false
+                        }
                     },
                     methods: {
+                        isMobile: function () {
+                            let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                            console.log(flag,22);
+                            return flag
+                        },
                         submitForm(formName) {
                             this.$refs[formName].validate((valid) => {
                                 if (valid) {
@@ -116,7 +111,12 @@
                                     }).then(function (res) {
                                         console.log(res.data.IsLogin, 333);
                                         if (res.data.IsLogin == "Pass") {
-                                            window.location.href = "/PEMain/MaintainExamBank"
+                                            if (_this.isMobileTurn) {
+                                                window.location.href = "/PEMain/MaintainExam"
+                                            } else {
+                                                window.location.href = "/PEMain/MaintainExamPC"
+                                            }
+                                          
                                            
                                         } else {
                                             window.location.href = "/Account/Login"

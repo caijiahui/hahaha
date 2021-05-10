@@ -400,7 +400,8 @@
                 axios.post('/PEMain/GetBankInfo', {
                     ExamType: _this.TypeName,
                     ExamSubject: _this.ExamSubject,
-                    TopicLevel: _this.TopicLevel
+                    TopicLevel: _this.TopicLevel,
+                    TopicTitle: _this.TopicTitles
                 }).then(function (res) {
                     _this.allTableData = res.data.LExamBank;
                     let index = _this.paginations.page_size * (page - 1);
