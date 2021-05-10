@@ -136,7 +136,7 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
-        public MemoryStream SignUpBank(string TypeName, string ExamSubject, string TopicLevel)
+        public MemoryStream SignUpBank(string TypeName, string ExamSubject, string TopicLevel,string TopicTitle)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace advt.CMS.Models.ExamModel
                 //添加一个sheet
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 var model = new ExamBankModel();
-                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(TypeName, ExamSubject, TopicLevel);
+                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(TypeName, ExamSubject, TopicLevel,TopicTitle);
                 //获取list数据
                 var tlst = c;
                 //给sheet1添加第一行的头部标题
@@ -220,17 +220,17 @@ namespace advt.CMS.Models.ExamModel
             }
             if (!string.IsNullOrEmpty(subjectname))
             {
-                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(typename, subjectname, "");
+                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(typename, subjectname, "","");
                 ListTopicLevel = c.GroupBy(x => x.TopicLevel).Select(y => new ExamBank { TopicLevel = y.Key }).ToList();
             }
         }
-        public void GetBankInfo(string ExamType, string ExamSubject, string TopicLevel)
+        public void GetBankInfo(string ExamType, string ExamSubject, string TopicLevel,string TopicTitle)
         {
             try
             {
                 if (!string.IsNullOrEmpty(ExamType))
                 {
-                    var info = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(ExamType, ExamSubject, TopicLevel);
+                    var info = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(ExamType, ExamSubject, TopicLevel,TopicTitle);
                     LExamBank = info.Take(500).ToList();
                     BankRemark = "题库中有" + info.Count.ToString() + "道题目";
                 }

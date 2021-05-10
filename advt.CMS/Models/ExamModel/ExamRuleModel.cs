@@ -25,7 +25,6 @@ namespace advt.CMS.Models.ExamModel
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
-            ListExamRule = Data.ExamRule.Get_All_ExamRule();
             ListExamSubject = new List<ExamSubject>();
             TopicInfoList = new TopicInfo();
             ListTopicInfo = new List<ExamBank>();
@@ -37,6 +36,18 @@ namespace advt.CMS.Models.ExamModel
             ListExamRuleInfo = new List<ExamRule>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
+        public void GetRuleName(string RuleName)
+        {
+            if (string.IsNullOrEmpty(RuleName))
+            {
+                ListExamRule = Data.ExamRule.Get_All_ExamRule();
+            }
+            else
+            {
+                ListExamRule = Data.ExamRule.Get_All_ExamRuleInfo(RuleName);
+            }
+        }
+
 
 
         public string SaveRuleInfo(string username)

@@ -1,8 +1,8 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamBankModel
 
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <div id="app" style="margin-left:20px">
     <div style="width:100%;margin-top:30px;">
 
@@ -10,7 +10,7 @@
             <el-breadcrumb separator="/" style="margin-bottom:20px">
                 <el-breadcrumb-item>考试管理</el-breadcrumb-item>
                 <el-breadcrumb-item>题库管理</el-breadcrumb-item>
-            </el-breadcrumb>           
+            </el-breadcrumb>
         </template>
 
         <div style="float:left;margin-bottom:20px">
@@ -25,6 +25,8 @@
                 <el-select v-model="TopicLevel" placeholder="请选择题目等级">
                     <el-option v-for="item in ListTopicLevel" :key="item.Key" :label="item.TopicLevel" :value="item.TopicLevel"></el-option>
                 </el-select>
+                <el-input placeholder="题目内容" v-model="TopicTitles" style="width:200px">
+                </el-input>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
                 <el-button @@click="createTopic">新增</el-button>
                 <div style="margin-bottom:20px">
@@ -80,7 +82,7 @@
         <template>
             <el-divider content-position="left" v-model="BankRemark">{{BankRemark}}</el-divider>
         </template>
-      
+
         <el-table :data="allTableData.filter(data => !search || data.CreateDate.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100%;margin-top:20px " :default-sort="{prop: 'CreateDate', order: 'CreateUser'}" border @@selection-change="changeFun">
             <el-table-column type="selection">
@@ -114,13 +116,13 @@
                              width="180">
             </el-table-column>
             @*<el-table-column label="上传时间"
-                             prop="CreateDate" sortable
-                             width="180">
-            </el-table-column>
-            <el-table-column label="上传人"
-                             prop="CreateUser" sortable
-                             width="180">
-            </el-table-column>*@
+                                 prop="CreateDate" sortable
+                                 width="180">
+                </el-table-column>
+                <el-table-column label="上传人"
+                                 prop="CreateUser" sortable
+                                 width="180">
+                </el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
 
@@ -251,243 +253,249 @@
     </el-dialog>
 
 </div>
-    <script src="~/Scripts/Vue/axios.js"></script>
-    <script src="~/Scripts/Vue/Vue.js"></script>
-    <script src="~/Scripts/elementUI/lib/index.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
 
-    <script src="~/Scripts/Vue/polyfill.min.js"></script>
-    <script type="text/javascript">
-        new Vue({
-            el: '#app',
-            data: {
-                LExamBank: [],
-                VExamBank: {},
-                LExamType: [],
-                search: '',
-                TypeName: '',
-                ExamSubject: '',
-                TopicLevel: '',
-                ListTopicLevel:[],
-                ListSubjectName: [],
-                ListSearchSubject: [],
-                BankRemark:'',
-                dialogFormVisible: false,
-                formLabelWidth: '120px',
-                paginations: {
-                    page_index: 1,
-                    total: 0,
-                    page_size: 5,
-                    page_sizes: [5, 10, 15, 20],
-                    layout: 'total, sizes, prev, pager, next, jumper'
-                },
-                allTableData: [],
-                LTopicType: [
-                    {
-                        Key: '0',
-                        Value:'单选'
-                    },
-                    {
-                        Key: '1',
-                        Value: '多选'
-                    },
-                    {
-                        Key: '2',
-                        Value: '问答'
-                    },
-                ],
-                checkBoxData: []
-
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            LExamBank: [],
+            VExamBank: {},
+            LExamType: [],
+            search: '',
+            TypeName: '',
+            ExamSubject: '',
+            TopicLevel: '',
+            ListTopicLevel: [],
+            ListSubjectName: [],
+            ListSearchSubject: [],
+            BankRemark: '',
+            dialogFormVisible: false,
+            formLabelWidth: '120px',
+            TopicTitle: '',
+            TopicTitles:'',
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 5,
+                page_sizes: [5, 10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
             },
-            watch: {
-                'VExamBank.ExamType': function (newval) {
-                    var _this = this;
-                    axios.post('/PEMain/GetSubjectName', {
-                        model: newval
-                    }).then(response => {
-                        _this.ListSubjectName = response.data.ListSubjectName;
-                    });
+            allTableData: [],
+            LTopicType: [
+                {
+                    Key: '0',
+                    Value: '单选'
                 },
-                'TypeName': function (newval) {
-                    var _this = this;
-                    axios.post('/PEMain/GetBankTypeSujectLevel', {
-                        typename: newval
-                    }).then(response => {
-                        _this.ListSearchSubject = response.data.ListSubjectName;
-                        _this.ListTopicLevel = response.data.ListTopicLevel;
-                    });
+                {
+                    Key: '1',
+                    Value: '多选'
                 },
-                 'ExamSubject': function (newval) {
-                    var _this = this;
-                     axios.post('/PEMain/GetBankTypeSujectLevel', {
-                         typename: _this.TypeName,
-                         subjectname: newval
-                    }).then(response => {
-                        _this.ListSearchSubject = response.data.ListSubjectName;
-                        _this.ListTopicLevel = response.data.ListTopicLevel;
-                    });
-                }
+                {
+                    Key: '2',
+                    Value: '问答'
+                },
+            ],
+            checkBoxData: []
+
+        },
+        watch: {
+            'VExamBank.ExamType': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectName', {
+                    model: newval
+                }).then(response => {
+                    _this.ListSubjectName = response.data.ListSubjectName;
+                });
             },
-            mounted: function () {
-                this.getdata();
-                //this.getInfoList();
+            'TypeName': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetBankTypeSujectLevel', {
+                    typename: newval
+                }).then(response => {
+                    _this.ListSearchSubject = response.data.ListSubjectName;
+                    _this.ListTopicLevel = response.data.ListTopicLevel;
+                });
             },
-            methods: {
-                changeFun(val) {
-                    var _this = this;
-                    _this.checkBoxData = val;
-                },
-                getdata: function () {
-                    var _this = this;
-                    axios.post('/PEMain/GetBankInfo', {
+            'ExamSubject': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetBankTypeSujectLevel', {
+                    typename: _this.TypeName,
+                    subjectname: newval
+                }).then(response => {
+                    _this.ListSearchSubject = response.data.ListSubjectName;
+                    _this.ListTopicLevel = response.data.ListTopicLevel;
+                });
+            }
+        },
+        mounted: function () {
+            this.getdata();
+            //this.getInfoList();
+        },
+        methods: {
+            changeFun(val) {
+                var _this = this;
+                _this.checkBoxData = val;
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetBankInfo', {
 
-                    }).then(function (responese) {
-                        _this.allTableData = responese.data.LExamBank;
-                        _this.LExamType = responese.data.LExamType;
-                        _this.BankRemark = responese.data.BankRemark;
-                        _this.setPaginations();
-                    })
-                    
-                },
-                //getInfoList() {
-                //    var _this = this;
-                //    axios.post('/PEMain/GetBankInfo').then(res => {
-                //        const data = res.data.LExamBank;
-                //        _this.allTableData = data;
-                //        _this.setPaginations()
-                //    })
-                //},
-                DeleteBank() {
-                    var _this = this;
-                    axios.post('/PEMain/DeleteBankInfo', {
-                        ID: 0,
-                        TypeName: _this.TypeName,
-                        ExamSubject: _this.ExamSubject,
-                        TopicLevel: _this.TopicLevel
-                    }).then(function (res) {
-                        _this.$alert('已成功删除' + res.data.Result+"条记录", '删除信息', {
-                            confirmButtonText: '确定'
-                        });
-                        _this.allTableData = res.data.LExamBank;
-                        _this.setPaginations();
-                    });
-                },
-                setPaginations() {
-                    var _this = this;
-                    _this.paginations.total = _this.allTableData.length; //数据的数量
-                    console.log(_this.allTableData.length);
-                    _this.paginations.page_index = 1; //默认显示第一页
-                    _this.paginations.page_size = 5; //每页显示多少数据
-
-                    //显示数据
-                    _this.allTableData = _this.allTableData.filter((item, index) => {
-                        return index < _this.paginations.page_size;
-                    })
-                },
-                handleSizeChange(page_size) {
-                    var _this = this;
-                    _this.paginations.page_index = 1; //第一页
-                    _this.paginations.page_size = page_size; //每页先显示多少数据
-                    _this.allTableData = _this.allTableData.filter((item, index) => {
-                        return index < page_size
-                    })
-                },
-                handleCurrentChange(page) {
-                    var _this = this;
-                    axios.post('/PEMain/GetBankInfo').then(function (res) {
-                        _this.allTableData = res.data.LExamBank;
-                        let index = _this.paginations.page_size * (page - 1);
-                        //获取总数
-                        let allData = _this.paginations.page_size * page;
-                        console.log(_this.allTableData, index, allData);
-                        let tablist = [];
-                        for (let i = index; i < allData; i++) {
-                            if (_this.allTableData[i]) {
-                                tablist.push(_this.allTableData[i]);
-                            }
-                        }
-                        _this.allTableData = tablist;
-                    })
-                    
-                },
-                SearchinByTypeName() {
-                    var _this = this;
-                    axios.post('/PEMain/GetBankInfo', {
-                        ExamType: _this.TypeName,
-                        ExamSubject: _this.ExamSubject,
-                        TopicLevel: _this.TopicLevel
-                    }).then(function (res) {
-                        _this.allTableData = res.data.LExamBank;
-                        _this.BankRemark = res.data.BankRemark;
-                        _this.setPaginations();
-                    });
-                    _this.dialogFormVisible = false
-                },
-                handleEdit(ID) {
-                    var _this = this;
-                    axios.post('/PEMain/GetTopic', {
-                        ID: ID
-                    }).then(function (res) {
-                        _this.VExamBank = res.data.VExamBank;
-                    });
-                    _this.dialogFormVisible = true;
-                }, 
-                handleSave() {
-                    var _this = this;
-                    var objs = {};
-                    objs.VExamBank = _this.VExamBank;
-                    axios.post('/PEMain/SaveBankInfo', {
-                        model: objs
-                    }).then(function (res) {
-                        _this.allTableData = res.data.LExamBank;
-                        this.VExamBank = {};
-                        _this.setPaginations();
-
-
-                    });
-                    _this.dialogFormVisible = false
-                },
-                handleDelete(index) {
-                    var _this = this;
-                    var ID = index;
-                    axios.post('/PEMain/DeleteBankInfo', {
-                        ID: ID
-                    }).then(function (res) {
-                        _this.allTableData = res.data.LExamBank;
-                        _this.setPaginations();
-                        });
-                  
-                },
-                createTopic() {
-                    var _this = this;
-                    this.VExamBank = {};
-                    _this.dialogFormVisible = true;
-                },
-                handleSuccess(Result) {
-                    console.log(Result, 43);
-                },
-                handleExcelSuccess(Result, LExamBank) {
-                    var _this = this;
-                    _this.allTableData = Result.LExamBank;
+                }).then(function (responese) {
+                    _this.allTableData = responese.data.LExamBank;
+                    _this.LExamType = responese.data.LExamType;
+                    _this.BankRemark = responese.data.BankRemark;
                     _this.setPaginations();
-                    this.$message({
-                        message: Result.Result,
-                        type: 'success'
+                })
+
+            },
+            //getInfoList() {
+            //    var _this = this;
+            //    axios.post('/PEMain/GetBankInfo').then(res => {
+            //        const data = res.data.LExamBank;
+            //        _this.allTableData = data;
+            //        _this.setPaginations()
+            //    })
+            //},
+            DeleteBank() {
+                var _this = this;
+                axios.post('/PEMain/DeleteBankInfo', {
+                    ID: 0,
+                    TypeName: _this.TypeName,
+                    ExamSubject: _this.ExamSubject,
+                    TopicLevel: _this.TopicLevel
+                }).then(function (res) {
+                    _this.$alert('已成功删除' + res.data.Result + "条记录", '删除信息', {
+                        confirmButtonText: '确定'
                     });
-                },
-                changeTopicType(ids) {
-                    if (ids == "0") {
-                        return '单选'
+                    _this.allTableData = res.data.LExamBank;
+                    _this.setPaginations();
+                });
+            },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.allTableData.length; //数据的数量
+                console.log(_this.allTableData.length);
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 5; //每页显示多少数据
+
+                //显示数据
+                _this.allTableData = _this.allTableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.allTableData = _this.allTableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetBankInfo', {
+                    ExamType: _this.TypeName,
+                    ExamSubject: _this.ExamSubject,
+                    TopicLevel: _this.TopicLevel
+                }).then(function (res) {
+                    _this.allTableData = res.data.LExamBank;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.allTableData, index, allData);
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.allTableData[i]) {
+                            tablist.push(_this.allTableData[i]);
+                        }
                     }
-                    else if (ids == "1") {
-                        return '多选'
-                    }
-                    else if (ids == "2") {
-                        return '问答'
-                    }
+                    _this.allTableData = tablist;
+                });
+            },
+            SearchinByTypeName() {
+                var _this = this;
+                axios.post('/PEMain/GetBankInfo', {
+                    ExamType: _this.TypeName,
+                    ExamSubject: _this.ExamSubject,
+                    TopicLevel: _this.TopicLevel,
+                    TopicTitle: _this.TopicTitles
+                }).then(function (res) {
+                    _this.allTableData = res.data.LExamBank;
+                    _this.BankRemark = res.data.BankRemark;
+                    _this.setPaginations();
+                });
+                _this.dialogFormVisible = false
+            },
+            handleEdit(ID) {
+                var _this = this;
+                axios.post('/PEMain/GetTopic', {
+                    ID: ID
+                }).then(function (res) {
+                    _this.VExamBank = res.data.VExamBank;
+                });
+                _this.dialogFormVisible = true;
+            },
+            handleSave() {
+                var _this = this;
+                var objs = {};
+                objs.VExamBank = _this.VExamBank;
+                axios.post('/PEMain/SaveBankInfo', {
+                    model: objs
+                }).then(function (res) {
+                    _this.allTableData = res.data.LExamBank;
+                    this.VExamBank = {};
+                    _this.setPaginations();
+
+
+                });
+                _this.dialogFormVisible = false
+            },
+            handleDelete(index) {
+                var _this = this;
+                var ID = index;
+                axios.post('/PEMain/DeleteBankInfo', {
+                    ID: ID
+                }).then(function (res) {
+                    _this.allTableData = res.data.LExamBank;
+                    _this.setPaginations();
+                });
+
+            },
+            createTopic() {
+                var _this = this;
+                this.VExamBank = {};
+                _this.dialogFormVisible = true;
+            },
+            handleSuccess(Result) {
+                console.log(Result, 43);
+            },
+            handleExcelSuccess(Result, LExamBank) {
+                var _this = this;
+                _this.allTableData = Result.LExamBank;
+                _this.setPaginations();
+                this.$message({
+                    message: Result.Result,
+                    type: 'success'
+                });
+            },
+            changeTopicType(ids) {
+                if (ids == "0") {
+                    return '单选'
+                }
+                else if (ids == "1") {
+                    return '多选'
+                }
+                else if (ids == "2") {
+                    return '问答'
                 }
             }
-            
+        }
 
-        })
-    </script>
+
+    })
+</script>
 

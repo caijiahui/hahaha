@@ -276,11 +276,11 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult GetRuleInfo()
+        public ActionResult GetRuleInfo(string RuleName)
         {
-            var subjectInfo = Data.ExamRule.Get_All_ExamRule();
             ExamRuleModel model = new ExamRuleModel();
-            return Json(new { tableData = subjectInfo, VExamRule = model.VExamRule }, JsonRequestBehavior.AllowGet);
+            model.GetRuleName(RuleName);
+            return Json(new { tableData = model.ListExamRule, VExamRule = model.VExamRule }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetSubjectName(string model)
@@ -329,10 +329,10 @@ namespace advt.Web.Controllers
             return Json(new { ListSubjectName = models.ListExamSubject, ListTopicLevel = models.ListTopicLevel }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult GetBankInfo(string ExamType,string ExamSubject,string TopicLavel)
+        public ActionResult GetBankInfo(string ExamType,string ExamSubject,string TopicLavel,string TopicTitle)
         {
             var model = new ExamBankModel();
-            model.GetBankInfo(ExamType, ExamSubject, TopicLavel);
+            model.GetBankInfo(ExamType, ExamSubject, TopicLavel, TopicTitle);
             return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType, BankRemark=model.BankRemark }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -357,10 +357,10 @@ namespace advt.Web.Controllers
             model.SaveBankInfo(username);
             return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
-        public FileResult SignUpBankExcel(string TypeName, string ExamSubject,string TopicLevel)
+        public FileResult SignUpBankExcel(string TypeName, string ExamSubject,string TopicLevel,string TopicTitle)
         {
             var model = new ExamBankModel();
-           var ms= model.SignUpBank(TypeName, ExamSubject, TopicLevel);
+           var ms= model.SignUpBank(TypeName, ExamSubject, TopicLevel, TopicTitle);
             return File(ms, "application/vnd.ms-excel", TypeName + ExamSubject + "题库" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
         }
@@ -1016,7 +1016,7 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetUserInfo()
+        public ActionResult GetUserInfos()
         {
             UserManagerModel model = new UserManagerModel();
             model.GetUser();

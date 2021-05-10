@@ -83,25 +83,40 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-        public IDataReader Get_All_ExamBank_ExamType_Subject(string ExamType, string ExamSubject,string TopicLevel)
+        public IDataReader Get_All_ExamBank_ExamType_Subject(string ExamType, string ExamSubject,string TopicLevel,string TopicTitle)
         {
             StringBuilder commandText = new StringBuilder();
             List<DbParameter> l_parms = new List<DbParameter>();
-            commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
-            commandText.AppendLine("   FROM [ExamBank] ");
-            var texts = " where ExamType=@ExamType ";
-            if (!string.IsNullOrEmpty(ExamSubject))
+            var texts = "";
+            if (string.IsNullOrEmpty(TopicTitle))
             {
-                texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
+                commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
+                commandText.AppendLine("   FROM [ExamBank] ");
+                texts = " where ExamType=@ExamType ";
+                if (!string.IsNullOrEmpty(ExamSubject))
+                {
+                    texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
+                }
+                if (!string.IsNullOrEmpty(TopicLevel))
+                {
+                    texts += " and TopicLevel =@TopicLevel ";
+                }
+                commandText.AppendLine(texts);
+                l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 500, ExamType));
+                l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
+                l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
             }
-            if (!string.IsNullOrEmpty(TopicLevel))
+            else
             {
-                texts += " and TopicLevel =@TopicLevel ";
+                commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
+                commandText.AppendLine("   FROM [ExamBank] ");
+                if (!string.IsNullOrEmpty(TopicTitle))
+                {
+                    texts= " where TopicTitle like N'%" + TopicTitle + "%' ";
+                }
+                commandText.AppendLine(texts);
+                l_parms.Add(SqlHelper.MakeInParam("@TopicTitle", (DbType)SqlDbType.NVarChar, 500, TopicTitle));
             }
-            commandText.AppendLine(texts);
-            l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 500, ExamType));
-            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
-            l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
         

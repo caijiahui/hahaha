@@ -146,7 +146,7 @@
 
             </div>
 
-            <el-table height="800" :data="tableData.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase())|| data.UserName.toLowerCase().includes(search.toLowerCase()))"
+            <el-table height="800" :data="tableData"
                       style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
                 <el-table-column prop="UserCode"
                                  label="工号">

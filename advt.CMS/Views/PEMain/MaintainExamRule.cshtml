@@ -19,6 +19,10 @@
                 <el-breadcrumb-item>考试管理</el-breadcrumb-item>
                 <el-breadcrumb-item>考试规则</el-breadcrumb-item>
             </el-breadcrumb>
+           
+            <el-input placeholder="规则名" v-model="Rule" style="width:200px">
+            </el-input>
+            <el-button slot="append" @@click="SearchinByRule">Search</el-button>
             <el-button @@click="createRule">新增</el-button>
         </template>
 
@@ -174,6 +178,7 @@
             TotalTime: '',
             TotalSubject: '',
             PassScore: '',
+            Rule:'',
             ruleform: {
                 RuleName: [
                     { required: true, message: '请输入规则名字', trigger: 'blur' }
@@ -399,6 +404,17 @@
             },
             editRow(index, rows) {
 
+            },
+            
+            SearchinByRule() {
+                var _this = this;
+                axios.post('/PEMain/GetRuleInfo', {
+                    RuleName: _this.Rule
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                });
+                _this.dialogFormVisible = false
             },
             deleteRow(index, TopicMajor, TopicLevel, TopicType, RuleName, ID, rows) {
                 console.log(ID);
