@@ -174,11 +174,15 @@ namespace advt.CMS.Models.ExamModel
                 foreach (var item in LDetail)
                 {
                     var d = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = item.TypeName, SubjectName = item.SubjectName, IsStop = false });
-                    if (d == null)
+
+                    if (d != null)
                     {
-                        var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
-                        successcount += c;
+                        item.IsStop = true;
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
+
+                    var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    successcount += c;
 
                 }
                 GetHrAuditUser();
