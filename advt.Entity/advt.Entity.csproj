@@ -68,8 +68,10 @@
     <Compile Include="ExamRole.cs" />
     <Compile Include="ExamBank.cs" />
     <Compile Include="ExamRecord.cs" />
+    <Compile Include="ExamUsersFromehr.cs" />
     <Compile Include="ExamRuleTopicType.cs" />
     <Compile Include="ExamRule.cs" />
+    <Compile Include="ExamRolePartDetail.cs" />
     <Compile Include="ExamScore.cs" />
     <Compile Include="ExamSubject.cs" />
     <Compile Include="ExamType.cs" />

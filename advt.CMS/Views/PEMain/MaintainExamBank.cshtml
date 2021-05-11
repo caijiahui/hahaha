@@ -15,17 +15,15 @@
 
         <div style="float:left;margin-bottom:20px">
             <template>
-
-                <el-select v-model="TypeName" placeholder="请选择考试类型">
-                    <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-                </el-select>
-                <el-select v-model="ExamSubject" placeholder="请选择考试科目">
-                    <el-option v-for="item in ListSearchSubject" :key="item.Key" :label="item.SubjectName" :value="item.SubjectName"></el-option>
-                </el-select>
-                <el-select v-model="TopicLevel" placeholder="请选择题目等级">
-                    <el-option v-for="item in ListTopicLevel" :key="item.Key" :label="item.TopicLevel" :value="item.TopicLevel"></el-option>
-                </el-select>
-                <el-input placeholder="题目内容" v-model="TopicTitles" style="width:200px">
+                <el-input placeholder="考试类型" v-model="VSearchBnakData.ExamType" style="width:200px">
+                </el-input>
+                <el-input placeholder="考试科目" v-model="VSearchBnakData.ExamSubject" style="width:200px">
+                </el-input>
+                <el-input placeholder="题目等级" v-model="VSearchBnakData.ExamLevel" style="width:200px">
+                </el-input>
+                <el-input placeholder="考试专业" v-model="VSearchBnakData.ExamMajor" style="width:200px">
+                </el-input>
+                <el-input placeholder="考试内容" v-model="VSearchBnakData.ExamContent" style="width:200px">
                 </el-input>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
                 <el-button @@click="createTopic">新增</el-button>
@@ -55,7 +53,7 @@
                         </el-upload>
                     </div>
                     <div style="float:left;margin-left:20px;margin-top:30px">
-                        <a style="color:white" :href="'/PEMain/SignUpBankExcel?TypeName='+TypeName+'&ExamSubject='+ExamSubject+'&TopicLevel='+TopicLevel">
+                        <a style="color:white" :href="'/PEMain/SignUpBankExcel?ExamType='+VSearchBnakData.ExamType+'&ExamSubject='+VSearchBnakData.ExamSubject+'&ExamMajor='+VSearchBnakData.ExamMajor+'&ExamLevel='+VSearchBnakData.ExamLevel+'&ExamContent='+VSearchBnakData.ExamContent">
                             <el-button size="small" type="primary">
                                 导出
                             </el-button>
@@ -115,14 +113,6 @@
                              prop="TopicTitle" sortable
                              width="180">
             </el-table-column>
-            @*<el-table-column label="上传时间"
-                                 prop="CreateDate" sortable
-                                 width="180">
-                </el-table-column>
-                <el-table-column label="上传人"
-                                 prop="CreateUser" sortable
-                                 width="180">
-                </el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
 
@@ -265,6 +255,7 @@
             LExamBank: [],
             VExamBank: {},
             LExamType: [],
+            VSearchBnakData: {},
             search: '',
             TypeName: '',
             ExamSubject: '',
@@ -303,33 +294,7 @@
 
         },
         watch: {
-            'VExamBank.ExamType': function (newval) {
-                var _this = this;
-                axios.post('/PEMain/GetSubjectName', {
-                    model: newval
-                }).then(response => {
-                    _this.ListSubjectName = response.data.ListSubjectName;
-                });
-            },
-            'TypeName': function (newval) {
-                var _this = this;
-                axios.post('/PEMain/GetBankTypeSujectLevel', {
-                    typename: newval
-                }).then(response => {
-                    _this.ListSearchSubject = response.data.ListSubjectName;
-                    _this.ListTopicLevel = response.data.ListTopicLevel;
-                });
-            },
-            'ExamSubject': function (newval) {
-                var _this = this;
-                axios.post('/PEMain/GetBankTypeSujectLevel', {
-                    typename: _this.TypeName,
-                    subjectname: newval
-                }).then(response => {
-                    _this.ListSearchSubject = response.data.ListSubjectName;
-                    _this.ListTopicLevel = response.data.ListTopicLevel;
-                });
-            }
+         
         },
         mounted: function () {
             this.getdata();
@@ -343,7 +308,7 @@
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetBankInfo', {
-
+                    VSearchBnakData: _this.VSearchBnakData
                 }).then(function (responese) {
                     _this.allTableData = responese.data.LExamBank;
                     _this.LExamType = responese.data.LExamType;
@@ -352,14 +317,6 @@
                 })
 
             },
-            //getInfoList() {
-            //    var _this = this;
-            //    axios.post('/PEMain/GetBankInfo').then(res => {
-            //        const data = res.data.LExamBank;
-            //        _this.allTableData = data;
-            //        _this.setPaginations()
-            //    })
-            //},
             DeleteBank() {
                 var _this = this;
                 axios.post('/PEMain/DeleteBankInfo', {
@@ -398,10 +355,7 @@
             handleCurrentChange(page) {
                 var _this = this;
                 axios.post('/PEMain/GetBankInfo', {
-                    ExamType: _this.TypeName,
-                    ExamSubject: _this.ExamSubject,
-                    TopicLevel: _this.TopicLevel,
-                    TopicTitle: _this.TopicTitles
+                    VSearchBnakData: _this.VSearchBnakData
                 }).then(function (res) {
                     _this.allTableData = res.data.LExamBank;
                     let index = _this.paginations.page_size * (page - 1);
@@ -420,10 +374,7 @@
             SearchinByTypeName() {
                 var _this = this;
                 axios.post('/PEMain/GetBankInfo', {
-                    ExamType: _this.TypeName,
-                    ExamSubject: _this.ExamSubject,
-                    TopicLevel: _this.TopicLevel,
-                    TopicTitle: _this.TopicTitles
+                    VSearchBnakData: _this.VSearchBnakData
                 }).then(function (res) {
                     _this.allTableData = res.data.LExamBank;
                     _this.BankRemark = res.data.BankRemark;
@@ -450,8 +401,6 @@
                     _this.allTableData = res.data.LExamBank;
                     this.VExamBank = {};
                     _this.setPaginations();
-
-
                 });
                 _this.dialogFormVisible = false
             },

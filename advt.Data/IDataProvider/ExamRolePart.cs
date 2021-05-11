@@ -13,6 +13,7 @@ namespace advt.Data
         #region ExamRolePart , (Ver:2.3.8) at: 2021/5/10 16:25:41
 
         IDataReader Get_All_ExamRolePart(object objparams);
+        IDataReader Get_All_ExamRolPartDetail_Sort(string username, string Action, string Controller);
 
         int Insert_ExamRolePart(Entity.ExamRolePart info, string[] Include, string[] Exclude);
         int Delete_ExamRolePart(int ID); 

@@ -27,23 +27,31 @@ namespace advt.CMS.Models.ExamModel
             LPracticeInfo = new List<PracticeInfo>();
             LExamType = new List<KeyValuePair<string, string>>();
         }
-        public void GetHrAuditUser(string typename = "")
+        public void GetHrAuditUser(SearchHrData model=null)
         {
-            if (string.IsNullOrEmpty(typename))
+            try
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                if (model != null)
+                {
+                    ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x => x.TypeName).ToList();
+                }
+                else
+                {
+                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                    ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.TypeName).ToList();
+                }
+                LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+                foreach (var item in Data.ExamType.Get_All_ExamType())
+                {
+                    LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = typename, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
-                ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrCheck", TypeName = typename, IsStop = false, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+
+                throw;
             }
-            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
-            foreach (var item in Data.ExamType.Get_All_ExamType())
-            {
-                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
-            }
+            
         }
         public void UpdateHrAduitUser(List<ExamUserDetailInfo> model, string username)
         {
@@ -197,5 +205,12 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
+    }
+    public class SearchHrData
+    {
+        public string TypeName { get; set; }
+        public string UserCode { get; set; }
+        public string SubjectName { get; set; }
+        public string DepartCode { get; set; }
     }
 }

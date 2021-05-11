@@ -24,6 +24,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamSubject> ListExamSubject { get; set; }
         public List<ExamBank> ListTopicLevel { get; set; }
         public string BankRemark { get; set; }
+        
         public ExamBankModel() : base()
         {
             LExamSubject = new List<KeyValuePair<string, string>>();
@@ -136,16 +137,27 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
-        public MemoryStream SignUpBank(string TypeName, string ExamSubject, string TopicLevel,string TopicTitle)
+        public MemoryStream SignUpBank(string ExamType, string ExamSubject, string ExamMajor, string ExamLevel, string ExamContent)
         {
             try
             {
+                if(ExamType== "undefined")
+                    ExamType = "";
+                if (ExamSubject == "undefined")
+                    ExamSubject = "";
+                if (ExamMajor == "undefined")
+                    ExamMajor = "";
+                if (ExamLevel == "undefined")
+                    ExamLevel = "";
+                if (ExamContent == "undefined")
+                    ExamContent = "";
+
                 //创建Excel文件的对象
                 NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
                 //添加一个sheet
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 var model = new ExamBankModel();
-                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(TypeName, ExamSubject, TopicLevel);
+                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(ExamType, ExamSubject, ExamMajor, ExamLevel, ExamContent);
                 //获取list数据
                 var tlst = c;
                 //给sheet1添加第一行的头部标题
@@ -212,33 +224,33 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
-        public void GetSubjectList(string typename, string subjectname)
-        {
-            if (!string.IsNullOrEmpty(typename))
-            {
-                ListExamSubject = Data.ExamRule.GetSubjectList(typename);
-            }
-            if (!string.IsNullOrEmpty(subjectname))
-            {
-                var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(typename, subjectname, "");
-                ListTopicLevel = c.GroupBy(x => x.TopicLevel).Select(y => new ExamBank { TopicLevel = y.Key }).ToList();
-            }
-        }
-        public void GetBankInfo(string ExamType, string ExamSubject, string TopicLevel,string TopicTitle)
+        //public void GetSubjectList(string typename, string subjectname)
+        //{
+        //    if (!string.IsNullOrEmpty(typename))
+        //    {
+        //        ListExamSubject = Data.ExamRule.GetSubjectList(typename);
+        //    }
+        //    if (!string.IsNullOrEmpty(subjectname))
+        //    {
+        //        var c = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(typename, subjectname, "","");
+        //        ListTopicLevel = c.GroupBy(x => x.TopicLevel).Select(y => new ExamBank { TopicLevel = y.Key }).ToList();
+        //    }
+        //}
+        public void GetBankInfo(SearchBnakData data)
         {
             try
             {
-                if (!string.IsNullOrEmpty(ExamType))
+                if (data != null)
                 {
-                    var info = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(ExamType, ExamSubject, TopicLevel);
+                    var info = Data.ExamBank.Get_All_ExamBank_ExamType_Subject(data.ExamType, data.ExamSubject,data.ExamMajor,data.ExamLevel,data.ExamContent);
                     LExamBank = info.Take(500).ToList();
                     BankRemark = "题库中有" + info.Count.ToString() + "道题目";
                 }
                 else
                 {
-                    var info = Data.ExamBank.Get_All_ExamBankTople(TopicTitle);
+                    var info = Data.ExamBank.Get_All_ExamBank_ExamType_Subject("","","","","");
                     LExamBank = info.Take(500).ToList();
-                    BankRemark ="题库中有"+ info.Count.ToString()+"道题目";
+                    BankRemark = "题库中有" + info.Count.ToString() + "道题目";
                 }
                 LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
                 foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -291,4 +303,12 @@ namespace advt.CMS.Models.ExamModel
             LExamBank = Data.ExamBank.Get_All_ExamBank();
         }
         }
+    public class SearchBnakData
+    {
+        public string ExamType { get; set; }
+        public string ExamSubject { get; set; }
+        public string ExamLevel { get; set; }
+        public string ExamContent { get; set; }
+        public string ExamMajor { get; set; }
+    }
 }

@@ -13,9 +13,8 @@ namespace advt.Data
 
         IDataReader Get_All_ExamBank(object objparams);
         IDataReader Get_All_ExamBank_ExamType_Rule(string TopicType, string TopicMajor, string TopicLevel,string ExamSubject);
-        IDataReader Get_All_ExamBank_ExamType_Subject(string type, string subject,string TopicLevel);
-        IDataReader Get_All_ExamBankTople(string TopicTitle);
-        
+        IDataReader Get_All_ExamBank_ExamType_Subject(string ExamType, string ExamSubject, string ExamMajor, string ExamLevel, string ExamContent);
+
         int Insert_ExamBank(Entity.ExamBank info, string[] Include, string[] Exclude);
 
         int Update_ExamBank(Entity.ExamBank info, string[] Include, string[] Exclude);

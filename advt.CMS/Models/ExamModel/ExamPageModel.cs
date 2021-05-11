@@ -83,6 +83,10 @@ namespace advt.CMS.Models
                         var banks = Data.ExamBank.Get_All_ExamBank_ExamType_Rule(item.TopicType, item.TopicMajor, item.TopicLevel, Rule.SubjectName);
                         int TopicNum = Convert.ToInt32(item.TopicNum);
                         var bank = banks.OrderBy(y => Guid.NewGuid()).Take(TopicNum);
+                        if (TopicNum != bank.Count())
+                        {
+
+                        }
                         foreach (var items in bank)
                         {
                             var right = items.RightKey.Split(',').OrderBy(x => x).ToArray();

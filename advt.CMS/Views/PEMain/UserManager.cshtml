@@ -8,22 +8,48 @@
         <template>
             <el-breadcrumb separator="/" style="margin-bottom:20px">
                 <el-breadcrumb-item>考试管理</el-breadcrumb-item>
-                <el-breadcrumb-item>题库管理</el-breadcrumb-item>
+                <el-breadcrumb-item>权限管理</el-breadcrumb-item>
             </el-breadcrumb>
         </template>
         <div style="margin-top:20px;clear:both;">
             <template>
-                <el-input placeholder="请输入需要查询的人员姓名" v-model="UserName" class="input-with-select" style="width:30%;">
-                    <el-button slot="append" @@click="handleSearch">查询</el-button>
-                </el-input>
+                <div style="float:left">
+                    <el-input placeholder="搜索姓名/工号" v-model="VSearchData.UserNameCode" />
+                </div>
+                <div style="float:left;margin-left:20px">
+                   <el-input placeholder="搜索部门代码" v-model="VSearchData.Depert" />
+                </div>
+                <div style="float:left;margin-left:20px">
+                   
+                    <el-select v-model="VSearchData.RoleName" placeholder="选择权限名称">
+                        <el-option v-for="item in ListType" :key="item.key" :label="item" :value="item"></el-option>
+                    </el-select>
+                </div>
+                <div style="float:left">
+                    <el-button  @@click="SearchBy">Search</el-button>
+                </div>
+                
+
             </template>
 
             <el-table :data="ListUsers.filter(data => !search || data.username.toLowerCase().includes(search.toLowerCase()))"
                       style="width: 100%;margin-top:20px ">
-                <el-table-column label="姓名"
+                <el-table-column label="员工工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
+                <el-table-column label="员工账号"
+                                 prop="EamilUsername" sortable>
+                </el-table-column>
+                <el-table-column label="员工姓名"
                                  prop="username" sortable>
                 </el-table-column>
-                <el-table-column label="角色"
+                <el-table-column label="员工邮箱"
+                                 prop="CommpanyEmail" sortable>
+                </el-table-column>
+                <el-table-column label="部门代码"
+                                 prop="UserDept" sortable>
+                </el-table-column>
+                <el-table-column label="权限名称"
                                  prop="type" sortable>
                 </el-table-column>
                 <el-table-column align="right">
@@ -36,7 +62,7 @@
 
                     <template slot-scope="scope">
                         <el-button size="mini"
-                                   @@click="handleEdit(scope.row.username,scope.row.type,scope.row.id)">Edit</el-button>
+                                   @@click="handleEdit(scope.row.EamilUsername,scope.row.type,scope.row.id)">Edit</el-button>
                     </template>
 
                 </el-table-column>
@@ -84,6 +110,7 @@
         data: {
             ListUsers: [],
             ListType: [],
+            VSearchData: {},
             VUserInfo: {},
             search: '',
             UserName:'',
@@ -106,19 +133,11 @@
             //this.getInfoList();
         },
         methods: {
-            changeFun(val) {
+            SearchBy: function () {
                 var _this = this;
-                _this.checkBoxData = val;
-            },
-            handleSearch: function () {
-                var _this = this;
-
-
-
-
-
+                console.log(_this.VSearchData,23)
                 axios.post('/PEMain/GetUserManagerInfo', {
-                    username: _this.UserName
+                    VSearchData: _this.VSearchData
                 }).then(function (responese) {
                     _this.ListType = responese.data.ListType;
                     console.log(responese.data.ListType, 123);
@@ -126,10 +145,14 @@
                     //_this.setPaginations();
                 })
             },
+            changeFun(val) {
+                var _this = this;
+                _this.checkBoxData = val;
+            },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetUserManagerInfo', {
-                    username: _this.UserName
+                    VSearchData: _this.VSearchData
                 }).then(function (responese) {
                     _this.ListType = responese.data.ListType;
                     console.log(responese.data.ListType, 123);
@@ -154,6 +177,9 @@
             },
             handleSave() {
                 var _this = this;
+                console.log(_this.VUserInfo.id, 1);
+                console.log(_this.VUserInfo.type, 2);
+                console.log(_this.VUserInfo.username, 3);
                 axios.post('/PEMain/EditUserType', {
                     id: _this.VUserInfo.id,
                     type: _this.VUserInfo.type,

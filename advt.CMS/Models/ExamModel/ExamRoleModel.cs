@@ -12,6 +12,7 @@ namespace advt.CMS.Models.ExamModel
         public string RoleName { get; set; }
         public List<string> checkRole { get; set; }
         public List<ExamRole> ListExamRole { get; set; }
+        public List<string> LRole { get; set; }
         public string RoleID { get; set; }
         public ExamRole VExamRole { get; set; }
 
@@ -21,6 +22,7 @@ namespace advt.CMS.Models.ExamModel
             checkRole = new List<string>();
             ListExamRole = new List<ExamRole>();
             VExamRole = new ExamRole();
+            LRole = new List<string>();
         }
         public string SaveExamRole(string username)
         {
@@ -96,6 +98,7 @@ namespace advt.CMS.Models.ExamModel
             {
                 model = Data.ExamRole.Get_All_ExamRole();
             }
+            LRole = Data.ExamRolePartDetail.Get_All_ExamRolePartDetail().Select(y=>y.PartName).ToList();
             return model;
         }
         public string DeleteExamRole(string RoleName)

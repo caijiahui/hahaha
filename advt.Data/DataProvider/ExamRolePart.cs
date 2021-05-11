@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using advt.Entity;
 using System.Collections.Generic;
-
+using advt.Model.ExamModel;
 
 namespace advt.Data
 {
@@ -21,6 +21,12 @@ namespace advt.Data
         public static List<Entity.ExamRolePart> Get_All_ExamRolePart()
         {
             return Get_All_ExamRolePart(null);
+        }
+        public static List<ExamRoleViewModel> Get_All_ExamRolPartDetail_Sort(string username,string Action,string Controller)
+        {
+
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamRolPartDetail_Sort(username,Action,Controller);
+            return SqlHelper.GetReaderToList<ExamRoleViewModel>(reader);
         }
 
         public static Entity.ExamRolePart Get_ExamRolePart(object objparams)
@@ -51,6 +57,7 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamRolePartByName(rolename);
         }
+
         #endregion
     }
 }

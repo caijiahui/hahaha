@@ -101,6 +101,21 @@
             </div>
             <div style="margin-top:20px;clear:both">
                 <template>
+                    <el-input placeholder="搜查考试类型" v-model="VSCheckData.TypeName" style="width:200px">
+                    </el-input>
+                    <el-input placeholder="搜查工号" v-model="VSCheckData.UserCode" style="width:200px">
+                    </el-input>
+                    <el-input placeholder="搜查科目" v-model="VSCheckData.SubjectName" style="width:200px">
+                    </el-input>
+                    <el-input placeholder="搜查部门" v-model="VSCheckData.DepartCode" style="width:200px">
+                    </el-input>
+                    <el-button slot="append" @@click="SearchCheckdata">Search</el-button>
+                </template>
+
+
+            </div>
+            <div style="margin-top:20px;clear:both">
+                <template>
 
                     <el-table :data="ListHrAuditSuccessUser"
                               style="width: 100%;margin-top:20px;clear:both " border @@selection-change="changeFun">
@@ -163,6 +178,14 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-pagination @@size-change="handleSizeChange"
+                                   @@current-change="handleCurrentChange"
+                                   :current-page="paginations.page_index"
+                                   :page-sizes="paginations.page_sizes"
+                                   :page-size="paginations.page_size"
+                                   :layout="paginations.layout"
+                                   :total="paginations.total">
+                    </el-pagination>
                 </template>
             </div>
 
@@ -362,13 +385,21 @@
             LPracticeInfo: [],//实践
             TypeName: '',
             LExamType:[],
-            LExamUserDetailInfo:[],
+            LExamUserDetailInfo: [],
+            VSCheckData: {},
             VAuditCheck: {},
             formLabelWidth: '120px',
             search: '',
             VPracticeInfo: {},
             checkBoxData: [],
-            activeName: 'first'
+            activeName: 'first',
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 5,
+                page_sizes: [5, 10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
           
         },
         mounted: function () {
@@ -384,6 +415,16 @@
             },
             dataSearch() {
                 this.getListByDataTime();
+            },
+            SearchCheckdata() {
+                var _this = this;
+                axios.post('/PEMain/GetHrAuditUser', {
+                    model: _this.VSCheckData
+                }).then(function (res) {
+                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                    _this.setPaginations();
+                });
             },
             //批量更新操作
             handleUpdate() {
@@ -430,6 +471,49 @@
                     type: 'success'
                 });
             },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.ListHrAuditSuccessUser.length; //数据的数量
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 5; //每页显示多少数据
+
+                //显示数据
+                _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetHrAuditUser', {
+                    model: _this.SearchCheckdata
+                }).then(function (res) {
+                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+
+                    let allData = _this.paginations.page_size * page;
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        console.log(_this.ListHrAuditSuccessUser[i], 333)
+                        if (_this.ListHrAuditSuccessUser[i]) {
+
+                            tablist.push(_this.ListHrAuditSuccessUser[i]);
+                        }
+                    }
+                    _this.ListHrAuditSuccessUser = tablist;
+
+                });
+
+            },
             //取消
             handleStop(ID) {
                 var _this = this;
@@ -466,7 +550,7 @@
             SearchinByTypeName() {
                 var _this = this;
                 axios.post('/PEMain/GetHrAuditUser', {
-                    typename: _this.TypeName
+                    model: _this.SearchCheckdata
                 }).then(function (res) {
                     _this.ListHrAuditUser = res.data.ListHrAuditUser;
                     _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
@@ -517,10 +601,14 @@
             },
             getdata: function () {
                 var _this = this;
-                axios.post('/PEMain/GetHrAuditUser').then(function (responese) {
+                console.log(_this.SearchCheckdata,11);
+                axios.post('/PEMain/GetHrAuditUser', {
+                    model: _this.SearchCheckdata
+                }).then(function (responese) {
                     _this.ListHrAuditUser = responese.data.ListHrAuditUser;
                     _this.ListHrAuditSuccessUser = responese.data.ListHrAuditSuccessUser;
                     _this.LExamType = responese.data.LExamType;
+                    _this.setPaginations();
                 })
             }
         }
