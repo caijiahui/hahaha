@@ -11,20 +11,20 @@ namespace advt.CMS.Models.ExamModel
         public ExamSubject VexamSubject { get; set; }
         public List<ExamSubject> ListExamSubject { get; set; }
         public List<ExamSubject> ListExamSubjectName { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }
         public ExamSubjectModel() : base()
         {
             VexamSubject = new ExamSubject();
             ListExamSubjectName = new List<ExamSubject>();
+            LExamType = new List<KeyValuePair<string, string>>();
         }
-        public void GetSubjectName(string SubjectName)
+        public void GetSubjectName(string ExamType,string SubjectName)
         {
-            if (!string.IsNullOrEmpty(SubjectName))
+            ListExamSubject = Data.ExamSubject.Get_All_ExamGetSubject(ExamType, SubjectName);
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
             {
-                ListExamSubject = Data.ExamSubject.Get_All_ExamGetSubject(SubjectName);
-            }
-            else
-            {
-                ListExamSubject = Data.ExamSubject.Get_All_ExamSubject();
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
             }
         }
         public string  SaveSubject(string username)

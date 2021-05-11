@@ -22,6 +22,9 @@ namespace advt.CMS.Models.ExamModel
         public ExamRuleTopicType topictype { get; set; }
         public List<ExamRule> ListExamRuleInfo { get; set; }
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public List<KeyValuePair<string, string>> ListSearchSubject { get; set; }
+
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
@@ -35,16 +38,16 @@ namespace advt.CMS.Models.ExamModel
             RuleTopic = new List<ExamRuleTopicType>();
             ListExamRuleInfo = new List<ExamRule>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
+            LExamType = new List<KeyValuePair<string, string>>();
         }
-        public void GetRuleName(string RuleName)
+        public void GetRuleName(string ExamType, string SubjectName,string RuleName)
         {
-            if (string.IsNullOrEmpty(RuleName))
+            ListExamRule = Data.ExamRule.Get_All_ExamGetRuleName(ExamType, SubjectName,RuleName);
+
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
             {
-                ListExamRule = Data.ExamRule.Get_All_ExamRule();
-            }
-            else
-            {
-                ListExamRule = Data.ExamRule.Get_All_ExamGetRuleName(RuleName);
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
             }
         }
 
@@ -255,11 +258,7 @@ namespace advt.CMS.Models.ExamModel
             }
 
         }
-        public void GetTopic()
-        {
-
-        }
-
+      
         public void GetRuleType(string model)
         {
             if (model != null)

@@ -12,6 +12,9 @@
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
             <el-breadcrumb-item>考试科目</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-select v-model="TypeNames" placeholder="请选择考试类型">
+            <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
         <el-input placeholder="输入科目" v-model="SubjectNames" style="width:200px">
         </el-input>
         <el-button slot="append" @@click="SearchinBySubjectName">Search</el-button>
@@ -92,7 +95,9 @@
             VexamSubject: [],
             formLabelWidth: '120px',
             search: '',
-            SubjectNames:'',
+            SubjectNames: '',
+            LExamType: [],
+            TypeNames:'',
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -103,15 +108,16 @@
         },
         mounted: function () {
             var _this = this;
-            _this.getdata();
             _this.getInfoList();
         },
         methods: {
+           
             getInfoList() {
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo').then(res => {
                     _this.tableData = res.data.tableData;
-                    console.log(_this.tableData,99)
+                    _this.LExamType = res.data.LExamType;
+                    _this.VexamSubject = res.data.VexamSubject;
                     _this.setPaginations();
                 })
             },
@@ -137,6 +143,7 @@
             handleCurrentChange(page) {   
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo', {
+                    ExamType: _this.TypeNames,
                     SubjectName: _this.SubjectNames
                 }).then(res => {
                     _this.tableData = res.data.tableData;
@@ -217,20 +224,11 @@
                     _this.setPaginations();
                     });
             },
-            getdata: function () {
-                var _this = this;
-                axios.post('/PEMain/GetSubjectInfo').then(function (responese) {
-                    _this.tableData = responese.data.tableData;
-                    _this.VexamSubject = responese.data.VexamSubject;
-                    _this.setPaginations();
-                 
-                })
-              
-               
-            },
+           
             SearchinBySubjectName() {
                 var _this = this;
                 axios.post('/PEMain/GetSubjectInfo', {
+                    ExamType: _this.TypeNames,
                     SubjectName: _this.SubjectNames
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;

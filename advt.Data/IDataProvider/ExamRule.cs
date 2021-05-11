@@ -23,7 +23,7 @@ namespace advt.Data
         IDataReader GetTopicInfo(string model);
         IDataReader GetTRuleSubjectInfo(string model);
         IDataReader Get_All_ExamRuleInfo(string RuleName);
-        IDataReader Get_All_ExamGetRuleName(string RuleName);
+        IDataReader Get_All_ExamGetRuleName(string ExamType, string SubjectName, string RuleName);
         
         #endregion
     }

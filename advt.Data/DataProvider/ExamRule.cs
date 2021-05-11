@@ -104,9 +104,9 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamRuleInfo(RuleName);
             return SqlHelper.GetReaderToList<Entity.ExamRule>(reader);
         }
-        public static List<Entity.ExamRule> Get_All_ExamGetRuleName(string RuleName)
+        public static List<Entity.ExamRule> Get_All_ExamGetRuleName(string ExamType, string SubjectName, string RuleName)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetRuleName(RuleName);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetRuleName(ExamType,SubjectName,RuleName);
             return SqlHelper.GetReaderToList<Entity.ExamRule>(reader);
         }
         

@@ -239,11 +239,11 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult GetSubjectInfo(string SubjectName)
+        public ActionResult GetSubjectInfo(string ExamType, string SubjectName)
         {            
             ExamSubjectModel model = new ExamSubjectModel();
-            model.GetSubjectName(SubjectName);
-           return Json(new { tableData =model.ListExamSubject, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
+            model.GetSubjectName(ExamType,SubjectName);
+           return Json(new { tableData =model.ListExamSubject, VexamSubject= model.VexamSubject, LExamType=model.LExamType }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult GetSubjectList(string model,string subjectname)
@@ -277,11 +277,11 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult GetRuleInfo(string RuleName)
+        public ActionResult GetRuleInfo(string ExamType, string SubjectName,string RuleName)
         {
             ExamRuleModel model = new ExamRuleModel();
-            model.GetRuleName(RuleName);
-            return Json(new { tableData = model.ListExamRule, VExamRule = model.VExamRule }, JsonRequestBehavior.AllowGet);
+            model.GetRuleName(ExamType,SubjectName,RuleName);
+            return Json(new { tableData = model.ListExamRule, VExamRule = model.VExamRule, LExamType=model.LExamType}, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetSubjectName(string model)

@@ -90,18 +90,27 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
-        public IDataReader Get_All_ExamGetSubject(string SubjectName)
+        public IDataReader Get_All_ExamGetSubject(string ExamType,string SubjectName)
         {
             StringBuilder commandText = new StringBuilder();
             var text = "";
             commandText.AppendLine(" SELECT " + ExamSubject_item_str + "");
             commandText.AppendLine("   FROM [ExamSubject] ");
-            if (!string.IsNullOrEmpty(SubjectName))
+            if (!string.IsNullOrEmpty(ExamType)&& (!string.IsNullOrEmpty(SubjectName)))
+            {
+                text = " where TypeName like N'%" + ExamType + "%' and  SubjectName like N'%" + SubjectName + "%' ";
+            }
+            else if (!string.IsNullOrEmpty(ExamType))
+            {
+                text = " where TypeName like N'%" + ExamType + "%' ";
+            }
+           else if (!string.IsNullOrEmpty(SubjectName))
             {
                 text = " where SubjectName like N'%" + SubjectName + "%' ";
             }
             commandText.AppendLine(text);
             List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 150, ExamType));
             l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 150, SubjectName));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }

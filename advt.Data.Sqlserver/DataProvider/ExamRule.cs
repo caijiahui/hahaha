@@ -116,18 +116,38 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
         }
-        public IDataReader Get_All_ExamGetRuleName(string RuleName)
+        public IDataReader Get_All_ExamGetRuleName(string ExamType, string SubjectName, string RuleName)
         {
             StringBuilder commandText = new StringBuilder();
-            var text = "";
+            var texts = "";
             commandText.AppendLine(" SELECT " + ExamRule_item_str + "");
             commandText.AppendLine("   FROM [ExamRule] ");
-            if (!string.IsNullOrEmpty(RuleName))
+            if (!string.IsNullOrEmpty(ExamType))
             {
-                text = " where RuleName like N'%" + RuleName + "%' ";
+                texts = " where TypeName=@ExamType ";
+                if (!string.IsNullOrEmpty(SubjectName))
+                {
+                    texts += " and SubjectName like N'%" + SubjectName + "%' ";
+                }
+                if (!string.IsNullOrEmpty(RuleName))
+                {
+                    texts += " and RuleName like N'%" + RuleName + "%' ";
+                }
+
             }
-            commandText.AppendLine(text);
+            else
+            {
+                if (!string.IsNullOrEmpty(RuleName))
+                {
+                    texts += " where RuleName like N'%" + RuleName + "%' ";
+                }
+            }
+
+           
+            commandText.AppendLine(texts);
             List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 150, ExamType));
+            l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 150, SubjectName));
             l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
