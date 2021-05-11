@@ -44,7 +44,7 @@ namespace advt.CMS.Models.ExamModel
             }
             else
             {
-                ListExamRule = Data.ExamRule.Get_All_ExamRuleInfo(RuleName);
+                ListExamRule = Data.ExamRule.Get_All_ExamGetRuleName(RuleName);
             }
         }
 

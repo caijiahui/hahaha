@@ -116,6 +116,22 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
         }
+        public IDataReader Get_All_ExamGetRuleName(string RuleName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            var text = "";
+            commandText.AppendLine(" SELECT " + ExamRule_item_str + "");
+            commandText.AppendLine("   FROM [ExamRule] ");
+            if (!string.IsNullOrEmpty(RuleName))
+            {
+                text = " where RuleName like N'%" + RuleName + "%' ";
+            }
+            commandText.AppendLine(text);
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+
+        }
         #endregion
 
 
