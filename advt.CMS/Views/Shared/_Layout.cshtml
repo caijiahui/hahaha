@@ -213,7 +213,15 @@
                      else if (ids == "人员信息") { window.location.href = "/PEMain/MaintainExamUserInfo" }
                      else if (ids == "主管审核") { window.location.href = "/PEMain/SupervisorAudit" }
                      else if (ids == "HR审核") { window.location.href = "/PEMain/HrAudit" }
-                     else if (ids == "考试页面") { window.location.href = "/PEMain/MaintainExam" }
+                     else if (ids == "考试页面") {
+                         if (_this.isMobileTurn == true) {
+                             window.location.href = "/PEMain/MaintainExam"
+                         }
+                         else {
+                             window.location.href = "/PEMain/MaintainExamPC"
+                         }
+                      
+                     }
                      else if (ids == "考试报表") { window.location.href = "/PEMain/MaintainExamPage" }
                      else if (ids == "权限管控") { window.location.href = "/PEMain/UserManager" }
                      else if (ids == "角色设定") { window.location.href = "/PEMain/MaintainExamRole"}

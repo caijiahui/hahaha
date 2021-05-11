@@ -12,7 +12,8 @@ namespace advt.Data
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/2/5 11:28:28
 
         IDataReader Get_All_ExamUserDetailInfo(object objparams);
-
+        IDataReader Get_All_ExamUserCheckDetail(string Typename, string UserCode, string SubjectName, string DepartCode);
+        
         int Insert_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude);
 
         int Update_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude);

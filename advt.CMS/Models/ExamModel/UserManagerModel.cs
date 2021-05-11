@@ -5,29 +5,29 @@ using System.Linq;
 using System.Web;
 using advt.BLL;
 using advt.Entity;
+using advt.Model.ExamModel;
+
 namespace advt.CMS.Models.ExamModel
 {
     public class UserManagerModel
     {
-        public List<advt_users_type> ListUsers { get; set; }
+        public List<ExamUserMangerViewModel> ListUsers { get; set; }
         public List<string> ListType { get; set; }//权限
+
         public UserManagerModel() : base()
         {
-            ListUsers = new List<advt_users_type>();
+            ListUsers = new List<ExamUserMangerViewModel>();
+
         }
-        public void GetUser(string username)
+        public void GetUser(SearchData VSearchData=null)
         {
             try
             {
                 ListType = Data.ExamRole.Get_All_ExamRole().Select(y => y.RoleName).ToList();
-                if (!string.IsNullOrEmpty(username))
-                {
-                    ListUsers = Data.advt_users_type.Get_All_advt_users_join_type(username);
-                }
+                if(VSearchData!=null)
+                ListUsers = Data.advt_users_type.Get_All_advt_users_join_type(VSearchData.UserNameCode,VSearchData.Depert,VSearchData.RoleName);
                 else
-                {
-                    ListUsers = Data.advt_users_type.Get_All_advt_users_join_type("");
-                }
+                    ListUsers = Data.advt_users_type.Get_All_advt_users_join_type("","","");
             }
             catch (Exception ex)
             {
@@ -53,7 +53,13 @@ namespace advt.CMS.Models.ExamModel
                 info.type = type;
                 Data.advt_users_type.Update_advt_users_type(info, null, new string[] { "id" });
             }
-            GetUser("");
+            GetUser();
         }
+    }
+    public class SearchData
+    {
+        public string UserNameCode { get; set; }
+        public string Depert { get; set; }
+        public string RoleName { get; set; }
     }
     }

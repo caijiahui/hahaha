@@ -82,7 +82,7 @@
                 if (Login.Isadmin)
                 {
                     authorizeflag = true;
-                    return authorizeflag;
+                    //return authorizeflag;
                 }
                 if (authorizeflag && (int)m_role != 0) //允许的用户角色
                 {
@@ -97,6 +97,16 @@
                     authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
                 }
             }
+            var roles = advt.Data.ExamRolePartDetail.Get_All_ExamRolePartDetail(new { Controller = this.AuthorizeController, Action = this.AuthorizeAction });
+            if (roles.Count != 0)
+            {
+                var data = advt.Data.ExamRolePart.Get_All_ExamRolPartDetail_Sort(Login.UserContext.username, this.AuthorizeAction, this.AuthorizeController);
+                if (data.Count == 0)
+                {
+                    authorizeflag = false;
+                }
+            }
+
 
 
             //else if (Login.UserContext.msn == null) //登录验证
@@ -112,17 +122,15 @@
 
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (Validata_InUserGroup)
-            {
-                if (String.IsNullOrEmpty(this.AuthorizeArea))
-                    this.AuthorizeArea = filterContext.RouteData.DataTokens["area"] == null ? "" : filterContext.RouteData.DataTokens["area"].ToString();
+            if (String.IsNullOrEmpty(this.AuthorizeArea))
+                this.AuthorizeArea = filterContext.RouteData.DataTokens["area"] == null ? "" : filterContext.RouteData.DataTokens["area"].ToString();
 
-                if (String.IsNullOrEmpty(this.AuthorizeController))
-                    this.AuthorizeController = filterContext.RouteData.Values["controller"] == null ? "" : filterContext.RouteData.Values["controller"].ToString();
+            if (String.IsNullOrEmpty(this.AuthorizeController))
+                this.AuthorizeController = filterContext.RouteData.Values["controller"] == null ? "" : filterContext.RouteData.Values["controller"].ToString();
 
-                if (String.IsNullOrEmpty(this.AuthorizeAction))
-                    this.AuthorizeAction = filterContext.RouteData.Values["action"] == null ? "" : filterContext.RouteData.Values["action"].ToString();
-            }
+            if (String.IsNullOrEmpty(this.AuthorizeAction))
+                this.AuthorizeAction = filterContext.RouteData.Values["action"] == null ? "" : filterContext.RouteData.Values["action"].ToString();
+
 
             base.OnAuthorization(filterContext);
         }

@@ -16,7 +16,7 @@ namespace advt.Data
         IDataReader Get_advt_users_type_join_user(int PageSize, int pageIndex,string username);
 
         IDataReader Get_All_advt_users_type(object objparams);
-        IDataReader Get_All_advt_users_join_type(string username);
+        IDataReader Get_All_advt_users_join_type(string username, string depert, string rolename);
 
         int Insert_advt_users_type(Entity.advt_users_type info, string[] Include, string[] Exclude);
         int Update_advt_users_type_username(Entity.advt_users_type info);

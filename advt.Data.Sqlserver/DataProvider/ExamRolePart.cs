@@ -36,7 +36,30 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamRolePart_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
+        public IDataReader Get_All_ExamRolPartDetail_Sort(string username, string Action, string Controller)
+        {
+            StringBuilder commandText = new StringBuilder();
+            var text = "";
+            if (!string.IsNullOrEmpty(username))
+            {
+                text += " and d.username = '" + username + "'";
+            }
+            if (!string.IsNullOrEmpty(Action))
+            {
+                text += " and c.[Action] ='" + Action + "'";
+            }
+            if (!string.IsNullOrEmpty(Controller))
+            {
+                text += " and c.[Controller] ='" + Controller + "'";
+            }
+            commandText.AppendLine("select b.PartName,c.[Action],c.Controller,c.Sort from ExamRole a inner join ExamRolePart b on a.RoleName=b.RoleName  " +
+ " inner join ExamRolePartDetail c on b.PartName = c.PartName " +
+ " inner join advt_users_type d on d.type = a.RoleName" +
+" where 1=1 " + text + " order by Sort desc");
+           
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+        
         public int Insert_ExamRolePart(Entity.ExamRolePart info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();

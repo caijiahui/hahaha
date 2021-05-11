@@ -73,14 +73,31 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
         //Get_All_advt_users_join_type
-        public IDataReader Get_All_advt_users_join_type(string username)
+        public IDataReader Get_All_advt_users_join_type(string username,string depert,string rolename)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine("select b.id,a.username,b.[type],b.[location] from advt_users a left join advt_users_type  b on a.username = b.username");
+            commandText.AppendLine("select  id=isnull(b.id,0),a.UserCode, a.EamilUsername  ,a.username,a.CommpanyEmail,a.UserDept,b.[type],b.[location]"
+             + "  from ExamUsersFromehr a left join advt_users_type b on a.EamilUsername = b.username");
+            var texts = " where 1=1";
+            var text= "";
+            if(!string.IsNullOrEmpty(depert))
+            {
+                text += " and a.UserDept like '%"+ depert + "%'";
+            }
+            if (!string.IsNullOrEmpty(rolename))
+            {
+                text += " and b.[type] like '%" + rolename + "%'";
+            }
             if (!string.IsNullOrEmpty(username))
             {
-                commandText.AppendLine(" where a.username = '"+ username+"'");
+                text += " and  a.username like N'%" + username + "%' or a.UserCode like N'%" + username + "%'";
+                //commandText.AppendLine(" where a.EamilUsername like 'N%" + username+ "%' or a.UserName like N'%"+username+"%'");
             }
+            if (string.IsNullOrEmpty(text))
+            {
+                text = " and b.[type] is not null";
+            }
+            commandText.AppendLine(texts+text);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 

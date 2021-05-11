@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="Global\ActionInfo.cs" />
     <Compile Include="LoginModel.cs" />
+    <Compile Include="PageModel\ExamUserMangerViewModel.cs" />
+    <Compile Include="PageModel\ExamRoleViewModel.cs" />
     <Compile Include="PageModel\ExamModel.cs" />
     <Compile Include="PageModel\UserTypeModel.cs" />
     <Compile Include="PageModel\PEModel.cs" />

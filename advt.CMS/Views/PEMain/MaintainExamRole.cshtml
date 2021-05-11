@@ -87,7 +87,7 @@
         data: {
             tableData: [],
             dialogFormVisible: false,
-            LRole: ['权限管控', '考试类型', '考试科目', '题库管理','考试规则','人员信息','HR审核','考试页面','考试报表','角色设定'],
+            LRole: [],
             checkRole: [],
             RoleName: '',
             RoleID:'',
@@ -130,6 +130,7 @@
                 axios.post('/PEMain/GetExamRole', {
                     ExamRoleName: _this.ExamRoleName
                 }).then(function (res) {
+                    _this.LRole = res.data.LRole;
                     _this.tableData = res.data.tableData;
                     _this.setPaginations();
                 });
@@ -162,6 +163,7 @@
                 axios.post('/PEMain/GetExamRole', {
                     ExamRoleName: _this.ExamRoleName
                 }).then(function (res) {
+                    _this.LRole = res.data.LRole;
                     _this.tableData = res.data.tableData;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数
@@ -189,6 +191,7 @@
                     ExamRoleName: index
                 }).then(function (res) {
                     _this.RoleName = index;
+                    _this.LRole = res.data.LRole;
                     _this.checkRole = res.data.checkRole;
                    
                     _this.dialogFormVisible = true;
@@ -232,6 +235,7 @@
                     ExamRoleName: _this.ExamRoleName
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
+                    _this.LRole = res.data.LRole;
                     _this.setPaginations();
 
                 })

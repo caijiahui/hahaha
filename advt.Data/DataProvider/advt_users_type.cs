@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using advt.Entity;
 using System.Collections.Generic;
-
+using advt.Model.ExamModel;
 
 namespace advt.Data
 {
@@ -39,10 +39,10 @@ namespace advt.Data
         //    IDataReader reader = DatabaseProvider.GetInstance().Get_ExamRuleInfo(TopicLevel, TopicMajor, TopicType, id);
         //    return SqlHelper.GetReaderToList<Entity.ExamRuleTopicType>(reader);
         //}
-        public static List<Entity.advt_users_type> Get_All_advt_users_join_type(string username)
+        public static List<ExamUserMangerViewModel> Get_All_advt_users_join_type(string username,string depert,string rolename)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_join_type(username);
-            return SqlHelper.GetReaderToList<Entity.advt_users_type>(reader);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_users_join_type(username,depert,rolename);
+            return SqlHelper.GetReaderToList<ExamUserMangerViewModel>(reader);
         }
         public static Entity.advt_users_type Get_advt_users_type(object objparams)
         {

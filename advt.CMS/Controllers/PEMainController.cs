@@ -323,17 +323,11 @@ namespace advt.Web.Controllers
             var model = new ExamBankModel();
             return View();
         }
-        public ActionResult GetBankTypeSujectLevel(string typename, string subjectname)
-        {
-            ExamBankModel models = new ExamBankModel();
-            models.GetSubjectList(typename,subjectname);
-            return Json(new { ListSubjectName = models.ListExamSubject, ListTopicLevel = models.ListTopicLevel }, JsonRequestBehavior.AllowGet);
-        }
         [MyAuthorize]
-        public ActionResult GetBankInfo(string ExamType,string ExamSubject,string TopicLavel,string TopicTitle)
+        public ActionResult GetBankInfo(SearchBnakData VSearchBnakData)
         {
             var model = new ExamBankModel();
-            model.GetBankInfo(ExamType, ExamSubject, TopicLavel, TopicTitle);
+            model.GetBankInfo(VSearchBnakData);
             return Json(new { LExamBank = model.LExamBank, LExamType =model.LExamType, BankRemark=model.BankRemark }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -358,11 +352,11 @@ namespace advt.Web.Controllers
             model.SaveBankInfo(username);
             return Json(new { model.LExamBank}, JsonRequestBehavior.AllowGet);
         }
-        public FileResult SignUpBankExcel(string TypeName, string ExamSubject,string TopicLevel,string TopicTitle)
+        public FileResult SignUpBankExcel(string ExamType, string ExamSubject, string ExamMajor, string ExamLevel, string ExamContent)
         {
             var model = new ExamBankModel();
-           var ms= model.SignUpBank(TypeName, ExamSubject, TopicLevel, TopicTitle);
-            return File(ms, "application/vnd.ms-excel", TypeName + ExamSubject + "题库" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+           var ms= model.SignUpBank(ExamType, ExamSubject, ExamMajor, ExamLevel, ExamContent);
+            return File(ms, "application/vnd.ms-excel", ExamType + ExamSubject + "题库" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
         }
 
@@ -714,11 +708,11 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetHrAuditUser(string typename)
+        public ActionResult GetHrAuditUser(SearchHrData model)
         {
-            HrAuditModel model = new HrAuditModel();
-            model.GetHrAuditUser(typename);
-            return Json(new { ListHrAuditUser = model.ListHrAuditUser, ListHrAuditSuccessUser =model.ListHrAuditSuccessUser,LExamType=model.LExamType });
+            HrAuditModel models = new HrAuditModel();
+            models.GetHrAuditUser(model);
+            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser,LExamType= models.LExamType });
         }
         [MyAuthorize]
         [HttpPost]
@@ -1023,10 +1017,10 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetUserManagerInfo(string username)
+        public ActionResult GetUserManagerInfo(SearchData VSearchData)
         {
             UserManagerModel model = new UserManagerModel();
-            model.GetUser(username);
+            model.GetUser(VSearchData);
             return Json(new { ListUsers = model.ListUsers, ListType=model.ListType });
         }
         [MyAuthorize]
@@ -1055,7 +1049,7 @@ namespace advt.Web.Controllers
         {
             var model = new ExamRoleModel();
             var roles=model.GetExamRole(ExamRoleName);
-            return Json(new { tableData = roles, checkRole = model.checkRole }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = roles, checkRole = model.checkRole, LRole=model.LRole }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult DeleteExamRole(string ExamRoleName)

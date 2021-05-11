@@ -66,6 +66,31 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamUserDetailInfo_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public IDataReader Get_All_ExamUserCheckDetail(string Typename, string UserCode, string SubjectName, string DepartCode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("  select * from ExamUserDetailInfo where ExamStatus='HrCheck' and IsStop='false' and IsExam='false' ");
+            var text = "";
+            if (!string.IsNullOrEmpty(Typename))
+            {
+                text += " and Typename like N'%"+ Typename + "%'";
+            }
+            if (!string.IsNullOrEmpty(UserCode))
+            {
+                text += " and UserCode like N'%" + UserCode + "%'";
+            }
+            if (!string.IsNullOrEmpty(SubjectName))
+            {
+                text += " and SubjectName like N'%" + SubjectName + "%'";
+            }
+            if (!string.IsNullOrEmpty(DepartCode))
+            {
+                text += " and DepartCode like N'%" + DepartCode + "%'";
+            }
+            commandText.AppendLine(text);
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+        
 
         public int Insert_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude)
         {
