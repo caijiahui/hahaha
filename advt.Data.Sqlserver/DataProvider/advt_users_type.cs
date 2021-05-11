@@ -73,10 +73,14 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
         //Get_All_advt_users_join_type
-        public IDataReader Get_All_advt_users_join_type()
+        public IDataReader Get_All_advt_users_join_type(string username)
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine("select b.id,a.username,b.[type],b.[location] from advt_users a left join advt_users_type  b on a.username = b.username");
+            if (!string.IsNullOrEmpty(username))
+            {
+                commandText.AppendLine(" where a.username = '"+ username+"'");
+            }
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 

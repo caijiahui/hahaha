@@ -179,6 +179,7 @@
     <Compile Include="infrastructure\IsAdminAttribute.cs" />
     <Compile Include="infrastructure\Pagination.cs" />
     <Compile Include="Models\ExamModel\EmailHelper.cs" />
+    <Compile Include="Models\ExamModel\ExamRoleModel.cs" />
     <Compile Include="Models\ExamModel\ExamUserSubject.cs" />
     <Compile Include="Models\ExamModel\ExamFinishModel.cs" />
     <Compile Include="Models\ExamModel\ExamPageModel.cs" />
@@ -452,6 +453,7 @@
     <Content Include="Views\PEMain\UserManager.cshtml" />
     <Content Include="Views\PEMain\ExamFinish.cshtml" />
     <Content Include="Views\PEMain\MaintainExamPC.cshtml" />
+    <Content Include="Views\PEMain\MaintainExamRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

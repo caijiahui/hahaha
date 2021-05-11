@@ -12,10 +12,16 @@
             </el-breadcrumb>
         </template>
         <div style="margin-top:20px;clear:both;">
+            <template>
+                <el-input placeholder="请输入需要查询的人员姓名" v-model="UserName" class="input-with-select" style="width:30%;">
+                    <el-button slot="append" @@click="handleSearch">查询</el-button>
+                </el-input>
+            </template>
+
             <el-table :data="ListUsers.filter(data => !search || data.username.toLowerCase().includes(search.toLowerCase()))"
                       style="width: 100%;margin-top:20px ">
                 <el-table-column label="姓名"
-                                 prop="username" sortable >
+                                 prop="username" sortable>
                 </el-table-column>
                 <el-table-column label="角色"
                                  prop="type" sortable>
@@ -36,13 +42,13 @@
                 </el-table-column>
             </el-table>
             @*<el-pagination @@size-change="handleSizeChange"
-                           @@current-change="handleCurrentChange"
-                           :current-page="paginations.page_index"
-                           :page-sizes="paginations.page_sizes"
-                           :page-size="paginations.page_size"
-                           :layout="paginations.layout"
-                           :total="paginations.total">
-            </el-pagination>*@
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>*@
         </div>
 
         <el-dialog title="角色编辑" :visible.sync="dialogFormVisible">
@@ -80,6 +86,7 @@
             ListType: [],
             VUserInfo: {},
             search: '',
+            UserName:'',
             dialogFormVisible: false,
             formLabelWidth: '120px',
             paginations: {
@@ -103,10 +110,26 @@
                 var _this = this;
                 _this.checkBoxData = val;
             },
+            handleSearch: function () {
+                var _this = this;
+
+
+
+
+
+                axios.post('/PEMain/GetUserManagerInfo', {
+                    username: _this.UserName
+                }).then(function (responese) {
+                    _this.ListType = responese.data.ListType;
+                    console.log(responese.data.ListType, 123);
+                    _this.ListUsers = responese.data.ListUsers;
+                    //_this.setPaginations();
+                })
+            },
             getdata: function () {
                 var _this = this;
-                axios.post('/PEMain/GetUserInfo', {
-
+                axios.post('/PEMain/GetUserManagerInfo', {
+                    username: _this.UserName
                 }).then(function (responese) {
                     _this.ListType = responese.data.ListType;
                     console.log(responese.data.ListType, 123);
@@ -178,7 +201,9 @@
             },
             handleCurrentChange(page) {
                 var _this = this;
-                axios.post('/PEMain/GetUserInfo').then(function (res) {
+                axios.post('/PEMain/GetUserManagerInfo', {
+                    username: _this.UserName
+                }).then(function (res) {
                     _this.ListUsers = res.data.ListUsers;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数

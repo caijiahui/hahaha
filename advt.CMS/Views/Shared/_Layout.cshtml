@@ -102,17 +102,9 @@
                                         </span>                                        
                                     </template>
                                     <el-menu-item-group>
-                                        <el-menu-item index="1-0" @@click="OpenExamType('UserManager')" v-if="ECtype=='HRManager'||ECtype=='Admin'" >权限管理</el-menu-item>
-                                        <el-menu-item index="1-1" @@click="OpenExamType('type')" v-if="ECtype=='HRManager'||ECtype=='Admin'">考试类型</el-menu-item>
-                                        <el-menu-item index="1-2" @@click="OpenExamType('subject')" v-if="ECtype=='HRManager'||ECtype=='Admin'">考试科目</el-menu-item>
-                                        <el-menu-item index="1-3" @@click="OpenExamType('bank')" v-if="ECtype=='HRManager'||ECtype=='Admin'">题库管理</el-menu-item>
-                                        <el-menu-item index="1-4" @@click="OpenExamType('rule')" v-if="ECtype=='HRManager'||ECtype=='Admin'">考试规则</el-menu-item>
-
-                                        <el-menu-item index="1-6" @@click="OpenExamType('UserInfo')" v-if="ECtype=='HRManager'||ECtype=='Admin'">人员信息</el-menu-item>
-                                        <el-menu-item index="1-7" @@click="OpenExamType('Director')" v-if="ECtype=='SupervisorAudit'||ECtype=='Admin'">主管审核</el-menu-item>
-                                        <el-menu-item index="1-8" @@click="OpenExamType('HrCheck')" v-if="ECtype=='HRManager'||ECtype=='Admin'">HR审核</el-menu-item>
-                                        <el-menu-item index="1-9" @@click="OpenExamType('ViewCheck')">考试页面</el-menu-item>
-                                        <el-menu-item index="1-9" @@click="OpenExamType('MaintainExamPage')">考试报表</el-menu-item>
+                                        <el-menu-item v-for="role in LRole"
+                                                      v-on:click="OpenExamType(role)" v-if="role!='考试页面'">{{role}}</el-menu-item>
+                                        <el-menu-item v-on:click="OpenExamType('考试页面')">考试页面</el-menu-item>
                                     </el-menu-item-group>
                                 </el-submenu>
                             </el-menu>
@@ -149,7 +141,8 @@
                 nowyear: '',
                 isMobileTurn: false,
                 mobileMenuDrawer: false,
-                admin: ''
+                admin: '',
+                LRole:[]
                
             },
             mounted: function () {
@@ -169,8 +162,7 @@
                     var _this = this;
                     axios.post('/Account/GetUser').then(res => {
                         _this.admin = res.data.admin;
-                        _this.ECtype = res.data.type;
-                        console.log(_this.ECtype, 444);
+                        _this.LRole = res.data.LRole;
                     })
 
                 },
@@ -188,7 +180,7 @@
                 isMobileTurn: false,
                 mobileMenuDrawer: false,
                 isCollapse: true,
-                ECtype: ''
+                LRole: []
             },
              mounted: function () {
                  var _this = this;
@@ -206,26 +198,25 @@
                  getuser() {
                      var _this = this;
                      axios.post('/Account/GetUser').then(res => {
-                         _this.ECtype = res.data.type;
-                         console.log(_this.ECtype, 444);
+                         _this.LRole = res.data.LRole;
+                         console.log(res.data.LRole, 12);
                      })
                     
                  },
                  OpenExamType: function (ids) {
+
                      var _this = this;
-                     if (ids == "type") { window.location.href = "/PEMain/MaintainExamType" }
-                     else if (ids == "subject") { window.location.href = "/PEMain/MaintainExamSubject" }
-                     else if (ids == "rule") { window.location.href = "/PEMain/MaintainExamRule" }
-                     else if (ids == "bank") { window.location.href = "/PEMain/MaintainExamBank" }
-                     else if (ids == "Page") {
-                         window.location.href = "/PEMain/ExamPage"
-                     }
-                     else if (ids == "UserInfo") { window.location.href = "/PEMain/MaintainExamUserInfo" }
-                     else if (ids == "Director") { window.location.href = "/PEMain/SupervisorAudit" }
-                     else if (ids == "HrCheck") { window.location.href = "/PEMain/HrAudit" }
-                     else if (ids == "ViewCheck") { window.location.href = "/PEMain/MaintainExam" }
-                     else if (ids == "MaintainExamPage") { window.location.href = "/PEMain/MaintainExamPage" }
-                     else if (ids == "UserManager") { window.location.href = "/PEMain/UserManager" }
+                     if (ids == "考试类型") { window.location.href = "/PEMain/MaintainExamType" }
+                     else if (ids == "考试科目") { window.location.href = "/PEMain/MaintainExamSubject" }
+                     else if (ids == "考试规则") { window.location.href = "/PEMain/MaintainExamRule" }
+                     else if (ids == "题库管理") { window.location.href = "/PEMain/MaintainExamBank" }
+                     else if (ids == "人员信息") { window.location.href = "/PEMain/MaintainExamUserInfo" }
+                     else if (ids == "主管审核") { window.location.href = "/PEMain/SupervisorAudit" }
+                     else if (ids == "HR审核") { window.location.href = "/PEMain/HrAudit" }
+                     else if (ids == "考试页面") { window.location.href = "/PEMain/MaintainExam" }
+                     else if (ids == "考试报表") { window.location.href = "/PEMain/MaintainExamPage" }
+                     else if (ids == "权限管控") { window.location.href = "/PEMain/UserManager" }
+                     else if (ids == "角色设定") { window.location.href = "/PEMain/MaintainExamRole"}
                      
                  },
                 isMobile() {
