@@ -299,7 +299,7 @@ namespace advt.CMS.Models
                                 sd++;
                                 sc.CorrectNum = sd;
                                 //答对分数CorrectScore
-                                score += item.TopicScore;
+                                score += item.TopicScore;   
                             }
                             else
                             {
