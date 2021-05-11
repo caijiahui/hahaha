@@ -14,8 +14,18 @@ namespace advt.CMS.Models.ExamModel
         public ExamSubjectModel() : base()
         {
             VexamSubject = new ExamSubject();
-            ListExamSubject = Data.ExamSubject.Get_All_ExamSubject();
             ListExamSubjectName = new List<ExamSubject>();
+        }
+        public void GetSubjectName(string SubjectName)
+        {
+            if (!string.IsNullOrEmpty(SubjectName))
+            {
+                ListExamSubject = Data.ExamSubject.Get_All_ExamGetSubject(SubjectName);
+            }
+            else
+            {
+                ListExamSubject = Data.ExamSubject.Get_All_ExamSubject();
+            }
         }
         public string  SaveSubject(string username)
         {

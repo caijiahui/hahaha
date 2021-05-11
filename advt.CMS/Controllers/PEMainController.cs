@@ -239,11 +239,11 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult GetSubjectInfo()
+        public ActionResult GetSubjectInfo(string SubjectName)
         {            
-            var subjectInfo = Data.ExamSubject.Get_All_ExamSubject();
             ExamSubjectModel model = new ExamSubjectModel();
-            return Json(new { tableData = subjectInfo, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
+            model.GetSubjectName(SubjectName);
+           return Json(new { tableData =model.ListExamSubject, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult GetSubjectList(string model)

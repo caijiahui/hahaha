@@ -89,6 +89,22 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@TypeName", (DbType)SqlDbType.NVarChar, 150, TypeName));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        public IDataReader Get_All_ExamGetSubject(string SubjectName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            var text = "";
+            commandText.AppendLine(" SELECT " + ExamSubject_item_str + "");
+            commandText.AppendLine("   FROM [ExamSubject] ");
+            if (!string.IsNullOrEmpty(SubjectName))
+            {
+                text = " where SubjectName like N'%" + SubjectName + "%' ";
+            }
+            commandText.AppendLine(text);
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 150, SubjectName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
         #endregion
     }
 }

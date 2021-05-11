@@ -22,11 +22,18 @@ namespace advt.Data
         {
             return Get_All_ExamBank(null);
         }
-        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Subject(string ExamType,string ExamSubject,string TopicLevel,string TopicTitle)
+        public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Subject(string ExamType,string ExamSubject,string TopicLevel)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Subject(ExamType,ExamSubject, TopicLevel, TopicTitle);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Subject(ExamType,ExamSubject, TopicLevel);
             return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
         }
+        public static List<Entity.ExamBank> Get_All_ExamBankTople(string TopicTitle)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBankTople(TopicTitle);
+            return SqlHelper.GetReaderToList<Entity.ExamBank>(reader);
+        }
+
+        
         public static List<Entity.ExamBank> Get_All_ExamBank_ExamType_Rule(string TopicType,string TopicMajor,string TopicLevel,string ExamSubject)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamBank_ExamType_Rule(TopicType,TopicMajor,TopicLevel, ExamSubject);

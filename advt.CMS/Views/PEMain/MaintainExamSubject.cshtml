@@ -12,6 +12,9 @@
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
             <el-breadcrumb-item>考试科目</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-input placeholder="输入科目" v-model="SubjectNames" style="width:200px">
+        </el-input>
+        <el-button slot="append" @@click="SearchinBySubjectName">Search</el-button>
         <el-button @@click="createSubject">新增</el-button>
     </template>
 
@@ -19,8 +22,8 @@
     <div style="margin-top:20px">
 
 
-        <el-table :data="tableData.filter(data => !search || data.SubjectName.toLowerCase().includes(search.toLowerCase())||data.TypeName.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100% " :default-sort="{prop: 'SubjectName'||'TypeName', order: 'CreateUser'}">
+        <el-table :data="tableData"
+                  style="width: 100% ">
             <el-table-column label="考试类型" prop="TypeName" sortable width="180"></el-table-column>
             <el-table-column label="考试科目" prop="SubjectName" sortable width="180"></el-table-column>
 
@@ -89,6 +92,7 @@
             VexamSubject: [],
             formLabelWidth: '120px',
             search: '',
+            SubjectNames:'',
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -221,7 +225,18 @@
                 })
               
                
+            },
+            SearchinBySubjectName() {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectInfo', {
+                    SubjectName: _this.SubjectNames
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                    });
+                _this.dialogFormVisible = false
             }
+           
         },
 
     })
