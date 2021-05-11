@@ -223,6 +223,7 @@
                 axios.post('/PEMain/GetRuleSubjectName', {
                     model: newval
                 }).then(response => {
+                    console.log(response.data.ListTopic);
                     _this.ListTopicInfo = response.data.ListTopic;
                 });
             },
@@ -264,7 +265,9 @@
             handleCurrentChange(page) {
 
                 var _this = this;
-                axios.post('/PEMain/GetRuleInfo').then(res => {
+                axios.post('/PEMain/GetRuleInfo', {
+                    RuleName: _this.Rule
+                }).then(res => {
                     _this.tableData = res.data.tableData;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数
@@ -282,7 +285,7 @@
             },
             topicratioPropsFn: function (val) {
                 var _this = this;
-                _this.RuleGrList = [];
+                //_this.RuleGrList = [];
                 val.forEach(function (lst, num) {
                     _this.ListTopicInfo.forEach(function (item, index) {
                         if (item.ID == lst)
@@ -372,10 +375,13 @@
                 _this.VExamRule.EndDesc = row.EndDesc;
                 _this.VExamRule.ID = index;
                 axios.post('/PEMain/GetSubjectList', {
-                    model: index
+                    model: index,
+                    subjectname: _this.VExamRule.SubjectName
                 }).then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
                     _this.RuleGrList = response.data.RuleGrList;
+                    _this.ListTopicInfo = response.data.ListTopic;
+
 
                 });
                 //axios.post('/PEMain/GetSubjectList').then(response => {

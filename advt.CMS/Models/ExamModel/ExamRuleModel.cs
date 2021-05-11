@@ -255,7 +255,10 @@ namespace advt.CMS.Models.ExamModel
             }
 
         }
+        public void GetTopic()
+        {
 
+        }
 
         public void GetRuleType(string model)
         {

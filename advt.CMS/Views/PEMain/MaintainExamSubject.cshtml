@@ -136,7 +136,9 @@
             },
             handleCurrentChange(page) {   
                 var _this = this;
-                axios.post('/PEMain/GetSubjectInfo').then(res => {
+                axios.post('/PEMain/GetSubjectInfo', {
+                    SubjectName: _this.SubjectNames
+                }).then(res => {
                     _this.tableData = res.data.tableData;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数

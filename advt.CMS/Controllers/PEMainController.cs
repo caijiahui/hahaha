@@ -246,12 +246,13 @@ namespace advt.Web.Controllers
            return Json(new { tableData =model.ListExamSubject, VexamSubject= model.VexamSubject }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult GetSubjectList(string model)
+        public ActionResult GetSubjectList(string model,string subjectname)
         {
             ExamRuleModel models = new ExamRuleModel();
             var subject = Data.ExamSubject.GetSubjectList();
             models.GetRuleType(model);
-            return Json(new { ListTypeName = subject, RuleGrList = models.RuleTopicList }, JsonRequestBehavior.AllowGet);
+            models.GetRuleSubjectList(subjectname);
+            return Json(new { ListTypeName = subject, RuleGrList = models.RuleTopicList, ListTopic=models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
