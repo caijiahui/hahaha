@@ -453,7 +453,7 @@ namespace advt.CMS.Models
                             record.OptionBPicNum = item.ansowerList[1].ansowerpic;
 
                         }
-                        if (item.ansowerList.Count() ==3)
+                        if (item.ansowerList.Count() >=3)
                         {
                             if (item.ansowerList[2] != null)
                             {
@@ -462,7 +462,7 @@ namespace advt.CMS.Models
 
                             }
                         }
-                        if (item.ansowerList.Count() == 4)
+                        if (item.ansowerList.Count() >= 4)
                         {
                             if (item.ansowerList[3] != null)
                             {
@@ -471,7 +471,7 @@ namespace advt.CMS.Models
 
                             }
                         }
-                        if (item.ansowerList.Count() ==5)
+                        if (item.ansowerList.Count()>=5)
                         {
                             if (item.ansowerList[4] != null)
                             {

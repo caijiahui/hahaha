@@ -47,7 +47,7 @@
                         </div>
                         <div class="clearfix" style="border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
                             <span style="flex:1;background-color:#EEEEEE">考试状态：</span>
-                            <span v-if="item.IsTest=='1'">已考</span>
+                            <span v-if="item.IsTest=='0'">已考</span>
                         </div>
                         <div class="clearfix" style=" border:1px solid #d7dae2;border-radius:4px;margin-top:5px">
                             <span style="flex:1;background-color:#EEEEEE">考试分数：</span>
@@ -241,7 +241,12 @@
                 _this.dialogFormVisible = true;
             },
             goBack: function () {
-                window.location.href = "/PEMain/MaintainExam"
+                var _this = this;
+                if (_this.isMobileTurn == true) {
+                    window.location.href = "/PEMain/MaintainExam"
+                } else {
+                    window.location.href = "/PEMain/MaintainExamPC"
+                }
             },
             abcChange: function (val) {
                 if (val == 0) {
