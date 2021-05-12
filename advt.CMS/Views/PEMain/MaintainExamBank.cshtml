@@ -52,6 +52,11 @@
                             <el-button size="small" type="primary">上传图片</el-button>
                         </el-upload>
                     </div>
+                    <div style="float:left;margin-left:20px">
+                        <el-button size="small" type="primary" @@click="SearchPic" style="margin-top:30px">
+                            查看图片
+                        </el-button>
+                    </div>
                     <div style="float:left;margin-left:20px;margin-top:30px">
                         <a style="color:white" :href="'/PEMain/SignUpBankExcel?ExamType='+VSearchBnakData.ExamType+'&ExamSubject='+VSearchBnakData.ExamSubject+'&ExamMajor='+VSearchBnakData.ExamMajor+'&ExamLevel='+VSearchBnakData.ExamLevel+'&ExamContent='+VSearchBnakData.ExamContent">
                             <el-button size="small" type="primary">
@@ -242,6 +247,24 @@
         </div>
     </el-dialog>
 
+    <el-dialog title="查看图片" :visible.sync="dialogFormPic">
+        <div style="height:500px;  overflow-y:auto">
+            <div v-for="item in ListPics" style="width:20%;float:left">
+                <template>
+                    <img :src="'/'+item.PicPath" style="width: 100px; height: 100px" />
+                    <span>{{item.PicName}} </span>
+                </template>
+
+            </div>
+        </div>
+
+        <div slot="footer" class="dialog-footer" style="clear:both">
+            <template>
+                <el-button type="primary" @@click="dialogFormPic==false">确 定</el-button>
+            </template>
+        </div>
+    </el-dialog>
+
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
 <script src="~/Scripts/Vue/Vue.js"></script>
@@ -255,6 +278,7 @@
             LExamBank: [],
             VExamBank: {},
             LExamType: [],
+            dialogFormPic: false,
             VSearchBnakData: {},
             search: '',
             TypeName: '',
@@ -263,6 +287,7 @@
             ListTopicLevel: [],
             ListSubjectName: [],
             ListSearchSubject: [],
+            ListPics:[],
             BankRemark: '',
             dialogFormVisible: false,
             formLabelWidth: '120px',
@@ -323,6 +348,15 @@
                     _this.setPaginations();
                 })
 
+            },
+            SearchPic: function () {
+                var _this = this;
+                axios.post('/PEMain/GetBankPic', {
+                }).then(function (responese) {
+                    _this.ListPics = responese.data.LPic;
+                    console.log(_this.ListPics, 33);
+                    })
+                _this.dialogFormPic = true;
             },
             DeleteBank() {
                 var _this = this;

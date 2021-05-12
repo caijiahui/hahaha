@@ -15,6 +15,7 @@ namespace advt.CMS.Models.ExamModel
         public List<string> LRole { get; set; }
         public string RoleID { get; set; }
         public ExamRole VExamRole { get; set; }
+        public List<PicData> LPic { get; set; }
 
 
         public ExamRoleModel() : base()
@@ -23,6 +24,7 @@ namespace advt.CMS.Models.ExamModel
             ListExamRole = new List<ExamRole>();
             VExamRole = new ExamRole();
             LRole = new List<string>();
+            LPic = new List<PicData>();
         }
         public string SaveExamRole(string username)
         {
@@ -120,5 +122,10 @@ namespace advt.CMS.Models.ExamModel
             }
            
         }
+    }
+    public class PicData
+    {
+        public string PicPath { get; set; }
+        public string PicName { get; set; }
     }
 }

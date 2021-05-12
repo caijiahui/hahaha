@@ -1072,5 +1072,27 @@ namespace advt.Web.Controllers
             var result = model.DeleteExamRole(ExamRoleName);
             return Json(new { result , tableData=model.ListExamRole }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult GetBankPic()
+        {
+            var model = new ExamRoleModel();
+            List<string> ja = new List<string>();
+            var path1 = System.AppDomain.CurrentDomain.BaseDirectory;//获取程序集目录
+            string path = Path.Combine(path1, "Attachment", "BankPic");//Path.Combine 将3个字符串组合成路径
+            var images = Directory.GetFiles(path, ".", SearchOption.AllDirectories).Where(s => s.EndsWith(".png") || s.EndsWith(".jpg") || s.EndsWith(".gif"));
+            //images = Directory.GetFiles(path, "*.png|*.jpg", SearchOption.AllDirectories);
+            //Directory.GetFiles 返回指定目录的文件路径 SearchOption.AllDirectories 指定搜索当前目录及子目录
+
+            //遍历string 型 images数组
+            foreach (var i in images)
+            {
+                var str = i.Replace(path1, "");//获取相对路径
+                var names = i.Replace(path+"\\", "");
+                var path2 = str.Replace("\\", "/");
+                model.LPic.Add(new PicData { PicName=names,PicPath="/"+path2 });
+            }
+
+            return Json(new { LPic=model.LPic}, JsonRequestBehavior.AllowGet);
+        }
     }
 }

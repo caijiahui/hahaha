@@ -530,8 +530,12 @@
                         if (IsExams !='') {
                             _this.$alert(IsExams, '提示', {
                                     confirmButtonText: '确定',
-                                    callback: action => {
+                                callback: action => {
+                                    if (_this.isMobileTurn == true)
                                         window.location.href = "/PEMain/MaintainExam";
+                                    else {
+                                        window.location.href = "/PEMain/MaintainExamPC";
+                                    }
                                     }
                                 });
                         } else {
