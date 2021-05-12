@@ -28,17 +28,8 @@ namespace advt.CMS.Models
             examList = new List<ExamScoreInfo>();
             ListVexamRecord = new List<ExamRecord>();
             Listexam.ansowerList = new List<LAnsower>();
-            if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
-            {
-                var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
 
-                VExamScore = Data.ExamScore.Get_ExamScore(ss);
-           
-                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
-                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();               
-                ID = ss;
-            }
-           
+
         }
 
         public void GetCsore(int ExamId)
@@ -55,28 +46,44 @@ namespace advt.CMS.Models
                 ID = ss;
             }
         }
-        public void GetExamListInfo(int id)
-        {        
+        public void GetExamListInfo(int id, string name)
+        {
+            var usercode = "";
+            if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
+            {
+                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
+                if (usersheet != null)
+                {
+                    usercode = usersheet.UserCode;
+                }
+                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode }).Max(x => x.ExamID);
+
+                VExamScore = Data.ExamScore.Get_ExamScore(ss);
+
+                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
+                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
+                ID = ss;
+            }
             if (id != 0)
-            {                
-                foreach (var item in ListVexamRecord.Where(x=>x.ExamID== id.ToString()))
+            {
+                foreach (var item in ListVexamRecord.Where(x => x.ExamID == id.ToString()))
                 {
                     var output = new string[] { };
-                    var list= new string[] { };
-                  
+                    var list = new string[] { };
+
                     var option = "";
                     //if (item.CorrectAnsower == item.HideAnsower)
                     //{
                     //    isright = true;
                     //}
                     List<LAnsower> answ = new List<LAnsower>();
-                    if (item.OptionA != null||item.OptionAPicNum!=null)
+                    if (item.OptionA != null || item.OptionAPicNum != null)
                     {
                         answ.Add(new LAnsower
                         {
                             ansower = item.OptionA,
                             ansowerflag = item.CorrectAnsower,
-                            ansowerpic=item.OptionAPicNum
+                            ansowerpic = item.OptionAPicNum
                         });
                     }
                     if (item.OptionB != null || item.OptionBPicNum != null)
@@ -122,7 +129,7 @@ namespace advt.CMS.Models
                             ansower = item.OptionF,
                             ansowerflag = item.CorrectAnsower,
                             ansowerpic = item.OptionFPicNum
-                        });                        
+                        });
                     }
                     if (item.Type == "0")
                     {
@@ -204,17 +211,17 @@ namespace advt.CMS.Models
                         ExamID = id.ToString(),
                         TopicTitle = item.TopicTitle,
                         TopicNum = item.TopicNum,
-                        ansowerList= answ,
-                        isright= item.IsRight,
-                        Type=item.Type,
-                        selectItem=output,
-                        selectOption=option,
-                        CorrectAnsower=item.CorrectAnsower,
-                        WriteItem=item.WriteAnsower,
-                        TopicTitlePicNum=item.TopicTitlePicNum,
-                        Remark=item.Remark,
-                        TopicTitlePic=item.TopicTitlePicNum,
-                        DeRemark=item.DaRemark
+                        ansowerList = answ,
+                        isright = item.IsRight,
+                        Type = item.Type,
+                        selectItem = output,
+                        selectOption = option,
+                        CorrectAnsower = item.CorrectAnsower,
+                        WriteItem = item.WriteAnsower,
+                        TopicTitlePicNum = item.TopicTitlePicNum,
+                        Remark = item.Remark,
+                        TopicTitlePic = item.TopicTitlePicNum,
+                        DeRemark = item.DaRemark
                     });
                 }
             }
@@ -268,6 +275,6 @@ namespace advt.CMS.Models
         public string TopicTitlePic { get; set; }
         public string DeRemark { get; set; }
     }
-   
+
 
 }

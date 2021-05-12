@@ -87,14 +87,14 @@
                             </el-button>*@
                         </div>
                         <el-aside width="auto" style="height:100%">
-                            <el-menu default-active="1"
+                            <el-menu  default-active="1-1"
                                      class="el-menu-vertical-demo"
                                      @@open="asideHandleOpen"
                                      @@close="asideHandleClose"
                                      :unique-opened='false'
                                      >
 
-                                <el-submenu index="1">
+                                <el-submenu index="1" >
                                     <template slot="title">
                                         <i class="el-icon-location"></i>
                                         <span>
@@ -102,7 +102,7 @@
                                         </span>                                        
                                     </template>
                                     <el-menu-item-group>
-                                        <el-menu-item v-for="role in LRole"
+                                        <el-menu-item v-for="(role,index) in LRole"  :index="'1-'+index"
                                                       v-on:click="OpenExamType(role)" v-if="role!='考试页面'">{{role}}</el-menu-item>
                                         <el-menu-item v-on:click="OpenExamType('考试页面')">考试页面</el-menu-item>
                                     </el-menu-item-group>
