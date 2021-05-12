@@ -56,6 +56,7 @@
                                         </el-form-item>
 
                                         <h5>如Xiaoee.wang/Q-XXXXX，密码为开机密码</h5>
+                                        <h5>{{LoginMess}}</h5>
                                         <el-form-item class="loginBtn">
                                             <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
                                         </el-form-item>
@@ -85,7 +86,8 @@
                             CookieTime: 0
                             
                         },
-                        isMobileTurn: false
+                        isMobileTurn: false,
+                        LoginMess:''
                     },
                     mounted: function () {
                       
@@ -102,14 +104,13 @@
                             return flag
                         },
                         submitForm(formName) {
+                            var _this = this;
                             this.$refs[formName].validate((valid) => {
                                 if (valid) {
-                                    var _this = this;
                                     console.log(_this.loginForm);
                                     axios.post('/Account/Login', {
                                         model: _this.loginForm
                                     }).then(function (res) {
-                                        console.log(res.data.IsLogin, 333);
                                         if (res.data.IsLogin == "Pass") {
                                             if (_this.isMobileTurn) {
                                                 window.location.href = "/PEMain/MaintainExam"
@@ -123,7 +124,8 @@
                                         }
                                     });
                                 } else {
-                                    console.log('error submit!!');
+                                    _this.LoginMess = "账号/密码不正确";
+                                    console.log(_this.LoginMess,22);
                                     return false;
                                 }
                             });

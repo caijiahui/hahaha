@@ -52,7 +52,7 @@ namespace advt.CMS.Models
                 var ListBanks = new List<ExamBankView>();
 
                 var Rule = Data.ExamRule.Get_ExamRule(new {RuleName });
-                var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username });
+                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = username });
                 if (Rule != null)
                 {
                     VExamUserInfo.ExamType = Rule.TypeName;//考试名称

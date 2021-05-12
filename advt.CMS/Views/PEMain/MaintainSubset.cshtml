@@ -127,7 +127,13 @@
                 //_this.ExamDate = '';
             },
             goBack: function () {
-                window.location.href = "/PEMain/MaintainExam"
+                var _this = this;
+                if (_this.isMobileTurn == true) {
+                    window.location.href = "/PEMain/MaintainExam"
+                } else {
+                    window.location.href = "/PEMain/MaintainExamPC"
+                }
+
             },
             changeDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));

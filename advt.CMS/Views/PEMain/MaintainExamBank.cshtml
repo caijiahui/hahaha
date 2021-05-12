@@ -294,7 +294,14 @@
 
         },
         watch: {
-         
+            'VExamBank.ExamType': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectName', {
+                    model: newval
+                }).then(response => {
+                    _this.ListSubjectName = response.data.ListSubjectName;
+                });
+            }
         },
         mounted: function () {
             this.getdata();

@@ -141,16 +141,7 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-                if(ExamType== "undefined")
-                    ExamType = "";
-                if (ExamSubject == "undefined")
-                    ExamSubject = "";
-                if (ExamMajor == "undefined")
-                    ExamMajor = "";
-                if (ExamLevel == "undefined")
-                    ExamLevel = "";
-                if (ExamContent == "undefined")
-                    ExamContent = "";
+
 
                 //创建Excel文件的对象
                 NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();

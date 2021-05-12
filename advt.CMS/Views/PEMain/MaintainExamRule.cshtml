@@ -1,8 +1,8 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamRuleModel
 
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-ui.min.js"></script>
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
@@ -40,9 +40,9 @@
             @*<el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>*@
             <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
             @*<el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-            <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-            <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-            <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+                <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+                <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -186,7 +186,7 @@
             TypeName: '',
             ExamSubject: '',
             LExamType: [],
-            ListSearchSubject:[],
+            ListSearchSubject: [],
             ruleform: {
                 RuleName: [
                     { required: true, message: '请输入规则名字', trigger: 'blur' }
@@ -247,7 +247,7 @@
                     _this.LExamType = res.data.LExamType;
                     _this.VExamRule = res.data.VExamRule;
                     _this.setPaginations();
-                   
+
                 })
             },
             setPaginations() {
@@ -410,11 +410,11 @@
                     _this.setPaginations();
                 });
             },
-            
+
             editRow(index, rows) {
 
             },
-            
+
             SearchinByRule() {
                 var _this = this;
                 axios.post('/PEMain/GetRuleInfo', {

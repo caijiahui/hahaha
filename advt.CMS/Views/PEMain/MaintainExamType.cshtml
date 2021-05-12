@@ -26,14 +26,14 @@
                   style="width: 100%;margin-top:20px " :default-sort="{prop: 'TypeName', order: 'CreateUser'}" border>
             <el-table-column label="考试类型"
                              prop="TypeName" sortable
-                             width="180">
+                             >
             </el-table-column>
             <el-table-column label="创建人"
                              prop="CreateUser" sortable
-                             width="180">
+                             >
             </el-table-column>
             <el-table-column label="创建时间"
-                             width="120">
+                            >
                 <template slot-scope="scope">
                     <span>{{changeDate(scope.row.CreateDate)}}</span>
                 </template>
@@ -113,11 +113,12 @@
                 axios.post('/PEMain/SaveTypeInfo', {
                     model: objs
                 }).then(function (res) {
-                    if (res.data.Result != null || res.data.Result != '') {
+                    console.log(res.data, 222);
+                    if ( res.data.Result != '') {
                         _this.$message.error(res.data.Result);
                     } else {
                         _this.LexamType = res.data.LexamType;
-                        this.VexamType = {};
+                        _this.VexamType = [];
                         _this.ExamName = '';
                     }
 

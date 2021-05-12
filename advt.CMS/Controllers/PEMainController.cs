@@ -195,7 +195,7 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             model.SaveType(username);
-            return Json(new { model.LexamType,model.Result }, JsonRequestBehavior.AllowGet);
+            return Json(new { LexamType=model.LexamType,model.Result }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         [HttpPost]
@@ -355,7 +355,17 @@ namespace advt.Web.Controllers
         public FileResult SignUpBankExcel(string ExamType, string ExamSubject, string ExamMajor, string ExamLevel, string ExamContent)
         {
             var model = new ExamBankModel();
-           var ms= model.SignUpBank(ExamType, ExamSubject, ExamMajor, ExamLevel, ExamContent);
+            if (ExamType == "undefined")
+                ExamType = "";
+            if (ExamSubject == "undefined")
+                ExamSubject = "";
+            if (ExamMajor == "undefined")
+                ExamMajor = "";
+            if (ExamLevel == "undefined")
+                ExamLevel = "";
+            if (ExamContent == "undefined")
+                ExamContent = "";
+            var ms= model.SignUpBank(ExamType, ExamSubject, ExamMajor, ExamLevel, ExamContent);
             return File(ms, "application/vnd.ms-excel", ExamType + ExamSubject + "题库" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
         }
