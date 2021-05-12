@@ -18,15 +18,12 @@
 <body>
 
     <div id="app" v-cloak>
-        <div v-if="isMobileTurn=='true'">
-            @{
 
-                Layout = null;
-
-            }
-
-        </div>
         <div class="wrap">
+            <div>
+                <el-page-header @@back="goBack" content="考试列表">
+                </el-page-header>
+            </div>
             <div class="header">
                 <h1>{{VExamScore.ExamType}}</h1>
             </div>
@@ -140,6 +137,15 @@
                 this.getdata();
             },
             methods: {
+                goBack: function () {
+                    var _this = this;
+                    if (_this.isMobileTurn == true) {
+                        window.location.href = "/PEMain/MaintainExam"
+                    } else {
+                        window.location.href = "/PEMain/MaintainExamPC"
+                    }
+
+                },
                 getdata: function () {
                     var _this = this;
                     axios.post('/PEMain/ExamFinishInfo').then(function (responese) {

@@ -25,32 +25,48 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
+                Result = "";
                 VexamType.CreateDate = DateTime.Now;
                 VexamType.CreateUser = username;
                 if (VexamType.ID == 0)
                 {
-                    var repeat = Data.ExamType.Get_ExamType(new { TypeName = ExamName });
-                    if (repeat != null)
+                    if (string.IsNullOrEmpty(ExamName))
                     {
-                        Result = "考试类型不可重复添加";
+                        Result = "添加内容不可为空";
                     }
                     else
                     {
-                        VexamType.TypeName = ExamName;
-                        Data.ExamType.Insert_ExamType(VexamType, null, new string[] { "ID" });
+                        var repeat = Data.ExamType.Get_ExamType(new { TypeName = ExamName });
+                        if (repeat != null)
+                        {
+                            Result = "考试类型不可重复添加";
+                        }
+                        else
+                        {
+                            VexamType.TypeName = ExamName;
+                            Data.ExamType.Insert_ExamType(VexamType, null, new string[] { "ID" });
+                        }
                     }
+
 
                 }
                 else
                 {
-                    var repeat = Data.ExamType.Get_ExamType(new { TypeName = VexamType.TypeName });
-                    if (repeat != null)
+                    if (string.IsNullOrEmpty(VexamType.TypeName))
                     {
-                        Result = "考试类型不可重复添加";
+                        Result = "添加内容不可为空";
                     }
-                    VexamType.CreateUser = username;
-                    VexamType.CreateDate = DateTime.Now;
-                    Data.ExamType.Update_ExamType(VexamType, null, new string[] { "ID" });
+                    else
+                    {
+                        var repeat = Data.ExamType.Get_ExamType(new { TypeName = VexamType.TypeName });
+                        if (repeat != null)
+                        {
+                            Result = "考试类型不可重复添加";
+                        }
+                        VexamType.CreateUser = username;
+                        VexamType.CreateDate = DateTime.Now;
+                        Data.ExamType.Update_ExamType(VexamType, null, new string[] { "ID" });
+                    }
                 }
                 LexamType = Data.ExamType.Get_All_ExamType();
             }
