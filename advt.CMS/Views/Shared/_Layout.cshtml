@@ -78,8 +78,8 @@
                 
                 <div style="display:flex;flex:1" class="nextWrap">
                     <div id="mainbox"  v-cloak>
-                        <div class="menu" @@click="toggleColl">
-                            <span>
+                        <div class="menu">
+                            <span >
                                 <i :class="isCollapse?'el-icon-arrow-right':'el-icon-arrow-left'"></i>
                             </span>
                             @*<el-button type="primary" :plain="isCollapse" @@click="toggleColl">
@@ -179,7 +179,7 @@
                 nowyear: '',
                 isMobileTurn: false,
                 mobileMenuDrawer: false,
-                isCollapse: true,
+                isCollapse: false,
                 LRole: []
             },
              mounted: function () {
@@ -240,10 +240,10 @@
                 asideHandleClose(key, keyPath) {
                     console.log(key, keyPath);
                 },
-                toggleColl: function () {
-                    console.log(111)
-                    this.isCollapse = !this.isCollapse;
-                },
+                //toggleColl: function () {
+                //    console.log(111)
+                //    this.isCollapse = !this.isCollapse;
+                //},
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 }
