@@ -78,39 +78,39 @@
             var c = httpContext.Request.Cookies["ALock"].Value.ToString();
             if (user != null)
             {
-                if (httpContext.Request.Cookies["ALock"].Value.ToString() != user.msn) //登录验证
+                if (Login.Isadmin)
                 {
-                    ////FormsAuthentication.SignOut();
-                    XUtils.ClearCookie();
-                    advt.Manager.Login.ClearSession();
-                    authorizeflag = false;
+                    authorizeflag = true;
+                    //return authorizeflag;
                 }
-                else
+                if (authorizeflag && (int)m_role != 0) //允许的用户角色
                 {
-                    if (Login.Isadmin)
-                    {
-                        authorizeflag = true;
-                        //return authorizeflag;
-                    }
-                    if (authorizeflag && (int)m_role != 0) //允许的用户角色
-                    {
-                        if (((Login.UserContext.roles ?? 0) & (int)m_role) == 0)
-                            authorizeflag = false;
-                    }
-
-                    if (authorizeflag && Validata_InUserGroup)
-                    {
-                        int usergroupid = Login.UserContext.usergroupid ?? 0;
-
-                        authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
-                    }
+                    if (((Login.UserContext.roles ?? 0) & (int)m_role) == 0)
+                        authorizeflag = false;
                 }
+
+                if (authorizeflag && Validata_InUserGroup)
+                {
+                    int usergroupid = Login.UserContext.usergroupid ?? 0;
+
+                    authorizeflag = Login.Isadmin || Login.IsAuthenticated_Page(usergroupid, this.AuthorizeArea, this.AuthorizeAction, this.AuthorizeController);
+                }
+                //存在数据库内的地址check是否有权限
                 var roles = advt.Data.ExamRolePartDetail.Get_All_ExamRolePartDetail(new { Controller = this.AuthorizeController, Action = this.AuthorizeAction });
                 if (roles.Count != 0)
                 {
                     var data = advt.Data.ExamRolePart.Get_All_ExamRolPartDetail_Sort(username, this.AuthorizeAction, this.AuthorizeController);
                     if (data.Count == 0)
                     {
+                        authorizeflag = false;
+                    }
+                }
+                if (this.AuthorizeAction == "ExamPage")
+                {
+                    if (httpContext.Request.Cookies["ALock"].Value.ToString() != user.msn) //登录验证
+                    {
+                        XUtils.ClearCookie();
+                        advt.Manager.Login.ClearSession();
                         authorizeflag = false;
                     }
                 }
