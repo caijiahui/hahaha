@@ -77,7 +77,7 @@
         </el-pagination>*@
         </div>
 
-        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible">
+        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
             <el-form :model="VUserInfo">
                 <el-form-item label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="VUserInfo.username" autocomplete="off" :disabled="true"></el-input>

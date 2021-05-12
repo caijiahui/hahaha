@@ -51,7 +51,7 @@
                        :layout="paginations.layout"
                        :total="paginations.total">
         </el-pagination>
-        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible">
+        <el-dialog title="角色编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
             <template>
                 <el-form ref="dialogForm">
                     角色名称： <el-input placeholder="请输入需要新增的角色" v-model="RoleName" class="input-with-select" style="width:30%;">

@@ -56,7 +56,7 @@
 
             </el-table-column>
         </el-table>
-        <el-dialog title="考试类型编辑" :visible.sync="dialogFormVisible">
+        <el-dialog title="考试类型编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
             <el-form :model="VexamType">
                 <el-form-item label="考试类型" :label-width="formLabelWidth">
                     <el-input v-model="VexamType.TypeName" autocomplete="off"></el-input>
