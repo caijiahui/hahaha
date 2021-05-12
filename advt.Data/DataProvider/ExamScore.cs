@@ -63,7 +63,11 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Update_ExamScore(info, Include, Exclude);
         }
-
+        public static List<Entity.ExamScore> Get_All_ExamGetScore(string CreateUser, bool IsTest)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetScore(CreateUser, IsTest);
+            return SqlHelper.GetReaderToList<Entity.ExamScore>(reader);
+        }
         
         #endregion
     }

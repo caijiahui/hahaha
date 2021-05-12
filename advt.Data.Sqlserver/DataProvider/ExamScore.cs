@@ -78,6 +78,20 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ExamID", (DbType)SqlDbType.Int, 4, ExamID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        public IDataReader Get_All_ExamGetScore(string CreateUser, bool IsTest=false)
+        {
+            StringBuilder commandText = new StringBuilder();
+            var texts = "";
+            commandText.AppendLine(" SELECT " + ExamScore_item_str + "");
+            commandText.AppendLine("   FROM [ExamScore] ");
+            texts= " where CreateUser like N'%" + CreateUser + "%' and IsTest=0";
+            commandText.AppendLine(texts);
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@CreateUser", (DbType)SqlDbType.NVarChar, 150, CreateUser));
+            l_parms.Add(SqlHelper.MakeInParam("@IsTest", (DbType)SqlDbType.Bit, 0, IsTest));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
         #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetUserScore(string code)
         {
-            ListExamScore = Data.ExamScore.Get_All_ExamScore(new { CreateUser = code,IsTest=false });
+            ListExamScore = Data.ExamScore.Get_All_ExamGetScore(code,false);
         }
         public string GetUserCode(string username)
         {

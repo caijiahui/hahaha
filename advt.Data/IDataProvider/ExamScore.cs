@@ -18,7 +18,7 @@ namespace advt.Data
         int Update_ExamScore(Entity.ExamScore info, string[] Include, string[] Exclude);
 
         int Delete_ExamScore(int ExamID);
-
+        IDataReader Get_All_ExamGetScore(string CreateUser, bool IsTest=false);
 
         #endregion
     }
