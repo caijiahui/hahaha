@@ -341,7 +341,8 @@
                                 numscore += item.TopicNum * item.TopicScore;
                             })
                             if (numscore == _this.VExamRule.TotalScore) {
-                                if (_this.VExamRule.TotalScore >= _this.VExamRule.PassScore) {
+                                if (parseFloat(_this.VExamRule.TotalScore) >= parseFloat(_this.VExamRule.PassScore))
+                                {
                                     var objs = {};
                                     objs.VExamRule = _this.VExamRule;
                                     objs.RuleGrList = _this.RuleGrList;
@@ -360,6 +361,7 @@
                                     _this.RuleGrList = [];
                                     _this.ListTopicInfo = [];
                                 }
+
                                 else {
                                     _this.$alert('通过分数不可大于总分，请检查')
                                 }
