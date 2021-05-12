@@ -34,10 +34,11 @@ namespace advt.CMS.Models.ExamModel
                 if (model != null)
                 {
                     ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x => x.TypeName).ToList();
+                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
                 }
                 else
                 {
-                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
+                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = "", IsExam = false }).OrderByDescending(x => x.TypeName).ToList();
                     ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.TypeName).ToList();
                 }
                 LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
@@ -153,22 +154,20 @@ namespace advt.CMS.Models.ExamModel
                 using (var ds = dt)
                 {
                     var data = new ExamUserDetailInfo();
-                    for (int i = 0; i < ds.Rows.Count; i++)
+                    foreach (DataRow item in ds.Rows)
                     {
-                        if (!string.IsNullOrEmpty(ds.Rows[i][6].ToString()))
+                        if (item != null)
                         {
-
-                            var ss = ds.Rows[i][0].ToString().Trim();
                             LDetail.Add(new ExamUserDetailInfo
                             {
-                                TypeName = ds.Rows[i][0].ToString().Trim(),
-                                SubjectName = ds.Rows[i][1].ToString().Trim(),
-                                UserCode = ds.Rows[i][2].ToString().Trim(),
-                                UserName = ds.Rows[i][3].ToString().Trim(),
-                                DepartCode = ds.Rows[i][4].ToString().Trim(),
-                                RuleName = ds.Rows[i][5].ToString().Trim(),
-                                ExamDate = Convert.ToDateTime(ds.Rows[i][6].ToString()),
-                                ExamPlace = ds.Rows[i][7].ToString().Trim(),
+                                TypeName = item[0].ToString().Trim(),
+                                SubjectName = item[1].ToString().Trim(),
+                                UserCode = item[2].ToString().Trim(),
+                                UserName = item[3].ToString().Trim(),
+                                DepartCode = item[4].ToString().Trim(),
+                                RuleName = item[5].ToString().Trim(),
+                                ExamDate = Convert.ToDateTime(item[6].ToString()),
+                                ExamPlace = item[7].ToString().Trim(),
                                 HrCheckCreateUser = username,
                                 HrCheckCreateDate = DateTime.Now,
                                 IsExam = "false",
@@ -188,13 +187,13 @@ namespace advt.CMS.Models.ExamModel
                         item.IsStop = true;
                         Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
-
+                    item.IsStop = false;
                     var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     successcount += c;
 
                 }
                 GetHrAuditUser();
-                Result = successcount + "成功插入" + successcount + "记录";
+                Result =  "成功插入" + successcount + "记录";
 
             }
 

@@ -172,7 +172,7 @@
             },
             watch: {
                 'examList.selectItem': function (newval) {
-                    console.log(newval, 232);
+
                 },
                 second: {
                     handler(newVal) {
@@ -200,35 +200,42 @@
                     return n < 10 ? '0' + n : '' + n
                 },
                 add() {
-                    var _this = this
-                    var time = window.setInterval(function () {
-                        if (_this.seconds === 0 && _this.minutes !== 0) {
-                            _this.seconds = 59
-                            _this.minutes -= 1
-                        } else if (_this.minutes === 0 && _this.seconds === 0) {
-                            _this.seconds = 0;
-                            _this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
-                                confirmButtonText: '确定',
-                                callback: action => {
-                                    var obj = {};
-                                    obj.examList = _this.examList;
-                                    obj.ListBankView = _this.ListBankView;
-                                    obj.VExamUserInfo = _this.VExamUserInfo;
-                                    axios.post('/PEMain/InsertScore', {
-                                        model: obj
-                                    }).then(function (res) {
+                    var _this = this;
+                    if (_this.$refs.idtests.value!='test') {
+                        if (_this.examList.length != 0) {
+                            var time = window.setInterval(function () {
+                                if (_this.seconds === 0 && _this.minutes !== 0) {
+                                    _this.seconds = 59
+                                    _this.minutes -= 1
+                                } else if (_this.minutes === 0 && _this.seconds === 0) {
+                                    _this.seconds = 0;
+                                    _this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
+                                        confirmButtonText: '确定',
+                                        callback: action => {
+                                            var obj = {};
+                                            obj.examList = _this.examList;
+                                            obj.ListBankView = _this.ListBankView;
+                                            obj.VExamUserInfo = _this.VExamUserInfo;
+                                            axios.post('/PEMain/InsertScore', {
+                                                model: obj
+                                            }).then(function (res) {
 
+                                            });
+                                            window.location.href = "/PEMain/ExamFinish";
+                                            //window.location.href = "/PEMain/MaintainExam";
+                                        }
                                     });
-                                    window.location.href = "/PEMain/ExamFinish";
-                                    //window.location.href = "/PEMain/MaintainExam";
-                                }
-                            });
-                            window.clearInterval(time)
+                                    window.clearInterval(time)
 
-                        } else {
-                            _this.seconds -= 1
+                                } else {
+                                    _this.seconds -= 1
+                                }
+                            }, 1000)
+
                         }
-                    }, 1000)
+                    }
+
+                  
                 },
                 isMobile: function () {
                     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
@@ -271,10 +278,9 @@
                                         if (_this.examList.Remark == null)
                                             _this.examList.Remark=''
                                         //const confirmText = ['是否将基金产品从我的自选中移出？', '注意：此操作将从我的自选中的所有分组中移除该产品。'] 
-                                        _this.$confirm(str+' <br/> 答案解析: <br/>' + _this.examList.Remark, '正确答案:', {
+                                        _this.$confirm(str+'         答案解析: ' + _this.examList.Remark, '正确答案:', {
                                             confirmButtonText: '下一题',
-                                            cancelButtonText: '取消',
-                                            dangerouslyUseHTMLString: true
+                                            cancelButtonText: '取消'
                                         }).then(() => {
                                             var obj = {};
                                             obj.examList = _this.examList;
@@ -316,7 +322,12 @@
                                                         _this.examList.selectItem = []
                                                     }
                                                     else if (res.data.examList.type == 0) {
-                                                        _this.examList.selectItem = ''
+                                                        if (_this.examList.selectItem.length != 0) {
+                                                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                        } else {
+                                                            _this.examList.selectItem = ''
+                                                        }
+                                                        
                                                     }
                                                     else {
                                                         _this.examList.selectItem = '';
@@ -369,7 +380,11 @@
                                                     _this.examList.selectItem = []
                                                 }
                                                 else if (res.data.examList.type == 0) {
-                                                    _this.examList.selectItem =''
+                                                    if (_this.examList.selectItem.length != 0) {
+                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                    } else {
+                                                        _this.examList.selectItem = ''
+                                                    }
                                                 }
                                                 else {
                                                     _this.examList.selectItem = '';
@@ -423,7 +438,11 @@
                                             _this.examList.selectItem = []
                                         }
                                         else if (res.data.examList.type == 0) {
-                                             _this.examList.selectItem = ''
+                                            if (_this.examList.selectItem.length!=0) {
+                                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                            } else {
+                                                _this.examList.selectItem = ''
+                                            }
                                         }
                                         else {
                                             _this.examList.selectItem = '';

@@ -84,6 +84,7 @@
                                        ref="upload"
                                        :multiple="false"
                                        :on-success="handleExcelSuccess"
+
                                        action="/PEMain/Upload_Qualification">
                                 <el-button size="small" type="primary">考试资格汇入</el-button>
                             </el-upload>
@@ -426,6 +427,7 @@
                     _this.setPaginations();
                 });
             },
+
             //批量更新操作
             handleUpdate() {
                 var _this = this;
@@ -463,13 +465,12 @@
 
             },
             handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
-                var _this = this;
-                _this.ListHrAuditUser = Result.data.ListHrAuditUser;
-                _this.ListHrAuditSuccessUser = Result.data.ListHrAuditSuccessUser;
-                this.$message({
-                    message: Result.data.Result,
-                    type: 'success'
+                this.$alert(Result.Result, '结果', {
+                    dangerouslyUseHTMLString: true
                 });
+                var _this = this;
+                _this.ListHrAuditUser = Result.ListHrAuditUser;
+                _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
             },
             setPaginations() {
                 var _this = this;
