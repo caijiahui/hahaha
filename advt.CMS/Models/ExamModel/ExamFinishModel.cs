@@ -28,16 +28,7 @@ namespace advt.CMS.Models
             examList = new List<ExamScoreInfo>();
             ListVexamRecord = new List<ExamRecord>();
             Listexam.ansowerList = new List<LAnsower>();
-            if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
-            {
-                var ss = Data.ExamScore.Get_All_ExamScore().Max(x => x.ExamID);
-
-                VExamScore = Data.ExamScore.Get_ExamScore(ss);
            
-                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
-                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();               
-                ID = ss;
-            }
            
         }
 
@@ -55,11 +46,27 @@ namespace advt.CMS.Models
                 ID = ss;
             }
         }
-        public void GetExamListInfo(int id)
-        {        
-            if (id != 0)
+        public void GetExamListInfo(int id,string name)
+        {
+            var usercode = "";
+            if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
+            {
+                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
+                if (usersheet != null)
+                {
+                    usercode = usersheet.UserCode;
+                }
+                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser= usercode }).Max(x => x.ExamID);
+
+                VExamScore = Data.ExamScore.Get_ExamScore(ss);
+
+                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
+                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
+                ID = ss;
+            }
+            if (ID != 0)
             {                
-                foreach (var item in ListVexamRecord.Where(x=>x.ExamID== id.ToString()))
+                foreach (var item in ListVexamRecord.Where(x=>x.ExamID== ID.ToString()))
                 {
                     var output = new string[] { };
                     var list= new string[] { };
@@ -201,7 +208,7 @@ namespace advt.CMS.Models
 
                     examList.Add(new ExamScoreInfo
                     {
-                        ExamID = id.ToString(),
+                        ExamID = ID.ToString(),
                         TopicTitle = item.TopicTitle,
                         TopicNum = item.TopicNum,
                         ansowerList= answ,

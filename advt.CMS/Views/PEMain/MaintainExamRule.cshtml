@@ -80,7 +80,7 @@
                     <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
                         <el-option v-for="item in ListTopicInfo"
                                    :key="item.ID"
-                                   :label="item.TopicMajor+item.TopicLevel+item.TopicType+item.Bcount"
+                                   :label="item.TopicMajor+item.TopicLevel+item.TopicType+'-'+item.Bcount"
                                    :value="item.ID">
                         </el-option>
                     </el-select>
@@ -294,8 +294,9 @@
 
             },
             topicratioPropsFn: function (val) {
+                console.log(val,298)
                 var _this = this;
-                //_this.RuleGrList = [];
+                _this.RuleGrList = [];
                 val.forEach(function (lst, num) {
                     _this.ListTopicInfo.forEach(function (item, index) {
                         if (item.ID == lst)
@@ -305,6 +306,7 @@
 
             },
             createRule: function () {
+                this.topicratioPropsVal = [];
                 var _this = this;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
@@ -391,7 +393,19 @@
                     _this.ListTypeName = response.data.ListTypeName;
                     _this.RuleGrList = response.data.RuleGrList;
                     _this.ListTopicInfo = response.data.ListTopic;
-
+                    _this.topicratioPropsVal = [];
+                    _this.ListTopicInfo.forEach(function (item,index) {
+                        _this.RuleGrList.forEach(function (list, num) {
+                            var aaa = list.TopicLevel ? list.TopicLevel : '';
+                            console.log(aaa)
+                            var string = list.TopicMajor + aaa + list.TopicType;
+                            var Grstring = item.TopicMajor + item.TopicLevel + item.TopicType;
+                            console.log(string, Grstring, index, num, 399)
+                            if (string == Grstring) {
+                                _this.topicratioPropsVal.push(index+1)
+                            }
+                        })
+                    })
 
                 });
                 //axios.post('/PEMain/GetSubjectList').then(response => {

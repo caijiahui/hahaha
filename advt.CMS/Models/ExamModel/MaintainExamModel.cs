@@ -25,13 +25,12 @@ namespace advt.CMS.Models.ExamModel
         public string GetUserCode(string username)
         {
             Name = username;
-               var code = "";
-            var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = username });
+            var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
             if (user != null)
             {
                 UserCode = user.UserCode;
             }
-            return code;
+            return UserCode;
         }
     }
     }

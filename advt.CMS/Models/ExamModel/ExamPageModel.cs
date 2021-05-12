@@ -276,7 +276,7 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 //+科目
                 sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                sc.IsQuestion = model.VExamUserInfo.IsQuestion;               
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;      
 
                 int sd = 0;
                 int score = 0;
@@ -357,9 +357,15 @@ namespace advt.CMS.Models
 
             }
         }
-        public void InsertRecoredData(ExamPageModel model)
+        public void InsertRecoredData(ExamPageModel model,string name)
         {
-            var ee = Data.ExamScore.Get_All_ExamScore().Max(x=>x.ExamID);
+            var usercode = "";
+            var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
+            if (usersheet != null)
+            {
+                usercode = usersheet.UserCode;
+            }
+            var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode }).Max(x=>x.ExamID);
             
             
             foreach (var item in model.VExamUserInfo.LExamViews)

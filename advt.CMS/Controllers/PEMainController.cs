@@ -520,7 +520,8 @@ namespace advt.Web.Controllers
         {
             model.GetExam();
             model.InsertScoreData(model);
-            model.InsertRecoredData(model);
+            var name = this.UserNameContext;
+            model.InsertRecoredData(model,name);
             return Json(new { examList = model}, JsonRequestBehavior.AllowGet);
         }
         //考试类型
@@ -535,7 +536,8 @@ namespace advt.Web.Controllers
         public ActionResult ExamFinishInfo()
         {
             ExamFinishModel model = new ExamFinishModel();
-            model.GetExamListInfo(model.ID);
+            var name = this.UserNameContext;
+            model.GetExamListInfo(model.ID, name);
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
 
@@ -983,8 +985,10 @@ namespace advt.Web.Controllers
         public ActionResult ExamGetFinishInfo(string ID)
         {
             ExamFinishModel model = new ExamFinishModel();
+            var username = this.UserNameContext;
+            model.GetExamListInfo(Convert.ToInt32(ID), username);
             model.GetCsore(Convert.ToInt32(ID));
-            model.GetExamListInfo(Convert.ToInt32(ID));
+           
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
         //个人考试科目
