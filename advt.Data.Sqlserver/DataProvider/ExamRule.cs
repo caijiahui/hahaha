@@ -121,28 +121,19 @@ namespace advt.Data.SqlServer
             StringBuilder commandText = new StringBuilder();
             var texts = "";
             commandText.AppendLine(" SELECT " + ExamRule_item_str + "");
-            commandText.AppendLine("   FROM [ExamRule] ");
+            commandText.AppendLine("   FROM [ExamRule] where 1=1 ");
             if (!string.IsNullOrEmpty(ExamType))
             {
-                texts = " where TypeName=@ExamType ";
-                if (!string.IsNullOrEmpty(SubjectName))
-                {
-                    texts += " and SubjectName like N'%" + SubjectName + "%' ";
-                }
-                if (!string.IsNullOrEmpty(RuleName))
-                {
-                    texts += " and RuleName like N'%" + RuleName + "%' ";
-                }
-
+                texts += " and TypeName like  N'%" + ExamType + "%'";
             }
-            else
+            if (!string.IsNullOrEmpty(SubjectName))
             {
-                if (!string.IsNullOrEmpty(RuleName))
-                {
-                    texts += " where RuleName like N'%" + RuleName + "%' ";
-                }
+                texts += " and SubjectName like  N'%" + SubjectName + "%'";
             }
-
+            if (!string.IsNullOrEmpty(RuleName))
+            {
+                texts += " and RuleName like  N'%" + RuleName + "%'";
+            }          
            
             commandText.AppendLine(texts);
             List<DbParameter> l_parms = new List<DbParameter>();
