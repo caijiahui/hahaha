@@ -21,7 +21,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetListUsersubject(string username)
         {
-            var usersheet = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = username});
+            var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
             if (usersheet != null)
             {
                 usercode = usersheet.UserCode;
