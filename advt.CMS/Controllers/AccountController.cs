@@ -74,20 +74,22 @@ namespace advt.Web.Controllers
                     //var account = "";
                     if (model.UserName.Contains("-"))
                     {
-                        var vuser = Data.advt_user_sheet.Get_advt_user_sheet(new { UserCode = model.UserName });
+                        var vuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
                         if (vuser != null)
                         {
-                            SplitAccount = vuser.UserAccount.Trim().Split('\\');
-                            username = vuser.UserAccount;
+                            var acc = "acn\\" + vuser.EamilUsername.Trim();
+                            SplitAccount = acc.Split('\\');
+                            username = vuser.EamilUsername;
                         }
                     }
                     else
                     {
-                        var vusers = Data.advt_user_sheet.Get_advt_user_sheet(new { UserAccount = model.UserName });
+                        var vusers = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
                         if (vusers != null)
                         {
-                            SplitAccount = vusers.UserAccount.Trim().Split('\\');
-                            username = vusers.UserAccount;
+                            var acc = "acn\\"+vusers.EamilUsername.Trim();
+                            SplitAccount = acc.Split('\\');
+                            username = vusers.EamilUsername;
                         }
                     }
                     //ResponseModel response = _accessRepository.GetAccess(user);

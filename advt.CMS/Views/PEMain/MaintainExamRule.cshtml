@@ -1,8 +1,8 @@
 ﻿@model advt.CMS.Models.ExamModel.ExamRuleModel
 
-    @{
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-ui.min.js"></script>
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
@@ -22,9 +22,8 @@
             <el-select v-model="TypeName" placeholder="请选择考试类型">
                 <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
             </el-select>
-            <el-select v-model="ExamSubject" placeholder="请选择考试科目">
-                <el-option v-for="item in ListSearchSubject" :key="item.Key" :label="item.SubjectName" :value="item.SubjectName"></el-option>
-            </el-select>
+            <el-input placeholder="考试科目" v-model="ExamSubject" style="width:200px">
+            </el-input>
             <el-input placeholder="规则名" v-model="Rule" style="width:200px">
             </el-input>
             <el-button slot="append" @@click="SearchinByRule">Search</el-button>
@@ -41,9 +40,9 @@
             @*<el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>*@
             <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
             @*<el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-            <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-            <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-            <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+                <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+                <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -187,7 +186,7 @@
             TypeName: '',
             ExamSubject: '',
             LExamType: [],
-            ListSearchSubject:[],
+            ListSearchSubject: [],
             ruleform: {
                 RuleName: [
                     { required: true, message: '请输入规则名字', trigger: 'blur' }
@@ -235,16 +234,7 @@
                     console.log(response.data.ListTopic);
                     _this.ListTopicInfo = response.data.ListTopic;
                 });
-            },
-            'TypeName': function (newval) {
-                var _this = this;
-                axios.post('/PEMain/GetRuleTypeName', {
-                    model: newval
-                }).then(response => {
-                    _this.ListSearchSubject = response.data.ListSubjectName;
-                    console.log(response.data.ListSubjectName);
-                });
-            },
+            }
         },
         mounted: function () {
             this.getInfoList();
@@ -257,7 +247,7 @@
                     _this.LExamType = res.data.LExamType;
                     _this.VExamRule = res.data.VExamRule;
                     _this.setPaginations();
-                   
+
                 })
             },
             setPaginations() {
@@ -420,11 +410,11 @@
                     _this.setPaginations();
                 });
             },
-            
+
             editRow(index, rows) {
 
             },
-            
+
             SearchinByRule() {
                 var _this = this;
                 axios.post('/PEMain/GetRuleInfo', {
