@@ -55,7 +55,7 @@ namespace advt.Data.SqlServer
             commandText.AppendLine("select b.PartName,c.[Action],c.Controller,c.Sort from ExamRole a inner join ExamRolePart b on a.RoleName=b.RoleName  " +
  " inner join ExamRolePartDetail c on b.PartName = c.PartName " +
  " inner join advt_users_type d on d.type = a.RoleName" +
-" where 1=1 " + text + " order by Sort desc");
+" where 1=1 " + text + " order by Sort asc");
            
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }

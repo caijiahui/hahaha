@@ -119,7 +119,12 @@ namespace advt.Service.Provider
             _user.password = password_MD5;
 
             int id = Data.advt_users.Insert_advt_users(_user, include_str.Split(','), new string[] { "id" });
-            _user.id = id;
+            var ids = Data.advt_users.Get_advt_user(UserName,password_MD5);
+            if (ids != null)
+            {
+                _user.id = ids.id;
+            }
+
 
             if (id < 1) ErrorMSG = "System Error!";
 

@@ -135,7 +135,9 @@
                 total: [],      //一共多少题  后台获取
                 nowItem: [],     //当前的题目  后台获取
                 //examList: [],
-                examList: {},
+                examList: {
+                    selectItem:''
+                },
                 ListBankView: {},
                 VExamUserInfo: {},
                 minutes: [],
@@ -167,7 +169,6 @@
                 }
                 this.getdata();
                 this.add();
-                console.log(this.isMobileTurn)
             },
             watch: {
                 'examList.selectItem': function (newval) {
@@ -234,47 +235,46 @@
                     return flag
                 },
                 submitForm: function (formName, ii) {
-
                     var _this = this;
+                   
 
                     this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             _this.examList.LselectItem = [];
-                            console.log(_this.examList.selectItem, 1234);
-                            console.log(_this.examList.ansowerList, 456);
                             if (_this.examList.type == 1) {
                                 for (var i = 0; i < _this.examList.selectItem.length; i++) {
                                     var c = _this.examList.selectItem[i];
+                                    if (_this.examList.ansowerList[c]!=null)
                                     _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
                                 }
                             }
                             else if (_this.examList.type == 0) {
                                 var c = _this.examList.selectItem;
+                                if (_this.examList.ansowerList[c] != null)
                                 _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
                             }
                             else if (_this.examList.type == 2) {
                                 _this.examList.LselectItem = _this.examList.selectItem;
                             }
-
-                            console.log(_this.examList.LselectItem, 343);
-                            console.log(_this.examList.LselectItem.sort().toString(), 344);
-                            console.log(_this.examList.RightKey.sort().toString(), 345);
                             if (_this.VExamUserInfo.IsTest) {
                                 //单选多选判断对错,填空直接往下
                                 if (_this.examList.type == 1 || _this.examList.type == 0) {
-                                    var next = "";
+                                    var next = [];
                                     if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
                                         for (var i = 0; i < _this.examList.ansowerList.length; i++) {
                                             var cc = _this.examList.ansowerList[i].ansowerflag;
-
                                             if (_this.examList.RightKey.indexOf(cc) != -1) {
-                                                console.log(cc, 2322);
-                                                next += _this.examList.ansowerList[i].ansower;
+                                                next.push( _this.examList.ansowerList[i].ansower);
                                             }
                                         }
-                                        _this.$confirm('答案解析:<br>' + _this.examList.Remark, '正确答案:' + next, {
+                                        let str = next.join(' <br/> ');
+                                        if (_this.examList.Remark == null)
+                                            _this.examList.Remark=''
+                                        //const confirmText = ['是否将基金产品从我的自选中移出？', '注意：此操作将从我的自选中的所有分组中移除该产品。'] 
+                                        _this.$confirm(str+' <br/> 答案解析: <br/>' + _this.examList.Remark, '正确答案:', {
                                             confirmButtonText: '下一题',
                                             cancelButtonText: '取消',
+                                            dangerouslyUseHTMLString: true
                                         }).then(() => {
                                             var obj = {};
                                             obj.examList = _this.examList;
@@ -283,7 +283,6 @@
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
-                                            console.log(_this.VExamUserInfo, 273333)
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
 
                                                 obj.examList = _this.examList;
@@ -299,17 +298,14 @@
                                             } else {
 
                                                 obj.PreNext = "Next";
-                                                console.log(290);
                                                 axios.post('/PEMain/NextTopic', {
                                                     model: obj
                                                 }).then(function (res) {
                                                     _this.examList = res.data.examList;
-
                                                     _this.total = res.data.total;
                                                     _this.nowItem = res.data.nowItem;
                                                     _this.ListBankView = res.data.ListBank;
                                                     _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                    console.log(_this.examList, 6565);
                                                     if (_this.examList.selectItem == null) {
                                                         _this.examList.selectItem = []
                                                     }
@@ -320,7 +316,7 @@
                                                         _this.examList.selectItem = []
                                                     }
                                                     else if (res.data.examList.type == 0) {
-                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                        _this.examList.selectItem = ''
                                                     }
                                                     else {
                                                         _this.examList.selectItem = '';
@@ -332,30 +328,6 @@
                                         }).catch(() => {
                                             return;
                                         });
-
-
-
-
-                                        //const h = _this.$createElement;
-                                        //_this.$msgbox({
-                                        //    title: '正确答案:' + _this.examList.RightKey.sort().toString(),
-                                        //    message: h('p', null, [
-                                        //        h('span', null, '答案解析:<br>' + _this.examList.Remark),
-                                        //    ]),
-                                        //    showCancelButton: true,
-                                        //    confirmButtonText: '下一题',
-                                        //    cancelButtonText: '取消',
-                                        //    beforeClose: (action, instance, done) => {
-                                        //        console.log(action, 454)
-                                        //        if (action === 'confirm') {
-                                        //            IsCon = true;
-                                        //            done();
-                                        //            console.log(IsCon, 4444);
-                                        //        } else {
-                                        //            done();
-                                        //        }
-                                        //    }
-                                        //});
                                     }
                                     else {
                                         var obj = {};
@@ -387,7 +359,6 @@
                                                 _this.nowItem = res.data.nowItem;
                                                 _this.ListBankView = res.data.ListBank;
                                                 _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                console.log(_this.examList, 6565);
                                                 if (_this.examList.selectItem == null) {
                                                     _this.examList.selectItem = []
                                                 }
@@ -398,7 +369,7 @@
                                                     _this.examList.selectItem = []
                                                 }
                                                 else if (res.data.examList.type == 0) {
-                                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                    _this.examList.selectItem =''
                                                 }
                                                 else {
                                                     _this.examList.selectItem = '';
@@ -442,7 +413,6 @@
                                         _this.nowItem = res.data.nowItem;
                                         _this.ListBankView = res.data.ListBank;
                                         _this.VExamUserInfo = res.data.VExamUserInfo;
-                                        console.log(_this.examList, 6565);
                                         if (_this.examList.selectItem == null) {
                                             _this.examList.selectItem = []
                                         }
@@ -453,7 +423,7 @@
                                             _this.examList.selectItem = []
                                         }
                                         else if (res.data.examList.type == 0) {
-                                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                            _this.examList.selectItem = ''
                                         }
                                         else {
                                             _this.examList.selectItem = '';
@@ -472,20 +442,18 @@
                 },
                 preBtn: function () {
                     var _this = this;
-                    console.log(_this.examList);
                     var objs = {};
                     objs.examList = _this.examList;
                     objs.LselectItem = _this.LselectItem;
                     objs.nowItem = _this.nowItem;
                     objs.total = _this.total;
                     objs.ListBankView = _this.ListBankView;
-                    console.log(objs.ListBankView, 2323);
                     objs.VExamUserInfo = _this.VExamUserInfo;
                     objs.PreNext = "Pre";
                     axios.post('/PEMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
-                        console.log(res.data.examList, 888);
+                        console.log(res.data.examList, 22);
                         _this.examList = res.data.examList;
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
@@ -503,7 +471,6 @@
                         else if (res.data.examList.type == 2) {
                             _this.examList.selectItem = _this.examList.selectItem[0].toString();
                         }
-                        console.log(_this.examList.selectItem, 999);
 
 
 
@@ -536,22 +503,28 @@
                         }).then(function (responese) {
                             _this.examList = responese.data.examList;
                             _this.VExamUserInfo = responese.data.VExamUserInfo;
+                            console.log(_this.examList.selectItem, 1)
                             if (_this.examList.selectItem == null) {
                                 _this.examList.selectItem = []
+                                console.log(_this.examList.selectItem, 2)
                             }
                             if (responese.data.examList.type == 1) {
                                 _this.examList.selectItem = []
+                                console.log(_this.examList.selectItem, 3)
                             }
                             else if (responese.data.examList.type == 0) {
-                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                _this.examList.selectItem = ''
+                                console.log(_this.examList.selectItem, 4)
                             }
                             else {
                                 _this.examList.selectItem = ''
+                                console.log(_this.examList.selectItem, 5)
                             }
                             if (_this.examList.LselectItem == null) {
                                 _this.examList.LselectItem = []
                             }
                             _this.minutes = responese.data.VExamUserInfo.TotalTime;
+                           
 
                             _this.total = responese.data.total;
                             _this.nowItem = responese.data.nowItem;
@@ -580,7 +553,7 @@
                                     _this.examList.selectItem = []
                                 }
                                 else if (responese.data.examList.type == 0) {
-                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                    _this.examList.selectItem = ''
                                 }
                                 else {
                                     _this.examList.selectItem = ''
