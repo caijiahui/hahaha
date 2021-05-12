@@ -43,16 +43,36 @@ namespace advt.CMS.Models
             VExamUserInfo.LExamViews = new List<ExamView>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
+        public string GetExamBankNum(string RuleName)
+        {
+            var Result = "";
+            //获取规则
+            var Rule = Data.ExamRule.Get_ExamRule(new { RuleName });
+            //规则里面题目类型和数量List
+            if (Rule != null)
+            {
+                var topicnum = Data.ExamRuleTopicType.Get_All_ExamRuleTopicType_RuleId(Rule.ID);
+                foreach (var item in topicnum)
+                {
+                    var banks = Data.ExamBank.Get_All_ExamBank_ExamType_Rule(item.TopicType, item.TopicMajor, item.TopicLevel, Rule.SubjectName);
+                    int TopicNum = Convert.ToInt32(item.TopicNum);
+                    var bank = banks.OrderBy(y => Guid.NewGuid()).Take(TopicNum);
+                    if (TopicNum != bank.Count())
+                    {
+                        Result += item.TopicType + item.TopicMajor + item.TopicLevel + item.TopicLevel + "题库数量不够";
+                    }
+                }
+            }
 
+            return Result;
+        }
         public void GetListExam(string data,string RuleName,string username)
         {
             try
             {
-               
                 var ListBanks = new List<ExamBankView>();
-
                 var Rule = Data.ExamRule.Get_ExamRule(new {RuleName });
-                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = username });
+                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
                 if (Rule != null)
                 {
                     VExamUserInfo.ExamType = Rule.TypeName;//考试名称

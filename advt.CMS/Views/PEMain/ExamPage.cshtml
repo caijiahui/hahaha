@@ -423,7 +423,7 @@
                                             _this.examList.selectItem = []
                                         }
                                         else if (res.data.examList.type == 0) {
-                                            _this.examList.selectItem = ''
+                                             _this.examList.selectItem = ''
                                         }
                                         else {
                                             _this.examList.selectItem = '';
@@ -503,22 +503,17 @@
                         }).then(function (responese) {
                             _this.examList = responese.data.examList;
                             _this.VExamUserInfo = responese.data.VExamUserInfo;
-                            console.log(_this.examList.selectItem, 1)
                             if (_this.examList.selectItem == null) {
                                 _this.examList.selectItem = []
-                                console.log(_this.examList.selectItem, 2)
                             }
                             if (responese.data.examList.type == 1) {
                                 _this.examList.selectItem = []
-                                console.log(_this.examList.selectItem, 3)
                             }
                             else if (responese.data.examList.type == 0) {
                                 _this.examList.selectItem = ''
-                                console.log(_this.examList.selectItem, 4)
                             }
                             else {
                                 _this.examList.selectItem = ''
-                                console.log(_this.examList.selectItem, 5)
                             }
                             if (_this.examList.LselectItem == null) {
                                 _this.examList.LselectItem = []
@@ -532,8 +527,8 @@
                         })
                     }
                     else {
-                        if (IsExams == "false") {
-                                _this.$alert('未到考试时间', '提示', {
+                        if (IsExams !='') {
+                            _this.$alert(IsExams, '提示', {
                                     confirmButtonText: '确定',
                                     callback: action => {
                                         window.location.href = "/PEMain/MaintainExam";

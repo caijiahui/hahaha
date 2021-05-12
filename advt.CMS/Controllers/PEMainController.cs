@@ -483,11 +483,11 @@ namespace advt.Web.Controllers
             }
             if(string.IsNullOrEmpty(ExamDate) || dtdate!= ExamDate)
             {
-                model.IsExam = "false";
+                model.IsExam = "未到考试时间,不可考试";
             }
             else
             {
-                model.IsExam = "true";
+                model.IsExam=model.GetExamBankNum(RuleName);
             }
             return View(model);
         }
