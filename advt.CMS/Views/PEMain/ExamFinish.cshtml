@@ -148,6 +148,8 @@
                 },
                 getdata: function () {
                     var _this = this;
+                    _this.examList = [];
+                    _this.VExamScore = [];
                     axios.post('/PEMain/ExamFinishInfo').then(function (responese) {
                         _this.VExamScore = responese.data.VExamScore;
                         if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {

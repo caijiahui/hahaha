@@ -341,23 +341,29 @@
                                 numscore += item.TopicNum * item.TopicScore;
                             })
                             if (numscore == _this.VExamRule.TotalScore) {
-                                var objs = {};
-                                objs.VExamRule = _this.VExamRule;
-                                objs.RuleGrList = _this.RuleGrList;
-                                axios.post('/PEMain/SaveRuleInfo', {
-                                    model: objs,
-                                }).then(function (res) {
-                                    if (res.data.Result != '') {
-                                        _this.$message.error(res.data.Result);
-                                    } else {
-                                        _this.tableData = res.data.tableData;
-                                        _this.RuleGrList = res.data.RuleGrList;
-                                        _this.setPaginations();
-                                    }
-                                });
-                                _this.dialogFormVisible = false;
-                                _this.RuleGrList = [];
-                                _this.ListTopicInfo = [];
+                                if (_this.VExamRule.TotalScore >= _this.VExamRule.PassScore) {
+                                    var objs = {};
+                                    objs.VExamRule = _this.VExamRule;
+                                    objs.RuleGrList = _this.RuleGrList;
+                                    axios.post('/PEMain/SaveRuleInfo', {
+                                        model: objs,
+                                    }).then(function (res) {
+                                        if (res.data.Result != '') {
+                                            _this.$message.error(res.data.Result);
+                                        } else {
+                                            _this.tableData = res.data.tableData;
+                                            _this.RuleGrList = res.data.RuleGrList;
+                                            _this.setPaginations();
+                                        }
+                                    });
+                                    _this.dialogFormVisible = false;
+                                    _this.RuleGrList = [];
+                                    _this.ListTopicInfo = [];
+                                }
+                                else {
+                                    _this.$alert('通过分数不可大于总分，请检查')
+                                }
+                               
                             }
                             else { _this.$alert('题目类型总分不等于设定的总分，请检查') }
                         }
