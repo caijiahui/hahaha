@@ -294,7 +294,6 @@
 
             },
             topicratioPropsFn: function (val) {
-                console.log(val,298)
                 var _this = this;
                 _this.RuleGrList = [];
                 val.forEach(function (lst, num) {
@@ -405,15 +404,14 @@
                     _this.ListTopicInfo.forEach(function (item,index) {
                         _this.RuleGrList.forEach(function (list, num) {
                             var aaa = list.TopicLevel ? list.TopicLevel : '';
-                            console.log(aaa)
                             var string = list.TopicMajor + aaa + list.TopicType;
                             var Grstring = item.TopicMajor + item.TopicLevel + item.TopicType;
-                            console.log(string, Grstring, index, num, 399)
                             if (string == Grstring) {
                                 _this.topicratioPropsVal.push(index+1)
                             }
                         })
                     })
+                    console.log(_this.topicratioPropsVal, _this.ListTopicInfo,414);
 
                 });
                 //axios.post('/PEMain/GetSubjectList').then(response => {

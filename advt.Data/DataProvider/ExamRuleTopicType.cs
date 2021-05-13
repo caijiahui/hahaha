@@ -98,7 +98,11 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().DeleteRuleLeTopicInfo(TopicMajor, TopicType, RuleName);
         }
-
+        public static int Delete_ExamRuleGetTopicType(string ruleid)
+        {
+            return DatabaseProvider.GetInstance().Delete_ExamRuleGetTopicType(ruleid);
+        }
+        
         #endregion
     }
 }

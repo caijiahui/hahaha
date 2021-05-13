@@ -24,6 +24,10 @@ namespace advt.Data
 
         int DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, int RuleName);
         int DeleteRuleLeTopicInfo(string TopicMajor, string TopicType, int RuleName);
+
+        int Delete_ExamRuleGetTopicType(string ruleid);
+
+        
         #endregion
     }
 }
