@@ -140,9 +140,9 @@
                 goBack: function () {
                     var _this = this;
                     if (_this.isMobileTurn == true) {
-                        window.location.href = "/PEMain/MaintainExam"
+                        window.location.href = "/EPageMain/MaintainExam"
                     } else {
-                        window.location.href = "/PEMain/MaintainExamPC"
+                        window.location.href = "/EPageMain/MaintainExamPC"
                     }
 
                 },
@@ -150,7 +150,7 @@
                     var _this = this;
                     _this.examList = [];
                     _this.VExamScore = [];
-                    axios.post('/PEMain/ExamFinishInfo').then(function (responese) {
+                    axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
                         _this.VExamScore = responese.data.VExamScore;
                         if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                             _this.isSuccess = true;

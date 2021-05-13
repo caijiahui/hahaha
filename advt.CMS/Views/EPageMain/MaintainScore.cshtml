@@ -199,7 +199,7 @@
             },
             getdata: function () {
                 var _this = this;
-                axios.post('/PEMain/GetUserScore').then(function (responese) {
+                axios.post('/EPageMain/GetUserScore').then(function (responese) {
 
                     _this.tableData = responese.data.tableData;
                     _this.Name = responese.data.Name;
@@ -226,9 +226,8 @@
             //查询明细
             handleSearchDetail(ExamID) {
                 console.log(ExamID);
-                //window.location.href = "/PEMain/ExamFinish?ID=" + ExamID;
                 var _this = this;
-                axios.post('/PEMain/ExamGetFinishInfo', {
+                axios.post('/EPageMain/ExamGetFinishInfo', {
                     ID: ExamID
                 }).then(function (responese) {
                     _this.VExamScore = responese.data.VExamScore;
@@ -243,9 +242,9 @@
             goBack: function () {
                 var _this = this;
                 if (_this.isMobileTurn == true) {
-                    window.location.href = "/PEMain/MaintainExam"
+                    window.location.href = "/EPageMain/MaintainExam"
                 } else {
-                    window.location.href = "/PEMain/MaintainExamPC"
+                    window.location.href = "/EPageMain/MaintainExamPC"
                 }
             },
             abcChange: function (val) {

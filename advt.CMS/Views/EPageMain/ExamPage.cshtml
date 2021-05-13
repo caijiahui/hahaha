@@ -238,13 +238,12 @@
                                             obj.examList = _this.examList;
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
-                                            axios.post('/PEMain/InsertScore', {
+                                            axios.post('/EPageMain/InsertScore', {
                                                 model: obj
                                             }).then(function (res) {
 
                                             });
-                                            window.location.href = "/PEMain/ExamFinish";
-                                            //window.location.href = "/PEMain/MaintainExam";
+                                            window.location.href = "/EPageMain/ExamFinish";
                                         }
                                     });
                                     window.clearInterval(time)
@@ -316,17 +315,17 @@
                                                 obj.examList = _this.examList;
                                                 obj.ListBankView = _this.ListBankView;
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
-                                                axios.post('/PEMain/InsertScore', {
+                                                axios.post('/EPageMain/InsertScore', {
                                                     model: obj
                                                 }).then(function (res) {
 
                                                 });
-                                                window.location.href = "/PEMain/ExamFinish";
+                                                window.location.href = "/EPageMain/ExamFinish";
 
                                             } else {
 
                                                 obj.PreNext = "Next";
-                                                axios.post('/PEMain/NextTopic', {
+                                                axios.post('/EPageMain/NextTopic', {
                                                     model: obj
                                                 }).then(function (res) {
                                                     _this.examList = res.data.examList;
@@ -374,16 +373,16 @@
                                             obj.examList = _this.examList;
                                             obj.ListBankView = _this.ListBankView;
                                             obj.VExamUserInfo = _this.VExamUserInfo;
-                                            axios.post('/PEMain/InsertScore', {
+                                            axios.post('/EPageMain/InsertScore', {
                                                 model: obj
                                             }).then(function (res) {
-                                                window.location.href = "/PEMain/ExamFinish";
+                                                window.location.href = "/EPageMain/ExamFinish";
                                             });
 
 
                                         } else {
                                             obj.PreNext = "Next";
-                                            axios.post('/PEMain/NextTopic', {
+                                            axios.post('/EPageMain/NextTopic', {
                                                 model: obj
                                             }).then(function (res) {
                                                 _this.examList = res.data.examList;
@@ -432,16 +431,16 @@
                                     obj.examList = _this.examList;
                                     obj.ListBankView = _this.ListBankView;
                                     obj.VExamUserInfo = _this.VExamUserInfo;
-                                    axios.post('/PEMain/InsertScore', {
+                                    axios.post('/EPageMain/InsertScore', {
                                         model: obj
                                     }).then(function (res) {
 
                                     });
-                                    window.location.href = "/PEMain/ExamFinish";
+                                    window.location.href = "/EPageMain/ExamFinish";
 
                                 } else {
                                     obj.PreNext = "Next";
-                                    axios.post('/PEMain/NextTopic', {
+                                    axios.post('/EPageMain/NextTopic', {
                                         model: obj
                                     }).then(function (res) {
                                         _this.examList = res.data.examList;
@@ -491,7 +490,7 @@
                     objs.ListBankView = _this.ListBankView;
                     objs.VExamUserInfo = _this.VExamUserInfo;
                     objs.PreNext = "Pre";
-                    axios.post('/PEMain/NextTopic', {
+                    axios.post('/EPageMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
                         console.log(res.data.examList, 22);
@@ -538,7 +537,7 @@
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
                     if ( IsTest == "test") {
-                        axios.post('/PEMain/Test', {
+                        axios.post('/EPageMain/Test', {
                             data: IsTest,
                             RuleName: RuleName
                         }).then(function (responese) {
@@ -573,14 +572,14 @@
                                     confirmButtonText: '确定',
                                 callback: action => {
                                     if (_this.isMobileTurn == true)
-                                        window.location.href = "/PEMain/MaintainExam";
+                                        window.location.href = "/EPageMain/MaintainExam";
                                     else {
-                                        window.location.href = "/PEMain/MaintainExamPC";
+                                        window.location.href = "/EPageMain/MaintainExamPC";
                                     }
                                     }
                                 });
                         } else {
-                            axios.post('/PEMain/Test', {
+                            axios.post('/EPageMain/Test', {
                                 data: "formal",
                                 RuleName: RuleName
                             }).then(function (responese) {

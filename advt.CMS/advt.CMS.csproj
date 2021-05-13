@@ -169,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\EPageMainController.cs" />
     <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\PEMainController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -441,18 +442,18 @@
     <Content Include="Scripts\Vue\js\elementUI\lib\theme-chalk\fonts\element-icons.woff" />
     <Content Include="Views\PEMain\MaintainExamRule.cshtml" />
     <Content Include="Views\PEMain\MaintainExamBank.cshtml" />
-    <Content Include="Views\PEMain\ExamPage.cshtml" />
+    <Content Include="Views\EPageMain\ExamPage.cshtml" />
     <Content Include="Views\PEMain\SupervisorAudit.cshtml" />
     <Content Include="Views\PEMain\MaintainExamUserInfo.cshtml" />
     <Content Include="Views\PEMain\HrAudit.cshtml" />
-    <Content Include="Views\PEMain\MaintainExam.cshtml" />
-    <Content Include="Views\PEMain\MaintainSubset.cshtml" />
-    <Content Include="Views\PEMain\MaintainScore.cshtml" />
+    <Content Include="Views\EPageMain\MaintainExam.cshtml" />
+    <Content Include="Views\EPageMain\MaintainSubset.cshtml" />
+    <Content Include="Views\EPageMain\MaintainScore.cshtml" />
     <Content Include="Views\Shared\HrCheckEmail.cshtml" />
     <Content Include="Views\PEMain\MaintainExamPage.cshtml" />
     <Content Include="Views\PEMain\UserManager.cshtml" />
-    <Content Include="Views\PEMain\ExamFinish.cshtml" />
-    <Content Include="Views\PEMain\MaintainExamPC.cshtml" />
+    <Content Include="Views\EPageMain\ExamFinish.cshtml" />
+    <Content Include="Views\EPageMain\MaintainExamPC.cshtml" />
     <Content Include="Views\PEMain\MaintainExamRole.cshtml" />
   </ItemGroup>
   <ItemGroup>

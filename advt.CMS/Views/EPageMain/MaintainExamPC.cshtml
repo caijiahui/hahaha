@@ -1,7 +1,4 @@
 ﻿@model advt.CMS.Models.ExamModel.MaintainExamModel
-@{ 
-    Layout = null;
-}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,8 +114,8 @@
                 return flag
             },
             ShowSubject: function (ids) {
-                if (ids == "exam") { window.location.href = "/PEMain/MaintainSubset" }
-                if (ids == "score") { window.location.href = "/PEMain/MaintainScore" }
+                if (ids == "exam") { window.location.href = "/EPageMain/MaintainSubset" }
+                if (ids == "score") { window.location.href = "/EPageMain/MaintainScore" }
             },
             asideHandleOpen(key, keyPath) {
 

@@ -105,15 +105,15 @@
                         authorizeflag = false;
                     }
                 }
-                //if (this.AuthorizeAction == "ExamPage")
-                //{
-                //    if (httpContext.Request.Cookies["ALock"].Value.ToString() != user.msn) //登录验证
-                //    {
-                //        XUtils.ClearCookie();
-                //        advt.Manager.Login.ClearSession();
-                //        authorizeflag = false;
-                //    }
-                //}
+                if (this.AuthorizeController == "EPageMain")
+                {
+                    if (httpContext.Request.Cookies["ALock"].Value.ToString() != user.msn) //登录验证
+                    {
+                        XUtils.ClearCookie();
+                        advt.Manager.Login.ClearSession();
+                        authorizeflag = false;
+                    }
+                }
             }
 
 
