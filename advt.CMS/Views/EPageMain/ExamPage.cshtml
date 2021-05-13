@@ -120,7 +120,7 @@
                         <div class="footer">
                             <div class="footer-btn-box">
                                 <div>
-                                    <el-button class="pro-btn" @@click="preBtn()">上一题</el-button>
+                                    <el-button class="pro-btn" @@click="preBtn()" v-if="nowItem!=1">上一题</el-button>
                                 </div>
                                 <div>
                                     <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
@@ -287,19 +287,21 @@
                             if (_this.VExamUserInfo.IsTest) {
                                 //单选多选判断对错,填空直接往下
                                 if (_this.examList.type == 1 || _this.examList.type == 0) {
-                                    var next = [];
+                                    var next = "";
+                                    var a = 1;
                                     if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
                                         for (var i = 0; i < _this.examList.ansowerList.length; i++) {
                                             var cc = _this.examList.ansowerList[i].ansowerflag;
                                             if (_this.examList.RightKey.indexOf(cc) != -1) {
-                                                next.push( _this.examList.ansowerList[i].ansower);
+                                                next+=a+". " + _this.examList.ansowerList[i].ansower+"  ";
+                                                a++;
                                             }
+                                           
                                         }
-                                        let str = next.join(' <br/> ');
                                         if (_this.examList.Remark == null)
                                             _this.examList.Remark=''
                                         //const confirmText = ['是否将基金产品从我的自选中移出？', '注意：此操作将从我的自选中的所有分组中移除该产品。'] 
-                                        _this.$confirm(str+'         答案解析: ' + _this.examList.Remark, '正确答案:', {
+                                        _this.$confirm(next+'         答案解析: ' + _this.examList.Remark, '正确答案:', {
                                             confirmButtonText: '下一题',
                                             cancelButtonText: '取消'
                                         }).then(() => {
@@ -339,10 +341,7 @@
                                                     if (_this.examList.LselectItem == null) {
                                                         _this.examList.LselectItem = []
                                                     }
-                                                    if (res.data.examList.type == 1) {
-                                                        _this.examList.selectItem = []
-                                                    }
-                                                    else if (res.data.examList.type == 0) {
+                                                     if (res.data.examList.type == 0) {
                                                         if (_this.examList.selectItem.length != 0) {
                                                             _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                                                         } else {
@@ -350,9 +349,7 @@
                                                         }
                                                         
                                                     }
-                                                    else {
-                                                        _this.examList.selectItem = '';
-                                                    }
+                                                  
 
 
                                                 });
@@ -397,18 +394,15 @@
                                                 if (_this.examList.LselectItem == null) {
                                                     _this.examList.LselectItem = []
                                                 }
-                                                if (res.data.examList.type == 1) {
-                                                    _this.examList.selectItem = []
-                                                }
-                                                else if (res.data.examList.type == 0) {
+                                                 if (res.data.examList.type == 0) {
                                                     if (_this.examList.selectItem.length != 0) {
                                                         _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                                                     } else {
                                                         _this.examList.selectItem = ''
                                                     }
                                                 }
-                                                else {
-                                                    _this.examList.selectItem = '';
+                                                 if (res.data.examList.type == 2) {
+                                                    _this.examList.selectItem = _this.examList.selectItem[0].toString();
                                                 }
 
 
@@ -455,18 +449,15 @@
                                         if (_this.examList.LselectItem == null) {
                                             _this.examList.LselectItem = []
                                         }
-                                        if (res.data.examList.type == 1) {
-                                            _this.examList.selectItem = []
-                                        }
-                                        else if (res.data.examList.type == 0) {
-                                            if (_this.examList.selectItem.length!=0) {
+                                        if (res.data.examList.type == 0) {
+                                            if (_this.examList.selectItem.length != 0) {
                                                 _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                                             } else {
                                                 _this.examList.selectItem = ''
                                             }
                                         }
-                                        else {
-                                            _this.examList.selectItem = '';
+                                        if (res.data.examList.type == 2) {
+                                            _this.examList.selectItem = _this.examList.selectItem[0].toString();
                                         }
 
 
@@ -493,7 +484,6 @@
                     axios.post('/EPageMain/NextTopic', {
                         model: objs
                     }).then(function (res) {
-                        console.log(res.data.examList, 22);
                         _this.examList = res.data.examList;
                         _this.total = res.data.total;
                         _this.nowItem = res.data.nowItem;
@@ -505,10 +495,14 @@
                         if (_this.examList.LselectItem == null) {
                             _this.examList.LselectItem = []
                         }
-                        else if (res.data.examList.type == 0) {
-                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                        if (res.data.examList.type == 0) {
+                            if (_this.examList.selectItem.length != 0) {
+                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                            } else {
+                                _this.examList.selectItem = ''
+                            }
                         }
-                        else if (res.data.examList.type == 2) {
+                        if (res.data.examList.type == 2) {
                             _this.examList.selectItem = _this.examList.selectItem[0].toString();
                         }
 
@@ -549,10 +543,10 @@
                             if (responese.data.examList.type == 1) {
                                 _this.examList.selectItem = []
                             }
-                            else if (responese.data.examList.type == 0) {
+                             if (responese.data.examList.type == 0) {
                                 _this.examList.selectItem = ''
                             }
-                            else {
+                            if (responese.data.examList.type == 2) {
                                 _this.examList.selectItem = ''
                             }
                             if (_this.examList.LselectItem == null) {
@@ -591,10 +585,10 @@
                                 if (responese.data.examList.type == 1) {
                                     _this.examList.selectItem = []
                                 }
-                                else if (responese.data.examList.type == 0) {
+                                 if (responese.data.examList.type == 0) {
                                     _this.examList.selectItem = ''
                                 }
-                                else {
+                                if (responese.data.examList.type == 2) {
                                     _this.examList.selectItem = ''
                                 }
                                 if (_this.examList.LselectItem == null) {

@@ -81,9 +81,9 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_ExamBank(ID);
         }
-        public static int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel)
+        public static int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel,string ExamContent)
         {
-            return DatabaseProvider.GetInstance().Delete_ExamBank_TypeName_ExamSubject_Level(TypeName, ExamSubject, TopicLevel);
+            return DatabaseProvider.GetInstance().Delete_ExamBank_TypeName_ExamSubject_Level(TypeName, ExamSubject, TopicLevel, ExamContent);
         }
         #endregion
     }

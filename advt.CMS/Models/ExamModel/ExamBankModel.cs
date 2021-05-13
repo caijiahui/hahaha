@@ -256,19 +256,32 @@ namespace advt.CMS.Models.ExamModel
             }
 
         }
-        public int DeleteBankInfo(int id, string TypeName, string ExamSubject, string TopicLevel)
+        public int DeleteBankInfo( SearchBnakData data)
         {
-            var deletecount = 0;
-            if (id != 0)
+            try
             {
-                deletecount=Data.ExamBank.Delete_ExamBank(id);
+                var deletecount = 0;
+                if (data != null)
+                {
+                    if (data.ID != 0)
+                    {
+                        deletecount = Data.ExamBank.Delete_ExamBank(data.ID);
+                    }
+                    else
+                    {
+                        deletecount = Data.ExamBank.Delete_ExamBank_TypeName_ExamSubject_Level(data.ExamType, data.ExamSubject, data.ExamLevel, data.ExamContent);
+                    }
+                   
+                }
+                LExamBank = Data.ExamBank.Get_All_ExamBank();
+                return deletecount;
             }
-            if (!string.IsNullOrEmpty(TypeName)|| !string.IsNullOrEmpty(ExamSubject)|| !string.IsNullOrEmpty(TopicLevel))
+            catch (Exception ex)
             {
-                deletecount= Data.ExamBank.Delete_ExamBank_TypeName_ExamSubject_Level(TypeName, ExamSubject, TopicLevel);
+
+                throw;
             }
-            LExamBank = Data.ExamBank.Get_All_ExamBank();
-            return deletecount;
+
         }
         public void GetTopic(int id)
         {
@@ -301,5 +314,6 @@ namespace advt.CMS.Models.ExamModel
         public string ExamLevel { get; set; }
         public string ExamContent { get; set; }
         public string ExamMajor { get; set; }
+        public int ID { get; set; }
     }
 }

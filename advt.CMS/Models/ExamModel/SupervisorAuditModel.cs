@@ -33,7 +33,13 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-                var usersheets = Data.advt_user_sheet.Get_advt_user_sheet_UserJobTitle(username);
+                var code = "";
+                var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
+                if (user!=null)
+                {
+                    code = user.UserCode;
+                }
+                var usersheets = Data.advt_user_sheet.Get_advt_user_sheet_UserJobTitle(code);
                 //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
 
                 //一个人可能是多个部门主管，所以循环
