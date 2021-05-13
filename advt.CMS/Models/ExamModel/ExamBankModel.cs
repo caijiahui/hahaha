@@ -273,7 +273,7 @@ namespace advt.CMS.Models.ExamModel
                     }
                    
                 }
-                LExamBank = Data.ExamBank.Get_All_ExamBank();
+                GetBankInfo(data);
                 return deletecount;
             }
             catch (Exception ex)

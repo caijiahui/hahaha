@@ -345,7 +345,7 @@ namespace advt.Web.Controllers
             var count = model.DeleteBankInfo(VSearchBnakData);
             var result = count+" ";
 
-            return Json(new { Result = result, model.LExamBank }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = result, LExamBank= model.LExamBank, BankRemark=model.BankRemark });
 
 
         }

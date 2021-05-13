@@ -358,16 +358,29 @@
             },
             DeleteBank(ids) {
                 var _this = this;
-                _this.VSearchBnakData.ID = ids;
-                axios.post('/PEMain/DeleteBankInfo', {
-                    VSearchBnakData: _this.VSearchBnakData
-                }).then(function (res) {
-                    _this.$alert('已成功删除' + res.data.Result + "条记录", '删除信息', {
-                        confirmButtonText: '确定'
+                this.$confirm(_this.BankRemark+'是否继续删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _this.VSearchBnakData.ID = ids;
+                    axios.post('/PEMain/DeleteBankInfo', {
+                        VSearchBnakData: _this.VSearchBnakData
+                    }).then(function (res) {
+                        _this.$alert('已成功删除' + res.data.Result + "条记录", '删除信息', {
+                            confirmButtonText: '确定'
+                        });
+                        _this.allTableData = res.data.LExamBank;
+                        _this.BankRemark = res.data.BankRemark;
+                        _this.setPaginations();
                     });
-                    _this.allTableData = res.data.LExamBank;
-                    _this.setPaginations();
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
+               
             },
             setPaginations() {
                 var _this = this;

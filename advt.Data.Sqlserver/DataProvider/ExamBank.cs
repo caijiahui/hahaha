@@ -18,7 +18,7 @@ namespace advt.Data.SqlServer
         #region ExamBank , (Ver:2.3.8) at: 2021/1/12 15:44:47
         #region Var: 
         private string[] ExamBank_key_a = { "ID" };
-        private string ExamBank_item_str = "[ID],[ExamType],[TopicMajor],[TopicLevel],[TopicType],[TopicTitle],[TopicTitlePicNum],[RightKey],[Remark],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum],[ExamSubject]";
+        private string ExamBank_item_str = "[ID],[ExamType],[TopicMajor],[TopicLevel],[TopicType],[TopicTitle],[TopicTitlePicNum],[RightKey],[Remark],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum],[ExamSubject],[Bcount]";
         private string[][] ExamBank_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -44,7 +44,8 @@ namespace advt.Data.SqlServer
             new string[] {"OptionFPicNum", "NVarChar", "500"},
             new string[] {"CreateUser", "NVarChar", "50"},
             new string[] {"CreateDate", "DateTime", "16"},
-            new string[] { "ExamSubject", "NVarChar", "500" }
+            new string[] { "ExamSubject", "NVarChar", "500" },
+            new string[] { "Bcount", "Int", "4" }
         };
         #endregion
 
@@ -148,7 +149,7 @@ namespace advt.Data.SqlServer
         public int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel,string ExamContent)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" DELETE FROM [ExamBank]");
+            commandText.AppendLine(" DELETE FROM [ExamBank] ");
             List<DbParameter> l_parms = new List<DbParameter>();
             var texts = " where 1=1  ";
             if (!string.IsNullOrEmpty(ExamSubject))
