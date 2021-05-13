@@ -150,7 +150,7 @@
             </el-table>
         </div>
         <!-- #region 上传实践弹窗 -->
-        <el-dialog title="上传实践" :visible.sync="dialogFormPractical">
+        <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
             <el-form :model="VPracticeInfo" class="demo-form-inline" :inline="true">
                 <el-form-item label="工号" :label-width="formLabelWidth">
                     <el-input v-model="VPracticeInfo.UserCode" autocomplete="off" :disabled="true"></el-input>
@@ -238,7 +238,7 @@
         </el-dialog>
         <!-- #endregion -->
         <!-- #region 批量更新 -->
-        <el-dialog title="信息编辑" :visible.sync="dialogUpdateVisible">
+        <el-dialog title="信息编辑" :visible.sync="dialogUpdateVisible" :close-on-click-modal="false">
             <el-form :model="VAuditCheck">
                 <el-form-item label="人员" :label-width="formLabelWidth">
                     <el-input v-model="VAuditCheck.Users" autocomplete="off" :disabled="true"></el-input>
@@ -263,7 +263,7 @@
         </el-dialog>
         <!-- #endregion -->
         <!-- #region 查看明细 -->
-        <el-dialog title="明细查看" :visible.sync="dialogSearchVisible">
+        <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
             <el-table :data="LExamUserDetailInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
                 <el-table-column label="考试类型"

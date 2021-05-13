@@ -59,7 +59,7 @@
                 <div class="text item" style="font-size:16px;cursor:pointer;" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
             </el-card>
         </div>
-        <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" :width="isMobileTurn?'90%':'50%'">
+        <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" :width="isMobileTurn?'90%':'50%'" :close-on-click-modal="false">
             <span>
                 <el-button @@click="handleExam('formal')">正式</el-button>
                 <el-button @@click="handleExam('test')">模拟</el-button>

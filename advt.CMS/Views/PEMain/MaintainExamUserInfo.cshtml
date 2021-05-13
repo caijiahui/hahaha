@@ -206,7 +206,7 @@
             </el-table>
 
             <!-- #region 上传实践弹窗 -->
-            <el-dialog title="上传实践" :visible.sync="dialogFormPractical">
+            <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
                 <el-table :data="LPracticeInfo"
                           style="width: 100%;margin-top:20px ">
                     <el-table-column label="姓名"
@@ -255,7 +255,7 @@
                            :layout="paginations.layout"
                            :total="paginations.total">
             </el-pagination>
-            <el-dialog title="考试信息" :visible.sync="dialogFormVisible">
+            <el-dialog title="考试信息" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
                 <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                     <el-form-item label="工号" prop="UserCode">
                         <el-input v-model="VExamUserInfo.UserCode" :disabled="true"></el-input>
@@ -295,7 +295,7 @@
             </el-dialog>
 
             <!-- #region 查看明细 -->
-            <el-dialog title="明细查看" :visible.sync="dialogSearchVisible">
+            <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
                 <el-table :data="LExamUserDetailInfo"
                           style="width: 100%;margin-top:20px ">
                     <el-table-column label="日期"
