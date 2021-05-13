@@ -201,7 +201,7 @@
                     var _this = this;
                     axios.post('/Account/GetUser').then(res => {
                         _this.LRole = res.data.LRole;
-                        console.log(res.data.LRole, 12);
+
                     })
 
                 },
@@ -237,13 +237,13 @@
                     this.mobileMenuDrawer = true;
                 },
                 asideHandleOpen(key, keyPath) {
-                    console.log(key, keyPath);
+
                 },
                 asideHandleClose(key, keyPath) {
-                    console.log(key, keyPath);
+
                 },
                 toggleColl: function () {
-                    console.log(111)
+
                     this.isCollapse = !this.isCollapse;
                 },
                 resetForm(formName) {
