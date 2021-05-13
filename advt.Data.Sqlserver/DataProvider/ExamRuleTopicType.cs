@@ -127,6 +127,15 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
+        public int Delete_ExamRuleGetTopicType(string ruleid)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("delete from ExamRuleTopicType where RuleId=@ruleid");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@ruleid", (DbType)SqlDbType.NVarChar, 150, ruleid));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        
         #endregion
 
 

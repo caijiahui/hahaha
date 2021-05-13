@@ -132,6 +132,8 @@ namespace advt.CMS.Models.ExamModel
         }
         public void Delete_ExamRule(int model)
         {
+            var ruleid = model.ToString();
+            Data.ExamRuleTopicType.Delete_ExamRuleGetTopicType(ruleid);
             Data.ExamRule.Delete_ExamRule(model);
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
 
