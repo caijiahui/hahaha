@@ -46,7 +46,12 @@ namespace advt.Service.Provider
                 var email = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { CommpanyEmail = userName });
                 if (string.IsNullOrEmpty(_TempID))//TempID 验证失败，直接用数据库验证
                 {
-                    Entity.advt_users user = BLL.Login.Get_User(email.EamilUsername);
+                    var emailname = "";
+                    if (email != null)
+                    {
+                        emailname = email.EamilUsername;
+                    }
+                    Entity.advt_users user = BLL.Login.Get_User(emailname);
                     if (user == null) return null;
 
                     if (!user.password.Equals(password_MD5, StringComparison.CurrentCultureIgnoreCase))//Check Password

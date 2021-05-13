@@ -85,7 +85,7 @@ namespace advt.Web.Controllers
                             }
                             else
                             {
-                                IsLogin = "在系统内没有用户资料,请检查eHR内的人员资料";
+                                IsLogin = "用户名称不存在";
                             }
                         }
                         else
@@ -104,6 +104,10 @@ namespace advt.Web.Controllers
                                 SplitAccount = acc.Split('\\');
                                 username = vuser.EamilUsername;
                             }
+                            else
+                            {
+                                IsLogin = "用户名称不存在";
+                            }
                         }
                         else
                         {
@@ -113,6 +117,10 @@ namespace advt.Web.Controllers
                                 var acc = "acn\\" + vusers.EamilUsername.Trim();
                                 SplitAccount = acc.Split('\\');
                                 username = vusers.EamilUsername;
+                            }
+                            else
+                            {
+                                IsLogin = "用户名称不存在";
                             }
                         }
                         //ResponseModel response = _accessRepository.GetAccess(user);
@@ -153,7 +161,7 @@ namespace advt.Web.Controllers
 
                         }
                     }
-                    if (string.IsNullOrEmpty(IsLogin))
+                    if (string.IsNullOrEmpty(IsLogin)&&!string.IsNullOrEmpty(users.username))
                     {
                         SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
                         //写入Cookie，无需登入。

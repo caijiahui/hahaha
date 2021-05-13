@@ -47,78 +47,83 @@
                     margin-bottom: 0px;
                     line-height:20px;
                 }
-        }
+            .el-card__header{
+               padding:10px 20px;
+            }
+            .el-card__body{
+                padding:5px 20px;
+            }
+            .header h1 {
+                font-size:25px;
+            }
+            }
 
     </style>
 </head>
 <body>
 
-    <div id="app" v-cloak>
-        <div v-if="isMobileTurn=='true'">
-            @{
-
-                Layout = null;
-
-            }
-
-        </div>
-        <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
-        <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
-        <input type="text" value="@Model.IsExam" ref="idisexam" hidden="hidden" />
-        <div class="wrap">
-            <div class="header">
-                <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
+    <div id="app" v-cloak >
+        <div style="width:90%;margin:30px auto">
+            <div>
+                <el-page-header @@back="goBack" ></el-page-header>
             </div>
-            <div style="width:100%;">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>温馨提示：{{VExamUserInfo.StartDesc}}</span>
-                    </div>
-                    <div class="text item">
-                        <i class="el-icon-user"></i>  {{VExamUserInfo.UserName}}
-                    </div>
-                    <div class="text item">
-                        <i class="el-icon-circle-check"></i>  {{VExamUserInfo.PassScore}}分<i class="el-icon-arrow-left"></i><i class="el-icon-user"></i><i class="el-icon-arrow-left"></i>{{VExamUserInfo.TotalScore}}分
-                    </div>
-                    <div>
-                        考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
-                        <span v-if="VExamUserInfo.IsTest==true">模拟</span>
-                    </div>
-                    <div class="text item" v-if="VExamUserInfo.IsTest==false">
-                        <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
-                    </div>
-                </el-card>
-            </div>
-
-            <div class="content">
-                <div style="margin-bottom:20px">
-                    <el-card class="box-card">
-                        <div><strong>{{nowItem}}.{{examList.proName}}({{examList.TopicLevel }} {{examList.TopicMajor}} {{examList.ExamTypeName}}) </strong></div>
-                        <div><img v-if="examList.TopicTitlePic!=''&&examList.TopicTitlePic!=null" :src="'/Attachment/BankPic/'+examList.TopicTitlePic" width="100" height="100" /></div>
-                    </el-card>
-
+            <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
+            <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
+            <input type="text" value="@Model.IsExam" ref="idisexam" hidden="hidden" />
+            <div class="wrap">
+                <div class="header">
+                    <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
                 </div>
-                <div class="pro-ansower">
-                    <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                        <div class="pro-ans-con">
-                            <el-form-item prop="selectItem">
-                                <el-radio-group v-if="examList.type==0" v-model="examList.selectItem">
-                                    <el-radio :label="index" v-for="(item,index) in examList.ansowerList">
-                                        <div>{{abcChange(index)}}、{{item.ansower}}</div>
-                                        <div><img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" width="100" height="100" /></div>
-                                    </el-radio>
-                                </el-radio-group>
-                                <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
-                                    <el-checkbox :label="index.toString()" v-for="(item,index) in examList.ansowerList">
-                                        <div>{{abcChange(index)}}、{{item.ansower}}</div>
-                                        <div> <img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" :width="100" height="100" /></div>
-                                    </el-checkbox>
-                                </el-checkbox-group>
-                                <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
-                            </el-form-item>
+                <div style="width:100%;">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>温馨提示：{{VExamUserInfo.StartDesc}}</span>
                         </div>
-                        <div class="footer">
-                            <div class="footer-btn-box">
+                        <div class="text item">
+                            <i class="el-icon-user"></i>  {{VExamUserInfo.UserName}}
+                        </div>
+                        <div class="text item">
+                            <i class="el-icon-circle-check"></i>  {{VExamUserInfo.PassScore}}分<i class="el-icon-arrow-left"></i><i class="el-icon-user"></i><i class="el-icon-arrow-left"></i>{{VExamUserInfo.TotalScore}}分
+                        </div>
+                        <div>
+                            考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
+                            <span v-if="VExamUserInfo.IsTest==true">模拟</span>
+                        </div>
+                        <div class="text item" v-if="VExamUserInfo.IsTest==false">
+                            <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
+                        </div>
+                    </el-card>
+                </div>
+
+                <div class="content">
+                    <div style="margin-bottom:20px">
+                        <el-card class="box-card">
+                            <div><strong>{{nowItem}}.{{examList.proName}} </strong></div>
+                            <div><img v-if="examList.TopicTitlePic!=''&&examList.TopicTitlePic!=null" :src="'/Attachment/BankPic/'+examList.TopicTitlePic" width="100" height="100" /></div>
+                        </el-card>
+
+                    </div>
+                    <div class="pro-ansower">
+                        <el-form :model="examList" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                            <div class="pro-ans-con">
+                                <el-form-item prop="selectItem">
+                                    <el-radio-group v-if="examList.type==0" v-model="examList.selectItem">
+                                        <el-radio :label="index" v-for="(item,index) in examList.ansowerList">
+                                            <div>{{abcChange(index)}}、{{item.ansower}}</div>
+                                            <div><img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" width="100" height="100" /></div>
+                                        </el-radio>
+                                    </el-radio-group>
+                                    <el-checkbox-group v-if="examList.type==1" v-model="examList.selectItem">
+                                        <el-checkbox :label="index.toString()" v-for="(item,index) in examList.ansowerList">
+                                            <div>{{abcChange(index)}}、{{item.ansower}}</div>
+                                            <div> <img v-if="item.ansowerpic!=''&&item.ansowerpic!=null" :src="'/Attachment/BankPic/'+item.ansowerpic" :width="100" height="100" /></div>
+                                        </el-checkbox>
+                                    </el-checkbox-group>
+                                    <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="footer" >
+                                <div class="footer-btn-box" v-if="nowItem!=1">
                                 <div>
                                     <el-button class="pro-btn" @@click="preBtn()" v-if="nowItem!=1">上一题</el-button>
                                 </div>
@@ -126,18 +131,32 @@
                                     <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
                                 </div>
                             </div>
-                            <el-divider>{{nowItem}}/{{total}} 题</el-divider>
-                            <!-- <p>{{nowItem}}/{{total}} 题</p> -->
-                        </div>
-                    </el-form>
 
+                               
+                                <div class="footer-btn-box" v-if="nowItem==1">
+                                        <div style="margin-left:100px">
+                                            <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                        </div>
+                                    <div>
+                                       
+                                    </div>
+                                </div>
+                                <el-divider>{{nowItem}}/{{total}} 题</el-divider>
+                                <!-- <p>{{nowItem}}/{{total}} 题</p> -->
+                            </div>
+                        </el-form>
+
+
+                    </div>
 
                 </div>
 
+
             </div>
-
-
         </div>
+
+       
+
     </div>
 
     <!-- end #container -->
@@ -218,6 +237,15 @@
 
             },
             methods: {
+                goBack: function () {
+                    var _this = this;
+                    if (_this.isMobileTurn == true) {
+                        window.location.href = "/EPageMain/MaintainExam"
+                    } else {
+                        window.location.href = "/EPageMain/MaintainExamPC"
+                    }
+
+                },
                 num: function (n) {
                     return n < 10 ? '0' + n : '' + n
                 },
@@ -291,7 +319,10 @@
                                     var a = 1;
                                     if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
                                         for (var i = 0; i < _this.examList.ansowerList.length; i++) {
+                                           
                                             var cc = _this.examList.ansowerList[i].ansowerflag;
+                                            console.log(cc, 333)
+                                            console.log(_this.examList.RightKey, 444)
                                             if (_this.examList.RightKey.indexOf(cc) != -1) {
                                                 next+=a+". " + _this.examList.ansowerList[i].ansower+"  ";
                                                 a++;
