@@ -294,10 +294,10 @@ namespace advt.Web.Controllers
         public ActionResult SaveRuleInfo(ExamRuleModel model)
         {
             var username = this.UserNameContext;
-            var Result= model.SaveRuleInfo(username);
-            model.SaveTopicInfo(model.VExamRule.ID);
-            return Json(new { Result,tableData = model.ListExamRule, RuleGrList =model.RuleTopicList }, JsonRequestBehavior.AllowGet);
-          
+            var Result = model.SaveRuleInfo(username);
+            model.SaveTopicInfo(model.VExamRule.RuleName);
+            return Json(new { Result, tableData = model.ListExamRule, RuleGrList = model.RuleTopicList }, JsonRequestBehavior.AllowGet);
+
         }
         [MyAuthorize]
         public ActionResult DeleteRuleInfo(int model)
@@ -480,12 +480,6 @@ namespace advt.Web.Controllers
             model.GetExam();
             return Json(new { examList = model.examList, ListBank = model.ListBankView, nowItem = model.nowItem, total = model.total }, JsonRequestBehavior.AllowGet);
         }
-
-
-
-
-
-
         //考试个人基本信息
         [MyAuthorize]
         public ActionResult MaintainExamUserInfo()
@@ -494,12 +488,10 @@ namespace advt.Web.Controllers
             return View(model);
         }
         [MyAuthorize]
-        public ActionResult GetUserInfo(string typename)
+        public ActionResult GetUserInfo(SearchUserData data)
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
-            model.GetUserInfo(typename);
-            model.GetUserComInfo();
-
+            model.GetUserInfo(data);
             return Json(new { tableData = model.ListUserInfo11, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo, LExamType=model.LExamType }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)

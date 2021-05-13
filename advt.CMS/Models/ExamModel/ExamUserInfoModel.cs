@@ -55,7 +55,7 @@ namespace advt.CMS.Models.ExamModel
 
 
         }
-        public void GetUserInfo(string typename)
+        public void GetUserInfo(SearchUserData data)
         {
             var connectionString = "server=172.21.128.84;database=Exam2;uid=adminims;pwd=Ifs2015Pri";
             DataSet result = new DataSet();
@@ -121,17 +121,29 @@ namespace advt.CMS.Models.ExamModel
                 });
 
             }
-
-            if (string.IsNullOrEmpty(typename))
-            {
-                ListUserInfo11 = ListUserInfo.ToList();
-            }
-            else
-            {
-                ListUserInfo11 = ListUserInfo.Where(x => x.TypeName == typename).ToList();
-            }
+            ListUserInfo11 = ListUserInfo.ToList();
             YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
-
+            if (data != null)
+            {
+                if (!string.IsNullOrEmpty(data.TypeName))
+                {
+                    ListUserInfo11 = ListUserInfo11.Where(x => x.TypeName.Contains(data.TypeName)).ToList();
+                    YListUserInfo = YListUserInfo.Where(x => x.TypeName.Contains(data.TypeName)).ToList();
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName=data.TypeName });
+                }
+                if (!string.IsNullOrEmpty(data.UserCode))
+                {
+                    ListUserInfo11 = ListUserInfo11.Where(x => x.UserCode.Contains(data.UserCode)).ToList();
+                    YListUserInfo = YListUserInfo.Where(x => x.UserCode.Contains(data.UserCode)).ToList();
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, UserCode = data.UserCode });
+                }
+                if (!string.IsNullOrEmpty(data.Depart))
+                {
+                    ListUserInfo11 = ListUserInfo11.Where(x => x.DepartCode.Contains(data.Depart)).ToList();
+                    YListUserInfo = YListUserInfo.Where(x => x.DepartCode.Contains(data.Depart)).ToList();
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, DepartCode=data.Depart });
+                }
+            }
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
             {
@@ -611,5 +623,11 @@ namespace advt.CMS.Models.ExamModel
         public DateTime? PracticeTime { get; set; }// 最近一次实践考试时间
         public string IsUserExam { get; set; }
 
+    }
+    public class SearchUserData
+    {
+        public string TypeName { get; set; }
+        public string UserCode { get; set; }
+        public string Depart { get; set; }
     }
 }

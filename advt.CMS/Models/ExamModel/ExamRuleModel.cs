@@ -82,8 +82,10 @@ namespace advt.CMS.Models.ExamModel
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
             return Result;
         }
-        public void SaveTopicInfo(int id)
+        public void SaveTopicInfo(string name)
         {
+            var names = Data.ExamRule.Get_All_ExamRule(new { RuleName = name });
+            int id = names.FirstOrDefault().ID;
             ExamRuleTopicType type = new ExamRuleTopicType();
             if (RuleGrList != null)
             {

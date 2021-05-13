@@ -19,6 +19,16 @@
     </template>
     <div style="margin-top:20px">
         <template>
+            <el-select v-model="VSearch.TypeName" placeholder="请选择考试类型">
+                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+            </el-select>
+            <el-input placeholder="搜查工号" v-model="VSearch.UserCode" style="width:200px">
+            </el-input>
+            <el-input placeholder="搜查部门" v-model="VSearch.Depart" style="width:200px">
+            </el-input>
+            <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
+        </template>
+        <template>
             <el-tabs v-model="activeName">
                 <el-tab-pane label="上传绩效成绩是否符合要求" name="third">
                 </el-tab-pane>
@@ -32,9 +42,7 @@
         <div v-show="activeName=='first'">
             <template>
                 <el-button size="small" type="primary" @@click="handlesert()">报名</el-button>
-
             </template>
-           
             <el-table :data="YListUserInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
                 <el-table-column type="selection" width="55">
@@ -49,8 +57,6 @@
                 <el-table-column label="本职等技能" prop="SkillLevel" sortable"></el-table-column>
                 <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable"></el-table-column>
                 <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable></el-table-column>
-
-
             </el-table>
         </div>
 
@@ -83,7 +89,7 @@
             <el-table :data="CPListUserInfo"
                       style="width:100%;margin-top:20px;">
                 @*<el-table-column type="selection">
-            </el-table-column>*@
+                </el-table-column>*@
                 <el-table-column fixed
                                  prop="UserCode"
                                  label="工号">
@@ -112,15 +118,10 @@
 
             </el-table>
         </div>
-       
+
 
         <div v-show="activeName=='third'">
-            <template>
-                <el-select v-model="TypeName" placeholder="请选择考试类型">
-                    <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-                </el-select>
-                <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
-            </template>
+
             <div style="margin-top:10px">
                 <div style="float:left;">
                     <template>
@@ -139,14 +140,15 @@
                     </a>
                 </template>
                 <template>
-                    <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px"> 
-                    <a style="color:white" href="/PEMain/ShunFengExcel">导出</a></el-button>
-                  
+                    <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
+                        <a style="color:white" href="/PEMain/ShunFengExcel">导出</a>
+                    </el-button>
+
                 </template>
 
             </div>
 
-            <el-table height="800" :data="tableData"
+            <el-table :data="tableData"
                       style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
                 <el-table-column prop="UserCode"
                                  label="工号">
@@ -157,6 +159,7 @@
                         <span>{{changeDate(scope.row.EntryDate)}}</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
                 <el-table-column label="职等" prop="RankName" sortable></el-table-column>
                 <el-table-column label="职位" prop="PostName" sortable></el-table-column>
                 <el-table-column label="本职等对应技能等级" prop="SkillLevel" sortable></el-table-column>
@@ -204,7 +207,14 @@
                     </template>
                 </el-table-column>
             </el-table>
-
+            <el-pagination @@size-change="handleSizeChange"
+                           @@current-change="handleCurrentChange"
+                           :current-page="paginations.page_index"
+                           :page-sizes="paginations.page_sizes"
+                           :page-size="paginations.page_size"
+                           :layout="paginations.layout"
+                           :total="paginations.total">
+            </el-pagination>
             <!-- #region 上传实践弹窗 -->
             <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
                 <el-table :data="LPracticeInfo"
@@ -247,14 +257,7 @@
 
             </el-dialog>
             <!-- #endregion -->
-            <el-pagination @@size-change="handleSizeChange"
-                           @@current-change="handleCurrentChange"
-                           :current-page="paginations.page_index"
-                           :page-sizes="paginations.page_sizes"
-                           :page-size="paginations.page_size"
-                           :layout="paginations.layout"
-                           :total="paginations.total">
-            </el-pagination>
+
             <el-dialog title="考试信息" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
                 <el-form :model="VExamUserInfo" ref="dialogForm" :label-position="labelPosition" :inline="true" class="demo-form-inline">
                     <el-form-item label="工号" prop="UserCode">
@@ -376,7 +379,7 @@
 
             </el-dialog>
         </div>
-      
+
 
 
     </div>
@@ -404,6 +407,7 @@
             LExamUserDetailInfo: [],
             YListUserInfo: [],
             CPListUserInfo: [],
+            VSearch:{},
             checkBoxData: [],
             checkBoxData11: [],
             LExamType:[],
@@ -428,7 +432,9 @@
             },
             getdata: function () {
                 var _this = this;
-                axios.post('/PEMain/GetUserInfo').then(function (responese) {
+                axios.post('/PEMain/GetUserInfo', {
+                    data: _this.VSearch
+                }).then(function (responese) {
                     _this.tableData = responese.data.tableData;
                     _this.YListUserInfo = responese.data.YListUserInfo;
                     _this.CPListUserInfo = responese.data.CPListUserInfo;
@@ -439,9 +445,11 @@
             SearchinByTypeName() {
                 var _this = this;
                 axios.post('/PEMain/GetUserInfo', {
-                    typename: _this.TypeName
+                    data: _this.VSearch
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
+                    _this.YListUserInfo = res.data.YListUserInfo;
+                    _this.CPListUserInfo = res.data.CPListUserInfo;
                 });
             },
             setPaginations() {
@@ -466,7 +474,9 @@
             },
             handleCurrentChange(page) {
                 var _this = this;
-                axios.post('/PEMain/GetUserInfo').then(res => {
+                axios.post('/PEMain/GetUserInfo', {
+                    data: _this.VSearch
+                }).then(res => {
                     _this.tableData = res.data.tableData;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数
