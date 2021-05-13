@@ -215,13 +215,25 @@
                 _this.dialogFormVisible = true;
             },
             handleDelete(index, row) {
-                var _this = this;
-                axios.post('/PEMain/DeleteSubject', {
-                    model: index
-                }).then(function (res) {
-                    _this.tableData = res.data.tableData;
-                    _this.setPaginations();
+                this.$confirm('此规则将被删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    var _this = this;
+                    axios.post('/PEMain/DeleteSubject', {
+                        model: index
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations();
                     });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+                
             },
            
             SearchinBySubjectName() {

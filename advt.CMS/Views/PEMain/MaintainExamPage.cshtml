@@ -1,34 +1,30 @@
 ﻿@model advt.CMS.Models.ExamModel.MaintainExamPageModel
-    <link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-ui.min.js"></script>
-    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 <style>
     .topie {
         width: 50px;
     }
 </style>
 <div id="app" style="margin-left:20px">
-    <div style="margin-top:20px">
-        <el-form :inline="true" class="demo-form-inline">
-            <el-form-item label="工号">
-                <el-input v-model="UserCode"></el-input>
-            </el-form-item>
-            <el-form-item label="科目">
-                <el-input v-model="SubjectName"></el-input>
-            </el-form-item>
-            <el-form-item label="日期">
-                <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <template>
-                    <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
-                </template>
-            </el-form-item>
-        </el-form>
-    </div>
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>考试报表</el-breadcrumb-item>
+        </el-breadcrumb>
 
-    <div>
+        <el-input v-model="UserCode" placeholder="工号" style="width:200px"></el-input>
+        <el-input v-model="SubjectName" placeholder="科目" style="width:200px"></el-input>
+        <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+        </el-date-picker>
+        <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
+    </template>
+
+    <div style="margin-top:20px">
         <el-table :data="tableData"
                   style="width: 100% ">
             <el-table-column label="工号" prop="UserCode" sortable></el-table-column>
@@ -58,17 +54,6 @@
                 </template>
             </el-table-column>
 
-            @*<el-table-column label="在职状态" prop="PostState" sortable></el-table-column>
-            <el-table-column label="本职岗位" prop="PostJob" sortable></el-table-column>
-            <el-table-column label="考核岗位" prop="SubjectName" sortable></el-table-column>
-            <el-table-column label="申请等级" prop="SkillName" sortable></el-table-column>
-            <el-table-column label="理论考核" prop="ExamScore" sortable></el-table-column>
-            <el-table-column label="实践考核" prop="PracticeScore" sortable></el-table-column>
-            <el-table-column label="标准等级津贴" prop="SkillAllowance" sortable></el-table-column>
-            <el-table-column label="技能等级通过后可晋升的新职等" prop="NewRankName" sortable></el-table-column>
-            <el-table-column label="晋升加给" prop="PromotionBonus" sortable></el-table-column>
-            <el-table-column label="此次上调金额" prop="ToatlBonus" sortable></el-table-column>
-            <el-table-column label="薪资调整月份" prop="CurrentMonth" sortable></el-table-column>*@
         </el-table>
         <el-pagination @@size-change="handleSizeChange"
                        @@current-change="handleCurrentChange"
@@ -80,107 +65,107 @@
         </el-pagination>
     </div>
 </div>
-    <script src="~/Scripts/Vue/axios.js"></script>
-    <script src="~/Scripts/Vue/Vue.js"></script>
-    <script src="~/Scripts/elementUI/lib/index.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
 
-    <script src="~/Scripts/Vue/polyfill.min.js"></script>
-    <script type="text/javascript">
-        new Vue({
-            el: '#app',
-            data: {
-                topicratioProps: { multiple: true, label: 'Text', },
-                tableData: [],
-                dialogFormVisible: false,
-                ListTypeName: [],
-                formLabelWidth: '120px',
-                search: '',
-                UserCode: '',
-                SubjectName:'',
-                ExamDate: '',
-                paginations: {
-                    page_index: 1,
-                    total: 0,
-                    page_size: 10,
-                    page_sizes: [10, 15, 20],
-                    layout: 'total, sizes, prev, pager, next, jumper'
-                },
-            },         
-            mounted: function () {
-                this.getdata();             
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            topicratioProps: { multiple: true, label: 'Text', },
+            tableData: [],
+            dialogFormVisible: false,
+            ListTypeName: [],
+            formLabelWidth: '120px',
+            search: '',
+            UserCode: '',
+            SubjectName: '',
+            ExamDate: '',
+            paginations: {
+                page_index: 1,
+                total: 0,
+                page_size: 10,
+                page_sizes: [10, 15, 20],
+                layout: 'total, sizes, prev, pager, next, jumper'
             },
-            methods: {
-                getdata: function () {
-                    var _this = this;
-                    axios.post('/PEMain/GetMaintainExamPage', {
-                        UserCode: _this.UserCode,
-                        SubjectName: _this.SubjectName,
-                        ExamDate: _this.ExamDate
-                    }).then(function (res) {
-                        _this.tableData = res.data.tableData;
-                        _this.setPaginations();
-                    });
-                   
-                },
-                setPaginations() {
-                    var _this = this;
-                    _this.paginations.total = _this.tableData.length; //数据的数量
+        },
+        mounted: function () {
+            this.getdata();
+        },
+        methods: {
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetMaintainExamPage', {
+                    UserCode: _this.UserCode,
+                    SubjectName: _this.SubjectName,
+                    ExamDate: _this.ExamDate
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                });
 
-                    _this.paginations.page_index = 1; //默认显示第一页
-                    _this.paginations.page_size = 10; //每页显示多少数据
+            },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
 
-                    //显示数据
-                    _this.tableData = _this.tableData.filter((item, index) => {
-                        return index < _this.paginations.page_size;
-                    })
-                },
-                handleSizeChange(page_size) {
-                    var _this = this;
-                    _this.paginations.page_index = 1; //第一页
-                    _this.paginations.page_size = page_size; //每页先显示多少数据
-                    _this.tableData = _this.tableData.filter((item, index) => {
-                        return index < page_size
-                    })
-                },
-                handleCurrentChange(page) {
-                    var _this = this;
-                    axios.post('/PEMain/GetMaintainExamPage', {
-                        UserCode: _this.UserCode,
-                        SubjectName: _this.SubjectName,
-                        ExamDate: _this.ExamDate
-                    }).then(res => {
-                        _this.tableData = res.data.tableData;
-                        let index = _this.paginations.page_size * (page - 1);
-                        //获取总数
-                        let allData = _this.paginations.page_size * page;
-                        console.log(_this.tableData, index, allData);
-                        let tablist = [];
-                        for (let i = index; i < allData; i++) {
-                            if (_this.tableData[i]) {
-                                tablist.push(_this.tableData[i]);
-                            }
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 10; //每页显示多少数据
+
+                //显示数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {
+                var _this = this;
+                axios.post('/PEMain/GetMaintainExamPage', {
+                    UserCode: _this.UserCode,
+                    SubjectName: _this.SubjectName,
+                    ExamDate: _this.ExamDate
+                }).then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.tableData, index, allData);
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
                         }
-                        _this.tableData = tablist;
-                    })
+                    }
+                    _this.tableData = tablist;
+                })
 
-                },
-                changeDate: function (dates) {
-                    var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
-                    Y = date.getFullYear() + '-';
-                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-                    D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-                    h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
-                    m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
-                    s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
-                    var NewDtime = Y + M + D + h + m + s;
-                    var listDate = new Date(date);
-                    var year = listDate.getFullYear();
-                    var mon = listDate.getMonth() + 1;
-                    var day = listDate.getDate();
-                    return year + '-' + mon + '-' + day;
-                },
-                SearchDetailInfo() {
-                 var _this = this;
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            SearchDetailInfo() {
+                var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
                     UserCode: _this.UserCode,
                     SubjectName: _this.SubjectName,
@@ -190,9 +175,9 @@
                     _this.setPaginations();
                 });
             },
-            },
+        },
 
-        })
+    })
 
-    </script>
+</script>
 

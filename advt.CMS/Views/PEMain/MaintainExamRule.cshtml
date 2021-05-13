@@ -459,22 +459,33 @@
                 _this.dialogFormVisible = false
             },
             deleteRow(index, TopicMajor, TopicLevel, TopicType, RuleName, ID, rows) {
-                console.log(ID);
-                var _this = this;
-                axios.post('/PEMain/DeleteRuleTopicInfo', {
-                    TopicMajor: TopicMajor,
-                    TopicLevel: TopicLevel,
-                    TopicType: TopicType,
-                    RuleName: RuleName
-                }).then(function (res) {
+                this.$confirm('此题目类型将被删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    var _this = this;
+                    axios.post('/PEMain/DeleteRuleTopicInfo', {
+                        TopicMajor: TopicMajor,
+                        TopicLevel: TopicLevel,
+                        TopicType: TopicType,
+                        RuleName: RuleName
+                    }).then(function (res) {
 
-                    if (res.data.Result == '否') {
-                        rows.splice(index, 1);
-                    } else {
-                        _this.RuleGrList = res.data.RuleGrList;
-                    }
+                        if (res.data.Result == '否') {
+                            rows.splice(index, 1);
+                        } else {
+                            _this.RuleGrList = res.data.RuleGrList;
+                        }
 
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
+                
 
             }
         },
