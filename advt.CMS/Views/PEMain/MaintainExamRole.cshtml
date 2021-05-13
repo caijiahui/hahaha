@@ -201,12 +201,24 @@
             },
             handleDelete(index) {
                 var _this = this;
-                axios.post('/PEMain/DeleteExamRole', {
-                    ExamRoleName: index
-                }).then(function (res) {
-                    _this.tableData = res.data.tableData;
-                    _this.setPaginations();
+                this.$confirm('将被删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/PEMain/DeleteExamRole', {
+                        ExamRoleName: index
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations();
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
+                
             },
             //弹窗保存
             handleSave: function () {

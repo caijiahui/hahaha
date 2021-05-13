@@ -12,7 +12,88 @@ namespace advt.Service.Provider
         {
             return MemberProvider.MyWebSecurity.Login(userName, password, CookieTime);
         }
+        public Entity.advt_users EmailAuthenticate(string userName, string password)
+        {
+            /*
+             null:  UserName or Password is Error, Please check it!
 
+             */
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+                return null;
+            else
+            {
+                userName = userName.Trim();
+            }
+
+            if (!Thread.CurrentPrincipal.Identity.IsAuthenticated)//)
+            {
+                string _TempID = null;
+
+                // 2. 存在 则找 TempID。找不到，先做Md5加密，再和Db做验证，
+                string password_MD5 = getMd5Hash(userName, password);
+
+                string ip = Common.wbRequest.GetIP();
+                MembershipWebservice.MembershipWebserviceSoapClient sso = new MembershipWebservice.MembershipWebserviceSoapClient();
+                //MembershipWebservice.MembershipWebservice sso = new MembershipWebservice.MembershipWebservice();
+                try
+                {
+                    _TempID = sso.login(userName, password, sitename, ip);
+                }
+                catch
+                {
+                    _TempID = null;
+                }
+                var email = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { CommpanyEmail = userName });
+                if (string.IsNullOrEmpty(_TempID))//TempID 验证失败，直接用数据库验证
+                {
+                    Entity.advt_users user = BLL.Login.Get_User(email.EamilUsername);
+                    if (user == null) return null;
+
+                    if (!user.password.Equals(password_MD5, StringComparison.CurrentCultureIgnoreCase))//Check Password
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return user;
+                    }
+                }
+                else//TempID验证成功，更新数据库。
+                {
+
+                    Entity.advt_users user = BLL.Login.Get_User(email.EamilUsername);
+
+                    if (user == null)
+                    {
+                        string ErrorMSG = string.Empty;
+
+                        user = new Entity.advt_users();
+
+                        int rst = Update_eRMA_User(user, email.EamilUsername, password_MD5, ref ErrorMSG);
+
+                        if (string.IsNullOrEmpty(ErrorMSG))
+                        {
+                            return user;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                        return user;
+
+                }
+            }
+            else
+            {
+
+                Entity.advt_users user = BLL.Login.Get_User(userName);
+
+                return user;
+            }
+
+        }
         public Entity.advt_users Authenticate(string userName, string password)
         {
             /*
@@ -28,22 +109,11 @@ namespace advt.Service.Provider
 
             if (!Thread.CurrentPrincipal.Identity.IsAuthenticated)//)
             {
-                //string _TempID = null;
                 Entity.advt_users user = BLL.Login.Get_User(userName);
                 // 2. 存在 则找 TempID。找不到，先做Md5加密，再和Db做验证，
                 string password_MD5 = getMd5Hash(userName, password);
 
                 string ip = Common.wbRequest.GetIP();
-                //MembershipWebservice.MembershipWebserviceSoapClient sso = new MembershipWebservice.MembershipWebserviceSoapClient();
-                ////MembershipWebservice.MembershipWebservice sso = new MembershipWebservice.MembershipWebservice();
-                //try
-                //{
-                //    _TempID = sso.login(userName, password, sitename, ip);
-                //}
-                //catch
-                //{
-                //    _TempID = null;
-                //}
                 if (user != null)
                 {
                     return user;
