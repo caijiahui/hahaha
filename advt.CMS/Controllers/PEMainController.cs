@@ -338,11 +338,16 @@ namespace advt.Web.Controllers
             return Json(new { VExamBank = model.VExamBank}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult DeleteBankInfo(int ID,string TypeName,string ExamSubject,string TopicLevel)
+        [HttpPost]
+        public ActionResult DeleteBankInfo(SearchBnakData VSearchBnakData)
         {
             var model = new ExamBankModel();
-            var count=model.DeleteBankInfo(ID,TypeName,ExamSubject,TopicLevel);
-            return Json(new { Result= count, model.LExamBank}, JsonRequestBehavior.AllowGet);
+            var count = model.DeleteBankInfo(VSearchBnakData);
+            var result = count+" ";
+
+            return Json(new { Result = result, model.LExamBank }, JsonRequestBehavior.AllowGet);
+
+
         }
         [MyAuthorize]
         [HttpPost]

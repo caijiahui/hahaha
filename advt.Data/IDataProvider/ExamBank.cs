@@ -20,7 +20,7 @@ namespace advt.Data
         int Update_ExamBank(Entity.ExamBank info, string[] Include, string[] Exclude);
 
         int Delete_ExamBank(int ID);
-        int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel);
+        int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel, string ExamContent);
 
         #endregion
     }

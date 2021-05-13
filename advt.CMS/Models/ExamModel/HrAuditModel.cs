@@ -180,12 +180,12 @@ namespace advt.CMS.Models.ExamModel
                 var successcount = 0;
                 foreach (var item in LDetail)
                 {
-                    var d = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = item.TypeName, SubjectName = item.SubjectName, IsStop = false });
+                    var d = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = item.TypeName, SubjectName = item.SubjectName, IsStop = false, IsExam=false });
 
                     if (d != null)
                     {
-                        item.IsStop = true;
-                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                        d.IsStop = true;
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(d, null, new string[] { "ID" });
                     }
                     item.IsStop = false;
                     var c = Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(item, null, new string[] { "ID" });

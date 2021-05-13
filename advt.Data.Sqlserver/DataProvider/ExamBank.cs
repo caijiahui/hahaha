@@ -145,25 +145,30 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-        public int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel)
+        public int Delete_ExamBank_TypeName_ExamSubject_Level(string TypeName, string ExamSubject, string TopicLevel,string ExamContent)
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" DELETE FROM [ExamBank]");
             List<DbParameter> l_parms = new List<DbParameter>();
-            var texts = " where ExamType=@ExamType ";
+            var texts = " where 1=1  ";
+            if (!string.IsNullOrEmpty(ExamSubject))
+            {
+                texts += " and ExamType like N'%" + TypeName + "%' ";
+            }
             if (!string.IsNullOrEmpty(ExamSubject))
             {
                 texts += " and ExamSubject like N'%" + ExamSubject + "%' ";
             }
             if (!string.IsNullOrEmpty(TopicLevel))
             {
-                texts += " and TopicLevel =@TopicLevel ";
+                texts += " and TopicLevel like N'%" + TopicLevel + "%' ";
+            }
+            if (!string.IsNullOrEmpty(ExamContent))
+            {
+                texts += " and TopicTitle like N'%" + ExamContent + "%' ";
             }
             commandText.AppendLine(texts);
-            l_parms.Add(SqlHelper.MakeInParam("@ExamType", (DbType)SqlDbType.NVarChar, 500, TypeName));
-            l_parms.Add(SqlHelper.MakeInParam("@TopicLevel", (DbType)SqlDbType.NVarChar, 500, TopicLevel));
-            l_parms.Add(SqlHelper.MakeInParam("@ExamSubject", (DbType)SqlDbType.NVarChar, 500, ExamSubject));
-            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString());
         }
         
         #endregion
