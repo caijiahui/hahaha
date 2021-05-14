@@ -46,7 +46,7 @@ namespace advt.CMS.Models
                 ID = ss;
             }
         }
-        public void GetExamListInfo(int id, string name)
+        public void GetExamListInfo(int id, string name,string test,string subjectname)
         {
             var usercode = "";
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
@@ -56,7 +56,10 @@ namespace advt.CMS.Models
                 {
                     usercode = usersheet.UserCode;
                 }
-                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode }).Max(x => x.ExamID);
+                bool be = false;
+                if (test == "True")
+                { be = true; }
+                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, IsTest = be }).Max(x => x.ExamID);
 
                 VExamScore = Data.ExamScore.Get_ExamScore(ss);
 

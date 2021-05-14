@@ -277,6 +277,8 @@
                 examLists: [],
                 isQuestion: false,
                 dialogFormVisible: false,
+                test: '',
+                subjectname:'',
                 rules: {
                     selectItem: [
                         { required: true, message: '请填写答案！', trigger: 'blur' }
@@ -357,8 +359,11 @@
 
                                             });
                                             //window.location.href = "/EPageMain/ExamFinish";
-                                            axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
-                                                _this.VExamScore = responese.data.VExamScore;
+                                            axios.post('/EPageMain/ExamFinishInfo', {
+                                                test: _this.VExamUserInfo.IsTest,
+                                                subjectname: _this.VExamUserInfo.SubjectName,
+                                            })   .then(function (responese) {
+                                                    _this.VExamScore = responese.data.VExamScore;
                                                 if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                                     _this.isSuccess = true;
                                                 }
@@ -447,7 +452,10 @@
 
                                                 });
                                                 //window.location.href = "/EPageMain/ExamFinish";
-                                                axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
+                                                axios.post('/EPageMain/ExamFinishInfo', {
+                                                    test: _this.VExamUserInfo.IsTest,
+                                                    subjectname: _this.VExamUserInfo.SubjectName,
+                                                }).then(function (responese) {
                                                     _this.VExamScore = responese.data.VExamScore;
                                                     if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                                         _this.isSuccess = true;
@@ -511,7 +519,10 @@
                                                 //window.location.href = "/EPageMain/ExamFinish";
                                                 
                                             });
-                                            axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
+                                            axios.post('/EPageMain/ExamFinishInfo', {
+                                                test: _this.VExamUserInfo.IsTest,
+                                                subjectname: _this.VExamUserInfo.SubjectName,
+                                            }).then(function (responese) {
                                                 _this.VExamScore = responese.data.VExamScore;
                                                 if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                                     _this.isSuccess = true;
@@ -576,7 +587,10 @@
 
                                     });
                                     //window.location.href = "/EPageMain/ExamFinish";
-                                    axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
+                                    axios.post('/EPageMain/ExamFinishInfo', {
+                                        test: _this.VExamUserInfo.IsTest,
+                                        subjectname: _this.VExamUserInfo.SubjectName,
+                                    }).then(function (responese) {
                                         _this.VExamScore = responese.data.VExamScore;
                                         if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                             _this.isSuccess = true;

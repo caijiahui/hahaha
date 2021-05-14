@@ -87,7 +87,7 @@ namespace advt.Web.Controllers
         {
             ExamFinishModel model = new ExamFinishModel();
             var username = this.UserNameContext;
-            model.GetExamListInfo(Convert.ToInt32(ID), username);
+            model.GetExamListInfo(Convert.ToInt32(ID), username,"","");
             model.GetCsore(Convert.ToInt32(ID));
 
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
@@ -125,11 +125,11 @@ namespace advt.Web.Controllers
             return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total, model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult ExamFinishInfo()
+        public ActionResult ExamFinishInfo(string test,string subjectname)
         {
             ExamFinishModel model = new ExamFinishModel();
             var name = this.UserNameContext;
-            model.GetExamListInfo(model.ID, name);
+            model.GetExamListInfo(model.ID, name, test, subjectname);
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
 

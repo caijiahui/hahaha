@@ -284,7 +284,7 @@ namespace advt.CMS.Models
             {
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
-         
+
                 sc.CreateDate = DateTime.Now;
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
@@ -292,7 +292,7 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 //+科目
                 sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                sc.IsQuestion = model.VExamUserInfo.IsQuestion;      
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
 
                 int sd = 0;
                 int score = 0;
@@ -300,10 +300,10 @@ namespace advt.CMS.Models
                 if (sc.IsQuestion == true)
                 {
                     sc.CorrectScore = 0;
-                  
+
                 }
                 else
-                {  
+                {
                     sc.TotalScore = model.VExamUserInfo.TotalScore;
                     foreach (var item in model.VExamUserInfo.LExamViews)
                     {
@@ -319,7 +319,7 @@ namespace advt.CMS.Models
                                 sd++;
                                 sc.CorrectNum = sd;
                                 //答对分数CorrectScore
-                                score += item.TopicScore;   
+                                score += item.TopicScore;
                             }
                             else
                             {
@@ -340,14 +340,14 @@ namespace advt.CMS.Models
                     { sc.CorrectNum = 0; }
                     sc.CorrectScore = score;
                 }
-               
+
 
 
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
                 if (model.VExamUserInfo.IsTest == false)
-                { 
+                {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
                     ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
                     if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
@@ -369,9 +369,10 @@ namespace advt.CMS.Models
 
                     }
                 }
-                   
+
 
             }
+         
         }
         public void InsertRecoredData(ExamPageModel model,string name)
         {
