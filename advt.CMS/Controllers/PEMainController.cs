@@ -906,10 +906,11 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetMaintainExamPage(string UserCode,string SubjectName,string ExamDate)
+        public ActionResult GetMaintainExamPage(string UserCode,string SubjectName,string ExamDate,string DepartCode)
+
         {
             MaintainExamPageModel model = new MaintainExamPageModel();
-            model.GetPageInfo(UserCode, SubjectName,ExamDate);
+            model.GetPageInfo(UserCode, SubjectName,ExamDate, DepartCode);
             return Json(new { tableData=model.ListPageInfo });
         }
         //权限管控

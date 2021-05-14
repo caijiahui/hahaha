@@ -133,6 +133,37 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.DateTime, 150, date));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        public IDataReader Get_All_ExamUserGetDetailInfo(string UserCode, string SubjectName, string date, string DepartCode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select *  from ExamUserDetailInfo ");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            var texts = " where IsExam='true'  ";
+            if (!string.IsNullOrEmpty(UserCode))
+            {
+                texts += " and UserCode like N'%" + UserCode + "%' ";
+            }
+            if (!string.IsNullOrEmpty(SubjectName))
+            {
+                texts += " and SubjectName like N'%" + SubjectName + "%' ";
+            }
+            if (!string.IsNullOrEmpty(date))
+            {
+                DateTime dates = Convert.ToDateTime(date);
+                texts += " and cast(convert(varchar(10),UserExamDate,120)+' 00:00:00' as datetime)= '" + dates + "'";
+            }
+            if (!string.IsNullOrEmpty(DepartCode))
+            {
+                texts += " and DepartCode like N'%" + DepartCode + "%' ";
+            }
+            commandText.AppendLine(texts);
+            //l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 500, UserCode));
+            //l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 500, SubjectName));          
+            //l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.NVarChar, 150, date));
+            //l_parms.Add(SqlHelper.MakeInParam("@DepartCode", (DbType)SqlDbType.NVarChar, 500, DepartCode));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         #endregion
     }
 }

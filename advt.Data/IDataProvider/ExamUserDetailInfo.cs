@@ -20,6 +20,7 @@ namespace advt.Data
 
         int Delete_ExamUserDetailInfo(int ID);
         IDataReader Get_All_ExamUserInfo(DateTime date);
+        IDataReader Get_All_ExamUserGetDetailInfo(string UserCode, string SubjectName, string date, string DepartCode);
         #endregion
     }
 }
