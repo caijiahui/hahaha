@@ -280,7 +280,6 @@ namespace advt.CMS.Models
         public string InsertScoreData(ExamPageModel model)
         {
             var id = "";
-
             if (model.VExamUserInfo.LExamViews.Count() > 0)
             {
                 ExamScore sc = new ExamScore();
@@ -374,167 +373,156 @@ namespace advt.CMS.Models
 
 
             }
+
             return id;
          
         }
         public void InsertRecoredData(ExamPageModel model,string name,string examguid)
         {
-            try
+            var usercode = "";
+            int examid = 0;
+            var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
+            if (usersheet != null)
             {
-                var usercode = "";
-                int examid = 0;
-                var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
-                if (usersheet != null)
+                usercode = usersheet.UserCode;
+            }
+            var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
+            if (ee.Count() > 0)
+            {
+                examid = ee.FirstOrDefault().ExamID;
+            }
+
+            foreach (var item in model.VExamUserInfo.LExamViews)
+            {
+                var RightMeno = string.Empty;
+                var IsRight = false;
+                ExamRecord record = new ExamRecord();
+
+                record.ExamID = examid.ToString();
+                record.TopicTitle = item.proName;
+                if (item.TopicTitlePic != null)
                 {
-                    usercode = usersheet.UserCode;
-                }
-                var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
-                if (ee.Count() > 0)
-                {
-                    examid = ee.FirstOrDefault().ExamID;
-                }
-
-                foreach (var item in model.VExamUserInfo.LExamViews)
-                {
-                    var RightMeno = string.Empty;
-                    var IsRight = false;
-                    ExamRecord record = new ExamRecord();
-
-                    record.ExamID = examid.ToString();
-                    record.TopicTitle = item.proName;
-                    if (item.TopicTitlePic != null)
-                    {
-                        record.TopicTitlePicNum = item.TopicTitlePic;
-
-                    }
-                    record.TopicNum = Convert.ToInt32(item.TopicScore);
-                    record.Type = item.type;
-                    record.Remark = item.Remark;
-                    if (item.selectItem != null)
-                    {
-                        foreach (var ss in item.selectItem)
-                        {
-                            var sr = "";
-                            if (ss == "0")
-                            {
-                                sr = "A";
-                            }
-                            if (ss == "1")
-                            {
-                                sr = "B";
-                            }
-                            if (ss == "2")
-                            {
-                                sr = "C";
-                            }
-                            if (ss == "3")
-                            {
-                                sr = "D";
-                            }
-                            if (ss == "4")
-                            {
-                                sr = "E";
-                            }
-
-                            //选择的答案
-                            record.WriteAnsower += sr + ';';
-                        }
-                    }
-
-                    if (item.RightKey.Count() > 0)
-                    {
-                        foreach (var sr in item.RightKey)
-                        {
-                            //选择的答案
-                            record.CorrectAnsower += sr + ';';
-                        }
-                    }
-                    var sss = item.RightKey.OrderBy(x => x).ToArray();
-                    if (item.LselectItem != null)
-                    {
-                        var sl = item.LselectItem.OrderBy(x => x).ToArray();
-                        //答错的情况把正确答案捞出
-                        if (!Enumerable.SequenceEqual(sss, sl))
-                        {
-                            foreach (var ii in item.RightKey)
-                            {
-                                if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
-                                {
-                                    RightMeno += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
-                                }
-                            }
-                        }
-                        if (string.IsNullOrEmpty(RightMeno))
-                        {
-                            IsRight = true;
-                        }
-                    }
-                    if (item.ansowerList != null && item.ansowerList.Count() > 0)
-                    {
-                        for (int i = 0; i < item.ansowerList.Count();)
-                        {
-                            if (item.ansowerList[0] != null)
-                            {
-                                record.OptionA = item.ansowerList[0].ansower;
-                                record.OptionAPicNum = item.ansowerList[0].ansowerpic;
-                            }
-
-                            if (item.ansowerList[1] != null)
-                            {
-                                record.OptionB = item.ansowerList[1].ansower;
-                                record.OptionBPicNum = item.ansowerList[1].ansowerpic;
-
-                            }
-                            if (item.ansowerList.Count() >= 3)
-                            {
-                                if (item.ansowerList[2] != null)
-                                {
-                                    record.OptionC = item.ansowerList[2].ansower;
-                                    record.OptionCPicNum = item.ansowerList[2].ansowerpic;
-
-                                }
-                            }
-                            if (item.ansowerList.Count() >= 4)
-                            {
-                                if (item.ansowerList[3] != null)
-                                {
-                                    record.OptionD = item.ansowerList[3].ansower;
-                                    record.OptionDPicNum = item.ansowerList[3].ansowerpic;
-
-                                }
-                            }
-                            if (item.ansowerList.Count() >= 5)
-                            {
-                                if (item.ansowerList[4] != null)
-                                {
-                                    record.OptionE = item.ansowerList[4].ansower;
-                                    record.OptionEPicNum = item.ansowerList[4].ansowerpic;
-                                }
-                            }
-
-                            i++;
-                        }
-
-                    }
-
-                    record.IsRight = IsRight;
-                    record.DaRemark = RightMeno;
-                    record.CreateUser = model.VExamUserInfo.UserName;
-                    record.CreateDate = DateTime.Now;
-                    Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
+                    record.TopicTitlePicNum = item.TopicTitlePic;
 
                 }
+                record.TopicNum = Convert.ToInt32(item.TopicScore);
+                record.Type = item.type;
+                record.Remark = item.Remark;
+                if (item.selectItem != null)
+                {
+                    foreach (var ss in item.selectItem)
+                    {
+                        var sr = "";
+                        if (ss == "0")
+                        {
+                            sr = "A";
+                        }
+                        if (ss == "1")
+                        {
+                            sr = "B";
+                        }
+                        if (ss == "2")
+                        {
+                            sr = "C";
+                        }
+                        if (ss == "3")
+                        {
+                            sr = "D";
+                        }
+                        if (ss == "4")
+                        {
+                            sr = "E";
+                        }
+
+                        //选择的答案
+                        record.WriteAnsower += sr + ';';
+                    }
+                }
+
+                if (item.RightKey.Count() > 0)
+                {
+                    foreach (var sr in item.RightKey)
+                    {
+                        //选择的答案
+                        record.CorrectAnsower += sr + ';';
+                    }
+                }
+                var sss = item.RightKey.OrderBy(x => x).ToArray();
+                if (item.LselectItem != null)
+                {
+                    var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                    //答错的情况把正确答案捞出
+                    if (!Enumerable.SequenceEqual(sss, sl))
+                    {
+                        foreach (var ii in item.RightKey)
+                        {
+                            if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
+                            {
+                                RightMeno += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
+                            }
+                        }
+                    }
+                    if (string.IsNullOrEmpty(RightMeno))
+                    {
+                        IsRight = true;
+                    }
+                }
+                if (item.ansowerList != null && item.ansowerList.Count() > 0)
+                {
+                    for (int i = 0; i < item.ansowerList.Count();)
+                    {
+                        if (item.ansowerList[0] != null)
+                        {
+                            record.OptionA = item.ansowerList[0].ansower;
+                            record.OptionAPicNum = item.ansowerList[0].ansowerpic;
+                        }
+
+                        if (item.ansowerList[1] != null)
+                        {
+                            record.OptionB = item.ansowerList[1].ansower;
+                            record.OptionBPicNum = item.ansowerList[1].ansowerpic;
+
+                        }
+                        if (item.ansowerList.Count() >= 3)
+                        {
+                            if (item.ansowerList[2] != null)
+                            {
+                                record.OptionC = item.ansowerList[2].ansower;
+                                record.OptionCPicNum = item.ansowerList[2].ansowerpic;
+
+                            }
+                        }
+                        if (item.ansowerList.Count() >= 4)
+                        {
+                            if (item.ansowerList[3] != null)
+                            {
+                                record.OptionD = item.ansowerList[3].ansower;
+                                record.OptionDPicNum = item.ansowerList[3].ansowerpic;
+
+                            }
+                        }
+                        if (item.ansowerList.Count() >= 5)
+                        {
+                            if (item.ansowerList[4] != null)
+                            {
+                                record.OptionE = item.ansowerList[4].ansower;
+                                record.OptionEPicNum = item.ansowerList[4].ansowerpic;
+                            }
+                        }
+
+                        i++;
+                    }
+
+                }
+
+                record.IsRight = IsRight;
+                record.DaRemark = RightMeno;
+                record.CreateUser = model.VExamUserInfo.UserName;
+                record.CreateDate = DateTime.Now;
+                Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
 
             }
-            catch (Exception ex)
-            {
-                var TestModel = new advt_Attachment();
-                TestModel.name = ex.Message;
-                Data.advt_Attachment.Insert_advt_Attachment(TestModel, null, new string[] { "id" });
-                throw ex;
-            }    
-               
-           
+
         }
     }
     //第二层

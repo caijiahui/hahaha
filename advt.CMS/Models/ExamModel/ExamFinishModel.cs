@@ -68,9 +68,6 @@ namespace advt.CMS.Models
                 {
                     usercode = usersheet.UserCode;
                 }
-                bool be = false;
-                if (test == "True")
-                { be = true; }
                 var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examid });
                 if (ss.Count() > 0)
                 {

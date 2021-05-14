@@ -97,11 +97,22 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult InsertScore(ExamPageModel model)
         {
-            model.GetExam();
-           var examguid= model.InsertScoreData(model);
-            var name = this.UserNameContext;
-            model.InsertRecoredData(model, name, examguid);
-            return Json(new { examList = model,examid= examguid }, JsonRequestBehavior.AllowGet);
+            try
+            {
+
+                var examguid = model.InsertScoreData(model);
+                var name = this.UserNameContext;
+                model.InsertRecoredData(model, name, examguid);
+                return Json(new { examList = model, examid = examguid }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var TestModel = new advt_Attachment();
+                TestModel.name = ex.Message;
+                Data.advt_Attachment.Insert_advt_Attachment(TestModel, null, new string[] { "id" });
+                throw;
+            }
+            
         }
         //考试类型
         [MyAuthorize]
