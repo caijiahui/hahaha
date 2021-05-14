@@ -18,30 +18,9 @@ namespace advt.CMS.Models.ExamModel
             ListPageInfo = new List<PageInfo>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
         }
-        public void GetPageInfo(string UserCode ="" ,string SubjectName ="",string ExamDate="")
+        public void GetPageInfo(string UserCode,string SubjectName,string ExamDate,string DepartCode)
         {
-            if (!string.IsNullOrEmpty(UserCode) && !string.IsNullOrEmpty(SubjectName))
-            {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode, SubjectName = SubjectName, IsExam="true" });
-            }
-            else if(!string.IsNullOrEmpty(UserCode))
-            {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = UserCode, IsExam = "true" });
-            }
-            else if (!string.IsNullOrEmpty(SubjectName))
-            {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = SubjectName, IsExam = "true" });
-            }
-            else if (!string.IsNullOrEmpty(ExamDate))
-            {
-                DateTime date = Convert.ToDateTime(ExamDate);
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserInfo(date);
-            }
-             if (string.IsNullOrEmpty(UserCode) &&string.IsNullOrEmpty(SubjectName)&&string.IsNullOrEmpty(ExamDate))
-            {
-                ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsExam = "true" });
-            }
-
+            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode,SubjectName, ExamDate, DepartCode);
             if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
             {
                 foreach (var item in ListExamUserDetailInfo)
