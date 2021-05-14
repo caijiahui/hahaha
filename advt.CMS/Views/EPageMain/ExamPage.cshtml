@@ -89,7 +89,7 @@
                             考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
                             <span v-if="VExamUserInfo.IsTest==true">模拟</span>
                         </div>
-                        <div class="text item" v-if="VExamUserInfo.IsTest==false">
+                        <div class="text item" v-if="VExamUserInfo.IsTest==false" style="color:red">
                             <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
                         </div>
                     </el-card>
@@ -559,35 +559,49 @@
                     var IsExams = _this.$refs.idisexam.value;
                     var IsTest = _this.$refs.idtests.value;
                     var RuleName = _this.$refs.idRuleName.value;
-                    if ( IsTest == "test") {
-                        axios.post('/EPageMain/Test', {
-                            data: IsTest,
-                            RuleName: RuleName
-                        }).then(function (responese) {
-                            _this.examList = responese.data.examList;
-                            _this.VExamUserInfo = responese.data.VExamUserInfo;
-                            if (_this.examList.selectItem == null) {
-                                _this.examList.selectItem = []
-                            }
-                            if (responese.data.examList.type == 1) {
-                                _this.examList.selectItem = []
-                            }
-                             if (responese.data.examList.type == 0) {
-                                _this.examList.selectItem = ''
-                            }
-                            if (responese.data.examList.type == 2) {
-                                _this.examList.selectItem = ''
-                            }
-                            if (_this.examList.LselectItem == null) {
-                                _this.examList.LselectItem = []
-                            }
-                            _this.minutes = responese.data.VExamUserInfo.TotalTime;
-                           
+                    if (IsTest == "test") {
+                        if (IsExams != '') {
+                            _this.$alert(IsExams, '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    if (_this.isMobileTurn == true)
+                                        window.location.href = "/EPageMain/MaintainExam";
+                                    else {
+                                        window.location.href = "/EPageMain/MaintainExamPC";
+                                    }
+                                }
+                            });
+                        } else {
+                            axios.post('/EPageMain/Test', {
+                                data: IsTest,
+                                RuleName: RuleName
+                            }).then(function (responese) {
+                                _this.examList = responese.data.examList;
+                                _this.VExamUserInfo = responese.data.VExamUserInfo;
+                                if (_this.examList.selectItem == null) {
+                                    _this.examList.selectItem = []
+                                }
+                                if (responese.data.examList.type == 1) {
+                                    _this.examList.selectItem = []
+                                }
+                                if (responese.data.examList.type == 0) {
+                                    _this.examList.selectItem = ''
+                                }
+                                if (responese.data.examList.type == 2) {
+                                    _this.examList.selectItem = ''
+                                }
+                                if (_this.examList.LselectItem == null) {
+                                    _this.examList.LselectItem = []
+                                }
+                                _this.minutes = responese.data.VExamUserInfo.TotalTime;
 
-                            _this.total = responese.data.total;
-                            _this.nowItem = responese.data.nowItem;
-                            _this.ListBankView = responese.data.ListBankView;
-                        })
+
+                                _this.total = responese.data.total;
+                                _this.nowItem = responese.data.nowItem;
+                                _this.ListBankView = responese.data.ListBankView;
+                            })
+                        }
+                       
                     }
                     else {
                         if (IsExams !='') {

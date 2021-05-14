@@ -358,7 +358,13 @@
             },
             DeleteBank(ids) {
                 var _this = this;
-                this.$confirm(_this.BankRemark+'是否继续删除?', '提示', {
+                var cc = ''
+                if (ids != 0) {
+                    cc = "1"
+                } else {
+                    cc = _this.BankRemark;
+                }
+                this.$confirm(cc+'是否继续删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

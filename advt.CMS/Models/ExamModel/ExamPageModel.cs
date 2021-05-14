@@ -59,7 +59,18 @@ namespace advt.CMS.Models
                     var bank = banks.OrderBy(y => Guid.NewGuid()).Take(TopicNum);
                     if (TopicNum != bank.Count())
                     {
-                        Result += item.TopicType + item.TopicMajor + item.TopicLevel + item.TopicLevel + "题库数量不够";
+                        var c = "";
+                        if (item.TopicType == "0")
+                        {
+                            c = "单选";
+                        }else if (item.TopicType == "1")
+                        {
+                            c = "多选";
+                        }else if (item.TopicType == "2")
+                        {
+                            c = "问答";
+                        }
+                        Result +=  item.TopicMajor + item.TopicLevel + Rule.SubjectName + c + " 在题库中数量不够,需要"+TopicNum+"道题目,题库中只有"+bank.Count()+"道题目";
                     }
                 }
             }
