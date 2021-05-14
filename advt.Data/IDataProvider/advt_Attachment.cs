@@ -12,13 +12,13 @@ namespace advt.Data
 
         #region advt_Attachment , (Ver:2.3.8) at: 2018/5/5 17:38:29
 
-        //IDataReader Get_All_advt_Attachment(object objparams);
+        IDataReader Get_All_advt_Attachment(object objparams);
 
-        //int Insert_advt_Attachment(Entity.advt_Attachment info, string[] Include, string[] Exclude);
+        int Insert_advt_Attachment(Entity.advt_Attachment info, string[] Include, string[] Exclude);
 
-        //int Update_advt_Attachment(Entity.advt_Attachment info, string[] Include, string[] Exclude);
+        int Update_advt_Attachment(Entity.advt_Attachment info, string[] Include, string[] Exclude);
 
-        //int Delete_advt_Attachment(int id);
+        int Delete_advt_Attachment(int id);
 
         #endregion
     }
