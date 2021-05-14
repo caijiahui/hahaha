@@ -61,122 +61,133 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult Login(Model.LoginModel model, string returnUrl)
         {
+            var IsLogin = "";
             try
             {
                 if (ModelState.IsValid)
                 {
-
-                    //Entity.advt_users user = service.Authenticate(model.UserName, model.Password);
                     string[] SplitAccount=new string[] { };
                     var username = "";
-                    //var user = SplitAccount[1];
-                    //var UserAccount = SplitAccount[0] + '\\' + SplitAccount[1];
-                    //var account = "";
-                    if (model.UserName.Contains("-"))
+                    Entity.advt_users users = new advt_users();
+                    Regex RegEmail = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");//w 英文字母或数字的字符串，和 [a-zA-Z0-9] 语法一样 
+                    Match m = RegEmail.Match(model.UserName);
+                   
+                    if (m.Success)
                     {
-                        var vuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
-                        if (vuser != null)
+                        Service.IProvider.IAuthorizationServices services = new Service.Provider.AuthorizationServices();
+                        users = services.EmailAuthenticate(model.UserName, model.Password);
+                        if (users != null) //验证通过
                         {
-                            var acc = "acn\\" + vuser.EamilUsername.Trim();
-                            SplitAccount = acc.Split('\\');
-                            username = vuser.EamilUsername;
+                            var emailuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { CommpanyEmail = model.UserName });
+                            if (emailuser != null)
+                            {
+                                username = emailuser.EamilUsername;
+                            }
+                            else
+                            {
+                                IsLogin = "用户名称不存在";
+                            }
+                        }
+                        else
+                        {
+                            IsLogin = "域账号登陆不成功";
                         }
                     }
                     else
                     {
-                        var vusers = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
-                        if (vusers != null)
+                        if (model.UserName.Contains("-"))
                         {
-                            var acc = "acn\\"+vusers.EamilUsername.Trim();
-                            SplitAccount = acc.Split('\\');
-                            username = vusers.EamilUsername;
+                            var vuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
+                            if (vuser != null)
+                            {
+                                var acc = "acn\\" + vuser.EamilUsername.Trim();
+                                SplitAccount = acc.Split('\\');
+                                username = vuser.EamilUsername;
+                            }
+                            else
+                            {
+                                IsLogin = "用户名称不存在";
+                            }
                         }
-                    }
-                    //ResponseModel response = _accessRepository.GetAccess(user);
-                    if (SplitAccount.Length > 1)
-                    {
-                        String adPath = ""; //Fully-qualified Domain Name
-                        switch (SplitAccount[0].ToLower().Trim())
+                        else
                         {
-                            case "acn":
-                                adPath = "LDAP://acn.advantech.corp"; //acn
-                                break;
-                            case "aeu":
-                                adPath = "LDAP://aeu.advantech.corp"; //advantech
-                                break;
-                            case "aus":
-                                adPath = "LDAP://aus.advantech.corp"; //advantech
-                                break;
-                            case "advantech":
-                                adPath = "LDAP://advantech.corp";//advantech
-                                break;
-                            default:
-                                adPath = "LDAP://acn.advantech.corp"; //acn
-                                break;
+                            var vusers = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
+                            if (vusers != null)
+                            {
+                                var acc = "acn\\" + vusers.EamilUsername.Trim();
+                                SplitAccount = acc.Split('\\');
+                                username = vusers.EamilUsername;
+                            }
+                            else
+                            {
+                                IsLogin = "用户名称不存在";
+                            }
                         }
-                        LdapAuthentication adAuth = new LdapAuthentication(adPath);
-                        try
+                        //ResponseModel response = _accessRepository.GetAccess(user);
+                        if (SplitAccount.Length > 1)
                         {
+                            String adPath = ""; //Fully-qualified Domain Name
+                            switch (SplitAccount[0].ToLower().Trim())
+                            {
+                                case "acn":
+                                    adPath = "LDAP://acn.advantech.corp"; //acn
+                                    break;
+                                case "aeu":
+                                    adPath = "LDAP://aeu.advantech.corp"; //advantech
+                                    break;
+                                case "aus":
+                                    adPath = "LDAP://aus.advantech.corp"; //advantech
+                                    break;
+                                case "advantech":
+                                    adPath = "LDAP://advantech.corp";//advantech
+                                    break;
+                                default:
+                                    adPath = "LDAP://acn.advantech.corp"; //acn
+                                    break;
+                            }
+                            LdapAuthentication adAuth = new LdapAuthentication(adPath);
                             string password = model.Password.Trim();
 
                             if (true == adAuth.IsAuthenticated(SplitAccount[0], SplitAccount[1], model.Password))
                             {
                                 Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
-                                Entity.advt_users users = service.Authenticate(username, model.Password);
-
-                                //登陆成功
-                                //var advt = new advt_users();
-                                //advt = Data.advt_users.Get_advt_users(new { username = model.UserName });
-                                //if (advt == null)
-                                //{
-                                //    advt = new advt_users();
-                                //    advt.username = model.UserName;
-                                //    advt.createdate = DateTime.Now;
-                                //    advt.status = 2;
-                                //    advt.password = model.Password;
-                                //    Data.advt_users.Insert_advt_users(advt, null, new string[] { "id" });
-                                //}
-
-                                SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
-                                //写入Cookie，无需登入。
-
-                                var LF = Guid.NewGuid().ToString();
-                                //写内存
-                                Manager.Login.Lock_Flag = LF;
-                                //写本地
-                                Utils.WriteCookie("ALock", LF);
-                                users.msn = LF;
-                                advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
-                                XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
-                                return Json(new { IsLogin = "Pass" }, JsonRequestBehavior.AllowGet);
+                                users = service.Authenticate(username, model.Password);
 
                             }
                             else
                             {
-
+                                IsLogin = "用户名/账号不正确";
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            // msg = "域账号密码验证失败，请重新登录！";
-                            //return Content("域账号密码验证失败，请重新登录！");
+
                         }
                     }
-                    else
+                    if (string.IsNullOrEmpty(IsLogin)&&!string.IsNullOrEmpty(users.username))
                     {
-                        //msg = "域账号密码验证失败，请重新登录！";
+                        SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
+                        //写入Cookie，无需登入。
+
+                        var LF = Guid.NewGuid().ToString();
+                        //写内存
+                        Manager.Login.Lock_Flag = LF;
+                        //写本地
+                        Utils.WriteCookie("ALock", LF);
+                        users.msn = LF;
+                        advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
+                        XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
+                        IsLogin = "Pass";
                     }
+
 
                 }
             }
             catch (Exception ex)
             {
-
+                return Json(new { IsLogin= ex.Message }, JsonRequestBehavior.AllowGet);
                 throw;
             }
-
-            ModelState.AddModelError("", "用户名或者密码错误!");
-            return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
+            //ModelState.AddModelError("", "用户名或者密码错误!");
+            return Json(new { IsLogin  }, JsonRequestBehavior.AllowGet);
+          
         }
 
         [MyAuthorize]

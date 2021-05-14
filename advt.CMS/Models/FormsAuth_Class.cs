@@ -41,7 +41,7 @@ namespace FormsAuth
             }
             catch (Exception ex)
             {
-                throw new Exception("Error authenticating user. " + ex.Message);
+                throw new Exception(ex.Message);
             }
 
             return true;

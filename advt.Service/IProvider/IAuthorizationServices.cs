@@ -17,5 +17,6 @@ namespace advt.Service.IProvider
         /// <param name="password"></param>
         /// <returns>回傳User_ID</returns>
         Entity.advt_users Authenticate(string userName, string password);
+        Entity.advt_users EmailAuthenticate(string userName, string password);
     }
 }

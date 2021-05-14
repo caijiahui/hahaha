@@ -21,7 +21,11 @@
                         .loginWrap .login_R .loginBox{
                             width:auto;
                         }
-                }
+                        .loginWrap .login_R .loginBox {
+                            height:auto;
+                        }
+
+                        }
             </style>
         </head>
 
@@ -55,8 +59,9 @@
                                             <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
                                         </el-form-item>
 
-                                        <h5>如Xiaoee.wang/Q-XXXXX，密码为开机密码</h5>
-                                        <h5>{{LoginMess}}</h5>
+                                        <h5>姓名/工号如：Xiaoee.wang/Q-XXXXX,密码为开机密码</h5>
+                                        <h5 style="margin-top:10px">邮箱如：Xiaoee.wang@advantech.com.cn,密码为EZ密码</h5>
+                                        <h5 style="color:red;margin-top:10px">{{LoginMess}}</h5>
                                         <el-form-item class="loginBtn">
                                             <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
                                         </el-form-item>
@@ -111,17 +116,18 @@
                                     axios.post('/Account/Login', {
                                         model: _this.loginForm
                                     }).then(function (res) {
-                                        if (res.data.IsLogin == "Pass") {
+                                        if (res.data.IsLogin != 'Pass') {
+                                            _this.LoginMess = res.data.IsLogin;
+                                            _this.loginForm.UserName = '';
+                                            _this.loginForm.Password = '';
+                                        } else {
                                             if (_this.isMobileTurn) {
                                                 window.location.href = "/EPageMain/MaintainExam"
                                             } else {
                                                 window.location.href = "/EPageMain/MaintainExamPC"
                                             }
-                                          
-                                           
-                                        } else {
-                                            window.location.href = "/Account/Login"
                                         }
+
                                     });
                                 } else {
                                     _this.LoginMess = "账号/密码不正确";
