@@ -98,7 +98,7 @@
                 <div class="content">
                     <div style="margin-bottom:20px">
                         <el-card class="box-card">
-                            <div><strong>{{nowItem}}.{{examList.proName}} </strong></div>
+                            <div><strong>{{nowItem}}.{{examList.proName}} ({{examList.ExamTypeName}})</strong></div>
                             <div><img v-if="examList.TopicTitlePic!=''&&examList.TopicTitlePic!=null" :src="'/Attachment/BankPic/'+examList.TopicTitlePic" width="100" height="100" /></div>
                         </el-card>
 
@@ -133,9 +133,9 @@
                             </div>
 
                                
-                                <div class="footer-btn-box" v-if="nowItem==1">
-                                        <div style="margin-left:100px">
-                                            <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+ <div class="footer-btn-box" v-if="nowItem==1" style="display:block">
+                                        <div>
+                                            <el-button class="pro-btn" @@click="submitForm('ruleForm')" style="width:200px">{{nowItem==total?'确认提交':'下一题'}}</el-button>
                                         </div>
                                     <div>
                                        
@@ -321,8 +321,6 @@
                                         for (var i = 0; i < _this.examList.ansowerList.length; i++) {
                                            
                                             var cc = _this.examList.ansowerList[i].ansowerflag;
-                                            console.log(cc, 333)
-                                            console.log(_this.examList.RightKey, 444)
                                             if (_this.examList.RightKey.indexOf(cc) != -1) {
                                                 next+=a+". " + _this.examList.ansowerList[i].ansower+"  ";
                                                 a++;
