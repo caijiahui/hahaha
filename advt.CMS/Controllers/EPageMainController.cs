@@ -110,7 +110,7 @@ namespace advt.Web.Controllers
         {
             try
             {
-
+                model.GetExam();
                 var examguid = model.InsertScoreData(model);
                 var name = this.UserNameContext;
                 model.InsertRecoredData(model, name, examguid);
