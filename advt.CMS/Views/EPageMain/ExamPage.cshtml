@@ -93,7 +93,7 @@
                             考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
                             <span v-if="VExamUserInfo.IsTest==true">模拟</span>
                         </div>
-                        <div class="text item" v-if="VExamUserInfo.IsTest==false">
+                        <div class="text item" v-if="VExamUserInfo.IsTest==false" style="color:red">
                             <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
                         </div>
                     </el-card>
