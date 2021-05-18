@@ -32,21 +32,33 @@ namespace advt.CMS.Models
 
         }
 
-        public void GetCsore(int ExamId)
+        public void GetCsore(string examguid)
         {
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
             {
-                ExamID = ExamId;
-                var ss = Data.ExamScore.Get_All_ExamScore(new { ExamID = ExamId }).Max(x => x.ExamID);
+                var ss = Data.ExamScore.Get_All_ExamScore(new { ExamGuid = examguid }).Max(x => x.ExamID);
+                if(ss!=0)
+                {
+                    VExamScore = Data.ExamScore.Get_ExamScore(ss);
 
-                VExamScore = Data.ExamScore.Get_ExamScore(ss);
-
-                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
-                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
-                ID = ss;
+                    ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
+                    ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
+ 
+                }
+                
             }
         }
-        public void GetExamListInfo(int id, string name)
+
+        public string GetExamIDInfo(string ID)
+        {
+            var guid = "";
+            var exa = Convert.ToInt32(ID);
+            var id = Data.ExamScore.Get_All_ExamScore(new { ExamID =exa});
+            if (id.Count() > 0)
+                guid = id.FirstOrDefault().ExamGuid;
+            return guid;
+        }
+        public void GetExamListInfo(int id, string name,string test,string examid)
         {
             var usercode = "";
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
@@ -56,13 +68,16 @@ namespace advt.CMS.Models
                 {
                     usercode = usersheet.UserCode;
                 }
-                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode }).Max(x => x.ExamID);
+                var ss = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examid });
+                if (ss.Count() > 0)
+                {
+                    ID = ss.FirstOrDefault().ExamID;
+                    VExamScore = Data.ExamScore.Get_ExamScore(ID);
 
-                VExamScore = Data.ExamScore.Get_ExamScore(ss);
-
-                ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
-                ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
-                ID = ss;
+                    ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ID);
+                    ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ID.ToString()).ToList();
+                }
+                
             }
             if (ID != 0)
             {

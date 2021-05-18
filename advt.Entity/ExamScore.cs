@@ -27,6 +27,8 @@ namespace advt.Entity
         public decimal? PassScore { get; set; }
         public string ExamSubject { get; set; }
         public bool? IsQuestion { get; set; }
+
+        public string ExamGuid { get; set; }
         #endregion
     }
 }

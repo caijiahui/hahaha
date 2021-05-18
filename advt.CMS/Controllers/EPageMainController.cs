@@ -87,8 +87,9 @@ namespace advt.Web.Controllers
         {
             ExamFinishModel model = new ExamFinishModel();
             var username = this.UserNameContext;
-            model.GetExamListInfo(Convert.ToInt32(ID), username);
-            model.GetCsore(Convert.ToInt32(ID));
+            var examguid = model.GetExamIDInfo(ID);
+            model.GetExamListInfo(Convert.ToInt32(ID), username,"", examguid);
+            model.GetCsore(examguid);
 
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
@@ -96,11 +97,22 @@ namespace advt.Web.Controllers
         [HttpPost]
         public ActionResult InsertScore(ExamPageModel model)
         {
-            model.GetExam();
-            model.InsertScoreData(model);
-            var name = this.UserNameContext;
-            model.InsertRecoredData(model, name);
-            return Json(new { examList = model }, JsonRequestBehavior.AllowGet);
+            try
+            {
+
+                var examguid = model.InsertScoreData(model);
+                var name = this.UserNameContext;
+                model.InsertRecoredData(model, name, examguid);
+                return Json(new { examList = model, examid = examguid }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var TestModel = new advt_Attachment();
+                TestModel.name = ex.Message;
+                Data.advt_Attachment.Insert_advt_Attachment(TestModel, null, new string[] { "id" });
+                throw;
+            }
+            
         }
         //考试类型
         [MyAuthorize]
@@ -125,11 +137,11 @@ namespace advt.Web.Controllers
             return Json(new { examList = model.examList, ListBankView = model.ListBankView, nowItem = model.nowItem, total = model.total, model.VExamUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult ExamFinishInfo()
+        public ActionResult ExamFinishInfo(string test,string examguid)
         {
             ExamFinishModel model = new ExamFinishModel();
             var name = this.UserNameContext;
-            model.GetExamListInfo(model.ID, name);
+            model.GetExamListInfo(model.ID, name, test, examguid);
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
 

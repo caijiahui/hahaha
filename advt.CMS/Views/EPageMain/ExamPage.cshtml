@@ -26,10 +26,12 @@
             .el-message-box {
                 width: 70%
             }
+
             .pro-ans-con .el-radio__input, .pro-ans-con .el-checkbox__input {
-                vertical-align:baseline;
+                vertical-align: baseline;
             }
-                .content .pro-ansower .pro-ans-con {
+
+            .content .pro-ansower .pro-ans-con {
                 min-height: 100px;
                 margin-bottom: 0px;
                 /* margin-bottom: 40px; */
@@ -39,33 +41,35 @@
                     margin-bottom: 0px
                 }
 
-                .content .pro-ansower .el-checkbox {
-                    margin-bottom: 0px;
-                }
+            .content .pro-ansower .el-checkbox {
+                margin-bottom: 0px;
+            }
 
-                .content .pro-ansower .el-radio, .content .pro-ansower .el-checkbox, .content .pro-ansower .el-textarea {
-                    margin-bottom: 0px;
-                    line-height:20px;
-                }
-            .el-card__header{
-               padding:10px 20px;
+            .content .pro-ansower .el-radio, .content .pro-ansower .el-checkbox, .content .pro-ansower .el-textarea {
+                margin-bottom: 0px;
+                line-height: 20px;
             }
-            .el-card__body{
-                padding:5px 20px;
+
+            .el-card__header {
+                padding: 10px 20px;
             }
+
+            .el-card__body {
+                padding: 5px 20px;
+            }
+
             .header h1 {
-                font-size:25px;
+                font-size: 25px;
             }
-            }
-
+        }
     </style>
 </head>
 <body>
 
-    <div id="app" v-cloak >
+    <div id="app" v-cloak>
         <div style="width:90%;margin:30px auto">
             <div>
-                <el-page-header @@back="goBack" ></el-page-header>
+                <el-page-header @@back="goBack"></el-page-header>
             </div>
             <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
             <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
@@ -122,23 +126,23 @@
                                     <el-input type="textarea" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examList.selectItem" v-if="examList.type==2"></el-input>
                                 </el-form-item>
                             </div>
-                            <div class="footer" >
+                            <div class="footer">
                                 <div class="footer-btn-box" v-if="nowItem!=1">
-                                <div>
-                                    <el-button class="pro-btn" @@click="preBtn()" v-if="nowItem!=1">上一题</el-button>
-                                </div>
-                                <div>
-                                    <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
-                                </div>
-                            </div>
-
-                               
- <div class="footer-btn-box" v-if="nowItem==1" style="display:block">
-                                        <div>
-                                            <el-button class="pro-btn" @@click="submitForm('ruleForm')" style="width:200px">{{nowItem==total?'确认提交':'下一题'}}</el-button>
-                                        </div>
                                     <div>
-                                       
+                                        <el-button class="pro-btn" @@click="preBtn()" v-if="nowItem!=1">上一题</el-button>
+                                    </div>
+                                    <div>
+                                        <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                    </div>
+                                </div>
+
+
+                                <div class="footer-btn-box" v-if="nowItem==1" style="display:block">
+                                    <div>
+                                        <el-button class="pro-btn" @@click="submitForm('ruleForm')" style="width:200px">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                    </div>
+                                    <div>
+
                                     </div>
                                 </div>
                                 <el-divider>{{nowItem}}/{{total}} 题</el-divider>
@@ -152,283 +156,357 @@
                 </div>
 
 
-        </div>
+            </div>
 
-        <el-dialog title="查看考试" :visible.sync="dialogFormVisible" width="80%" style="height:auto" :close-on-click-modal="false" :show-close="false">
-            <div class="wrap">
-                <el-page-header @@back="goBack" content="考试科目列表">
-                </el-page-header>
-                <div class="header">
-                    <h1>{{VExamScore.ExamType}}</h1>
-                </div>
-                <div>
-                    考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
-                    <span v-if="VExamUserInfo.IsTest==true">模拟</span>
-                </div>
-                <div class="content">
+            <el-dialog title="查看考试" :visible.sync="dialogFormVisible" width="80%" style="height:auto" :close-on-click-modal="false" :show-close="false">
+                <div class="wrap">
+                    <el-page-header @@back="goBack" content="考试科目列表">
+                    </el-page-header>
+                    <div class="header">
+                        <h1>{{VExamScore.ExamType}}</h1>
+                    </div>
                     <div>
-                        <div v-if="VExamScore.IsQuestion==false">
-                            <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
-                            <div class="grade-show">
-                                <div>
-                                    <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
-                                    <div>总分 {{VExamScore.TotalScore}}</div>
-                                </div>
-                                <div>
+                        考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
+                        <span v-if="VExamUserInfo.IsTest==true">模拟</span>
+                    </div>
+                    <div class="content">
+                        <div>
+                            <div v-if="VExamScore.IsQuestion==false">
+                                <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>
+                                <div class="grade-show">
                                     <div>
-                                        <div>{{VExamScore.CorrectNum}}</div>
-                                        <p>答对题数</p>
+                                        <div class="grade" :class="{'isSuccess':isSuccess}">{{VExamScore.CorrectScore}}</div>
+                                        <div>总分 {{VExamScore.TotalScore}}</div>
                                     </div>
-                                    <div>共 {{VExamScore.TatalTopicNum}} 题</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="detail-show">
-                            <div class="detail-divide">
-                                答案解析: <i class="fa fa-angle-double-down"></i>
-                            </div>
-                            <div class="detail-list" v-for="(item,index) in examLists">
-                                <div>
-                                    <div class="detail-title">
-                                        {{index+1}}.{{item.TopicTitle}}
-                                        <span>分值{{item.TopicNum}}分</span>
-                                    </div>
-                                </div>
-                                <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
-
-                                <div class="detail-content">
-                                    <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
-                                        <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                            <div>{{abcChange(index)}}.{{list.ansower}}</div>
-                                            <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
-
-                                        </el-radio>
-                                    </el-radio-group>
-                                    <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
-                                        <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                            <div>{{abcChange(index)}}.{{list.ansower}}</div>
-                                            <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
-
-                                        </el-checkbox>
-                                    </el-checkbox-group>
-                                    <el-input type="textarea" :disabled="true" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examLists.selectItem" v-if="examLists.type==2"></el-input>
-
-                                    <div class="pro-judge" :class="{'isright':item.isright}" v-if="VExamScore.IsQuestion==false">
+                                    <div>
                                         <div>
-                                            <span>
-                                                <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
-                                            </span>
-                                            <span>{{item.isright?'回答正确':'回答错误'}}</span>
+                                            <div>{{VExamScore.CorrectNum}}</div>
+                                            <p>答对题数</p>
                                         </div>
+                                        <div>共 {{VExamScore.TatalTopicNum}} 题</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                        <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
+                            <div class="detail-show">
+                                <div class="detail-divide">
+                                    答案解析: <i class="fa fa-angle-double-down"></i>
+                                </div>
+                                <div class="detail-list" v-for="(item,index) in examLists">
+                                    <div>
+                                        <div class="detail-title">
+                                            {{index+1}}.{{item.TopicTitle}}
+                                            <span>分值{{item.TopicNum}}分</span>
+                                        </div>
                                     </div>
-                                    <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
-                                        <span>正确答案:{{item.DeRemark}}</span>
-                                    </div>
-                                    <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
-                                        <span>答案解析:{{item.Remark}}</span>
+                                    <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
+
+                                    <div class="detail-content">
+                                        <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
+                                            <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                                <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                                <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                            </el-radio>
+                                        </el-radio-group>
+                                        <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
+                                            <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
+                                                <div>{{abcChange(index)}}.{{list.ansower}}</div>
+                                                <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
+
+                                            </el-checkbox>
+                                        </el-checkbox-group>
+                                        <el-input type="textarea" :disabled="true" :clearable='true' :rows="2" resize="none" :autosize="{ minRows: 4}" v-model="examLists.selectItem" v-if="examLists.type==2"></el-input>
+
+                                        <div class="pro-judge" :class="{'isright':item.isright}" v-if="VExamScore.IsQuestion==false">
+                                            <div>
+                                                <span>
+                                                    <img :src="item.isright?'/Images/right.png':'/Images/error.png'">
+                                                </span>
+                                                <span>{{item.isright?'回答正确':'回答错误'}}</span>
+                                            </div>
+
+                                            <div>{{item.isright?'+'+item.TopicNum+'分':'+0分'}}</div>
+                                        </div>
+                                        <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
+                                            <span>正确答案:{{item.DeRemark}}</span>
+                                        </div>
+                                        <div class="judge-wrong" v-if="VExamScore.IsQuestion==false">
+                                            <span>答案解析:{{item.Remark}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
+            </el-dialog>
+        </div>
+        </div>
 
-            </div>
-        </el-dialog>
-    </div>
+        <!-- end #container -->
+        <script src="~/Scripts/Vue/Vue.js"></script>
+        <script src="~/Scripts/Vue/axios.js"></script>
+        <script src="~/Scripts/elementUI/lib/index.js"></script>
+        <script src="~/Scripts/Vue/polyfill.min.js"></script>
+        <!-- Yoursite Scripts -->
+        <script>
+            new Vue({
+                el: "#app",
+                data: {
+                    nowyear: '',
+                    isMobileTurn: false,
+                    admin: 'Admin',
+                    isCollapse: true,
+                    total: [],      //一共多少题  后台获取
+                    nowItem: [],     //当前的题目  后台获取
+                    //examList: [],
+                    examList: {
+                        selectItem: ''
+                    },
+                    ListBankView: {},
+                    VExamUserInfo: {},
+                    minutes: [],
+                    seconds: 0,
+                    IsTest: '',
+                    isSuccess: false,    //是否通过考试
+                    nowyear: '',
+                    admin: '',
+                    TatalTopicNum: '',      //一共多少题  后台获取
+                    TotalScore: '',  //总分数
+                    CorrectScore: '',      //答题分数
+                    CorrectNum: '',   //答对题数
+                    VExamScore: [],
+                    VexamRecord: [],
+                    examLists: [],
+                    isQuestion: false,
+                    dialogFormVisible: false,
+                    examid:'',
+                    rules: {
+                        selectItem: [
+                            { required: true, message: '请填写答案！', trigger: 'blur' }
+                        ]
 
-    <!-- end #container -->
-    <script src="~/Scripts/Vue/Vue.js"></script>
-    <script src="~/Scripts/Vue/axios.js"></script>
-    <script src="~/Scripts/elementUI/lib/index.js"></script>
-    <script src="~/Scripts/Vue/polyfill.min.js"></script>
-    <!-- Yoursite Scripts -->
-    <script>
-        new Vue({
-            el: "#app",
-            data: {
-                nowyear: '',
-                isMobileTurn: false,
-                admin: 'Admin',
-                isCollapse: true,
-                total: [],      //一共多少题  后台获取
-                nowItem: [],     //当前的题目  后台获取
-                //examList: [],
-                examList: {
-                    selectItem:''
-                },
-                ListBankView: {},
-                VExamUserInfo: {},
-                minutes: [],
-                seconds: 0,
-                IsTest: '',
-                isSuccess: false,    //是否通过考试
-                nowyear: '',
-                admin: '',
-                TatalTopicNum: '',      //一共多少题  后台获取
-                TotalScore: '',  //总分数
-                CorrectScore: '',      //答题分数
-                CorrectNum: '',   //答对题数
-                VExamScore: [],
-                VexamRecord: [],
-                examLists: [],
-                isQuestion: false,
-                dialogFormVisible: false,
-                rules: {
-                    selectItem: [
-                        { required: true, message: '请填写答案！', trigger: 'blur' }
-                    ]
-
-                }
-            },
-            mounted: function () {
-                var date = new Date();
-                this.nowyear = date.getFullYear();
-
-                if (this.isMobile()) {
-                    this.isMobileTurn = true
-                } else {
-                    this.isMobileTurn = false
-                }
-                this.getdata();
-                this.add();
-            },
-            watch: {
-                'examList.selectItem': function (newval) {
-
-                },
-                second: {
-                    handler(newVal) {
-                        this.num(newVal)
                     }
                 },
-                minute: {
-                    handler(newVal) {
-                        this.num(newVal)
-                    }
-                }
-            },
-            computed: {
-                second: function () {
-                    return this.num(this.seconds)
-                },
-                minute: function () {
-                    return this.num(this.minutes)
-                }
+                mounted: function () {
+                    var date = new Date();
+                    this.nowyear = date.getFullYear();
 
-
-            },
-            methods: {
-                goBack: function () {
-                    var _this = this;
-                    if (_this.isMobileTurn == true) {
-                        window.location.href = "/EPageMain/MaintainExam"
+                    if (this.isMobile()) {
+                        this.isMobileTurn = true
                     } else {
-                        window.location.href = "/EPageMain/MaintainExamPC"
+                        this.isMobileTurn = false
                     }
-
+                    this.getdata();
+                    this.add();
                 },
-                num: function (n) {
-                    return n < 10 ? '0' + n : '' + n
-                },
-                add() {
-                    var _this = this;
-                    if (_this.$refs.idtests.value!='test') {
-                        if (_this.examList.length != 0) {
-                            var time = window.setInterval(function () {
-                                if (_this.seconds === 0 && _this.minutes !== 0) {
-                                    _this.seconds = 59
-                                    _this.minutes -= 1
-                                } else if (_this.minutes === 0 && _this.seconds === 0) {
-                                    _this.seconds = 0;
-                                    _this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
-                                        confirmButtonText: '确定',
-                                        callback: action => {
-                                            var obj = {};
-                                            obj.examList = _this.examList;
-                                            obj.ListBankView = _this.ListBankView;
-                                            obj.VExamUserInfo = _this.VExamUserInfo;
-                                            axios.post('/EPageMain/InsertScore', {
-                                                model: obj
-                                            }).then(function (res) {
+                watch: {
+                    'examList.selectItem': function (newval) {
 
-                                            });
-                                            //window.location.href = "/EPageMain/ExamFinish";
-                                            axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
-                                                _this.VExamScore = responese.data.VExamScore;
-                                                if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                    _this.isSuccess = true;
-                                                }
-                                                _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                _this.examLists = responese.data.examList;
-
-                                            })
-                                            _this.dialogFormVisible = true;
-                                        }
-                                    });
-                                    window.clearInterval(time)
-
-                                } else {
-                                    _this.seconds -= 1
-                                }
-                            }, 1000)
-
+                    },
+                    second: {
+                        handler(newVal) {
+                            this.num(newVal)
+                        }
+                    },
+                    minute: {
+                        handler(newVal) {
+                            this.num(newVal)
                         }
                     }
-
-                  
                 },
-                isMobile: function () {
-                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-                    return flag
-                },
-                submitForm: function (formName, ii) {
-                    var _this = this;
-                   
+                computed: {
+                    second: function () {
+                        return this.num(this.seconds)
+                    },
+                    minute: function () {
+                        return this.num(this.minutes)
+                    }
 
-                    this.$refs[formName].validate(function (valid) {
-                        if (valid) {
-                            _this.examList.LselectItem = [];
-                            if (_this.examList.type == 1) {
-                                for (var i = 0; i < _this.examList.selectItem.length; i++) {
-                                    var c = _this.examList.selectItem[i];
-                                    if (_this.examList.ansowerList[c]!=null)
-                                    _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
-                                }
-                            }
-                            else if (_this.examList.type == 0) {
-                                var c = _this.examList.selectItem;
-                                if (_this.examList.ansowerList[c] != null)
-                                _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
-                            }
-                            else if (_this.examList.type == 2) {
-                                _this.examList.LselectItem = _this.examList.selectItem;
-                            }
-                            if (_this.VExamUserInfo.IsTest) {
-                                //单选多选判断对错,填空直接往下
-                                if (_this.examList.type == 1 || _this.examList.type == 0) {
-                                    var next = "";
-                                    var a = 1;
-                                    if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
-                                        for (var i = 0; i < _this.examList.ansowerList.length; i++) {
-                                           
-                                            var cc = _this.examList.ansowerList[i].ansowerflag;
-                                            if (_this.examList.RightKey.indexOf(cc) != -1) {
-                                                next+=a+". " + _this.examList.ansowerList[i].ansower+"  ";
-                                                a++;
+
+                },
+                methods: {
+                    goBack: function () {
+                        var _this = this;
+                        if (_this.isMobileTurn == true) {
+                            window.location.href = "/EPageMain/MaintainExam"
+                        } else {
+                            window.location.href = "/EPageMain/MaintainExamPC"
+                        }
+
+                    },
+                    num: function (n) {
+                        return n < 10 ? '0' + n : '' + n
+                    },
+                    add() {
+                        var _this = this;
+                        if (_this.$refs.idtests.value != 'test') {
+                            if (_this.examList.length != 0) {
+                                var time = window.setInterval(function () {
+                                    if (_this.seconds === 0 && _this.minutes !== 0) {
+                                        _this.seconds = 59
+                                        _this.minutes -= 1
+                                    } else if (_this.minutes === 0 && _this.seconds === 0) {
+                                        _this.seconds = 0;
+                                        _this.$alert('已超过考试时间，请联系HR重新考试', '提示', {
+                                            confirmButtonText: '确定',
+                                            callback: action => {
+                                                var obj = {};
+                                                obj.examList = _this.examList;
+                                                obj.ListBankView = _this.ListBankView;
+                                                obj.VExamUserInfo = _this.VExamUserInfo;
+                                                axios.post('/EPageMain/InsertScore', {
+                                                    model: obj
+                                                }).then(function (res) {
+                                                    _this.examid = res.data.examid;
+                                                    axios.post('/EPageMain/ExamFinishInfo', {
+                                                        test: _this.VExamScore.IsTest,
+                                                        examguid:_this.examid
+                                                    }).then(function (responese) {
+                                                        _this.VExamScore = responese.data.VExamScore;
+                                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                            _this.isSuccess = true;
+                                                        }
+                                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                        _this.examLists = responese.data.examList;
+
+                                                    })
+                                                    _this.dialogFormVisible = true;
+                                                });
+                                                //window.location.href = "/EPageMain/ExamFinish";
+                                                
                                             }
-                                           
+                                        });
+                                        window.clearInterval(time)
+
+                                    } else {
+                                        _this.seconds -= 1
+                                    }
+                                }, 1000)
+
+                            }
+                        }
+
+
+                    },
+                    isMobile: function () {
+                        let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                        return flag
+                    },
+                    submitForm: function (formName, ii) {
+                        var _this = this;
+
+
+                        this.$refs[formName].validate(function (valid) {
+                            if (valid) {
+                                _this.examList.LselectItem = [];
+                                if (_this.examList.type == 1) {
+                                    for (var i = 0; i < _this.examList.selectItem.length; i++) {
+                                        var c = _this.examList.selectItem[i];
+                                        if (_this.examList.ansowerList[c] != null)
+                                            _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
+                                    }
+                                }
+                                else if (_this.examList.type == 0) {
+                                    var c = _this.examList.selectItem;
+                                    if (_this.examList.ansowerList[c] != null)
+                                        _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
+                                }
+                                else if (_this.examList.type == 2) {
+                                    _this.examList.LselectItem = _this.examList.selectItem;
+                                }
+                                if (_this.VExamUserInfo.IsTest) {
+                                    //单选多选判断对错,填空直接往下
+                                    if (_this.examList.type == 1 || _this.examList.type == 0) {
+                                        var next = "";
+                                        var a = 1;
+                                        if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
+                                            for (var i = 0; i < _this.examList.ansowerList.length; i++) {
+
+                                                var cc = _this.examList.ansowerList[i].ansowerflag;
+                                                if (_this.examList.RightKey.indexOf(cc) != -1) {
+                                                    next += a + ". " + _this.examList.ansowerList[i].ansower + "  ";
+                                                    a++;
+                                                }
+
+                                            }
+                                            if (_this.examList.Remark == null)
+                                                _this.examList.Remark = ''
+                                            //const confirmText = ['是否将基金产品从我的自选中移出？', '注意：此操作将从我的自选中的所有分组中移除该产品。']
+                                            _this.$confirm(next + '         答案解析: ' + _this.examList.Remark, '正确答案:', {
+                                                confirmButtonText: '下一题',
+                                                cancelButtonText: '取消'
+                                            }).then(() => {
+                                                var obj = {};
+                                                obj.examList = _this.examList;
+                                                obj.nowItem = _this.nowItem;
+                                                obj.total = _this.total;
+                                                obj.ListBankView = _this.ListBankView;
+                                                obj.VExamUserInfo = _this.VExamUserInfo;
+                                                obj.LselectItem = _this.LselectItem;
+                                                if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+
+                                                    obj.examList = _this.examList;
+                                                    obj.ListBankView = _this.ListBankView;
+                                                    obj.VExamUserInfo = _this.VExamUserInfo;
+                                                    axios.post('/EPageMain/InsertScore', {
+                                                        model: obj
+                                                    }).then(function (res) {
+                                                        _this.examid = res.data.examid;
+                                                        axios.post('/EPageMain/ExamFinishInfo', {
+                                                            test: _this.VExamScore.IsTest,
+                                                            examguid: _this.examid
+                                                        }).then(function (responese) {
+                                                            _this.VExamScore = responese.data.VExamScore;
+                                                            if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                                _this.isSuccess = true;
+                                                            }
+                                                            _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                            _this.examLists = responese.data.examList;
+
+                                                        })
+                                                        _this.dialogFormVisible = true;
+                                                    });
+                                                   
+
+
+                                                } else {
+
+                                                    obj.PreNext = "Next";
+                                                    axios.post('/EPageMain/NextTopic', {
+                                                        model: obj
+                                                    }).then(function (res) {
+                                                        _this.examList = res.data.examList;
+                                                        _this.total = res.data.total;
+                                                        _this.nowItem = res.data.nowItem;
+                                                        _this.ListBankView = res.data.ListBank;
+                                                        _this.VExamUserInfo = res.data.VExamUserInfo;
+                                                        if (_this.examList.selectItem == null) {
+                                                            _this.examList.selectItem = []
+                                                        }
+                                                        if (_this.examList.LselectItem == null) {
+                                                            _this.examList.LselectItem = []
+                                                        }
+                                                        if (res.data.examList.type == 0) {
+                                                            if (_this.examList.selectItem.length != 0) {
+                                                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                            } else {
+                                                                _this.examList.selectItem = ''
+                                                            }
+
+                                                        }
+
+
+
+                                                    });
+                                                }
+                                            }).catch(() => {
+                                                return;
+                                            });
                                         }
-                                        if (_this.examList.Remark == null)
-                                            _this.examList.Remark=''
-                                        //const confirmText = ['是否将基金产品从我的自选中移出？', '注意：此操作将从我的自选中的所有分组中移除该产品。'] 
-                                        _this.$confirm(next+'         答案解析: ' + _this.examList.Remark, '正确答案:', {
-                                            confirmButtonText: '下一题',
-                                            cancelButtonText: '取消'
-                                        }).then(() => {
+                                        else {
                                             var obj = {};
                                             obj.examList = _this.examList;
                                             obj.nowItem = _this.nowItem;
@@ -437,35 +515,36 @@
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-
                                                 obj.examList = _this.examList;
                                                 obj.ListBankView = _this.ListBankView;
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
                                                 axios.post('/EPageMain/InsertScore', {
                                                     model: obj
                                                 }).then(function (res) {
+                                                    _this.examid = res.data.examid;
+                                                    axios.post('/EPageMain/ExamFinishInfo', {
+                                                        test: _this.VExamScore.IsTest,
+                                                        examguid: _this.examid
+                                                    }).then(function (responese) {
+                                                        _this.VExamScore = responese.data.VExamScore;
+                                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                            _this.isSuccess = true;
+                                                        }
+                                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                        _this.examLists = responese.data.examList;
 
+                                                    })
+                                                    _this.dialogFormVisible = true;
                                                 });
-                                                //window.location.href = "/EPageMain/ExamFinish";
-                                                axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
-                                                    _this.VExamScore = responese.data.VExamScore;
-                                                    if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                        _this.isSuccess = true;
-                                                    }
-                                                    _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                    _this.examLists = responese.data.examList;
-
-                                                })
-                                                _this.dialogFormVisible = true;
-
+                                               
 
                                             } else {
-
                                                 obj.PreNext = "Next";
                                                 axios.post('/EPageMain/NextTopic', {
                                                     model: obj
                                                 }).then(function (res) {
                                                     _this.examList = res.data.examList;
+
                                                     _this.total = res.data.total;
                                                     _this.nowItem = res.data.nowItem;
                                                     _this.ListBankView = res.data.ListBank;
@@ -476,42 +555,45 @@
                                                     if (_this.examList.LselectItem == null) {
                                                         _this.examList.LselectItem = []
                                                     }
-                                                     if (res.data.examList.type == 0) {
+                                                    if (res.data.examList.type == 0) {
                                                         if (_this.examList.selectItem.length != 0) {
                                                             _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
                                                         } else {
                                                             _this.examList.selectItem = ''
                                                         }
-                                                        
                                                     }
-                                                  
+                                                    if (res.data.examList.type == 2) {
+                                                        _this.examList.selectItem = _this.examList.selectItem[0].toString();
+                                                    }
 
 
                                                 });
                                             }
-                                        }).catch(() => {
-                                            return;
-                                        });
+                                        }
                                     }
-                                    else {
-                                        var obj = {};
+
+
+                                }
+                                if (_this.VExamUserInfo.IsTest == false || _this.examList.type == 2) {
+                                    var obj = {};
+                                    obj.examList = _this.examList;
+                                    obj.nowItem = _this.nowItem;
+                                    obj.total = _this.total;
+                                    obj.ListBankView = _this.ListBankView;
+                                    obj.VExamUserInfo = _this.VExamUserInfo;
+                                    obj.LselectItem = _this.LselectItem;
+                                    if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
                                         obj.examList = _this.examList;
-                                        obj.nowItem = _this.nowItem;
-                                        obj.total = _this.total;
                                         obj.ListBankView = _this.ListBankView;
                                         obj.VExamUserInfo = _this.VExamUserInfo;
-                                        obj.LselectItem = _this.LselectItem;
-                                        if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-                                            obj.examList = _this.examList;
-                                            obj.ListBankView = _this.ListBankView;
-                                            obj.VExamUserInfo = _this.VExamUserInfo;
-                                            axios.post('/EPageMain/InsertScore', {
-                                                model: obj
-                                            }).then(function (res) {
-                                                //window.location.href = "/EPageMain/ExamFinish";
-                                                
-                                            });
-                                            axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
+                                        axios.post('/EPageMain/InsertScore', {
+                                            model: obj
+                                        }).then(function (res) {
+                                            _this.examid = res.data.examid;
+                                            axios.post('/EPageMain/ExamFinishInfo', {
+                                                test: _this.VExamScore.IsTest,
+                                                examguid: _this.examid
+                                            }).then(function (responese) {
                                                 _this.VExamScore = responese.data.VExamScore;
                                                 if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                                     _this.isSuccess = true;
@@ -521,183 +603,108 @@
 
                                             })
                                             _this.dialogFormVisible = true;
+                                        });
+                                        
 
-                                        } else {
-                                            obj.PreNext = "Next";
-                                            axios.post('/EPageMain/NextTopic', {
-                                                model: obj
-                                            }).then(function (res) {
-                                                _this.examList = res.data.examList;
+                                    } else {
+                                        obj.PreNext = "Next";
+                                        axios.post('/EPageMain/NextTopic', {
+                                            model: obj
+                                        }).then(function (res) {
+                                            _this.examList = res.data.examList;
 
-                                                _this.total = res.data.total;
-                                                _this.nowItem = res.data.nowItem;
-                                                _this.ListBankView = res.data.ListBank;
-                                                _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                if (_this.examList.selectItem == null) {
-                                                    _this.examList.selectItem = []
-                                                }
-                                                if (_this.examList.LselectItem == null) {
-                                                    _this.examList.LselectItem = []
-                                                }
-                                                 if (res.data.examList.type == 0) {
-                                                    if (_this.examList.selectItem.length != 0) {
-                                                        _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                                    } else {
-                                                        _this.examList.selectItem = ''
-                                                    }
-                                                }
-                                                 if (res.data.examList.type == 2) {
-                                                    _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                                                }
-
-
-                                            });
-                                        }
-                                    }
-                                }
-
-
-                            }
-                            if (_this.VExamUserInfo.IsTest == false || _this.examList.type == 2) {
-                                var obj = {};
-                                obj.examList = _this.examList;
-                                obj.nowItem = _this.nowItem;
-                                obj.total = _this.total;
-                                obj.ListBankView = _this.ListBankView;
-                                obj.VExamUserInfo = _this.VExamUserInfo;
-                                obj.LselectItem = _this.LselectItem;
-                                if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-                                    obj.examList = _this.examList;
-                                    obj.ListBankView = _this.ListBankView;
-                                    obj.VExamUserInfo = _this.VExamUserInfo;
-                                    axios.post('/EPageMain/InsertScore', {
-                                        model: obj
-                                    }).then(function (res) {
-
-                                    });
-                                    //window.location.href = "/EPageMain/ExamFinish";
-                                    axios.post('/EPageMain/ExamFinishInfo').then(function (responese) {
-                                        _this.VExamScore = responese.data.VExamScore;
-                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                            _this.isSuccess = true;
-                                        }
-                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                        _this.examLists = responese.data.examList;
-
-                                    })
-                                    _this.dialogFormVisible = true;
-
-                                } else {
-                                    obj.PreNext = "Next";
-                                    axios.post('/EPageMain/NextTopic', {
-                                        model: obj
-                                    }).then(function (res) {
-                                        _this.examList = res.data.examList;
-
-                                        _this.total = res.data.total;
-                                        _this.nowItem = res.data.nowItem;
-                                        _this.ListBankView = res.data.ListBank;
-                                        _this.VExamUserInfo = res.data.VExamUserInfo;
-                                        if (_this.examList.selectItem == null) {
-                                            _this.examList.selectItem = []
-                                        }
-                                        if (_this.examList.LselectItem == null) {
-                                            _this.examList.LselectItem = []
-                                        }
-                                        if (res.data.examList.type == 0) {
-                                            if (_this.examList.selectItem.length != 0) {
-                                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                            } else {
-                                                _this.examList.selectItem = ''
+                                            _this.total = res.data.total;
+                                            _this.nowItem = res.data.nowItem;
+                                            _this.ListBankView = res.data.ListBank;
+                                            _this.VExamUserInfo = res.data.VExamUserInfo;
+                                            if (_this.examList.selectItem == null) {
+                                                _this.examList.selectItem = []
                                             }
-                                        }
-                                        if (res.data.examList.type == 2) {
-                                            _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                                        }
+                                            if (_this.examList.LselectItem == null) {
+                                                _this.examList.LselectItem = []
+                                            }
+                                            if (res.data.examList.type == 0) {
+                                                if (_this.examList.selectItem.length != 0) {
+                                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                                } else {
+                                                    _this.examList.selectItem = ''
+                                                }
+                                            }
+                                            if (res.data.examList.type == 2) {
+                                                _this.examList.selectItem = _this.examList.selectItem[0].toString();
+                                            }
 
 
-                                    });
-                                }
-                            }
-
-                        } else {
-                            console.log('error submit!!');
-                            return false;
-                        }
-                    });
-                },
-                preBtn: function () {
-                    var _this = this;
-                    var objs = {};
-                    objs.examList = _this.examList;
-                    objs.LselectItem = _this.LselectItem;
-                    objs.nowItem = _this.nowItem;
-                    objs.total = _this.total;
-                    objs.ListBankView = _this.ListBankView;
-                    objs.VExamUserInfo = _this.VExamUserInfo;
-                    objs.PreNext = "Pre";
-                    axios.post('/EPageMain/NextTopic', {
-                        model: objs
-                    }).then(function (res) {
-                        _this.examList = res.data.examList;
-                        _this.total = res.data.total;
-                        _this.nowItem = res.data.nowItem;
-                        _this.ListBankView = res.data.ListBank;
-                        _this.VExamUserInfo = res.data.VExamUserInfo;
-                        if (_this.examList.selectItem == null) {
-                            _this.examList.selectItem = []
-                        }
-                        if (_this.examList.LselectItem == null) {
-                            _this.examList.LselectItem = []
-                        }
-                        if (res.data.examList.type == 0) {
-                            if (_this.examList.selectItem.length != 0) {
-                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                            } else {
-                                _this.examList.selectItem = ''
-                            }
-                        }
-                        if (res.data.examList.type == 2) {
-                            _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                        }
-
-
-
-                    });
-                },
-                abcChange: function (val) {
-                    if (val == 0) {
-                        return 'A'
-                    } else if (val == 1) {
-                        return 'B'
-                    } else if (val == 2) {
-                        return 'C'
-                    } else if (val == 3) {
-                        return 'D'
-                    } else if (val == 4) {
-                        return 'E'
-                    } else if (val == 5) {
-                        return 'F'
-                    }
-                },
-                getdata: function () {
-                    var _this = this;
-                    var IsExams = _this.$refs.idisexam.value;
-                    var IsTest = _this.$refs.idtests.value;
-                    var RuleName = _this.$refs.idRuleName.value;
-                    if (IsTest == "test") {
-                        if (IsExams != '') {
-                            _this.$alert(IsExams, '提示', {
-                                confirmButtonText: '确定',
-                                callback: action => {
-                                    if (_this.isMobileTurn == true)
-                                        window.location.href = "/EPageMain/MaintainExam";
-                                    else {
-                                        window.location.href = "/EPageMain/MaintainExamPC";
+                                        });
                                     }
                                 }
-                            });
-                        } else {
+
+                            } else {
+                                console.log('error submit!!');
+                                return false;
+                            }
+                        });
+                    },
+                    preBtn: function () {
+                        var _this = this;
+                        var objs = {};
+                        objs.examList = _this.examList;
+                        objs.LselectItem = _this.LselectItem;
+                        objs.nowItem = _this.nowItem;
+                        objs.total = _this.total;
+                        objs.ListBankView = _this.ListBankView;
+                        objs.VExamUserInfo = _this.VExamUserInfo;
+                        objs.PreNext = "Pre";
+                        axios.post('/EPageMain/NextTopic', {
+                            model: objs
+                        }).then(function (res) {
+                            _this.examList = res.data.examList;
+                            _this.total = res.data.total;
+                            _this.nowItem = res.data.nowItem;
+                            _this.ListBankView = res.data.ListBank;
+                            _this.VExamUserInfo = res.data.VExamUserInfo;
+                            if (_this.examList.selectItem == null) {
+                                _this.examList.selectItem = []
+                            }
+                            if (_this.examList.LselectItem == null) {
+                                _this.examList.LselectItem = []
+                            }
+                            if (res.data.examList.type == 0) {
+                                if (_this.examList.selectItem.length != 0) {
+                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
+                                } else {
+                                    _this.examList.selectItem = ''
+                                }
+                            }
+                            if (res.data.examList.type == 2) {
+                                _this.examList.selectItem = _this.examList.selectItem[0].toString();
+                            }
+
+
+
+                        });
+                    },
+                    abcChange: function (val) {
+                        if (val == 0) {
+                            return 'A'
+                        } else if (val == 1) {
+                            return 'B'
+                        } else if (val == 2) {
+                            return 'C'
+                        } else if (val == 3) {
+                            return 'D'
+                        } else if (val == 4) {
+                            return 'E'
+                        } else if (val == 5) {
+                            return 'F'
+                        }
+                    },
+                    getdata: function () {
+                        var _this = this;
+                        var IsExams = _this.$refs.idisexam.value;
+                        var IsTest = _this.$refs.idtests.value;
+                        var RuleName = _this.$refs.idRuleName.value;
+                        if (IsTest == "test") {
                             axios.post('/EPageMain/Test', {
                                 data: IsTest,
                                 RuleName: RuleName
@@ -727,56 +734,54 @@
                                 _this.ListBankView = responese.data.ListBankView;
                             })
                         }
-                       
-                    }
-                    else {
-                        if (IsExams !='') {
-                            _this.$alert(IsExams, '提示', {
+                        else {
+                            if (IsExams != '') {
+                                _this.$alert(IsExams, '提示', {
                                     confirmButtonText: '确定',
-                                callback: action => {
-                                    if (_this.isMobileTurn == true)
-                                        window.location.href = "/EPageMain/MaintainExam";
-                                    else {
-                                        window.location.href = "/EPageMain/MaintainExamPC";
-                                    }
+                                    callback: action => {
+                                        if (_this.isMobileTurn == true)
+                                            window.location.href = "/EPageMain/MaintainExam";
+                                        else {
+                                            window.location.href = "/EPageMain/MaintainExamPC";
+                                        }
                                     }
                                 });
-                        } else {
-                            axios.post('/EPageMain/Test', {
-                                data: "formal",
-                                RuleName: RuleName
-                            }).then(function (responese) {
-                                _this.examList = responese.data.examList;
-                                _this.VExamUserInfo = responese.data.VExamUserInfo;
-                                if (_this.examList.selectItem == null) {
-                                    _this.examList.selectItem = []
-                                }
-                                if (responese.data.examList.type == 1) {
-                                    _this.examList.selectItem = []
-                                }
-                                 if (responese.data.examList.type == 0) {
-                                    _this.examList.selectItem = ''
-                                }
-                                if (responese.data.examList.type == 2) {
-                                    _this.examList.selectItem = ''
-                                }
-                                if (_this.examList.LselectItem == null) {
-                                    _this.examList.LselectItem = []
-                                }
-                                _this.minutes = responese.data.VExamUserInfo.TotalTime;
+                            } else {
+                                axios.post('/EPageMain/Test', {
+                                    data: "formal",
+                                    RuleName: RuleName
+                                }).then(function (responese) {
+                                    _this.examList = responese.data.examList;
+                                    _this.VExamUserInfo = responese.data.VExamUserInfo;
+                                    if (_this.examList.selectItem == null) {
+                                        _this.examList.selectItem = []
+                                    }
+                                    if (responese.data.examList.type == 1) {
+                                        _this.examList.selectItem = []
+                                    }
+                                    if (responese.data.examList.type == 0) {
+                                        _this.examList.selectItem = ''
+                                    }
+                                    if (responese.data.examList.type == 2) {
+                                        _this.examList.selectItem = ''
+                                    }
+                                    if (_this.examList.LselectItem == null) {
+                                        _this.examList.LselectItem = []
+                                    }
+                                    _this.minutes = responese.data.VExamUserInfo.TotalTime;
 
-                                _this.total = responese.data.total;
-                                _this.nowItem = responese.data.nowItem;
-                                _this.ListBankView = responese.data.ListBankView;
-                            })
+                                    _this.total = responese.data.total;
+                                    _this.nowItem = responese.data.nowItem;
+                                    _this.ListBankView = responese.data.ListBankView;
+                                })
+                            }
                         }
                     }
+
                 }
 
-            }
-
-        })
-    </script>
+            })
+        </script>
 </body>
 </html>
 

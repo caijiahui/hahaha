@@ -288,14 +288,14 @@ namespace advt.CMS.Models
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
 
         }
-        public void InsertScoreData(ExamPageModel model)
+        public string InsertScoreData(ExamPageModel model)
         {
-
+            var id = "";
             if (model.VExamUserInfo.LExamViews.Count() > 0)
             {
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
-         
+
                 sc.CreateDate = DateTime.Now;
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
@@ -303,7 +303,7 @@ namespace advt.CMS.Models
                 sc.PassScore = model.VExamUserInfo.PassScore;
                 //+科目
                 sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                sc.IsQuestion = model.VExamUserInfo.IsQuestion;      
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
 
                 int sd = 0;
                 int score = 0;
@@ -311,10 +311,10 @@ namespace advt.CMS.Models
                 if (sc.IsQuestion == true)
                 {
                     sc.CorrectScore = 0;
-                  
+
                 }
                 else
-                {  
+                {
                     sc.TotalScore = model.VExamUserInfo.TotalScore;
                     foreach (var item in model.VExamUserInfo.LExamViews)
                     {
@@ -330,7 +330,7 @@ namespace advt.CMS.Models
                                 sd++;
                                 sc.CorrectNum = sd;
                                 //答对分数CorrectScore
-                                score += item.TopicScore;   
+                                score += item.TopicScore;
                             }
                             else
                             {
@@ -351,14 +351,15 @@ namespace advt.CMS.Models
                     { sc.CorrectNum = 0; }
                     sc.CorrectScore = score;
                 }
-               
 
-
+                var guid = Guid.NewGuid();
+                sc.ExamGuid = guid.ToString();
+                id = sc.ExamGuid;
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
                 if (model.VExamUserInfo.IsTest == false)
-                { 
+                {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
                     ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
                     if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
@@ -380,30 +381,37 @@ namespace advt.CMS.Models
 
                     }
                 }
-                   
+
 
             }
+
+            return id;
+         
         }
-        public void InsertRecoredData(ExamPageModel model,string name)
+        public void InsertRecoredData(ExamPageModel model,string name,string examguid)
         {
             var usercode = "";
+            int examid = 0;
             var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
             if (usersheet != null)
             {
                 usercode = usersheet.UserCode;
             }
-            var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode }).Max(x=>x.ExamID);
-            
-            
+            var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
+            if (ee.Count() > 0)
+            {
+                examid = ee.FirstOrDefault().ExamID;
+            }
+
             foreach (var item in model.VExamUserInfo.LExamViews)
             {
                 var RightMeno = string.Empty;
                 var IsRight = false;
                 ExamRecord record = new ExamRecord();
 
-                record.ExamID = ee.ToString();
+                record.ExamID = examid.ToString();
                 record.TopicTitle = item.proName;
-                if (item.TopicTitlePic!=null)
+                if (item.TopicTitlePic != null)
                 {
                     record.TopicTitlePicNum = item.TopicTitlePic;
 
@@ -416,7 +424,7 @@ namespace advt.CMS.Models
                     foreach (var ss in item.selectItem)
                     {
                         var sr = "";
-                        if (ss =="0")
+                        if (ss == "0")
                         {
                             sr = "A";
                         }
@@ -424,11 +432,11 @@ namespace advt.CMS.Models
                         {
                             sr = "B";
                         }
-                        if (ss== "2")
+                        if (ss == "2")
                         {
                             sr = "C";
                         }
-                        if (ss== "3")
+                        if (ss == "3")
                         {
                             sr = "D";
                         }
@@ -441,7 +449,7 @@ namespace advt.CMS.Models
                         record.WriteAnsower += sr + ';';
                     }
                 }
-               
+
                 if (item.RightKey.Count() > 0)
                 {
                     foreach (var sr in item.RightKey)
@@ -470,14 +478,14 @@ namespace advt.CMS.Models
                         IsRight = true;
                     }
                 }
-                if (item.ansowerList!=null&&item.ansowerList.Count()>0)
+                if (item.ansowerList != null && item.ansowerList.Count() > 0)
                 {
                     for (int i = 0; i < item.ansowerList.Count();)
                     {
-                         if (item.ansowerList[0]!=null)
+                        if (item.ansowerList[0] != null)
                         {
                             record.OptionA = item.ansowerList[0].ansower;
-                            record.OptionAPicNum = item.ansowerList[0].ansowerpic;                        
+                            record.OptionAPicNum = item.ansowerList[0].ansowerpic;
                         }
 
                         if (item.ansowerList[1] != null)
@@ -486,7 +494,7 @@ namespace advt.CMS.Models
                             record.OptionBPicNum = item.ansowerList[1].ansowerpic;
 
                         }
-                        if (item.ansowerList.Count() >=3)
+                        if (item.ansowerList.Count() >= 3)
                         {
                             if (item.ansowerList[2] != null)
                             {
@@ -504,7 +512,7 @@ namespace advt.CMS.Models
 
                             }
                         }
-                        if (item.ansowerList.Count()>=5)
+                        if (item.ansowerList.Count() >= 5)
                         {
                             if (item.ansowerList[4] != null)
                             {
@@ -512,10 +520,10 @@ namespace advt.CMS.Models
                                 record.OptionEPicNum = item.ansowerList[4].ansowerpic;
                             }
                         }
-                       
+
                         i++;
                     }
-                   
+
                 }
 
                 record.IsRight = IsRight;
@@ -525,6 +533,7 @@ namespace advt.CMS.Models
                 Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
 
             }
+
         }
     }
     //第二层
