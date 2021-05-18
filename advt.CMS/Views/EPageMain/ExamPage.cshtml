@@ -74,6 +74,7 @@
             <input type="text" value="@Model.IsTest" ref="idtests" hidden="hidden" />
             <input type="text" value="@Model.RuleName" ref="idRuleName" hidden="hidden" />
             <input type="text" value="@Model.IsExam" ref="idisexam" hidden="hidden" />
+            <input type="text" value="@Model.ExamFailResult" ref="idExamFailResult" hidden="hidden" />
             <div class="wrap">
                 <div class="header">
                     <div class="sub-title"><h1>{{VExamUserInfo.ExamType}}</h1></div>
@@ -84,7 +85,11 @@
                             <span>温馨提示：{{VExamUserInfo.StartDesc}}</span>
                         </div>
                         <div class="text item">
-                            <i class="el-icon-user"></i>  {{VExamUserInfo.UserName}}
+                            考试科目：
+                            {{VExamUserInfo.ExamSubject}}
+                        </div>
+                        <div class="text item">
+                            <i class="el-icon-user"></i>  {{VExamUserInfo.UserName}}  {{VExamUserInfo.UserTextName}}
                         </div>
                         <div class="text item">
                             <i class="el-icon-circle-check"></i>  {{VExamUserInfo.PassScore}}分<i class="el-icon-arrow-left"></i><i class="el-icon-user"></i><i class="el-icon-arrow-left"></i>{{VExamUserInfo.TotalScore}}分
@@ -92,9 +97,7 @@
                         <div>
                             考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
                             <span v-if="VExamUserInfo.IsTest==true">模拟</span>
-                        </div>
-                        <div class="text item" v-if="VExamUserInfo.IsTest==false" style="color:red">
-                            <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}
+                            <span v-if="VExamUserInfo.IsTest==false" style="color:red;font-size:16px"> <i class="el-icon-alarm-clock"></i>  {{minute}}:{{second}}</span>
                         </div>
                     </el-card>
                 </div>
@@ -242,6 +245,15 @@
 
                 </div>
             </el-dialog>
+            @*<el-dialog title="提示" :visible.sync="dialogTilteFormVisible" width="80%" style="height:auto" :close-on-click-modal="false" :show-close="false">
+                <div class="wrap">
+                    <template>
+                        <span>
+                            请联系管理员
+                        </span>
+                    </template>
+                </div>
+            </el-dialog>*@
         </div>
         </div>
 
@@ -252,6 +264,7 @@
         <script src="~/Scripts/Vue/polyfill.min.js"></script>
         <!-- Yoursite Scripts -->
         <script>
+          
             new Vue({
                 el: "#app",
                 data: {
@@ -282,6 +295,7 @@
                     examLists: [],
                     isQuestion: false,
                     dialogFormVisible: false,
+                    dialogTilteFormVisible: false,
                     examid:'',
                     rules: {
                         selectItem: [
@@ -301,10 +315,24 @@
                     }
                     this.getdata();
                     this.add();
+
+                    //// 监听 visibility change 事件 
+                    //document.addEventListener('visibilitychange', function () {
+                    //    // 页面变为不可见时触发 
+                    //    if (document.visibilityState == 'hidden') {
+                    //        var _this = this;
+                    //        var isHidden = document.hidden;
+                    //        if (isHidden) {
+                    //            alert("1");
+                    //            this.dialogTilteFormVisible = true;
+                    //        } else {
+                               
+                    //        }
+                    //    }
+                    //});
                 },
                 watch: {
                     'examList.selectItem': function (newval) {
-
                     },
                     second: {
                         handler(newVal) {
@@ -324,8 +352,6 @@
                     minute: function () {
                         return this.num(this.minutes)
                     }
-
-
                 },
                 methods: {
                     goBack: function () {
@@ -469,7 +495,7 @@
                                                         })
                                                         _this.dialogFormVisible = true;
                                                     });
-                                                   
+
 
 
                                                 } else {
@@ -536,7 +562,7 @@
                                                     })
                                                     _this.dialogFormVisible = true;
                                                 });
-                                               
+
 
                                             } else {
                                                 obj.PreNext = "Next";
@@ -604,7 +630,7 @@
                                             })
                                             _this.dialogFormVisible = true;
                                         });
-                                        
+
 
                                     } else {
                                         obj.PreNext = "Next";
@@ -704,7 +730,42 @@
                         var IsExams = _this.$refs.idisexam.value;
                         var IsTest = _this.$refs.idtests.value;
                         var RuleName = _this.$refs.idRuleName.value;
+                        var idExamFailResults = _this.$refs.idExamFailResult.value;
+                        var falgs = 0;
                         if (IsTest == "test") {
+                            if (idExamFailResults != '') {
+                                _this.$alert(idExamFailResults, '提示', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        if (_this.isMobileTurn == true)
+                                            window.location.href = "/EPageMain/MaintainExam";
+                                        else {
+                                            window.location.href = "/EPageMain/MaintainExamPC";
+                                        }
+                                    }
+                                });
+                            } else {
+                                falgs = 1;
+                            }
+                        }
+                        if (IsTest == "formal") {
+                            console.log("23");
+                            if (IsExams != '' || idExamFailResults != '') {
+                                _this.$alert(IsExams + idExamFailResults, '提示', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        if (_this.isMobileTurn == true)
+                                            window.location.href = "/EPageMain/MaintainExam";
+                                        else {
+                                            window.location.href = "/EPageMain/MaintainExamPC";
+                                        }
+                                    }
+                                });
+                            } else {
+                                falgs = 1;
+                            }
+                        }
+                        if (falgs != 0) {
                             axios.post('/EPageMain/Test', {
                                 data: IsTest,
                                 RuleName: RuleName
@@ -734,48 +795,7 @@
                                 _this.ListBankView = responese.data.ListBankView;
                             })
                         }
-                        else {
-                            if (IsExams != '') {
-                                _this.$alert(IsExams, '提示', {
-                                    confirmButtonText: '确定',
-                                    callback: action => {
-                                        if (_this.isMobileTurn == true)
-                                            window.location.href = "/EPageMain/MaintainExam";
-                                        else {
-                                            window.location.href = "/EPageMain/MaintainExamPC";
-                                        }
-                                    }
-                                });
-                            } else {
-                                axios.post('/EPageMain/Test', {
-                                    data: "formal",
-                                    RuleName: RuleName
-                                }).then(function (responese) {
-                                    _this.examList = responese.data.examList;
-                                    _this.VExamUserInfo = responese.data.VExamUserInfo;
-                                    if (_this.examList.selectItem == null) {
-                                        _this.examList.selectItem = []
-                                    }
-                                    if (responese.data.examList.type == 1) {
-                                        _this.examList.selectItem = []
-                                    }
-                                    if (responese.data.examList.type == 0) {
-                                        _this.examList.selectItem = ''
-                                    }
-                                    if (responese.data.examList.type == 2) {
-                                        _this.examList.selectItem = ''
-                                    }
-                                    if (_this.examList.LselectItem == null) {
-                                        _this.examList.LselectItem = []
-                                    }
-                                    _this.minutes = responese.data.VExamUserInfo.TotalTime;
-
-                                    _this.total = responese.data.total;
-                                    _this.nowItem = responese.data.nowItem;
-                                    _this.ListBankView = responese.data.ListBankView;
-                                })
-                            }
-                        }
+                        
                     }
 
                 }

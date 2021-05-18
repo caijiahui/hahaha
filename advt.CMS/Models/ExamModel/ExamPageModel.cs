@@ -26,6 +26,7 @@ namespace advt.CMS.Models
         public string IsExam { get; set; }//是否可考
         public string IsTest { get; set; }
         public string RuleName { get; set; }
+        public string ExamFailResult { get; set; }
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public string Remark { get; set; }
         public ExamPageModel() : base()
@@ -93,6 +94,7 @@ namespace advt.CMS.Models
                     if (usersheet != null)
                     {
                         VExamUserInfo.UserName = usersheet.UserCode;//工号
+                        VExamUserInfo.UserTextName = usersheet.UserName;
                     }
                     
                     if (data == "formal")
@@ -623,6 +625,7 @@ namespace advt.CMS.Models
         public bool IsRead { get; set; }//是否人工审批
         public decimal TotalScore { get; set; }//总分
         public string UserName { get; set; }//考试人
+        public string UserTextName { get; set; }//考试人姓名
         public string StartDesc { get; set; }//开头
         public string EndDesc { get; set; }
         public decimal TotalTime { get; set; }

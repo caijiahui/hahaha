@@ -51,23 +51,34 @@ namespace advt.Web.Controllers
             return Json(new { ListUsersubject = model.ListUsersubject, username, model.usercode }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult ExamPage(string IsTest = null, string RuleName = null, string ExamDate = null)
+        public ActionResult ExamPage(string IsTest = null, string RuleName = null)
         {
             var model = new ExamPageModel();
             model.IsTest = IsTest;
             model.RuleName = RuleName;
-            var dtdate = DateTime.Now.ToString("yyyy-MM-dd");
-            if (!string.IsNullOrEmpty(ExamDate))
+            var username = this.UserNameContext;
+            var usercode = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
+            if (usercode != null)
             {
-                ExamDate = Convert.ToDateTime(ExamDate).ToString("yyyy-MM-dd");
-            }
-            if (string.IsNullOrEmpty(ExamDate) || dtdate != ExamDate)
-            {
-                model.IsExam = "未到考试时间,不可考试";
-            }
-            else
-            {
-                model.IsExam = model.GetExamBankNum(RuleName);
+                var detail = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = usercode.UserCode, RuleName = RuleName, IsStop = false, IsExam = false });
+                if (detail != null)
+                {
+                    var dtdate = DateTime.Now.ToString("yyyy-MM-dd");
+                    var ddate = "";
+                    ddate = Convert.ToDateTime(detail.ExamDate).ToString("yyyy-MM-dd");
+                    if ( dtdate != ddate)
+                    {
+                        model.IsExam = "未到考试时间,不可考试";
+                    }
+                    else
+                    {
+                        model.ExamFailResult = model.GetExamBankNum(RuleName);
+                    }
+                }
+                else
+                {
+                    model.ExamFailResult = "没有考试资格";
+                }
             }
             return View(model);
         }
