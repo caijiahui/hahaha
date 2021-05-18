@@ -85,6 +85,9 @@
                 <div class="header">
                     <h1>{{VExamScore.ExamType}}</h1>
                 </div>
+                <div>
+                    考试科目：{{VExamScore.ExamSubject}}
+                </div>
                 <div class="content">
                     <div>
                         <div class="grade-title" :class="{'isSuccess':isSuccess}">{{isSuccess?'恭喜！通过考试':'很遗憾！您未通过考试'}}</div>

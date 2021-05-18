@@ -163,9 +163,13 @@
                     <el-page-header @@back="goBack" content="考试科目列表">
                     </el-page-header>
                     <div class="header">
-                        <h1>{{VExamScore.ExamType}}</h1>
+                        <h1>{{VExamScore.ExamType}}</h1>                    
+                    </div>  
+                    <div>
+                        考试科目：{{VExamScore.ExamSubject}}
                     </div>
                     <div>
+                       
                         考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
                         <span v-if="VExamUserInfo.IsTest==true">模拟</span>
                     </div>
