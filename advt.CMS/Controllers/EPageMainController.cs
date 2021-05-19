@@ -110,10 +110,27 @@ namespace advt.Web.Controllers
         {
             try
             {
-                model.GetExam();
-                var examguid = model.InsertScoreData(model);
-                var name = this.UserNameContext;
-                model.InsertRecoredData(model, name, examguid);
+                var examguid = "";
+                if (model.VExamUserInfo.IsTest == false)
+                {
+                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject });
+                    if (set.Count()== 0)
+                    {
+                        model.GetExam();
+                        examguid = model.InsertScoreData(model);
+                        var name = this.UserNameContext;
+                        model.InsertRecoredData(model, name, examguid);
+                    }
+                    
+                }
+                else
+                {
+                    model.GetExam();
+                    examguid = model.InsertScoreData(model);
+                    var name = this.UserNameContext;
+                    model.InsertRecoredData(model, name, examguid);
+                   
+                }
                 return Json(new { examList = model, examid = examguid }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
