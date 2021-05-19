@@ -295,6 +295,8 @@ namespace advt.CMS.Models
             var id = "";
             if (model.VExamUserInfo.LExamViews.Count() > 0)
             {
+                
+
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
 
@@ -357,6 +359,8 @@ namespace advt.CMS.Models
                 var guid = Guid.NewGuid();
                 sc.ExamGuid = guid.ToString();
                 id = sc.ExamGuid;
+
+                
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
 
 
