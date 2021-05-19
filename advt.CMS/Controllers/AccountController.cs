@@ -71,59 +71,30 @@ namespace advt.Web.Controllers
                     Entity.advt_users users = new advt_users();
                     Regex RegEmail = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");//w 英文字母或数字的字符串，和 [a-zA-Z0-9] 语法一样 
                     Match m = RegEmail.Match(model.UserName);
-                   
-                    if (m.Success)
+                    //工号
+                    var wuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
+                    if (wuser != null)
                     {
                         Service.IProvider.IAuthorizationServices services = new Service.Provider.AuthorizationServices();
-                        users = services.EmailAuthenticate(model.UserName, model.Password);
+                        users = services.EmailAuthenticate(wuser.CommpanyEmail, model.Password);
                         if (users != null) //验证通过
                         {
-                            var emailuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { CommpanyEmail = model.UserName });
-                            if (emailuser != null)
-                            {
-                                username = emailuser.EamilUsername;
-                            }
-                            else
-                            {
-                                IsLogin = "用户名称不存在";
-                            }
+                            username = wuser.EamilUsername;
                         }
                         else
                         {
-                            IsLogin = "域账号登陆不成功";
+                            IsLogin = "EZ账号登陆不成功";
                         }
                     }
-                    else
+                    var cuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
+                    if (cuser != null)
                     {
-                        if (model.UserName.Contains("-"))
-                        {
-                            var vuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
-                            if (vuser != null)
-                            {
-                                var acc = "acn\\" + vuser.EamilUsername.Trim();
-                                SplitAccount = acc.Split('\\');
-                                username = vuser.EamilUsername;
-                            }
-                            else
-                            {
-                                IsLogin = "用户名称不存在";
-                            }
-                        }
-                        else
-                        {
-                            var vusers = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
-                            if (vusers != null)
-                            {
-                                var acc = "acn\\" + vusers.EamilUsername.Trim();
-                                SplitAccount = acc.Split('\\');
-                                username = vusers.EamilUsername;
-                            }
-                            else
-                            {
-                                IsLogin = "用户名称不存在";
-                            }
-                        }
-                        //ResponseModel response = _accessRepository.GetAccess(user);
+                        var acc = "acn\\" + cuser.EamilUsername.Trim();
+                        SplitAccount = acc.Split('\\');
+                        username = cuser.EamilUsername;
+                    }
+                    if (cuser != null)
+                    {
                         if (SplitAccount.Length > 1)
                         {
                             String adPath = ""; //Fully-qualified Domain Name
@@ -161,6 +132,10 @@ namespace advt.Web.Controllers
 
                         }
                     }
+                    if (wuser == null && cuser == null)
+                    {
+                        IsLogin = "用户名/工号不存在";
+                    }
                     if (string.IsNullOrEmpty(IsLogin)&&!string.IsNullOrEmpty(users.username))
                     {
                         SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
@@ -176,8 +151,6 @@ namespace advt.Web.Controllers
                         XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
                         IsLogin = "Pass";
                     }
-
-
                 }
             }
             catch (Exception ex)
