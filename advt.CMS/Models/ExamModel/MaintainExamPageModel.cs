@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using advt.Entity;
@@ -63,6 +64,63 @@ namespace advt.CMS.Models.ExamModel
             }
 
 
+        }
+
+        public MemoryStream GetPageExcelInfo(string UserCode, string SubjectName, string DepartCode, string ExamDate)
+        {
+            try
+            {
+
+
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                var model = new ExamUserDetailInfo();
+                var c = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode, SubjectName, ExamDate, DepartCode);
+                //获取list数据
+                var tlst = c;
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("工号");
+                row1.CreateCell(1).SetCellValue("姓名");
+                row1.CreateCell(2).SetCellValue("部门");
+                row1.CreateCell(3).SetCellValue("科目");
+                row1.CreateCell(4).SetCellValue("理论成绩");
+                row1.CreateCell(5).SetCellValue("职称");
+                row1.CreateCell(6).SetCellValue("职等");
+                row1.CreateCell(7).SetCellValue("入职日期");
+                row1.CreateCell(8).SetCellValue("本职等技能");
+                row1.CreateCell(9).SetCellValue("目前技能等级");
+                row1.CreateCell(10).SetCellValue("考试时间");               
+                
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].UserCode);//工号
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].UserName);//姓名
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].DepartCode);//部门
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].SubjectName);//科目
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].ExamScore.ToString());//理论成绩
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].PostName);//职称
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].RankName);//职等
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].EntryDate.ToString());//入职日期
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].SkillName);//本职等技能
+                    rowtemp.CreateCell(9).SetCellValue(tlst[i].ApplyLevel);//目前技能等级
+                    rowtemp.CreateCell(10).SetCellValue(tlst[i].UserExamDate.ToString());//考试时间 
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms;
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
     public class PageInfo

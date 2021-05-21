@@ -985,5 +985,14 @@ namespace advt.Web.Controllers
 
             return Json(new { LPic=model.LPic}, JsonRequestBehavior.AllowGet);
         }
+        public FileResult ExportPageExcel(string UserCode, string SubjectName, string DepartCode, string ExamDate)
+        {
+            var model = new MaintainExamPageModel();
+            var ms = model.GetPageExcelInfo(UserCode, SubjectName, DepartCode, ExamDate);
+            return File(ms, "application/vnd.ms-excel",  "考试报表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+        }
+
+        
     }
 }

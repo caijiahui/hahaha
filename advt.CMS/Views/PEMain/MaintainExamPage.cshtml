@@ -23,6 +23,12 @@
         <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
         </el-date-picker>
         <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
+        <a style="color:white" :href="'/PEMain/ExportPageExcel?UserCode='+UserCode+'&SubjectName='+SubjectName+'&DepartCode='+DepartCode+'&ExamDate='+ExamDate">
+            <el-button type="primary">
+                导出
+            </el-button>
+
+        </a>
     </template>
 
     <div style="margin-top:20px">
