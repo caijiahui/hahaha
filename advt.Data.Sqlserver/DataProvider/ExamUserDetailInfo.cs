@@ -151,7 +151,7 @@ namespace advt.Data.SqlServer
             if (!string.IsNullOrEmpty(date))
             {
                 DateTime dates = Convert.ToDateTime(date);
-                texts += " and cast(convert(varchar(10),UserExamDate,120)+' 00:00:00' as datetime)= '" + dates + "'";
+                texts += " and cast(convert(varchar(10),ExamDate,120)+' 00:00:00' as datetime)= '" + dates + "'";
             }
             if (!string.IsNullOrEmpty(DepartCode))
             {
