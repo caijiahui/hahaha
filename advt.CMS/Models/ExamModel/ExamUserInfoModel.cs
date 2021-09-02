@@ -57,7 +57,7 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetUserInfo(SearchUserData data)
         {
-            var connectionString = "server=172.21.128.84;database=Exam2;uid=adminims;pwd=Ifs2015Pri";
+            var connectionString = "server=172.21.161.41;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
             DataSet result = new DataSet();
             string sql = string.Format(@"SELECT * FROM [V_ExamUserDetail]");
             using (SqlConnection con = new SqlConnection(connectionString))

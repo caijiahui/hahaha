@@ -158,10 +158,6 @@ namespace advt.Data.SqlServer
                 texts += " and DepartCode like N'%" + DepartCode + "%' ";
             }
             commandText.AppendLine(texts);
-            //l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 500, UserCode));
-            //l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 500, SubjectName));          
-            //l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.NVarChar, 150, date));
-            //l_parms.Add(SqlHelper.MakeInParam("@DepartCode", (DbType)SqlDbType.NVarChar, 500, DepartCode));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         #endregion
