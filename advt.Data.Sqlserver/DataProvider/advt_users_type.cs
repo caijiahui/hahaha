@@ -22,9 +22,9 @@ namespace advt.Data.SqlServer
         private string[][] advt_users_type_item_prop_a =
         {
             new string[] {"id", "Int", "4"},
-            new string[] {"username", "VarChar", "100"},
-            new string[] {"type", "VarChar", "50"},
-            new string[] {"location", "VarChar", "50"}
+            new string[] {"username", "NVarChar", "100"},
+            new string[] {"type", "NVarChar", "50"},
+            new string[] {"location", "NVarChar", "50"}
         };
         #endregion
 
