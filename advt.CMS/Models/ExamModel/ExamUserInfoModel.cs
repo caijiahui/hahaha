@@ -58,6 +58,7 @@ namespace advt.CMS.Models.ExamModel
         public void GetUserInfo(SearchUserData data)
         {
             var connectionString = "server=172.21.161.41;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
+            //var connectionString = "server=172.21.128.84;database=ExamTT;uid=adminims;pwd=Ifs2015Pri";
             DataSet result = new DataSet();
             string sql = string.Format(@"SELECT * FROM [V_ExamUserDetail]");
             using (SqlConnection con = new SqlConnection(connectionString))
@@ -400,12 +401,21 @@ namespace advt.CMS.Models.ExamModel
         {
             Data.ExamUserInfo.Delete_ExamUserInfo(model);
         }
+        public void ReverseExamUserInfo(int model)
+        {
+            string Level = Data.ExamUserInfo.Get_All_ExamUserInfo(new { ID = model }).FirstOrDefault().ApplicationLevel;
+            Data.ExamUserInfo.ReverseExamUserInfo(model, Level);
+        }
+        
+
         public void SaveUserInfo(string username)
         {
             if (VExamUserInfo.ID != 0)
             {
                 VExamUserInfo.UpdateUser = username;
                 VExamUserInfo.UpdateDate = DateTime.Now;
+                VExamUserInfo.ReverseBuckleUser = username;
+                VExamUserInfo.ReverseBuckleDate = DateTime.Now; 
                 Data.ExamUserInfo.Update_ExamUserInfo(VExamUserInfo, null, new string[] { "ID" });
             }
             else
@@ -413,6 +423,7 @@ namespace advt.CMS.Models.ExamModel
 
                 VExamUserInfo.CreateUser = username;
                 VExamUserInfo.CreateDate = DateTime.Now;
+                
                 Data.ExamUserInfo.Insert_ExamUserInfo(VExamUserInfo, null, new string[] { "ID" });
 
             }

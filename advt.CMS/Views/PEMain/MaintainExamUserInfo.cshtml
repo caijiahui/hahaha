@@ -43,7 +43,7 @@
             <template>
                 <el-button size="small" type="primary" @@click="handlesert()">报名</el-button>
             </template>
-            <el-table :data="YListUserInfo"
+            <el-table :data="YListUserInfo" border
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
                 <el-table-column type="selection" width="55">
 
@@ -86,7 +86,7 @@
             </template>
 
 
-            <el-table :data="CPListUserInfo"
+            <el-table :data="CPListUserInfo" border
                       style="width:100%;margin-top:20px;">
                 @*<el-table-column type="selection">
                 </el-table-column>*@
@@ -148,24 +148,24 @@
 
             </div>
 
-            <el-table :data="tableData"
-                      style="width: 100% " :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
+            <el-table :data="tableData" border  height="600"
+                      style="width: 100%;" :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
                 <el-table-column prop="UserCode"
                                  label="工号">
                 </el-table-column>
                 <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
-                <el-table-column label="入职日期">
+                <el-table-column label="入职日期" width="110">
                     <template slot-scope="scope">
                         <span>{{changeDate(scope.row.EntryDate)}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
                 <el-table-column label="职等" prop="RankName" sortable></el-table-column>
-                <el-table-column label="职位" prop="PostName" sortable></el-table-column>
-                <el-table-column label="本职等对应技能等级" prop="SkillLevel" sortable></el-table-column>
-                <el-table-column label="已经考取技能等级" prop="CurrentSkillLevel" sortable"></el-table-column>
-                <el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable"></el-table-column>
-                <el-table-column label="最近一次通过理论时间">
+                <el-table-column label="当下最新职位" prop="PostName" sortable></el-table-column>
+                <el-table-column label="入职初始等级" prop="SkillLevel" sortable></el-table-column>
+                <el-table-column label="考核通过等级" prop="CurrentSkillLevel" sortable></el-table-column>
+                @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
+                <el-table-column label="最近一次通过理论时间" width="110">
                     <template slot-scope="scope">
                         <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
                     </template>
@@ -176,14 +176,14 @@
                     <template slot-scope="scope">
                         <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
                     </template>
-                </el-table-column>
-                <el-table-column label="最高可考技能等级" prop="HighestTestSkill" sortable></el-table-column>
+                </el-table-column>*@
+                <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
-                <el-table-column label="可申请技能等级" prop="ApplicationLevel" sortable></el-table-column>
+                <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
 
-                <el-table-column label="最近一次绩效成绩要求" prop="Achievement" sortable></el-table-column>
+                <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
 
-                <el-table-column label="是否符合绩效">
+                <el-table-column label="绩效是否符合">
                     <template slot-scope="scope">
                         @*<span>{{ChangeAch(scope.row.IsAchment)}}</span>*@
                         <i class="el-icon-check" v-if="scope.row.IsAchment=='true'" style="color:green"></i>
@@ -191,13 +191,15 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="180">
                     <template slot="header" slot-scope="scope">
                         <el-input v-model="search"
                                   size="mini"
                                   placeholder="输入关键字搜索" />
                     </template>
                     <template slot-scope="scope">
+                        @*<el-button type="text" size="small"
+                                   @@click="Reverse(scope.row.Id)">倒扣</el-button>*@
                         <el-button type="text" size="small"
                                    @@click="handleEdit(scope.row.Id, scope.row)">编辑</el-button>
                         <el-button type="text" size="small"
@@ -286,7 +288,7 @@
                     </el-form-item>
                     <el-form-item label="科目" prop="SubjectName">
                         <el-input v-model="VExamUserInfo.SubjectName" :disabled="true"></el-input>
-                    </el-form-item>
+                    </el-form-item>                   
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <template>
@@ -299,7 +301,7 @@
 
             <!-- #region 查看明细 -->
             <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
-                <el-table :data="LExamUserDetailInfo"
+                <el-table :data="LExamUserDetailInfo" border
                           style="width: 100%;margin-top:20px ">
                     <el-table-column label="日期"
                                      prop="CreateDate" sortable
@@ -440,6 +442,7 @@
                     _this.CPListUserInfo = responese.data.CPListUserInfo;
                     _this.LExamType = responese.data.LExamType;
                     _this.setPaginations();
+                    console.log(responese.data.tableData);
                 })
             },
             SearchinByTypeName() {
@@ -582,7 +585,14 @@
                 });
                 _this.dialogFormVisible = true;
             },
-
+            //Reverse(index) {
+            //    var _this = this;
+            //    axios.post('/PEMain/ReverseExamUser', {
+            //        model: index
+            //    }).then(function (res) {
+            //        _this.tableData = res.data.tableData;
+            //    });
+            //},
             handleDelete(index) {
                 var _this = this;
                 axios.post('/PEMain/DeleteExamUserInfo', {

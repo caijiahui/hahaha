@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserInfo , (Ver:2.3.8) at: 2021/2/5 11:25:22
         #region Var: 
         private string[] ExamUserInfo_key_a = { "ID" };
-        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate]";
+        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel";
         private string[][] ExamUserInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -33,7 +33,11 @@ namespace advt.Data.SqlServer
             new string[] {"CreateUser", "NVarChar", "500"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
-            new string[] {"UpdateDate", "DateTime", "16"}
+            new string[] {"UpdateDate", "DateTime", "16"},
+            new string[] { "ReverseBuckle", "NVarChar", "500"},
+            new string[] { "ReverseBuckleDate", "DateTime", "16"},
+            new string[] { "ReverseBuckleUser", "NVarChar", "500" },
+            new string[] { "ApplicationLevel", "NVarChar", "500"}
         };
         #endregion
 
@@ -90,6 +94,19 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 150, UserCode));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
+        }
+        public int ReverseExamUserInfo(int ID,string Level)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string set_str = string.Empty;
+            var ApplicationLevel = Level.Substring(1, 1);
+            int lev = Convert.ToInt32(ApplicationLevel) - 1;
+            Level = "G" + lev;
+            commandText.AppendLine(" update ExamUserInfo set ApplicationLevel=@Level  where ID=@ID");
+            l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
+            l_parms.Add(SqlHelper.MakeInParam("@Level", (DbType)SqlDbType.NVarChar, 500, Level));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
 

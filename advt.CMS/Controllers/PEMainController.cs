@@ -551,6 +551,16 @@ namespace advt.Web.Controllers
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
+        public ActionResult ReverseExamUser(int model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.ReverseExamUserInfo(model);
+            models.GetUserInfo(null);
+            return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [MyAuthorize]
         public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
         {
             var username = this.UserNameContext;
