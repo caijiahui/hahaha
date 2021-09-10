@@ -73,9 +73,9 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Get_UpdateExamUserInfo(UserCode, Achievement);
         }
-        public static int ReverseExamUserInfo(int ID,string Level)
+        public static int ReverseExamUserInfo(int ID,string Level,string username)
         {
-            return DatabaseProvider.GetInstance().ReverseExamUserInfo(ID, Level);
+            return DatabaseProvider.GetInstance().ReverseExamUserInfo(ID, Level, username);
         }
         #endregion
     }

@@ -84,7 +84,7 @@ namespace advt.CMS.Models.ExamModel
                 }
                 if (row["PariceDate"].ToString() != "")
                 {
-                    now = Convert.ToDateTime(row["PariceDate"].ToString());
+                    practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
                 }
                 
                 ListUserInfo.Add(new UserInfo
@@ -110,6 +110,7 @@ namespace advt.CMS.Models.ExamModel
                     Achievement = row["Achievement"].ToString(),
                 
                     SubjectName = row["SubjectName"].ToString(),
+                    ReverseBuckle=row["ReverseBuckle"].ToString(),
                     //CreateUser = row["CreateUser"].ToString(),
                     //CreateDate = Convert.ToDateTime(row["CreateDate"]),
                     //UpdateUser = row["UpdateUser"].ToString(),
@@ -401,10 +402,10 @@ namespace advt.CMS.Models.ExamModel
         {
             Data.ExamUserInfo.Delete_ExamUserInfo(model);
         }
-        public void ReverseExamUserInfo(int model)
+        public void ReverseExamUserInfo(int model,string username)
         {
             string Level = Data.ExamUserInfo.Get_All_ExamUserInfo(new { ID = model }).FirstOrDefault().ApplicationLevel;
-            Data.ExamUserInfo.ReverseExamUserInfo(model, Level);
+            Data.ExamUserInfo.ReverseExamUserInfo(model, Level, username);
         }
         
 
@@ -414,8 +415,6 @@ namespace advt.CMS.Models.ExamModel
             {
                 VExamUserInfo.UpdateUser = username;
                 VExamUserInfo.UpdateDate = DateTime.Now;
-                VExamUserInfo.ReverseBuckleUser = username;
-                VExamUserInfo.ReverseBuckleDate = DateTime.Now; 
                 Data.ExamUserInfo.Update_ExamUserInfo(VExamUserInfo, null, new string[] { "ID" });
             }
             else
@@ -633,6 +632,7 @@ namespace advt.CMS.Models.ExamModel
         public string ExamScore { get; set; }
         public DateTime? PracticeTime { get; set; }// 最近一次实践考试时间
         public string IsUserExam { get; set; }
+        public string ReverseBuckle { get; set; }
 
     }
     public class SearchUserData

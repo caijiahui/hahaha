@@ -554,7 +554,8 @@ namespace advt.Web.Controllers
         public ActionResult ReverseExamUser(int model)
         {
             ExamUserInfoModel models = new ExamUserInfoModel();
-            models.ReverseExamUserInfo(model);
+            var username = this.UserNameContext;
+            models.ReverseExamUserInfo(model,username);
             models.GetUserInfo(null);
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }

@@ -38,7 +38,7 @@ namespace advt.Entity
 
 
         public DateTime? UpdateDate { get; set; }
-        public decimal ReverseBuckle { get; set; }//本职等对应技能等级
+        public string ReverseBuckle { get; set; }//本职等对应技能等级
         public DateTime? ReverseBuckleDate { get; set; }//绩效可扣时间
         public string ReverseBuckleUser { get; set; }//绩效可扣时间
         public string ApplicationLevel { get; set; }

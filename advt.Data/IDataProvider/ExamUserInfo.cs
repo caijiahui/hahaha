@@ -19,7 +19,7 @@ namespace advt.Data
 
         int Delete_ExamUserInfo(int ID);
         int Get_UpdateExamUserInfo(string UserCode, string Achievement);
-        int ReverseExamUserInfo(int ID,string Level);
+        int ReverseExamUserInfo(int ID,string Level,string username);
         #endregion
     }
 }

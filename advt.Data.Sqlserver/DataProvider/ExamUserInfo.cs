@@ -95,7 +95,7 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
 
         }
-        public int ReverseExamUserInfo(int ID,string Level)
+        public int ReverseExamUserInfo(int ID, string Level, string username)
         {
             List<DbParameter> l_parms = new List<DbParameter>();
             StringBuilder commandText = new StringBuilder();
@@ -103,9 +103,12 @@ namespace advt.Data.SqlServer
             var ApplicationLevel = Level.Substring(1, 1);
             int lev = Convert.ToInt32(ApplicationLevel) - 1;
             Level = "G" + lev;
-            commandText.AppendLine(" update ExamUserInfo set ApplicationLevel=@Level  where ID=@ID");
+            DateTime date = DateTime.Now;
+            commandText.AppendLine(" update ExamUserInfo set ApplicationLevel=@Level,ReverseBuckleUser=@username,ReverseBuckleDate=@date  where ID=@ID");
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             l_parms.Add(SqlHelper.MakeInParam("@Level", (DbType)SqlDbType.NVarChar, 500, Level));
+            l_parms.Add(SqlHelper.MakeInParam("@username", (DbType)SqlDbType.NVarChar, 500, username));
+            l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.DateTime, 50, date));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
