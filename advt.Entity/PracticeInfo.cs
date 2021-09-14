@@ -33,6 +33,8 @@ namespace advt.Entity
         public string UpdateUser { get; set; }
 
         public DateTime? UpdateDate { get; set; }
+
+        public string Result { get; set; }
         #endregion
     }
 }

@@ -166,7 +166,7 @@
                 <el-table-column label="考核通过等级" prop="CurrentSkillLevel" sortable></el-table-column>
                 <el-table-column label="已经考取技能等级时间" width="110">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
+                        <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeMonth(scope.row.LastExamTime)}}</span>
                     </template>
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
@@ -621,6 +621,21 @@
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
                 return year + '-' + mon + '-' + day;
+            },
+            changeMonth: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon;
             },
             ChangeAch: function (ach) {
                 if (ach == "false") {
