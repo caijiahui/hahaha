@@ -73,6 +73,7 @@ namespace advt.Web.Controllers
                     Match m = RegEmail.Match(model.UserName);
                     //工号
                     var wuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = model.UserName });
+                    var cuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
                     if (wuser != null)
                     {
                         Service.IProvider.IAuthorizationServices services = new Service.Provider.AuthorizationServices();
@@ -86,52 +87,56 @@ namespace advt.Web.Controllers
                             IsLogin = "EZ账号登陆不成功";
                         }
                     }
-                    var cuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
-                    if (cuser != null)
+                    else
                     {
-                        var acc = "acn\\" + cuser.EamilUsername.Trim();
-                        SplitAccount = acc.Split('\\');
-                        username = cuser.EamilUsername;
-                    }
-                    if (cuser != null)
-                    {
-                        if (SplitAccount.Length > 1)
+                        
+                        if (cuser != null)
                         {
-                            String adPath = ""; //Fully-qualified Domain Name
-                            switch (SplitAccount[0].ToLower().Trim())
+                            var acc = "acn\\" + cuser.EamilUsername.Trim();
+                            SplitAccount = acc.Split('\\');
+                            username = cuser.EamilUsername;
+                        }
+                        if (cuser != null)
+                        {
+                            if (SplitAccount.Length > 1)
                             {
-                                case "acn":
-                                    adPath = "LDAP://acn.advantech.corp"; //acn
-                                    break;
-                                case "aeu":
-                                    adPath = "LDAP://aeu.advantech.corp"; //advantech
-                                    break;
-                                case "aus":
-                                    adPath = "LDAP://aus.advantech.corp"; //advantech
-                                    break;
-                                case "advantech":
-                                    adPath = "LDAP://advantech.corp";//advantech
-                                    break;
-                                default:
-                                    adPath = "LDAP://acn.advantech.corp"; //acn
-                                    break;
-                            }
-                            LdapAuthentication adAuth = new LdapAuthentication(adPath);
-                            string password = model.Password.Trim();
+                                String adPath = ""; //Fully-qualified Domain Name
+                                switch (SplitAccount[0].ToLower().Trim())
+                                {
+                                    case "acn":
+                                        adPath = "LDAP://acn.advantech.corp"; //acn
+                                        break;
+                                    case "aeu":
+                                        adPath = "LDAP://aeu.advantech.corp"; //advantech
+                                        break;
+                                    case "aus":
+                                        adPath = "LDAP://aus.advantech.corp"; //advantech
+                                        break;
+                                    case "advantech":
+                                        adPath = "LDAP://advantech.corp";//advantech
+                                        break;
+                                    default:
+                                        adPath = "LDAP://acn.advantech.corp"; //acn
+                                        break;
+                                }
+                                LdapAuthentication adAuth = new LdapAuthentication(adPath);
+                                string password = model.Password.Trim();
 
-                            if (true == adAuth.IsAuthenticated(SplitAccount[0], SplitAccount[1], model.Password))
-                            {
-                                Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
-                                users = service.Authenticate(username, model.Password);
+                                if (true == adAuth.IsAuthenticated(SplitAccount[0], SplitAccount[1], model.Password))
+                                {
+                                    Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                                    users = service.Authenticate(username, model.Password);
+
+                                }
+                                else
+                                {
+                                    IsLogin = "用户名/账号不正确";
+                                }
 
                             }
-                            else
-                            {
-                                IsLogin = "用户名/账号不正确";
-                            }
-
                         }
                     }
+                    
                     if (wuser == null && cuser == null)
                     {
                         IsLogin = "用户名/工号不存在";
