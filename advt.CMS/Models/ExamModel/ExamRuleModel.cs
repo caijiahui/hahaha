@@ -64,19 +64,26 @@ namespace advt.CMS.Models.ExamModel
             }
             else
             {
-                ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
-                if (ListExamRuleInfo.Count() > 0 && ListExamRuleInfo != null)
+                ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.SubjectName);
+                if (ListExamRuleInfo.Count() == 0 && ListExamRuleInfo == null)
                 {
-                    Result += VExamRule.RuleName + "此考试规则名已存在";
+                    var ruled = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
+                    if (ruled.Count() > 0 && ruled != null)
+                    {
+                        Result += VExamRule.RuleName + "此考试规则已存在";
+                    }
+                    else
+                    {
+                        VExamRule.CreateUser = username;
+                        VExamRule.CreateDate = DateTime.Now;
+                        Data.ExamRule.Insert_ExamRule(VExamRule, null, new string[] { "ID" });
+                    }
                 }
                 else
                 {
-                    VExamRule.CreateUser = username;
-                    VExamRule.CreateDate = DateTime.Now;
-                    Data.ExamRule.Insert_ExamRule(VExamRule, null, new string[] { "ID" });
+
+                    Result += VExamRule.SubjectName + "此考试科目已存在";
                 }
-
-
             }
 
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
@@ -138,7 +145,7 @@ namespace advt.CMS.Models.ExamModel
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
 
         }
-        public string DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType,string RuleName)
+        public string DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType,string RuleName,string SubjectName)
         {
             var result = "";
             var type = "";

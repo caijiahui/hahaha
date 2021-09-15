@@ -31,6 +31,7 @@ namespace advt.CMS.Models.ExamModel
         public List<Entity.SkillInfo> ListSkillInfo { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
+        public List<AchieveRecord> LExamUserMeritsRecord { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
         public string Results { get; set; }
         public bool IsHrSign { get; set; }
@@ -52,6 +53,7 @@ namespace advt.CMS.Models.ExamModel
             ListDetailInfo = new List<ExamUserDetailInfo>();
             LExamType = new List<KeyValuePair<string, string>>();
             ListUserInfo11 = new List<UserInfo>();
+            LExamUserMeritsRecord = new List<AchieveRecord>();
 
 
         }
@@ -317,7 +319,7 @@ namespace advt.CMS.Models.ExamModel
 
         }
 
-        public void UploadUser(string filepath)
+        public void UploadUser(string filepath,string name)
         {
             DataTable dt = new DataTable();
             FileStream files = null;
@@ -382,6 +384,15 @@ namespace advt.CMS.Models.ExamModel
                 {
                     //根据工号去更新绩效
                     Data.ExamUserInfo.Get_UpdateExamUserInfo(item.UserCode, item.Achievement);
+
+                    var record = new AchieveRecord();
+                    record.UserCode = item.UserCode;
+                    record.CreateUser = name;
+                    record.CreateDate = DateTime.Now;
+                    record.Achievement = item.Achievement;
+                    record.RecordType = "绩效";
+                    Data.AchieveRecord.Insert_AchieveRecord(record);
+
                     Result = "success";
                 }
 
@@ -404,8 +415,14 @@ namespace advt.CMS.Models.ExamModel
         }
         public void ReverseExamUserInfo(int model,string username)
         {
-            string Level = Data.ExamUserInfo.Get_All_ExamUserInfo(new { ID = model }).FirstOrDefault().ApplicationLevel;
-            Data.ExamUserInfo.ReverseExamUserInfo(model, Level, username);
+            var Level = Data.ExamUserInfo.Get_All_ExamUserInfo(new { ID = model });
+            Data.ExamUserInfo.ReverseExamUserInfo(model, Level.FirstOrDefault().ApplicationLevel, username);
+            var record = new AchieveRecord();
+            record.UserCode = Level.FirstOrDefault().UserCode;
+            record.CreateUser = username;
+            record.CreateDate = DateTime.Now;
+            record.RecordType = "倒扣";
+            Data.AchieveRecord.Insert_AchieveRecord(record);
         }
         
 
@@ -437,6 +454,10 @@ namespace advt.CMS.Models.ExamModel
         {
             LExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = Code });
         }
+        public void SerachMeritsRecord(string Code)
+        {
+            LExamUserMeritsRecord = Data.AchieveRecord.Get_All_AchieveRecord(new { UserCode = Code });
+        }        
 
         public string InsertUserDetail(List<UserInfo> data, string username)
         {

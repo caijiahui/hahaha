@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AchieveRecord.cs" />
     <Compile Include="advt_Attachment.cs" />
     <Compile Include="advt_user_sheet.cs" />
     <Compile Include="ExamRolePart.cs" />

@@ -295,7 +295,10 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             var Result = model.SaveRuleInfo(username);
-            model.SaveTopicInfo(model.VExamRule.RuleName);
+            if (Result== null)
+            {
+                model.SaveTopicInfo(model.VExamRule.RuleName);
+            }
             return Json(new { Result, tableData = model.ListExamRule, RuleGrList = model.RuleTopicList }, JsonRequestBehavior.AllowGet);
 
         }
@@ -307,10 +310,10 @@ namespace advt.Web.Controllers
             return Json(new { tableData = models.ListExamRule }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, string RuleName)
+        public ActionResult DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, string RuleName,string SubjectName)
         {
             ExamRuleModel models = new ExamRuleModel();
-            var Result = models.DeleteRuleTopicInfo(TopicMajor, TopicLevel, TopicType, RuleName);
+            var Result = models.DeleteRuleTopicInfo(TopicMajor, TopicLevel, TopicType, RuleName, SubjectName);
             return Json(new { Result, RuleGrList = models.RuleTopicList }, JsonRequestBehavior.AllowGet);
         }
 
@@ -501,6 +504,7 @@ namespace advt.Web.Controllers
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)
         {
+            string name= this.UserNameContext;
             string filepath = "";
             if (file != null)
             {
@@ -519,7 +523,7 @@ namespace advt.Web.Controllers
                 file.SaveAs(filepath);//上传路径
             }
             var model = new ExamUserInfoModel();
-            model.UploadUser(filepath);
+            model.UploadUser(filepath, name);
             model.GetUserInfo(null);
             return Json(new { Result = model.Result, tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
@@ -751,6 +755,16 @@ namespace advt.Web.Controllers
             models.SerachDetailByUserCode(model);
 
             return Json(new { LExamUserDetailInfo = models.LExamUserDetailInfo });
+        }
+
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SerachMeritsRecord(string model)
+        {
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.SerachMeritsRecord(model);
+            return Json(new { LExamUserMeritsRecord = models.LExamUserMeritsRecord });
         }
 
         public ActionResult GetRuleTypeName(string model)

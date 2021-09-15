@@ -170,18 +170,18 @@
                     </template>
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
-        <el-table-column label="最近一次通过理论时间" width="110">
-            <template slot-scope="scope">
-                <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
+            <el-table-column label="最近一次通过理论时间" width="110">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
 
-        <el-table-column label="最近一次实践考核通过时间">
-            <template slot-scope="scope">
-                <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
-            </template>
-        </el-table-column>*@
+            <el-table-column label="最近一次实践考核通过时间">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
+                </template>
+            </el-table-column>*@
                 <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
                 <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
@@ -204,13 +204,15 @@
                     </template>
                     <template slot-scope="scope">
                         <el-button type="text" size="small"
-                @@click="Reverse(scope.row.Id)">倒扣</el-button>
+                                   @@click="Reverse(scope.row.Id)">倒扣</el-button>
                         <el-button type="text" size="small"
                                    @@click="handleEdit(scope.row.Id, scope.row)">编辑</el-button>
                         <el-button type="text" size="small"
                                    @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
                         <el-button type="text" size="small"
                                    @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">明细</el-button>
+                        <el-button type="text" size="small"
+                                   @@click="MeritsRecord(scope.row.UserCode)">绩效记录</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -293,7 +295,7 @@
                     </el-form-item>
                     <el-form-item label="科目" prop="SubjectName">
                         <el-input v-model="VExamUserInfo.SubjectName" :disabled="true"></el-input>
-                    </el-form-item>                   
+                    </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <template>
@@ -385,6 +387,26 @@
                 </el-table>
 
             </el-dialog>
+
+            <!-- #region 查看明细 -->
+            <el-dialog title="明细查看" :visible.sync="dialogMeritsRecord" :close-on-click-modal="false">
+                <el-table :data="LExamUserMeritsRecord" border
+                          style="width: 100%;margin-top:20px ">
+                    <el-table-column label="工号"
+                                     prop="UserCode" sortable>
+                    </el-table-column>
+                    <el-table-column label="绩效"
+                                     prop="Achievement" sortable>
+                    </el-table-column>
+                    <el-table-column label="时间"
+                                     sortable>
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.Achievement!=''&&scope.row.Achievement!=null">{{changeDate(scope.row.Achievement)}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+            </el-dialog>
         </div>
 
 
@@ -409,6 +431,7 @@
             dialogFormVisible: false,
             dialogFormPractical: false,
             dialogSearchVisible: false,
+            dialogMeritsRecord: false,
             VExamUserInfo: [],
             LPracticeInfo: [],
             LExamUserDetailInfo: [],
@@ -548,6 +571,19 @@
                 });
                 _this.dialogSearchVisible = true;
             },
+            //绩效记录查询
+            MeritsRecord(usercode) {
+                var _this = this;
+                axios.post('/PEMain/SerachMeritsRecord', {
+                    model: usercode
+                }).then(function (res) {
+                    _this.LExamUserMeritsRecord = res.data.LExamUserMeritsRecord;
+                });
+                _this.dialogMeritsRecord = true;
+            },
+            
+
+
             StopComplete(ID) {
                 var _this = this;
                 axios.post('/PEMain/StopComplete', {

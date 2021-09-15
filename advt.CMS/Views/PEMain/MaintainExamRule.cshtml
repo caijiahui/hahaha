@@ -38,11 +38,12 @@
             <el-table-column label="总分" prop="TotalScore" sortable width="120"></el-table-column>
             <el-table-column label="总时长" prop="TotalTime" sortable width="120"></el-table-column>
             @*<el-table-column label="总题" prop="TotalSubject" sortable width="120"></el-table-column>*@
-            <el-table-column label="通过分数" prop="PassScore" sortable width="120"></el-table-column>
+            <el-table-column label="通过理论分数" prop="PassScore" sortable width="150"></el-table-column>
+            <el-table-column label="通过实践分数" prop="PassPracticeScore" sortable width="150"></el-table-column>
             @*<el-table-column label="是否批阅" prop="IsRead" sortable width="120"></el-table-column>
-                <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
-                <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
-                <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
+        <el-table-column label="是否重考" prop="IsRepeat" sortable width="120"></el-table-column>
+        <el-table-column label="开头" prop="StartDeac" sortable width="120"></el-table-column>
+        <el-table-column label="结尾" prop="EndDesc" sortable width="120"></el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -105,7 +106,7 @@
 
                         <el-table-column label="操作" width="120">
                             <template slot-scope="scope">
-                                <el-button @@click.native.prevent="deleteRow(scope.$index,scope.row.TopicMajor,scope.row.TopicLevel,scope.row.TopicType,VExamRule.RuleName,VExamRule.ID,RuleGrList)"
+                                <el-button @@click.native.prevent="deleteRow(scope.$index,scope.row.TopicMajor,scope.row.TopicLevel,scope.row.TopicType,VExamRule.RuleName,VExamRule.ID,VExamRule.SubjectName,RuleGrList)"
                                            type="text"
                                            size="small">
                                     移除
@@ -124,8 +125,11 @@
                     <el-input v-model="VExamRule.TotalTime"></el-input>
                 </el-form-item>
 
-                <el-form-item label="通过分数" prop="PassScore">
+                <el-form-item label="通过理论分数" prop="PassScore">
                     <el-input v-model="VExamRule.PassScore"></el-input>
+                </el-form-item>
+                <el-form-item label="通过实践分数" prop="PassPracticeScore">
+                    <el-input v-model="VExamRule.PassPracticeScore"></el-input>
                 </el-form-item>
                 <el-form-item label="是否批阅" prop="IsRead">
                     <el-switch v-model="VExamRule.IsRead"></el-switch>
@@ -182,6 +186,7 @@
             TotalTime: '',
             TotalSubject: '',
             PassScore: '',
+            PassPracticeScore:'',
             Rule: '',
             TypeName: '',
             ExamSubject: '',
@@ -201,7 +206,10 @@
                     { required: true, message: '请输入题目总数', trigger: 'blur' }
                 ],
                 PassScore: [
-                    { required: true, message: '请输入通过分数', trigger: 'blur' }
+                    { required: true, message: '请输入理论通过分数', trigger: 'blur' }
+                ],
+                PassPracticeScore: [
+                    { required: true, message: '请输入实践通过分数', trigger: 'blur' }
                 ]
             },
             paginations: {
@@ -348,6 +356,7 @@
                                     axios.post('/PEMain/SaveRuleInfo', {
                                         model: objs,
                                     }).then(function (res) {
+                                        console.log(res.data.Result);
                                         if (res.data.Result != '') {
                                             _this.$message.error(res.data.Result);
                                         } else {
@@ -388,6 +397,7 @@
                 _this.VExamRule.TotalTime = row.TotalTime;
                 _this.VExamRule.TotalSubject = row.TotalSubject;
                 _this.VExamRule.PassScore = row.PassScore;
+                _this.VExamRule.PassPracticeScore = row.PassPracticeScore;
                 _this.VExamRule.IsRead = row.IsRead;
                 _this.VExamRule.IsRepeat = row.IsRepeat;
                 _this.VExamRule.StartDeac = row.StartDeac;
@@ -458,7 +468,7 @@
                 });
                 _this.dialogFormVisible = false
             },
-            deleteRow(index, TopicMajor, TopicLevel, TopicType, RuleName, ID, rows) {
+            deleteRow(index, TopicMajor, TopicLevel, TopicType, RuleName, SubjectName, ID, rows) {
                 this.$confirm('此题目类型将被删除, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -469,7 +479,8 @@
                         TopicMajor: TopicMajor,
                         TopicLevel: TopicLevel,
                         TopicType: TopicType,
-                        RuleName: RuleName
+                        RuleName: RuleName,
+                        SubjectName: SubjectName
                     }).then(function (res) {
 
                         if (res.data.Result == '否') {

@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataProvider\AchieveRecord.cs" />
     <Compile Include="DataProvider\advt_Attachment.cs" />
     <Compile Include="DataProvider\advt_Attach_Files.cs" />
     <Compile Include="DataProvider\ExamUsersFromehr.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="DbProvider\SqlHelper.cs" />
     <Compile Include="DbProvider\SqlMapper.cs" />
     <Compile Include="IDataProvider.cs" />
+    <Compile Include="IDataProvider\AchieveRecord.cs" />
     <Compile Include="IDataProvider\advt_Attachment.cs" />
     <Compile Include="IDataProvider\advt_Attach_Files.cs" />
     <Compile Include="IDataProvider\advt_Category.cs" />

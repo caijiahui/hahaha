@@ -109,8 +109,7 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetRuleName(ExamType,SubjectName,RuleName);
             return SqlHelper.GetReaderToList<Entity.ExamRule>(reader);
         }
-        
-
+       
         #endregion
     }
 }
