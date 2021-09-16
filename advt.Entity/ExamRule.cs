@@ -33,6 +33,7 @@ namespace advt.Entity
         public DateTime? CreateDate { get; set; }
 
         public bool IsQuestion { get; set; }
+        public decimal PassPracticeScore { get; set; }
         #endregion
     }
 }
