@@ -20,7 +20,7 @@
     <div style="margin-top:20px">
         <template>
             <el-select v-model="VSearch.TypeName" placeholder="请选择考试类型">
-                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                <el-option v-for="item in LExamType" :key="item.Value" :label="item.Value" :value="item.Key"></el-option>
             </el-select>
             <el-input placeholder="搜查工号" v-model="VSearch.UserCode" style="width:200px">
             </el-input>
@@ -473,16 +473,7 @@
                     console.log(responese.data.tableData);
                 })
             },
-            SearchinByTypeName() {
-                var _this = this;
-                axios.post('/PEMain/GetUserInfo', {
-                    data: _this.VSearch
-                }).then(function (res) {
-                    _this.tableData = res.data.tableData;
-                    _this.YListUserInfo = res.data.YListUserInfo;
-                    _this.CPListUserInfo = res.data.CPListUserInfo;
-                });
-            },
+            
             setPaginations() {
                 var _this = this;
                 _this.paginations.total = _this.tableData.length; //数据的数量
@@ -533,6 +524,17 @@
                     })
                 })
 
+            },
+            SearchinByTypeName() {
+                var _this = this;
+                axios.post('/PEMain/GetUserInfo', {
+                    data: _this.VSearch
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.YListUserInfo = res.data.YListUserInfo;
+                    _this.CPListUserInfo = res.data.CPListUserInfo;
+                    _this.setPaginations();
+                });
             },
             handleSave: function () {
                 var _this = this;
