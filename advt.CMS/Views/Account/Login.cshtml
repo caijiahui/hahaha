@@ -1,152 +1,180 @@
-﻿@{
+﻿@model advt.CMS.Models.ExamModel.LoginModel
+@{
     Layout = null;
 }
-    <!doctype html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>登录</title>
-            <link href="~/Scripts/css2/common-1200.css" rel="stylesheet" />
-            <link href="~/Scripts/css2/common-mq-1200.css" rel="stylesheet" />
-            <link href="~/Scripts/css2/all.min.css" rel="stylesheet" />
-            <link href="~/Scripts/css2/font-awesome.css" rel="stylesheet" />
-            <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-            <link href="~/Scripts/css2/layout.css" rel="stylesheet" />
-            <style>
-                @@media screen and (max-width:700px){
-                    .loginWrap .login_R{
-                        width:100vw;
-                    }
-                        .loginWrap .login_R .loginBox{
-                            width:auto;
-                        }
-                        .loginWrap .login_R .loginBox {
-                            height:auto;
-                        }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录</title>
+    <link href="~/Scripts/css2/common-1200.css" rel="stylesheet" />
+    <link href="~/Scripts/css2/common-mq-1200.css" rel="stylesheet" />
+    <link href="~/Scripts/css2/all.min.css" rel="stylesheet" />
+    <link href="~/Scripts/css2/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css2/layout.css" rel="stylesheet" />
+    <style>
+        @@media screen and (max-width:700px) {
+            .loginWrap .login_R {
+                width: 100vw;
+            }
 
-                        }
-            </style>
-        </head>
+                .loginWrap .login_R .loginBox {
+                    width: auto;
+                }
 
-        <body>
-            <div id="app" v-cloak>
-                <div class="boxWrap" id="container">
-                    <div class="loginWrap">
-                        <div class="login_L" v-if="isMobileTurn==false">
-                            <h2>研华考试平台</h2>
-                            <div class="logo">
-                                <img src="~/Images/logo.png" />
-                            </div>
-                        </div>
-                        <div class="login_R">
-                            <div class="loginBox">
-                                <h2>欢迎登录</h2>
-                                <div>
-                                    <el-form :model="loginForm" ref="loginForm" class="demo-dynamic">
-                                        <el-form-item prop="UserName"
-                                                      label="用户名/工号"
-                                                      :rules="[
+                .loginWrap .login_R .loginBox {
+                    height: auto;
+                }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <input type="text" value="@Model.token" ref="idtoken" hidden="hidden" />
+        <div class="boxWrap" id="container">
+            <div class="loginWrap">
+                <div class="login_L" v-if="isMobileTurn==false">
+                    <h2>研华考试平台</h2>
+                    <div class="logo">
+                        <img src="~/Images/logo.png" />
+                    </div>
+                </div>
+                <div class="login_R">
+                    <div class="loginBox">
+                        <h2>欢迎登录</h2>
+                        <div>
+                            <el-form :model="loginForm" ref="loginForm" class="demo-dynamic">
+                                <el-form-item prop="UserName"
+                                              label="用户名/工号"
+                                              :rules="[
                                    { required: true, message: '请输入用户名或工号', trigger: 'blur' }
                                  ]">
-                                            <el-input v-model="loginForm.UserName"></el-input>
-                                        </el-form-item>
-                                        <el-form-item prop="Password"
-                                                      label="密码"
-                                                      :rules="[
+                                    <el-input v-model="loginForm.UserName"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="Password"
+                                              label="密码"
+                                              :rules="[
                                    { required: true, message: '请输入密码', trigger: 'blur' }
                                  ]">
-                                            <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
-                                        </el-form-item>
+                                    <el-input v-model="loginForm.Password" show-password id="TxtPas"></el-input>
+                                </el-form-item>
 
-                                        <h5>工号如：Q-XXXXX,密码为EZ密码</h5>
-                                        <h5 style="margin-top:10px">姓名如：Xiaoee.wang,密码为开机密码</h5>
-                                        <h5 style="color:red;margin-top:10px">{{LoginMess}}</h5>
-                                        <el-form-item class="loginBtn">
-                                            <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
-                                        </el-form-item>
-                                    </el-form>
-                                </div>
-                            </div>
+                                <h5>工号如：Q-XXXXX,密码为EZ密码</h5>
+                                <h5 style="margin-top:10px">姓名如：Xiaoee.wang,密码为开机密码</h5>
+                                <h5 style="color:red;margin-top:10px">{{LoginMess}}</h5>
+                                <el-form-item class="loginBtn">
+                                    <el-button type="primary" @@click="submitForm('loginForm')" id="txtsumit">登  录</el-button>
+                                </el-form-item>
+                            </el-form>
                         </div>
                     </div>
-                    <!-- end #advan-footer -->
                 </div>
             </div>
+            <!-- end #advan-footer -->
+        </div>
+    </div>
 
-            <script src="~/Scripts/Vue/Vue.js"></script>
-            <script src="~/Scripts/Vue/polyfill.min.js"></script>
-            <script src="~/Scripts/Vue/axios.js"></script>
-            <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
 
 
-            <!-- Yoursite Scripts -->
-            <script>
-                new Vue({
-                    el: "#app",
-                    data: {
-                        loginForm: {
-                            UserName:'',
-                            Password: '',
-                            CookieTime: 0
-                            
-                        },
-                        isMobileTurn: false,
-                        LoginMess:''
-                    },
-                    mounted: function () {
-                      
-                        if (this.isMobile()) {
-                            this.isMobileTurn = true
-                        } else {
-                            this.isMobileTurn = false
-                        }
-                    },
-                    methods: {
-                        isMobile: function () {
-                            let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-                            console.log(flag,22);
-                            return flag
-                        },
-                        submitForm(formName) {
-                            var _this = this;
-                            this.$refs[formName].validate((valid) => {
-                                if (valid) {
-                                    console.log(_this.loginForm);
-                                    axios.post('/Account/Login', {
-                                        model: _this.loginForm
-                                    }).then(function (res) {
-                                        if (res.data.IsLogin != 'Pass') {
-                                            _this.LoginMess = res.data.IsLogin;
-                                            _this.loginForm.UserName = '';
-                                            _this.loginForm.Password = '';
-                                        } else {
-                                            if (_this.isMobileTurn) {
-                                                window.location.href = "/EPageMain/MaintainExam"
-                                            } else {
-                                                window.location.href = "/EPageMain/MaintainExamPC"
-                                            }
-                                        }
+    <!-- Yoursite Scripts -->
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                loginForm: {
+                    UserName: '',
+                    Password: '',
+                    CookieTime: 0
 
-                                    });
+                },
+                isMobileTurn: false,
+                LoginMess: ''
+            },
+            mounted: function () {
+
+                if (this.isMobile()) {
+                    this.isMobileTurn = true
+                } else {
+                    this.isMobileTurn = false
+                }
+                this.getdata();
+            },
+            methods: {
+                isMobile: function () {
+                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                    console.log(flag, 22);
+                    return flag
+                },
+                submitForm(formName) {
+                    var _this = this;
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            console.log(_this.loginForm);
+                            axios.post('/Account/Login', {
+                                model: _this.loginForm
+                            }).then(function (res) {
+                                if (res.data.IsLogin != 'Pass') {
+                                    _this.LoginMess = res.data.IsLogin;
+                                    _this.loginForm.UserName = '';
+                                    _this.loginForm.Password = '';
                                 } else {
-                                    //_this.LoginMess = "账号/密码不正确";
-                                    //console.log(_this.LoginMess,22);
-                                    return false;
+                                    if (_this.isMobileTurn) {
+                                        window.location.href = "/EPageMain/MaintainExam"
+                                    } else {
+                                        window.location.href = "/EPageMain/MaintainExamPC"
+                                    }
                                 }
+
                             });
+                        } else {
+                            //_this.LoginMess = "账号/密码不正确";
+                            //console.log(_this.LoginMess,22);
+                            return false;
                         }
+                    });
+                },
+                getdata: function () {
+                    var _this = this;
+                    console.log("1");
+                    if (_this.$refs.idtoken.value != "") {
+                        axios.post('/Account/Login', {
+                            model: _this.loginForm,
+                            token: _this.$refs.idtoken.value
+                        }).then(function (res) {
+                            if (res.data.IsLogin != 'Pass') {
+                                _this.LoginMess = res.data.IsLogin;
+                                _this.loginForm.UserName = '';
+                                _this.loginForm.Password = '';
+                            } else {
+                                if (_this.isMobileTurn) {
+                                    window.location.href = "/EPageMain/MaintainExam"
+                                } else {
+                                    window.location.href = "/EPageMain/MaintainExamPC"
+                                }
+                            }
+
+                        });
                     }
-                })
-                var input = document.getElementById("TxtPas");
-                input.addEventListener("keyup", function (event) {
-                    event.preventDefault();
-                    if (event.keyCode === 13) {
-                        document.getElementById("txtsumit").click();
-                    }
-                });
-            </script>
-        </body>
-        </html>
+                }
+            }
+
+        })
+        var input = document.getElementById("TxtPas");
+        input.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("txtsumit").click();
+            }
+        });
+    </script>
+</body>
+</html>
 
 

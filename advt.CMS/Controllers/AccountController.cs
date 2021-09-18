@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 using advt.Common;
 using System.Text;
 using FormsAuth;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using advt.CMS.Models.ExamModel;
 
 namespace advt.Web.Controllers
 {
@@ -22,15 +25,17 @@ namespace advt.Web.Controllers
         }
         //
         // GET: /Account/Login
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl,string token)
         {
+            LoginModel model = new LoginModel();
+            model.token = token;
             Manager.Login.ClearSession();
             if (Manager.Login.ValidateUser)
             {
                 alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
             }
 
-            return View();
+            return View(model) ;
         }
 
         //[HttpPost]
@@ -59,16 +64,43 @@ namespace advt.Web.Controllers
         //    return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public ActionResult Login(Model.LoginModel model, string returnUrl)
+        public ActionResult Login(Model.LoginModel model, string returnUrl,string token)
         {
             var IsLogin = "";
             try
             {
-                if (ModelState.IsValid)
+                Entity.advt_users users = new advt_users();
+                if (!string.IsNullOrEmpty(token))
                 {
-                    string[] SplitAccount=new string[] { };
+                    HttpClient _httpClient = new HttpClient();
+                    var parameters = new Dictionary<string, string>();
+                    parameters.Add("token", token);
+                    var byteContent = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(parameters)));
+                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var response = _httpClient.PostAsync(" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam", byteContent);
+                    var result = response.Result.Content.ReadAsStringAsync();
+                    if (result != null)
+                    {
+                        if (!string.IsNullOrEmpty(result.Result))
+                        {
+                            var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = result.Result });
+                            if (uname != null)
+                            {
+                                Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                                users = service.Authenticate(uname.EamilUsername, "123");
+                            }
+                            else
+                            {
+                                IsLogin = "用户名不存在考试平台系统内";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    string[] SplitAccount = new string[] { };
                     var username = "";
-                    Entity.advt_users users = new advt_users();
+
                     Regex RegEmail = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");//w 英文字母或数字的字符串，和 [a-zA-Z0-9] 语法一样 
                     Match m = RegEmail.Match(model.UserName);
                     //工号
@@ -89,7 +121,7 @@ namespace advt.Web.Controllers
                     }
                     else
                     {
-                        
+
                         if (cuser != null)
                         {
                             var acc = "acn\\" + cuser.EamilUsername.Trim();
@@ -136,26 +168,26 @@ namespace advt.Web.Controllers
                             }
                         }
                     }
-                    
+
                     if (wuser == null && cuser == null)
                     {
                         IsLogin = "用户名/工号不存在";
                     }
-                    if (string.IsNullOrEmpty(IsLogin)&&!string.IsNullOrEmpty(users.username))
-                    {
-                        SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
-                        //写入Cookie，无需登入。
+                }
+                if (string.IsNullOrEmpty(IsLogin) && !string.IsNullOrEmpty(users.username))
+                {
+                    SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
+                    //写入Cookie，无需登入。
 
-                        var LF = Guid.NewGuid().ToString();
-                        //写内存
-                        Manager.Login.Lock_Flag = LF;
-                        //写本地
-                        Utils.WriteCookie("ALock", LF);
-                        users.msn = LF;
-                        advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
-                        XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
-                        IsLogin = "Pass";
-                    }
+                    var LF = Guid.NewGuid().ToString();
+                    //写内存
+                    Manager.Login.Lock_Flag = LF;
+                    //写本地
+                    Utils.WriteCookie("ALock", LF);
+                    users.msn = LF;
+                    advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
+                    XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
+                    IsLogin = "Pass";
                 }
             }
             catch (Exception ex)

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "advt.CMS", "advt.CMS\advt.CMS.csproj", "{7BDC0E09-5989-4AA7-B84F-C09D62EF10C5}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "advt.WinService", "advt.WinService\advt.WinService.csproj", "{B5529DF7-2402-4956-9C72-C082D2094F19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "advt.WebTest", "advt.WebTest\advt.WebTest.csproj", "{261D67BE-7BEE-40CD-96F7-CB81171838A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{2995CC74-0086-40B9-87FF-6696886C7822}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{261D67BE-7BEE-40CD-96F7-CB81171838A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{261D67BE-7BEE-40CD-96F7-CB81171838A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{261D67BE-7BEE-40CD-96F7-CB81171838A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2995CC74-0086-40B9-87FF-6696886C7822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2995CC74-0086-40B9-87FF-6696886C7822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2995CC74-0086-40B9-87FF-6696886C7822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2995CC74-0086-40B9-87FF-6696886C7822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
