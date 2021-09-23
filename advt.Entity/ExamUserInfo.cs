@@ -35,13 +35,12 @@ namespace advt.Entity
         public DateTime? CreateDate { get; set; }
 
         public string UpdateUser { get; set; }
-
-
         public DateTime? UpdateDate { get; set; }
         public string ReverseBuckle { get; set; }//本职等对应技能等级
         public DateTime? ReverseBuckleDate { get; set; }//绩效可扣时间
         public string ReverseBuckleUser { get; set; }//绩效可扣时间
         public string ApplicationLevel { get; set; }
+        public string PostID { get; set; }//岗位编号
         #endregion
     }
 }

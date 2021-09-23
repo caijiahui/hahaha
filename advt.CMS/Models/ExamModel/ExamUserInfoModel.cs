@@ -58,102 +58,91 @@ namespace advt.CMS.Models.ExamModel
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
             {
-                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+                LExamType.Add(new KeyValuePair<string, string>(item.ID.ToString(), item.TypeName));
             }
         }
         public void GetUserInfo(SearchUserData data)
         {
             var connectionString = "server=172.21.161.41;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
-            //var connectionString = "server=172.21.128.84;database=ExamTT;uid=adminims;pwd=Ifs2015Pri";
             DataSet result = new DataSet();
-            string sql = string.Format(@"SELECT * FROM [V_ExamUserDetail]");
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(sql, con))
+            data.TypeName = "53";
+            if (!string.IsNullOrEmpty(data.TypeName))
+            {                
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
-                    adp.Fill(result);
+                    using (SqlCommand cmd = new SqlCommand("Proc_Exam_User_Info", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@ExamType", SqlDbType.NVarChar, 500);                        
+                        cmd.Parameters.Add("@UserCode", SqlDbType.NVarChar, 500);
+                        cmd.Parameters.Add("@DepartCode", SqlDbType.NVarChar, 500);
+                        cmd.Parameters["@ExamType"].SqlValue = data.TypeName;
+                        if (data.UserCode != null)
+                            cmd.Parameters["@UserCode"].SqlValue = data.UserCode;
+                        else
+                        {
+                            cmd.Parameters["@UserCode"].SqlValue = DBNull.Value;
+                        }
+                        if (data.DepartCode != null)
+                            cmd.Parameters["@DepartCode"].SqlValue = data.DepartCode;
+                        else
+                        {
+                            cmd.Parameters["@DepartCode"].SqlValue = DBNull.Value;
+                        }
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(result);
+                    }
                 }
+                foreach (DataRow row in result.Tables[0].Rows)
+                {
+                    decimal score = 0;
+                    DateTime? now = null;
+                    DateTime? practicetime = null;
+                    if (row["TheoreticalAchievement"].ToString() != "")
+                    {
+                        score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
+                    }
+                    if (row["LastExamTime"].ToString() != "")
+                    {
+                        now = Convert.ToDateTime(row["LastExamTime"].ToString());
+                    }
+                    if (row["PariceDate"].ToString() != "")
+                    {
+                        practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
+                    }
+
+                    ListUserInfo.Add(new UserInfo
+                    {
+                        Id = Convert.ToInt32(row["ID"].ToString()),
+                        TypeName = row["TypeName"].ToString(),
+                        UserCode = row["UserCode"].ToString(),
+                        UserName = row["UserName"].ToString(),
+                        EntryDate = Convert.ToDateTime(row["EntryDate"]),
+
+                        RankName = row["RankName"].ToString(),
+                        PostName = row["PostName"].ToString(),
+                        DepartCode = row["DepartCode"].ToString(),
+                        SkillLevel = row["SkillLevel"].ToString(),//本职等
+                        CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
+                        ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
+                        LastExamTime = now,//最后一次理论时间
+                        TheoreticalAchievement = score,//实践成绩
+                        PracticeTime = practicetime,//最后一次实践成绩
+                        HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
+                        ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
+                        IsAchment = row["IsAchment"].ToString(),
+                        Achievement = row["Achievement"].ToString(),
+                        SubjectName = row["SubjectName"].ToString(),
+                        ReverseBuckle = row["ReverseBuckle"].ToString(),                        
+                        IsUserExam = row["IsUserExam"].ToString()
+                    });
+                }
+                var tname = Data.ExamType.Get_All_ExamType(new { ID =Convert.ToInt32(data.TypeName) }).FirstOrDefault().TypeName;
+                ListUserInfo11 = ListUserInfo.ToList();
+                YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
+                ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tname });
+                            
             }
-            foreach (DataRow row in result.Tables[0].Rows)
-            {
-                decimal score = 0;
-                DateTime? now = null;
-                DateTime? practicetime = null;
-                if (row["TheoreticalAchievement"].ToString() != "")
-                {
-                    score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
-                }
-                if (row["LastExamTime"].ToString() != "")
-                {
-                    now = Convert.ToDateTime(row["LastExamTime"].ToString());
-                }
-                if (row["PariceDate"].ToString() != "")
-                {
-                    practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
-                }
-                
-                ListUserInfo.Add(new UserInfo
-                {
-                    Id = Convert.ToInt32(row["ID"].ToString()),
-                    TypeName = row["TypeName"].ToString(),
-                    UserCode = row["UserCode"].ToString(),
-                    UserName = row["UserName"].ToString(),
-                    EntryDate = Convert.ToDateTime(row["EntryDate"]),
-
-                    RankName = row["RankName"].ToString(),
-                    PostName = row["PostName"].ToString(),
-                    DepartCode = row["DepartCode"].ToString(),
-                    SkillLevel = row["SkillLevel"].ToString(),//本职等
-                    CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
-                    ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
-                    LastExamTime = now,//最后一次理论时间
-                    TheoreticalAchievement = score,//实践成绩
-                    PracticeTime = practicetime,//最后一次实践成绩
-                    HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                    ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
-                    IsAchment = row["IsAchment"].ToString(),
-                    Achievement = row["Achievement"].ToString(),
-                
-                    SubjectName = row["SubjectName"].ToString(),
-                    ReverseBuckle=row["ReverseBuckle"].ToString(),
-                    //CreateUser = row["CreateUser"].ToString(),
-                    //CreateDate = Convert.ToDateTime(row["CreateDate"]),
-                    //UpdateUser = row["UpdateUser"].ToString(),
-                    //UpdateDate = Convert.ToDateTime(row["UpdateDate"]),   
-
-
-                    IsUserExam = row["IsUserExam"].ToString()
-                  
-                   
-                });
-
-            }
-            ListUserInfo11 = ListUserInfo.ToList();
-            YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
-            if (data != null)
-            {
-                if (!string.IsNullOrEmpty(data.TypeName))
-                {
-                    ListUserInfo11 = ListUserInfo11.Where(x => x.TypeName.Contains(data.TypeName)).ToList();
-                    YListUserInfo = YListUserInfo.Where(x => x.TypeName.Contains(data.TypeName)).ToList();
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName=data.TypeName });
-                }
-                if (!string.IsNullOrEmpty(data.UserCode))
-                {
-                    ListUserInfo11 = ListUserInfo11.Where(x => x.UserCode.Contains(data.UserCode)).ToList();
-                    YListUserInfo = YListUserInfo.Where(x => x.UserCode.Contains(data.UserCode)).ToList();
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, UserCode = data.UserCode });
-                }
-                if (!string.IsNullOrEmpty(data.Depart))
-                {
-                    ListUserInfo11 = ListUserInfo11.Where(x => x.DepartCode.Contains(data.Depart)).ToList();
-                    YListUserInfo = YListUserInfo.Where(x => x.DepartCode.Contains(data.Depart)).ToList();
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, DepartCode=data.Depart });
-                }
-            }
-
-            
         }
 
         public void UploadUser(string filepath,string name)
@@ -497,6 +486,6 @@ namespace advt.CMS.Models.ExamModel
     {
         public string TypeName { get; set; }
         public string UserCode { get; set; }
-        public string Depart { get; set; }
+        public string DepartCode { get; set; }
     }
 }
