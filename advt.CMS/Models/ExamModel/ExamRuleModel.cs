@@ -65,10 +65,10 @@ namespace advt.CMS.Models.ExamModel
             else
             {
                 ListExamRuleInfo = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.SubjectName);
-                if (ListExamRuleInfo.Count() == 0 && ListExamRuleInfo == null)
+                if (ListExamRuleInfo.Count() == 0 || ListExamRuleInfo == null)
                 {
                     var ruled = Data.ExamRule.Get_All_ExamRuleInfo(VExamRule.RuleName);
-                    if (ruled.Count() > 0 && ruled != null)
+                    if (ruled.Count()!=0)
                     {
                         Result += VExamRule.RuleName + "此考试规则已存在";
                     }

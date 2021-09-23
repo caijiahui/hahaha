@@ -295,7 +295,7 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             var Result = model.SaveRuleInfo(username);
-            if (Result== null)
+            if (string.IsNullOrEmpty(Result))
             {
                 model.SaveTopicInfo(model.VExamRule.RuleName);
             }
