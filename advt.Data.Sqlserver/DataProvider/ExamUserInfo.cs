@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserInfo , (Ver:2.3.8) at: 2021/2/5 11:25:22
         #region Var: 
         private string[] ExamUserInfo_key_a = { "ID" };
-        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID";
+        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID,WorkPlace";
         private string[][] ExamUserInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -38,8 +38,10 @@ namespace advt.Data.SqlServer
             new string[] { "ReverseBuckleDate", "DateTime", "16"},
             new string[] { "ReverseBuckleUser", "NVarChar", "500" },
             new string[] { "ApplicationLevel", "NVarChar", "500"},
-            new string[] { "PostID", "NVarChar", "500"}
+            new string[] { "PostID", "NVarChar", "500"},
+             new string[] { "WorkPlace", "NVarChar", "500"}
             
+
         };
         #endregion
 

@@ -93,55 +93,57 @@ namespace advt.CMS.Models.ExamModel
                         adapter.Fill(result);
                     }
                 }
-                foreach (DataRow row in result.Tables[0].Rows)
+                if (result.Tables.Count != 0)
                 {
-                    decimal score = 0;
-                    DateTime? now = null;
-                    DateTime? practicetime = null;
-                    if (row["TheoreticalAchievement"].ToString() != "")
+                    foreach (DataRow row in result.Tables[0].Rows)
                     {
-                        score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
-                    }
-                    if (row["LastExamTime"].ToString() != "")
-                    {
-                        now = Convert.ToDateTime(row["LastExamTime"].ToString());
-                    }
-                    if (row["PariceDate"].ToString() != "")
-                    {
-                        practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
-                    }
+                        decimal score = 0;
+                        DateTime? now = null;
+                        DateTime? practicetime = null;
+                        if (row["TheoreticalAchievement"].ToString() != "")
+                        {
+                            score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
+                        }
+                        if (row["LastExamTime"].ToString() != "")
+                        {
+                            now = Convert.ToDateTime(row["LastExamTime"].ToString());
+                        }
+                        if (row["PariceDate"].ToString() != "")
+                        {
+                            practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
+                        }
 
-                    ListUserInfo.Add(new UserInfo
-                    {
-                        Id = Convert.ToInt32(row["ID"].ToString()),
-                        TypeName = row["TypeName"].ToString(),
-                        UserCode = row["UserCode"].ToString(),
-                        UserName = row["UserName"].ToString(),
-                        EntryDate = Convert.ToDateTime(row["EntryDate"]),
-
-                        RankName = row["RankName"].ToString(),
-                        PostName = row["PostName"].ToString(),
-                        DepartCode = row["DepartCode"].ToString(),
-                        SkillLevel = row["SkillLevel"].ToString(),//本职等
-                        CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
-                        ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
-                        LastExamTime = now,//最后一次理论时间
-                        TheoreticalAchievement = score,//实践成绩
-                        PracticeTime = practicetime,//最后一次实践成绩
-                        HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                        ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
-                        IsAchment = row["IsAchment"].ToString(),
-                        Achievement = row["Achievement"].ToString(),
-                        SubjectName = row["SubjectName"].ToString(),
-                        ReverseBuckle = row["ReverseBuckle"].ToString(),                        
-                        IsUserExam = row["IsUserExam"].ToString()
-                    });
+                        ListUserInfo.Add(new UserInfo
+                        {
+                            Id = Convert.ToInt32(row["ID"].ToString()),
+                            TypeName = row["TypeName"].ToString(),
+                            UserCode = row["UserCode"].ToString(),
+                            UserName = row["UserName"].ToString(),
+                            EntryDate = Convert.ToDateTime(row["EntryDate"]),
+                            RankName = row["RankName"].ToString(),
+                            PostName = row["PostName"].ToString(),
+                            DepartCode = row["DepartCode"].ToString(),
+                            SkillLevel = row["SkillLevel"].ToString(),//本职等
+                            CurrentSkillLevel = row["CurrentSkillLevel"].ToString(),//已经考取技能等级  
+                            ExamScore = row["ExamScore"].ToString(),//最近一次理论考试成绩
+                            LastExamTime = now,//最后一次理论时间
+                            TheoreticalAchievement = score,//实践成绩
+                            PracticeTime = practicetime,//最后一次实践成绩
+                            HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
+                            ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
+                            IsAchment = row["IsAchment"].ToString(),
+                            Achievement = row["Achievement"].ToString(),
+                            SubjectName = row["SubjectName"].ToString(),
+                            ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
+                            IsUserExam = row["IsUserExam"].ToString()
+                        });
+                    }
+                    var tname = Data.ExamType.Get_All_ExamType(new { ID = Convert.ToInt32(data.TypeName) }).FirstOrDefault().TypeName;
+                    ListUserInfo11 = ListUserInfo.ToList();
+                    YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tname });
                 }
-                var tname = Data.ExamType.Get_All_ExamType(new { ID =Convert.ToInt32(data.TypeName) }).FirstOrDefault().TypeName;
-                ListUserInfo11 = ListUserInfo.ToList();
-                YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
-                ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tname });
-                            
+
             }
         }
 
