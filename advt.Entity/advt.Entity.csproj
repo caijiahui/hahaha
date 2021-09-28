@@ -83,6 +83,7 @@
     <Compile Include="ExamUserInfo.cs" />
     <Compile Include="PracticeInfo.cs" />
     <Compile Include="RankInfo.cs" />
+    <Compile Include="RegionalPost.cs" />
     <Compile Include="SkillInfo.cs" />
     <Compile Include="TestReport.cs" />
     <Compile Include="advt_users_type.cs" />

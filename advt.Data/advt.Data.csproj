@@ -77,6 +77,7 @@
     <Compile Include="DataProvider\ExamRecord.cs" />
     <Compile Include="DataProvider\ExamSubject.cs" />
     <Compile Include="DataProvider\PracticeInfo.cs" />
+    <Compile Include="DataProvider\RegionalPost.cs" />
     <Compile Include="DataProvider\SkillInfo.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
     <Compile Include="DataProvider\ExamUserDetailInfo.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="IDataProvider\ExamRecord.cs" />
     <Compile Include="IDataProvider\ExamSubject.cs" />
     <Compile Include="IDataProvider\PracticeInfo.cs" />
+    <Compile Include="IDataProvider\RegionalPost.cs" />
     <Compile Include="IDataProvider\SkillInfo.cs" />
     <Compile Include="IDataProvider\ExamType.cs" />
     <Compile Include="IDataProvider\ExamUserDetailInfo.cs" />
