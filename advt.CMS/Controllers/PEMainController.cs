@@ -250,9 +250,10 @@ namespace advt.Web.Controllers
         {
             ExamRuleModel models = new ExamRuleModel();
             var subject = Data.ExamSubject.GetSubjectList();
+            models.GetRegionPlace();
             models.GetRuleType(model);
             models.GetRuleSubjectList(subjectname);
-            return Json(new { ListTypeName = subject, RuleGrList = models.RuleTopicList, ListTopic=models.ListTopic }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListRegionalPlace = models.ListRegionPlace, ListTypeName = subject, RuleGrList = models.RuleTopicList, ListTopic=models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SaveSubjectInfo(ExamSubjectModel model)
@@ -779,7 +780,19 @@ namespace advt.Web.Controllers
             models.GetRuleSubjectList(model);
             return Json(new { ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult GetRegionalDeapart(string model)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            models.GetRegionalDeapart(model);
+            return Json(new { ListDepartCode = models.ListRegionDepart }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetPostName(string model)
+        {
+            ExamRuleModel models = new ExamRuleModel();
+            models.GetPostName(model);
+            return Json(new { ListPostName = models.ListPostName }, JsonRequestBehavior.AllowGet);
+        }
+        
         public JsonResult Upload_UserInfo(HttpPostedFileBase file)
         {
             string filepath = "";

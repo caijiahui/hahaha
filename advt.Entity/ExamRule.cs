@@ -34,6 +34,9 @@ namespace advt.Entity
 
         public bool IsQuestion { get; set; }
         public decimal PassPracticeScore { get; set; }
+        public string RegionalPlace { get; set; }
+        public string DepartCode { get; set; }
+        public string PostName { get; set; }
         #endregion
     }
 }

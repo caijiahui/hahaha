@@ -18,7 +18,7 @@ namespace advt.Data.SqlServer
         #region ExamRule , (Ver:2.3.8) at: 2021/1/9 14:56:07
         #region Var: 
         private string[] ExamRule_key_a = { "ID" };
-        private string ExamRule_item_str = "[ID],[TypeName],[TotalScore],[TotalTime],[TotalSubject],[PassScore],[IsRead],[IsRepeat],[StartDeac],[EndDesc],[CreateUser],[CreateDate],[RuleName],[SubjectName],IsQuestion,PassPracticeScore";
+        private string ExamRule_item_str = "[ID],[TypeName],[TotalScore],[TotalTime],[TotalSubject],[PassScore],[IsRead],[IsRepeat],[StartDeac],[EndDesc],[CreateUser],[CreateDate],[RuleName],[SubjectName],IsQuestion,PassPracticeScore,RegionalPlace,DepartCode,PostName";
         private string[][] ExamRule_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -36,7 +36,10 @@ namespace advt.Data.SqlServer
             new string[] {"RuleName", "NVarChar", "150"},
             new string[] {"SubjectName", "NVarChar", "150"},
             new string[] { "IsQuestion", "Bit", "1"},
-            new string[] { "PassPracticeScore", "Decimal", "20"}
+            new string[] { "PassPracticeScore", "Decimal", "20"},
+            new string[] { "RegionalPlace", "NVarChar", "150"},
+            new string[] { "DepartCode", "NVarChar", "150"},
+            new string[] { "PostName", "NVarChar", "150"}
         };
        
         #endregion

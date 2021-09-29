@@ -20,7 +20,7 @@
     <div style="margin-top:20px">
         <template>
             <el-select v-model="VSearch.TypeName" placeholder="请选择考试类型">
-                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                <el-option v-for="item in LExamType" :key="item.Value" :label="item.Value" :value="item.Value"></el-option>
             </el-select>
             <el-input placeholder="搜查工号" v-model="VSearch.UserCode" style="width:200px">
             </el-input>

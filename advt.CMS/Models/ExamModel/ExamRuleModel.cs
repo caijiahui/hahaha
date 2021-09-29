@@ -24,7 +24,9 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
         public List<KeyValuePair<string, string>> ListSearchSubject { get; set; }
-
+        public List<SelectListItem> ListRegionPlace { get; set; }
+        public List<SelectListItem> ListRegionDepart { get; set; }
+        public List<SelectListItem> ListPostName { get; set; }
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
@@ -39,6 +41,9 @@ namespace advt.CMS.Models.ExamModel
             ListExamRuleInfo = new List<ExamRule>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LExamType = new List<KeyValuePair<string, string>>();
+            ListRegionPlace = new List<SelectListItem>();
+            ListRegionDepart = new List<SelectListItem>();
+            ListPostName = new List<SelectListItem>();
         }
         public void GetRuleName(string ExamType, string SubjectName,string RuleName)
         {
@@ -51,7 +56,14 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
-
+        public void GetRegionPlace()
+        {
+            ListRegionPlace.Add(new SelectListItem() { Text = "-- Select --", Value = string.Empty });
+            foreach (var post in Data.RegionalPost.Get_All_RegionalPost().Select(x=>x.RegionalPlace).Distinct())
+            {
+                ListRegionPlace.Add(new SelectListItem() { Value = post, Text = post });
+            }
+        }
 
         public string SaveRuleInfo(string username)
         {
@@ -308,6 +320,28 @@ namespace advt.CMS.Models.ExamModel
 
             }
         }
+
+        public void GetRegionalDeapart(string model)
+        {
+            foreach (var part in Data.RegionalPost.Get_All_RegionalPost().Where(x=>x.RegionalPlace==model).Distinct())
+            {
+                if (ListRegionDepart.Where(x => x.Value == part.DepartCode).Count() == 0)
+                {
+                    ListRegionDepart.Add(new SelectListItem() { Value = part.DepartCode, Text = part.DepartCode });
+                }
+            }
+        }
+        public void GetPostName(string model)
+        {
+            foreach (var name in Data.RegionalPost.Get_All_RegionalPost().Where(x => x.DepartCode == model).Distinct())
+            {
+                if (ListPostName.Where(x => x.Value == name.PostName).Count() == 0)
+                {
+                    ListPostName.Add(new SelectListItem() { Value = name.PostName, Text = name.PostName });
+                }
+            }
+        }
+        
     }
     public class TopicInfo
     {

@@ -138,10 +138,9 @@ namespace advt.CMS.Models.ExamModel
                             IsUserExam = row["IsUserExam"].ToString()
                         });
                     }
-                    var tname = Data.ExamType.Get_All_ExamType(new { ID = Convert.ToInt32(data.TypeName) }).FirstOrDefault().TypeName;
                     ListUserInfo11 = ListUserInfo.ToList();
                     YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tname });
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = data.TypeName });
                 }
 
             }
