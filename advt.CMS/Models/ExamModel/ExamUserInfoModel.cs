@@ -65,7 +65,10 @@ namespace advt.CMS.Models.ExamModel
         {
             var connectionString = "server=172.21.161.41;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
             DataSet result = new DataSet();
-            data.TypeName = "53";
+            if (string.IsNullOrEmpty(data.TypeName))
+            {
+                data.TypeName = "53";
+            }
             if (!string.IsNullOrEmpty(data.TypeName))
             {                
                 using (SqlConnection conn = new SqlConnection(connectionString))

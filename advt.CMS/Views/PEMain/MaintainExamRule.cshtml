@@ -441,6 +441,9 @@
                 _this.VExamRule.RegionalPlace = row.RegionalPlace;
                 _this.VExamRule.DepartCode = row.DepartCode;
                 _this.VExamRule.PostName = row.PostName;
+                _this.VExamRule.RegionalPlace = row.RegionalPlace;
+                _this.VExamRule.DepartCode = row.DepartCode;
+                _this.VExamRule.PostName = row.PostName;
                 _this.VExamRule.ID = index;
                 axios.post('/PEMain/GetSubjectList', {
                     model: index,
@@ -449,6 +452,10 @@
                     _this.ListTypeName = response.data.ListTypeName;
                     _this.RuleGrList = response.data.RuleGrList;
                     _this.ListTopicInfo = response.data.ListTopic;
+                    _this.ListRegionalPlace = response.data.ListRegionalPlace;
+                    _this.ListDepartCode = response.data.ListDepartCode;
+                    _this.ListPostName = response.data.ListPostName;
+
                     _this.topicratioPropsVal = [];
                     _this.ListTopicInfo.forEach(function (item,index) {
                         _this.RuleGrList.forEach(function (list, num) {
