@@ -138,6 +138,7 @@ namespace advt.CMS.Models.ExamModel
                             Achievement = row["Achievement"].ToString(),
                             SubjectName = row["SubjectName"].ToString(),
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
+                            RuleName = row["RuleName"].ToString(),
                             IsUserExam = row["IsUserExam"].ToString()
                         });
                     }
