@@ -150,10 +150,10 @@
 
             <el-table :data="tableData" border height="600"
                       style="width: 100%;" :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
-                <el-table-column prop="UserCode"
+                <el-table-column  fixed prop="UserCode"
                                  label="工号">
                 </el-table-column>
-                <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
+                <el-table-column fixed label="姓名" prop="UserName" sortable></el-table-column>
                 <el-table-column label="入职日期" width="110">
                     <template slot-scope="scope">
                         <span>{{changeDate(scope.row.EntryDate)}}</span>
