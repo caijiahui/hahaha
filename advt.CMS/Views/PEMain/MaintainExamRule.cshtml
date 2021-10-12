@@ -78,21 +78,23 @@
                         <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="岗位区域" prop="RegionalPlace">
-                    <el-select v-model="VExamRule.RegionalPlace" placeholder="请选择区域">
-                        <el-option v-for="item in ListRegionalPlace" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="岗位部门" prop="DepartCode">
-                    <el-select v-model="VExamRule.DepartCode" placeholder="请选择区域下的部门">
-                        <el-option v-for="item in ListDepartCode" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="岗位工种" prop="PostName">
-                    <el-select v-model="VExamRule.PostName" placeholder="请选择区域工种">
-                        <el-option v-for="item in ListPostName" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
-                    </el-select>
-                </el-form-item>
+                <el-form :inline="true">
+                    <el-form-item label="岗位区域" prop="RegionalPlace">
+                        <el-select v-model="VExamRule.RegionalPlace" placeholder="请选择区域">
+                            <el-option v-for="item in ListRegionalPlace" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-select v-model="VExamRule.DepartCode" placeholder="请选择区域部门">
+                            <el-option v-for="item in ListDepartCode" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-select v-model="VExamRule.PostName" placeholder="请选择区域工种">
+                            <el-option v-for="item in ListPostName" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>               
                 <el-form-item label="题目类型" prop="ListTopicInfo">
                     <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
                         <el-option v-for="item in ListTopicInfo"
