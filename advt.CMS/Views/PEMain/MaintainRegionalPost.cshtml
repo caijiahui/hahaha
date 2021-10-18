@@ -12,8 +12,11 @@
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
             <el-breadcrumb-item>规则岗位</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-select v-model="RuleNames" placeholder="请选择考试规则" clearable filterable>
+        <el-select v-model="RuleNames" placeholder="请选择考试规则1" clearable filterable>
             <el-option v-for="item in LExamRule" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
+        <el-select v-model="RuleTwoNames" placeholder="请选择考试规则2" clearable filterable>
+            <el-option v-for="item in LExamRuleTwo" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
         </el-select>
         <el-input placeholder="输入岗位" v-model="PostNames" style="width:200px">
         </el-input>
@@ -25,12 +28,12 @@
     <div style="margin-top:20px">
         <el-table :data="tableData"
                   style="width: 100% ">
-            <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
             <el-table-column label="岗位名称" prop="PostName" sortable></el-table-column>
             <el-table-column label="区域" prop="RegionalPlace" sortable></el-table-column>
             <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="岗位编号" prop="PostID" sortable></el-table-column>
-
+            <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
+            <el-table-column label="考试规则2" prop="RuleTwoName" sortable></el-table-column>
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -54,13 +57,19 @@
         </el-pagination>
         <el-dialog title="规则岗位编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
             <el-form :model="VregionalPost" ref="dialogForm">
+
+                <el-form-item label="岗位" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.PostName" autocomplete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="考试规则" :label-width="formLabelWidth">
                     <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
                         <el-option v-for="item in ListExamRule" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="岗位" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.PostName" autocomplete="off"></el-input>
+                <el-form-item label="考试规则2" :label-width="formLabelWidth">
+                    <el-select v-model="VregionalPost.RuleTwoName" clearable filterable placeholder="请选择考试规则2">
+                        <el-option v-for="item in ListExamRuleTwo" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="区域" :label-width="formLabelWidth">
                     <el-input v-model="VregionalPost.RegionalPlace" autocomplete="off"></el-input>
@@ -94,16 +103,19 @@
         data: {
             tableData: [],
             dialogFormVisible: false,
-            LExamRule: [],
+            LExamRule: [], 
+            LExamRuleTwo:[],
             PostNames:'',
-            RuleNames:'',
+            RuleNames: '',
+            RuleTwoNames:'',
             VregionalPost: [],
             formLabelWidth: '120px',
             search: '',
             RegionalPlace: '',
             PostID:'',
             DepartCode:'',
-            ListExamRule:[],
+            ListExamRule: [],
+            ListExamRuleTwo:[],
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -123,6 +135,7 @@
                 axios.post('/PEMain/GetRegionalPost').then(res => {
                     _this.tableData = res.data.tableData;
                     _this.LExamRule = res.data.LExamRule;
+                    _this.LExamRuleTwo = res.data.LExamRuleTwo;
                     _this.VregionalPost = res.data.VregionalPost;
                     _this.setPaginations();
                 })
@@ -149,14 +162,14 @@
             handleCurrentChange(page) {   
                 var _this = this;
                 axios.post('/PEMain/GetRegionalPost', {
-                    ExamType: _this.TypeNames,
-                    SubjectName: _this.SubjectNames
+                    RuleName: _this.RuleNames,
+                    PostName: _this.PostNames,
+                    RuleTwoName: _this.RuleTwoNames
                 }).then(res => {
                     _this.tableData = res.data.tableData;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数
                     let allData = _this.paginations.page_size * page;
-                    console.log(_this.tableData, 133);
                   
                     let tablist = [];
                     for (let i = index; i < allData; i++) {
@@ -189,6 +202,7 @@
                 var _this = this;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
+                    _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.VregionalPost = {};
                 });
                 _this.dialogFormVisible = true;
@@ -215,12 +229,14 @@
                 var _this = this;
                 _this.VregionalPost.PostName = postname;
                 _this.VregionalPost.RuleName = rulename;
+                _this.VregionalPost.RuleTwoName = row.RuleTwoName;
                 _this.VregionalPost.RegionalPlace = row.RegionalPlace;
                 _this.VregionalPost.DepartCode = row.DepartCode;
                 _this.VregionalPost.PostID = row.PostID;
                 _this.VregionalPost.ID = index;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
+                    _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                 });
                 _this.dialogFormVisible = true;
             },
@@ -250,7 +266,8 @@
                 var _this = this;
                 axios.post('/PEMain/GetRegionalPost', {
                     RuleName: _this.RuleNames,
-                    PostName: _this.PostNames
+                    PostName: _this.PostNames,
+                    RuleTwoName: _this.RuleTwoNames
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
                     _this.setPaginations();

@@ -20,9 +20,9 @@ namespace advt.Data
 
         int Delete_RegionalPost(int ID);
 
-        IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName);
+        IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName,string RuleTwoName);
 
-        int Update_RegionalPostInfo(string PostName, string RuleName);
+        int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName);
         #endregion
     }
 }

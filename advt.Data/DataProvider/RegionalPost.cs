@@ -69,14 +69,14 @@ namespace advt.Data
             return DatabaseProvider.GetInstance().Delete_RegionalPost(ID);
         }
 
-        public static List<Entity.RegionalPost> Get_All_RegionalPostInfo(string RuleName,string PostName)
+        public static List<Entity.RegionalPost> Get_All_RegionalPostInfo(string RuleName,string PostName,string RuleTwoName)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_All_RegionalPostInfo(RuleName, PostName);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_RegionalPostInfo(RuleName, PostName, RuleTwoName);
             return SqlHelper.GetReaderToList<Entity.RegionalPost>(reader);
         }
-        public static int Update_RegionalPostInfo(string PostName, string RuleName)
+        public static int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName)
         {
-            return DatabaseProvider.GetInstance().Update_RegionalPostInfo(PostName, RuleName);
+            return DatabaseProvider.GetInstance().Update_RegionalPostInfo(PostName, RuleName, RuleTwoName);
         }
         
     }

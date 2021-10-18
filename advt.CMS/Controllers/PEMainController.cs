@@ -1040,11 +1040,11 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult GetRegionalPost(string RuleName, string PostName)
+        public ActionResult GetRegionalPost(string RuleName, string PostName,string RuleTwoName)
         {
             RegionalPostModel model = new RegionalPostModel();
-            model.GetPostName(RuleName, PostName);
-            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule }, JsonRequestBehavior.AllowGet);
+            model.GetPostName(RuleName, PostName, RuleTwoName);
+            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SavePostInfo(RegionalPostModel model)
@@ -1057,13 +1057,7 @@ namespace advt.Web.Controllers
         public ActionResult GetRegionalPostList()
         {
             var LExamRules = Data.ExamRule.Get_All_ExamRule();
-            return Json(new { ListExamRule = LExamRules }, JsonRequestBehavior.AllowGet);
-        }
-        [MyAuthorize]
-        public ActionResult GetRegionalPostInfo(string model,string PostName)
-        {
-            var LExamRules = Data.ExamRule.Get_All_ExamRule();
-            return Json(new { ListExamRule = LExamRules }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules }, JsonRequestBehavior.AllowGet);
         }
         
         [MyAuthorize]
