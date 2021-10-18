@@ -67,6 +67,18 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        public int Update_RegionalPostInfo(string PostName, string RuleName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" Update [RegionalPost] set RuleName=@RuleName where PostName=@PostName");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
+            l_parms.Add(SqlHelper.MakeInParam("@PostName", (DbType)SqlDbType.NVarChar, 150, PostName));
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+
+
         public IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName)
         {
             StringBuilder commandText = new StringBuilder();

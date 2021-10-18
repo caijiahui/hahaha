@@ -32,12 +32,15 @@ namespace advt.CMS.Models.ExamModel
             var Result = "";
             if (VregionalPost.ID != 0)
             {
-                Data.RegionalPost.Update_RegionalPost(VregionalPost, null, new string[] { "ID" });
+                if (!string.IsNullOrEmpty(VregionalPost.PostName))
+                {
+                    Data.RegionalPost.Update_RegionalPostInfo(VregionalPost.PostName, VregionalPost.RuleName);
+                }
+               
             }
             else
             {
                 Data.RegionalPost.Insert_RegionalPost(VregionalPost, null, new string[] { "ID" });
-
             }
             ListRegionalPost = Data.RegionalPost.Get_All_RegionalPost();
             return Result;

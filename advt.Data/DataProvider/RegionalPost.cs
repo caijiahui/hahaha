@@ -74,6 +74,10 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_RegionalPostInfo(RuleName, PostName);
             return SqlHelper.GetReaderToList<Entity.RegionalPost>(reader);
         }
+        public static int Update_RegionalPostInfo(string PostName, string RuleName)
+        {
+            return DatabaseProvider.GetInstance().Update_RegionalPostInfo(PostName, RuleName);
+        }
         
     }
     #endregion
