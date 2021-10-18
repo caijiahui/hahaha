@@ -73,8 +73,8 @@
                         <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="考试科目" prop="SubjectName">
-                    <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目">
+                <el-form-item label="考试科目"  prop="SubjectName">
+                    <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目" clearable filterable>
                         <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                     </el-select>
                 </el-form-item>
