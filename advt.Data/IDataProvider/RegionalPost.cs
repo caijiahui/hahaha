@@ -19,7 +19,8 @@ namespace advt.Data
         int Update_RegionalPost(Entity.RegionalPost info, string[] Include, string[] Exclude);
 
         int Delete_RegionalPost(int ID);
-    
+
+        IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName);
         #endregion
     }
 }

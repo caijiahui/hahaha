@@ -13,14 +13,15 @@ namespace advt.Data.SqlServer
         #region RegionalPost , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] RegionalPost_key_a = { "ID" };
-        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName]";
+        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName],RuleName";
         private string[][] RegionalPost_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
             new string[] { "RegionalPlace", "NVarChar", "500"},
             new string[] { "DepartCode", "NVarChar", "500"},
             new string[] { "PostID", "NVarChar", "500"},
-            new string[] { "PostName", "NVarChar", "500"}
+            new string[] { "PostName", "NVarChar", "500"},
+            new string[] { "RuleName", "NVarChar", "500"}
         };
         #endregion
 
@@ -50,7 +51,7 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = new List<DbParameter>();
             StringBuilder commandText = new StringBuilder();
             string set_str = string.Empty;
-            SqlHelper.Get_Update_Set(ExamSubject_key_a, ExamSubject_item_prop_a, Include, Exclude, info, ref set_str, ref l_parms);
+            SqlHelper.Get_Update_Set(RegionalPost_key_a, RegionalPost_item_prop_a, Include, Exclude, info, ref set_str, ref l_parms);
             commandText.AppendLine(" UPDATE [RegionalPost]");
             commandText.AppendLine("   SET " + set_str);
             commandText.AppendLine("   " + SqlHelper.Get_Where_Str(ExamSubject_key_a));
@@ -66,8 +67,28 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            var texts = "";
+            commandText.AppendLine(" SELECT " + RegionalPost_item_str + "");
+            commandText.AppendLine("   FROM [RegionalPost] where 1=1 ");
+            if (!string.IsNullOrEmpty(RuleName))
+            {
+                texts += " and RuleName like  N'%" + RuleName + "%'";
+            }
+            if (!string.IsNullOrEmpty(PostName))
+            {
+                texts += " and PostName like  N'%" + PostName + "%'";
+            }
+            
+            commandText.AppendLine(texts);
+            List<DbParameter> l_parms = new List<DbParameter>();
+            l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
+            l_parms.Add(SqlHelper.MakeInParam("@PostName", (DbType)SqlDbType.NVarChar, 150, PostName));
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
 
-       
         #endregion
     }
 }

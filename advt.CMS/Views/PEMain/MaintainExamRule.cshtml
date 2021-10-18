@@ -78,7 +78,7 @@
                         <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form :inline="true">
+                @*<el-form :inline="true">
                     <el-form-item label="岗位区域" prop="RegionalPlace">
                         <el-select v-model="VExamRule.RegionalPlace" placeholder="请选择区域">
                             <el-option v-for="item in ListRegionalPlace" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
@@ -94,7 +94,7 @@
                             <el-option v-for="item in ListPostName" :key="item.Text" :label="item.Text" :value="item.Text"></el-option>
                         </el-select>
                     </el-form-item>
-                </el-form>               
+                </el-form>*@               
                 <el-form-item label="题目类型" prop="ListTopicInfo">
                     <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
                         <el-option v-for="item in ListTopicInfo"
@@ -189,9 +189,9 @@
             dialogFormVisible: false,
             iscount: false,
             ListTypeName: [],
-            ListRegionalPlace: [],
-            ListDepartCode: [],
-            ListPostName:[],
+            //ListRegionalPlace: [],
+            //ListDepartCode: [],
+            //ListPostName:[],
             VExamRule: [],
             VRuleGrList: [],
             ListTopicInfo: [],
@@ -355,7 +355,7 @@
                 var _this = this;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
-                    _this.ListRegionalPlace = response.data.ListRegionalPlace;
+                   // _this.ListRegionalPlace = response.data.ListRegionalPlace;
                     _this.VExamRule = {};
                     _this.RuleGrList = [];
 
@@ -443,9 +443,9 @@
                 _this.VExamRule.RegionalPlace = row.RegionalPlace;
                 _this.VExamRule.DepartCode = row.DepartCode;
                 _this.VExamRule.PostName = row.PostName;
-                _this.VExamRule.RegionalPlace = row.RegionalPlace;
-                _this.VExamRule.DepartCode = row.DepartCode;
-                _this.VExamRule.PostName = row.PostName;
+                //_this.VExamRule.RegionalPlace = row.RegionalPlace;
+                //_this.VExamRule.DepartCode = row.DepartCode;
+                //_this.VExamRule.PostName = row.PostName;
                 _this.VExamRule.ID = index;
                 axios.post('/PEMain/GetSubjectList', {
                     model: index,
@@ -454,9 +454,9 @@
                     _this.ListTypeName = response.data.ListTypeName;
                     _this.RuleGrList = response.data.RuleGrList;
                     _this.ListTopicInfo = response.data.ListTopic;
-                    _this.ListRegionalPlace = response.data.ListRegionalPlace;
-                    _this.ListDepartCode = response.data.ListDepartCode;
-                    _this.ListPostName = response.data.ListPostName;
+                    //_this.ListRegionalPlace = response.data.ListRegionalPlace;
+                    //_this.ListDepartCode = response.data.ListDepartCode;
+                    //_this.ListPostName = response.data.ListPostName;
 
                     _this.topicratioPropsVal = [];
                     _this.ListTopicInfo.forEach(function (item,index) {

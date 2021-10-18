@@ -13,5 +13,6 @@ namespace advt.Entity
         public string DepartCode { get; set; }//部门代码
         public string PostID { get; set; }//岗位编号
         public string PostName { get; set; }//岗位-工种
+        public string RuleName { get; set; }//岗位-工种
     }
 }

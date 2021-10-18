@@ -69,7 +69,12 @@ namespace advt.Data
             return DatabaseProvider.GetInstance().Delete_RegionalPost(ID);
         }
 
-       
-        #endregion
+        public static List<Entity.RegionalPost> Get_All_RegionalPostInfo(string RuleName,string PostName)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_RegionalPostInfo(RuleName, PostName);
+            return SqlHelper.GetReaderToList<Entity.RegionalPost>(reader);
+        }
+        
     }
+    #endregion
 }

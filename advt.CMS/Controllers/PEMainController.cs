@@ -1031,6 +1031,47 @@ namespace advt.Web.Controllers
 
         }
 
+        //岗位
+        [MyAuthorize]
+        public ActionResult MaintainRegionalPost()
+        {
+            RegionalPostModel model = new RegionalPostModel();
+            return View(model);
+        }
+
+        [MyAuthorize]
+        public ActionResult GetRegionalPost(string RuleName, string PostName)
+        {
+            RegionalPostModel model = new RegionalPostModel();
+            model.GetPostName(RuleName, PostName);
+            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult SavePostInfo(RegionalPostModel model)
+        {
+            var username = this.UserNameContext;
+            var Result = model.SavePostInfo(username);
+            return Json(new { Result, tableData = model.ListRegionalPost }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetRegionalPostList()
+        {
+            var LExamRules = Data.ExamRule.Get_All_ExamRule();
+            return Json(new { ListExamRule = LExamRules }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetRegionalPostInfo(string model,string PostName)
+        {
+            var LExamRules = Data.ExamRule.Get_All_ExamRule();
+            return Json(new { ListExamRule = LExamRules }, JsonRequestBehavior.AllowGet);
+        }
         
+        [MyAuthorize]
+        public ActionResult DeletePost(int model)
+        {
+            RegionalPostModel mode = new RegionalPostModel();
+            mode.Delete_ExamPost(model);
+            return Json(new { tableData = mode.ListRegionalPost }, JsonRequestBehavior.AllowGet);
+        }        
     }
 }

@@ -190,6 +190,7 @@
     <Compile Include="Models\ExamModel\ExamBankModel.cs" />
     <Compile Include="Models\ExamModel\HrAuditModel.cs" />
     <Compile Include="Models\ExamModel\ImportCheckEmail.cs" />
+    <Compile Include="Models\ExamModel\RegionalPostModel.cs" />
     <Compile Include="Models\ExamModel\UserManagerModel.cs" />
     <Compile Include="Models\ExamModel\MaintainExamModel.cs" />
     <Compile Include="Models\ExamModel\MaintainExamPageModel.cs" />
@@ -456,6 +457,7 @@
     <Content Include="Views\EPageMain\ExamFinish.cshtml" />
     <Content Include="Views\EPageMain\MaintainExamPC.cshtml" />
     <Content Include="Views\PEMain\MaintainExamRole.cshtml" />
+    <Content Include="Views\PEMain\MaintainRegionalPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

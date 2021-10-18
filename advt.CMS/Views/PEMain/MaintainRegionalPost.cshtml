@@ -1,0 +1,268 @@
+﻿@model advt.CMS.Models.ExamModel.RegionalPostModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+
+
+<div id="app" style="margin-left:20px">
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>规则岗位</el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-select v-model="RuleNames" placeholder="请选择考试规则" clearable filterable>
+            <el-option v-for="item in LExamRule" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
+        <el-input placeholder="输入岗位" v-model="PostNames" style="width:200px">
+        </el-input>
+        <el-button slot="append" @@click="SearchinByPostName">Search</el-button>
+        <el-button @@click="createPost">新增</el-button>
+    </template>
+
+
+    <div style="margin-top:20px">
+        <el-table :data="tableData"
+                  style="width: 100% ">
+            <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
+            <el-table-column label="岗位名称" prop="PostName" sortable></el-table-column>
+            <el-table-column label="区域" prop="RegionalPlace" sortable></el-table-column>
+            <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
+            <el-table-column label="岗位编号" prop="PostID" sortable></el-table-column>
+
+            <el-table-column align="right">
+                <template slot="header" slot-scope="scope">
+                    <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
+                </template>
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @@click="handleEdit(scope.row.ID,scope.row.PostName,scope.row.RuleName,scope.row)">Edit</el-button>
+                    <el-button size="mini"
+                               type="danger"
+                               @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination @@size-change="handleSizeChange"
+                       @@current-change="handleCurrentChange"
+                       :current-page="paginations.page_index"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total">
+        </el-pagination>
+        <el-dialog title="规则岗位编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+            <el-form :model="VregionalPost" ref="dialogForm">
+                <el-form-item label="考试规则" :label-width="formLabelWidth">
+                    <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
+                        <el-option v-for="item in ListExamRule" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="岗位" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.PostName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="区域" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.RegionalPlace" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="部门" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.DepartCode" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="岗位编号" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.PostID" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    <el-button @@click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleSave">确 定</el-button>
+                </template>
+
+            </div>
+        </el-dialog>
+
+    </div>
+</div>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            tableData: [],
+            dialogFormVisible: false,
+            LExamRule: [],
+            PostNames:'',
+            RuleNames:'',
+            VregionalPost: [],
+            formLabelWidth: '120px',
+            search: '',
+            RegionalPlace: '',
+            PostID:'',
+            DepartCode:'',
+            ListExamRule:[],
+            paginations: {
+                page_index: 1, 
+                total: 0,
+                page_size:10,
+                page_sizes: [10,15, 20], 
+                layout: 'total, sizes, prev, pager, next, jumper'
+            }
+        },
+        mounted: function () {
+            var _this = this;
+            _this.getInfoList();
+        },
+        methods: {
+           
+            getInfoList() {
+                var _this = this;
+                axios.post('/PEMain/GetRegionalPost').then(res => {
+                    _this.tableData = res.data.tableData;
+                    _this.LExamRule = res.data.LExamRule;
+                    _this.VregionalPost = res.data.VregionalPost;
+                    _this.setPaginations();
+                })
+            },
+            setPaginations() {
+                var _this = this;
+                _this.paginations.total = _this.tableData.length; //数据的数量
+                _this.paginations.page_index = 1; //默认显示第一页
+                _this.paginations.page_size = 10; //每页显示多少数据
+
+                //显示数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < _this.paginations.page_size;
+                })
+            },
+            handleSizeChange(page_size) {
+                var _this = this;
+                _this.paginations.page_index = 1; //第一页
+                _this.paginations.page_size = page_size; //每页先显示多少数据
+                _this.tableData = _this.tableData.filter((item, index) => {
+                    return index < page_size
+                })
+            },
+            handleCurrentChange(page) {   
+                var _this = this;
+                axios.post('/PEMain/GetRegionalPost', {
+                    ExamType: _this.TypeNames,
+                    SubjectName: _this.SubjectNames
+                }).then(res => {
+                    _this.tableData = res.data.tableData;
+                    let index = _this.paginations.page_size * (page - 1);
+                    //获取总数
+                    let allData = _this.paginations.page_size * page;
+                    console.log(_this.tableData, 133);
+                  
+                    let tablist = [];
+                    for (let i = index; i < allData; i++) {
+
+                        if (_this.tableData[i]) {
+                            tablist.push(_this.tableData[i]);
+                        }
+                    }
+                    _this.tableData = tablist;
+                })            
+              
+          
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            createPost: function () {
+                var _this = this;
+                axios.post('/PEMain/GetRegionalPostList').then(response => {
+                    _this.ListExamRule = response.data.ListExamRule;
+                    _this.VregionalPost = {};
+                });
+                _this.dialogFormVisible = true;
+               
+            },
+            handleSave: function () {
+                var _this = this;
+                var objs = {};
+                objs.VregionalPost = _this.VregionalPost;
+                axios.post('/PEMain/SavePostInfo', {
+                    model: objs
+                }).then(function (res) {
+                    if (res.data.Result != '') {
+                        _this.$message.error(res.data.Result);
+                    } else {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations();
+                    }
+                });
+                _this.dialogFormVisible = false;           
+
+            },
+            handleEdit(index, postname, rulename, row) {
+                var _this = this;
+                _this.VregionalPost.PostName = postname;
+                _this.VregionalPost.RuleName = rulename;
+                _this.VregionalPost.RegionalPlace = row.RegionalPlace;
+                _this.VregionalPost.DepartCode = row.DepartCode;
+                _this.VregionalPost.PostID = row.PostID;
+                _this.VregionalPost.ID = index;
+                axios.post('/PEMain/GetRegionalPostList').then(response => {
+                    _this.ListExamRule = response.data.ListExamRule;
+                });
+                _this.dialogFormVisible = true;
+            },
+            handleDelete(index, row) {
+                this.$confirm('此规则将被删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    var _this = this;
+                    axios.post('/PEMain/DeletePost', {
+                        model: index
+                    }).then(function (res) {
+                        _this.tableData = res.data.tableData;
+                        _this.setPaginations();
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+                
+            },
+           
+            SearchinByPostName() {
+                var _this = this;
+                axios.post('/PEMain/GetRegionalPost', {
+                    RuleName: _this.RuleNames,
+                    PostName: _this.PostNames
+                }).then(function (res) {
+                    _this.tableData = res.data.tableData;
+                    _this.setPaginations();
+                    });
+                _this.dialogFormVisible = false
+            }
+           
+        },
+
+    })
+
+</script>
+
+
+
