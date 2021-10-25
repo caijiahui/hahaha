@@ -77,12 +77,15 @@ namespace advt.CMS.Models.ExamModel
                         {
                             IRow row = sheet.GetRow(i);
                             DataRow dataRow = dt.NewRow();
-
-                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            if (row != null)
                             {
-                                if (row.GetCell(j) != null)
-                                    dataRow[j] = row.GetCell(j).ToString();
+                                for (int j = row.FirstCellNum; j < cellCount; j++)
+                                {
+                                    if (row.GetCell(j) != null)
+                                        dataRow[j] = row.GetCell(j).ToString();
+                                }
                             }
+
                             dt.Rows.Add(dataRow);
                         }
                     }
