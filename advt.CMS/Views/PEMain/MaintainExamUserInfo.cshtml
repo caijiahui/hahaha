@@ -57,6 +57,8 @@
                 <el-table-column label="本职等技能" prop="SkillLevel" sortable"></el-table-column>
                 <el-table-column label="最高可考技能" prop="HighestTestSkill" sortable"></el-table-column>
                 <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable></el-table-column>
+                <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
+                <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
             </el-table>
         </div>
 
@@ -150,7 +152,7 @@
 
             <el-table :data="tableData" border height="600"
                       style="width: 100%;" :default-sort="{prop: 'UserCode'||'UserName', order: 'CreateUser'}">
-                <el-table-column  fixed prop="UserCode"
+                <el-table-column fixed prop="UserCode"
                                  label="工号">
                 </el-table-column>
                 <el-table-column fixed label="姓名" prop="UserName" sortable></el-table-column>
@@ -170,21 +172,23 @@
                     </template>
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
-            <el-table-column label="最近一次通过理论时间" width="110">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
+        <el-table-column label="最近一次通过理论时间" width="110">
+            <template slot-scope="scope">
+                <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
 
-            <el-table-column label="最近一次实践考核通过时间">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
-                </template>
-            </el-table-column>*@
+        <el-table-column label="最近一次实践考核通过时间">
+            <template slot-scope="scope">
+                <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
+            </template>
+        </el-table-column>*@
                 <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
                 <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
+                <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
+                <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
 
                 <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
 

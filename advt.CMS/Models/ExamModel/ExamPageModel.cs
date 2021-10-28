@@ -386,6 +386,7 @@ namespace advt.CMS.Models
                         }
 
                     }
+                   
                 }
 
 
@@ -539,6 +540,50 @@ namespace advt.CMS.Models
                 Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
 
             }
+
+        }
+
+        public void UpdateLevel(ExamPageModel model, string name, string examguid)
+        {
+            var usercode = "";
+            var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
+            if (usersheet != null)
+            {
+                usercode = usersheet.UserCode;
+            }
+            var guid = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
+            if (guid.Count() > 0)
+            {
+                var CorrectScore = guid.FirstOrDefault().CorrectScore;
+                var PassScore = guid.FirstOrDefault().PassScore;
+                if (CorrectScore >= PassScore)
+                {
+                    var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = "职等考试" });
+                    if (userinfo.Count() > 0 && userinfo != null)
+                    {
+                        foreach (var item in userinfo)
+                        {
+                            var applevel = item.ApplicationLevel;
+                          
+                            if (Convert.ToInt32(applevel.Substring(1, 1))<3)
+                            {
+                                int ss = Convert.ToInt32(applevel.Substring(1, 1))+ 1;
+                                item.ApplicationLevel = "A" + ss.ToString();                   
+                            }
+                            if (Convert.ToInt32(item.PostName.Substring(1, 1)) < 3 || Convert.ToInt32(item.RankName.Substring(1, 1)) < 3)
+                            {
+                                int ran = Convert.ToInt32(item.PostName.Substring(1, 1))+1;
+                                item.PostName = "A-" + ran;
+                                item.RankName = "A-" + ran;
+                            }
+                            Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+                        }
+                       
+                    }
+                }
+
+            }
+
 
         }
     }

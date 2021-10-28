@@ -525,7 +525,8 @@ namespace advt.Web.Controllers
             }
             var model = new ExamUserInfoModel();
             model.UploadUser(filepath, name);
-            model.GetUserInfo(null);
+            SearchUserData data = new SearchUserData();
+            model.GetUserInfo(data);
             return Json(new { Result = model.Result, tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
 
@@ -542,8 +543,9 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
+            SearchUserData data = new SearchUserData();
             var result=models.InsertUserDetail(model, username);
-            models.GetUserInfo(null);
+            models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }
@@ -552,7 +554,8 @@ namespace advt.Web.Controllers
         {
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.DeleteExamUserInfo(model);
-            models.GetUserInfo(null);
+            SearchUserData data = new SearchUserData();
+            models.GetUserInfo(data);
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -561,7 +564,8 @@ namespace advt.Web.Controllers
             ExamUserInfoModel models = new ExamUserInfoModel();
             var username = this.UserNameContext;
             models.ReverseExamUserInfo(model,username);
-            models.GetUserInfo(null);
+            SearchUserData data = new SearchUserData();
+            models.GetUserInfo(data);
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
 
@@ -571,7 +575,8 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             model.SaveUserInfo(username);
-            model.GetUserInfo(null);
+            SearchUserData data = new SearchUserData();
+            model.GetUserInfo(data);
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -827,7 +832,8 @@ namespace advt.Web.Controllers
                 //添加一个sheet
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 ExamUserInfoModel models = new ExamUserInfoModel();
-                models.GetUserInfo(null);
+                SearchUserData data = new SearchUserData();
+                models.GetUserInfo(data);
                 //获取list数据
                 var tlst = models.ListUserInfo;
                 //给sheet1添加第一行的头部标题

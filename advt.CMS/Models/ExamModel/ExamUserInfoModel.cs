@@ -64,6 +64,7 @@ namespace advt.CMS.Models.ExamModel
         public void GetUserInfo(SearchUserData data)
         {
             var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
+            //var connectionString = @"Data Source=172.21.128.84\CTOSTEST;Initial Catalog=ExamDBYin;Persist Security Info=True;User ID=adminims;Password=Ifs2015Pri";
             DataSet result = new DataSet();
             if (string.IsNullOrEmpty(data.TypeName))
             {
@@ -144,10 +145,12 @@ namespace advt.CMS.Models.ExamModel
                     }
                     ListUserInfo11 = ListUserInfo.ToList();
                     YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true").ToList();
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = data.TypeName });
+                    var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
+                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName });
                 }
 
             }
+        
         }
 
         public void UploadUser(string filepath,string name)
