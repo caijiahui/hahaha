@@ -558,27 +558,65 @@ namespace advt.CMS.Models
                 var PassScore = guid.FirstOrDefault().PassScore;
                 if (CorrectScore >= PassScore)
                 {
-                    var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = "职等考试" });
-                    if (userinfo.Count() > 0 && userinfo != null)
+                    if (model.VExamUserInfo.ExamType == "职等考试")
                     {
-                        foreach (var item in userinfo)
+                        var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = "职等考试" });
+                        if (userinfo.Count() > 0 && userinfo != null)
                         {
-                            var applevel = item.ApplicationLevel;
-                          
-                            if (Convert.ToInt32(applevel.Substring(1, 1))<3)
+                            foreach (var item in userinfo)
                             {
-                                int ss = Convert.ToInt32(applevel.Substring(1, 1))+ 1;
-                                item.ApplicationLevel = "A" + ss.ToString();                   
+                                var applevel = item.ApplicationLevel;
+
+                                if (Convert.ToInt32(applevel.Substring(1, 1)) < 3)
+                                {
+                                    int ss = Convert.ToInt32(applevel.Substring(1, 1)) + 1;
+                                    item.ApplicationLevel = "A" + ss.ToString();
+                                }
+                                if (Convert.ToInt32(item.PostName.Substring(1, 1)) < 3 || Convert.ToInt32(item.RankName.Substring(1, 1)) < 3)
+                                {
+                                    int ran = Convert.ToInt32(item.PostName.Substring(1, 1)) + 1;
+                                    item.RankName = "A-" + ran;
+                                }
+                                Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }
-                            if (Convert.ToInt32(item.PostName.Substring(1, 1)) < 3 || Convert.ToInt32(item.RankName.Substring(1, 1)) < 3)
-                            {
-                                int ran = Convert.ToInt32(item.PostName.Substring(1, 1))+1;
-                                item.PostName = "A-" + ran;
-                                item.RankName = "A-" + ran;
-                            }
-                            Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+
                         }
-                       
+                    }
+                    else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
+                    {  //实践是否通过并更新等级
+
+                        //var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode }).OrderByDescending(x => x.CreateDate);
+                        //if (pract.Count() > 0 && pract != null)
+                        //{
+                        //    var le = pract.FirstOrDefault().SkillName;
+                        //    var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, ApplicationLevel = le });
+                        //    if (userinfo != null && userinfo.Count() > 0)
+                        //    {
+                        //        foreach (var item in userinfo)
+                        //        {
+                        //            var rule = Data.ExamRule.Get_All_ExamRule(new { SubjectName=item.SubjectName});
+                        //            var practscore = rule.FirstOrDefault().PassPracticeScore;
+                        //            if (pract.FirstOrDefault().PracticeScore >= practscore)
+                        //            {
+                        //                if (Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) < 8)
+                        //                {
+                        //                    int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
+                        //                    item.ApplicationLevel = Convert.ToInt32(item.ApplicationLevel.Substring(0, 1)) + ss.ToString();
+                        //                }
+                        //                if (Convert.ToInt32(item.SubjectName.Substring(1, 1)) < 8)
+                        //                {
+                        //                    int ss = Convert.ToInt32(item.SubjectName.Substring(item.SubjectName.Length - 1, item.SubjectName.Length)) + 1;
+                        //                    item.SubjectName = item.SubjectName.Substring(0, item.SubjectName.Length - 1) + ss;
+                        //                }
+
+                        //                Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+                        //            }
+                                    
+                        //        }
+                        //    }
+
+                        //}
+
                     }
                 }
 

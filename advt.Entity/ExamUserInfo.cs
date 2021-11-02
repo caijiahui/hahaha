@@ -42,6 +42,7 @@ namespace advt.Entity
         public string ApplicationLevel { get; set; }
         public string PostID { get; set; }//岗位编号
         public string WorkPlace { get; set; }//区域
+        public bool isJobStatus { get; set; }//区域
         #endregion
     }
 }
