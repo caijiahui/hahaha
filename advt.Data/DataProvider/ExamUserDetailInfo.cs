@@ -43,6 +43,7 @@ namespace advt.Data
             return Insert_ExamUserDetailInfo(info, null, null);
         }
 
+
         public static int Insert_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include)
         {
             return Insert_ExamUserDetailInfo(info, Include, null);
@@ -82,7 +83,13 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserGetDetailInfo(UserCode,SubjectName,date,DepartCode);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
-        
+        //ExamStatus = "HrSignUp", IsStop = false, UserCode = item.UserCode 
+        public static List<Entity.ExamUserDetailInfo> Get_All_UserAduitInfo(string ExamStatus, string UserCode)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+
         #endregion
     }
 }

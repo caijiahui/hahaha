@@ -30,7 +30,7 @@
 
         <div v-show="activeName=='first'">
             <template>
-                <el-select v-model="TypeName" placeholder="请选择考试类型">
+                <el-select v-model="VSCheckData.TypeName" placeholder="请选择考试类型">
                     <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
                 </el-select>
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
@@ -551,7 +551,7 @@
             SearchinByTypeName() {
                 var _this = this;
                 axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.SearchCheckdata
+                    model: _this.VSCheckData
                 }).then(function (res) {
                     _this.ListHrAuditUser = res.data.ListHrAuditUser;
                     _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;

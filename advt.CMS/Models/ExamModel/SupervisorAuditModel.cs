@@ -41,27 +41,13 @@ namespace advt.CMS.Models.ExamModel
                 }
                 var usersheets = Data.advt_user_sheet.Get_advt_user_sheet_UserJobTitle(code);
                 //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
-
-                //一个人可能是多个部门主管，所以循环
-                foreach (var sheets in usersheets)
+                var audata= Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp",code);
+                if (audata != null && audata.Count() != 0)
                 {
-                    //找到该主管下的部门人员
-                    var groups = Data.advt_user_sheet.Get_All_advt_user_sheet(new { UserCostCenter = sheets.UserCostCenter });
-                    foreach (var item in groups)
-                    {
-                        //找到该部门下报名人员
-                        var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, UserCode = item.UserCode });
-                        if (data != null && data.Count() != 0)
-                        {
-                            LCheckAudtiUser.AddRange(data);
-                        }
-                        var auditdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, UserCode = item.UserCode,IsExam=true });
-                        if (auditdata != null && auditdata.Count() != 0)
-                        {
-                            LSignedupUser.AddRange(auditdata);
-                        }
-                    }
+                    LCheckAudtiUser.AddRange(audata);
                 }
+                var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code);
+                LSignedupUser.AddRange(adata);
                 if (LCheckAudtiUser.Count() != 0)
                 {
                     var LTypename = LCheckAudtiUser.GroupBy(x => x.TypeName).Select(y => new { typename = y.Key });
