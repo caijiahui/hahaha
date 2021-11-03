@@ -822,9 +822,8 @@ namespace advt.Web.Controllers
             
             return Json(new { Result = model.Result, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
         }
-        public FileResult ShunFengExcel()
+        public FileResult ShunFengExcel(string TypeName,string UserCode,string DepartCode)
         {
-
             try
             {
                 //创建Excel文件的对象
@@ -833,9 +832,16 @@ namespace advt.Web.Controllers
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 ExamUserInfoModel models = new ExamUserInfoModel();
                 SearchUserData data = new SearchUserData();
+                data.TypeName = TypeName;
+                if (UserCode == "undefined")
+                {
+                    UserCode =null;
+                }
+                data.UserCode = UserCode;
+                data.DepartCode = DepartCode;
                 models.GetUserInfo(data);
                 //获取list数据
-                var tlst = models.ListUserInfo;
+                var tlst = models.ListUserInfo11;
                 //给sheet1添加第一行的头部标题
                 NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
                 row1.CreateCell(0).SetCellValue("工号");
@@ -843,15 +849,22 @@ namespace advt.Web.Controllers
                 row1.CreateCell(2).SetCellValue("入职日期");
                 row1.CreateCell(3).SetCellValue("职等");
                 row1.CreateCell(4).SetCellValue("职位");
-                row1.CreateCell(5).SetCellValue("本职等对应技能等级");
-                row1.CreateCell(6).SetCellValue("已经考取技能等级");
-                row1.CreateCell(7).SetCellValue("最近一次理论考试成绩");
-                row1.CreateCell(8).SetCellValue("最近一次通过理论时间");
-                row1.CreateCell(9).SetCellValue("最近一次实践成绩");
-                row1.CreateCell(10).SetCellValue("最近一次实践考核通过时间");
-                row1.CreateCell(11).SetCellValue("最高可考技能等级");
-                row1.CreateCell(12).SetCellValue("可申请技能等级");
-                row1.CreateCell(13).SetCellValue("最近一次绩效成绩要求");
+                row1.CreateCell(5).SetCellValue("入职初始等级");
+                row1.CreateCell(6).SetCellValue("考核通过等级");
+                row1.CreateCell(7).SetCellValue("考核通过等级");
+                row1.CreateCell(8).SetCellValue("最高可考等级");
+                row1.CreateCell(9).SetCellValue("下次可考等级");
+                row1.CreateCell(10).SetCellValue("科目");
+                row1.CreateCell(11).SetCellValue("规则");
+                //row1.CreateCell(5).SetCellValue("本职等对应技能等级");
+                //row1.CreateCell(6).SetCellValue("已经考取技能等级");
+                //row1.CreateCell(7).SetCellValue("最近一次理论考试成绩");
+                //row1.CreateCell(8).SetCellValue("最近一次通过理论时间");
+                //row1.CreateCell(9).SetCellValue("最近一次实践成绩");
+                //row1.CreateCell(10).SetCellValue("最近一次实践考核通过时间");
+                //row1.CreateCell(11).SetCellValue("最高可考技能等级");
+                //row1.CreateCell(12).SetCellValue("可申请技能等级");
+                //row1.CreateCell(13).SetCellValue("最近一次绩效成绩要求");
                 //将数据逐步写入sheet1各个行
                 for (int i = 0; i < tlst.Count; i++)
                 {
@@ -861,15 +874,22 @@ namespace advt.Web.Controllers
                     rowtemp.CreateCell(2).SetCellValue(tlst[i].EntryDate.ToString());//入职日期
                     rowtemp.CreateCell(3).SetCellValue(tlst[i].RankName);//职等
                     rowtemp.CreateCell(4).SetCellValue(tlst[i].PostName);//职位
-                    rowtemp.CreateCell(5).SetCellValue(tlst[i].SkillLevel);//本职等对应技能等级
-                    rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);//已经考取技能等级
-                    rowtemp.CreateCell(7).SetCellValue(tlst[i].ExamScore);//最近一次理论考试成绩
-                    rowtemp.CreateCell(8).SetCellValue(tlst[i].LastExamTime.ToString());//最近一次通过理论时间
-                    rowtemp.CreateCell(9).SetCellValue(tlst[i].TheoreticalAchievement.ToString());//最近一次实践成绩
-                    rowtemp.CreateCell(10).SetCellValue(tlst[i].PracticeTime.ToString());//最近一次实践考核通过时间
-                    rowtemp.CreateCell(11).SetCellValue(tlst[i].HighestTestSkill);//最高可考技能等级
-                    rowtemp.CreateCell(12).SetCellValue(tlst[i].ApplicationLevel);//可申请技能等级
-                    rowtemp.CreateCell(13).SetCellValue(tlst[i].Achievement);//最近一次绩效成绩要求    
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].ReverseBuckle);
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].LastExamTime.ToString());
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].HighestTestSkill);
+                    rowtemp.CreateCell(9).SetCellValue(tlst[i].ApplicationLevel);
+                    rowtemp.CreateCell(10).SetCellValue(tlst[i].SubjectName);
+                    rowtemp.CreateCell(11).SetCellValue(tlst[i].RuleName);
+                    //rowtemp.CreateCell(5).SetCellValue(tlst[i].SkillLevel);//本职等对应技能等级
+                    //rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);//已经考取技能等级
+                    //rowtemp.CreateCell(7).SetCellValue(tlst[i].ExamScore);//最近一次理论考试成绩
+                    //rowtemp.CreateCell(8).SetCellValue(tlst[i].LastExamTime.ToString());//最近一次通过理论时间
+                    //rowtemp.CreateCell(9).SetCellValue(tlst[i].TheoreticalAchievement.ToString());//最近一次实践成绩
+                    //rowtemp.CreateCell(10).SetCellValue(tlst[i].PracticeTime.ToString());//最近一次实践考核通过时间
+                    //rowtemp.CreateCell(11).SetCellValue(tlst[i].HighestTestSkill);//最高可考技能等级
+                    //rowtemp.CreateCell(12).SetCellValue(tlst[i].ApplicationLevel);//可申请技能等级
+                    //rowtemp.CreateCell(13).SetCellValue(tlst[i].Achievement);//最近一次绩效成绩要求    
                 }
                 // 写入到客户端 
                 System.IO.MemoryStream ms = new System.IO.MemoryStream();
@@ -886,7 +906,7 @@ namespace advt.Web.Controllers
         }
         public FileResult SignUpExamExcel()
         {
-
+    /* string TypeName,string Usercode,string DepartCode*/
             try
             {
                 //创建Excel文件的对象
@@ -894,6 +914,7 @@ namespace advt.Web.Controllers
                 //添加一个sheet
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 ExamUserInfoModel models = new ExamUserInfoModel();
+                
                 models.GetUserComInfo();
                 //获取list数据
                 var tlst = models.ListDetailInfo;

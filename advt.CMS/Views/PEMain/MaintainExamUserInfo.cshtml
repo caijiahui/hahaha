@@ -142,10 +142,11 @@
                     </a>
                 </template>
                 <template>
-                    <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
-                        <a style="color:white" href="/PEMain/ShunFengExcel">导出</a>
-                    </el-button>
-
+                    <a style="color:white" :href="'/PEMain/ShunFengExcel?TypeName='+VSearch.TypeName+'&UserCode='+VSearch.UserCode+'&DepartCode='+VSearch.DepartCode">
+                        <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
+                            导出
+                        </el-button>
+                    </a>
                 </template>
 
             </div>
