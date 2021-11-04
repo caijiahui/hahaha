@@ -450,7 +450,7 @@
                 var _this = this;
                 _this.checkBoxData.forEach(function (item) {
                     //item['IsExam'] = _this.VAuditCheck.IsExam;
-                    item['ValidityDate'] = _this.VAuditCheck.RuleName;
+                    item['ExamDate'] = _this.VAuditCheck.ValidityDate;
                     item['ExamStatus'] = 'HrCheck';
                     item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
                 })
