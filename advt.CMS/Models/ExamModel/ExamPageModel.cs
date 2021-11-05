@@ -566,16 +566,21 @@ namespace advt.CMS.Models
                             foreach (var item in userinfo)
                             {
                                 var applevel = item.ApplicationLevel;
-
-                                if (Convert.ToInt32(applevel.Substring(1, 1)) < 3)
+                                if (!string.IsNullOrEmpty(applevel))
                                 {
-                                    int ss = Convert.ToInt32(applevel.Substring(1, 1)) + 1;
-                                    item.ApplicationLevel = "A" + ss.ToString();
-                                }
-                                if (Convert.ToInt32(item.PostName.Substring(1, 1)) < 3 || Convert.ToInt32(item.RankName.Substring(1, 1)) < 3)
+                                    if (Convert.ToInt32(applevel.Substring(1, 1)) < 3)
+                                    {
+                                        int ss = Convert.ToInt32(applevel.Substring(1, 1)) + 1;
+                                        item.ApplicationLevel = "A" + ss.ToString();
+                                    }
+                                }                               
+                                if (!string.IsNullOrEmpty(item.RankName))
                                 {
-                                    int ran = Convert.ToInt32(item.PostName.Substring(1, 1)) + 1;
-                                    item.RankName = "A-" + ran;
+                                    if (Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) < 3)
+                                    {
+                                        int ran = Convert.ToInt32(item.RankName.Substring(item.RankName.Length-1, 1)) + 1;
+                                        item.RankName = "A-" + ran;
+                                    }
                                 }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }

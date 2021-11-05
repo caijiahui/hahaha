@@ -164,7 +164,7 @@ namespace advt.Data.SqlServer
         public IDataReader Get_ExamUserAuditInfo(string ExamStatus,  string UserCode)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select * from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='"+UserCode+"'" +
+            commandText.AppendLine(" select distinct * from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='" + UserCode+"'" +
                  " and (UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b" +
                  " on a.UserCostCenter=b.UserCostCenter inner join ExamUserDetailInfo c on c.UserCode = a.UserCode where   ExamStatus='"+ ExamStatus + "' and IsStop=0" +
                 "");
