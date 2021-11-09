@@ -64,7 +64,9 @@
                         <el-table-column label="工号"
                                          prop="UserCode" sortable>
                         </el-table-column>
-
+                        <el-table-column label="考试规则"
+                                         prop="RuleName" sortable>
+                        </el-table-column>
                         <el-table-column label="最高可考技能"
                                          prop="HighestLevel" sortable>
                         </el-table-column>
@@ -242,11 +244,6 @@
             <el-form :model="VAuditCheck">
                 <el-form-item label="人员" :label-width="formLabelWidth">
                     <el-input v-model="VAuditCheck.Users" autocomplete="off" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="考试规则" :label-width="formLabelWidth">
-                    <el-select v-model="VAuditCheck.RuleName" placeholder="考试规则">
-                        <el-option v-for="item in LRules" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                    </el-select>
                 </el-form-item>
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
                     <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
@@ -537,11 +534,25 @@
             },
             handleStop(ID) {
                 var _this = this;
-                axios.post('/PEMain/StopUser', {
-                    model: ID
-                }).then(function (res) {
-                    //_this.ListExamUserDetailInfos = res.data.ListExamUserDetailInfos;
-                    _this.LSignedupUser = res.data.LSignedupUser;
+                this.$confirm('是否取消?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/PEMain/StopUser',  {
+                        model: ID
+                    }).then(function (res) {
+                        _this.$alert('已成功取消', '取消信息', {
+                            confirmButtonText: '确定'
+                        });
+                        _this.LSignedupUser = res.data.LSignedupUser;
+                        console.log(res.data.LSignedupUser, 123);
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消动作'
+                    });
                 });
             },
             ChangeAch: function (ach) {
