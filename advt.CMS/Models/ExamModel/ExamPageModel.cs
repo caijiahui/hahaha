@@ -579,7 +579,11 @@ namespace advt.CMS.Models
                                     if (Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) < 3)
                                     {
                                         int ran = Convert.ToInt32(item.RankName.Substring(item.RankName.Length-1, 1)) + 1;
-                                        item.RankName = "A-" + ran;
+                                        item.RankName = "A-" + ran;                                        
+                                    }
+                                    if (item.RankName== "A-3" && item.PostName == "作业员")
+                                    {
+                                        item.PostName = "技术员";
                                     }
                                 }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
