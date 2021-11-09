@@ -118,8 +118,14 @@ namespace advt.CMS.Models.ExamModel
                 c.IsStop = true;
                 c.HrCheckCreateDate = DateTime.Now;
                 c.HrCheckCreateUser = username;
+                var code = "";
+                var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
+                if (user != null)
+                {
+                    code = user.UserCode;
+                }
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-                LSignedupUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsStop = false, DepartCode = "KQ12" });
+                LSignedupUser = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code);
             }
             catch (Exception ex)
             {
