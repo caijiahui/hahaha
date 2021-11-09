@@ -1084,7 +1084,8 @@ namespace advt.Web.Controllers
         public ActionResult GetRegionalPostList()
         {
             var LExamRules = Data.ExamRule.Get_All_ExamRule();
-            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules }, JsonRequestBehavior.AllowGet);
+            var LExamType = Data.ExamType.Get_All_ExamType();
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType }, JsonRequestBehavior.AllowGet);
         }
         
         [MyAuthorize]

@@ -13,12 +13,14 @@ namespace advt.CMS.Models.ExamModel
 
         public List<KeyValuePair<string, string>> LExamRule { get; set; }
         public List<KeyValuePair<string, string>> LExamRuleTwo { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }
         public RegionalPostModel() : base()
         {
             VregionalPost = new RegionalPost();
             ListRegionalPost = new List<RegionalPost>();
             LExamRule = new List<KeyValuePair<string, string>>();
             LExamRuleTwo = new List<KeyValuePair<string, string>>();
+            LExamType = new List<KeyValuePair<string, string>>();
         }
         public void GetPostName(string RuleName, string PostName,string RuleTwoName)
         {
@@ -33,6 +35,12 @@ namespace advt.CMS.Models.ExamModel
             foreach (var item in Data.ExamRule.Get_All_ExamRule())
             {
                 LExamRuleTwo.Add(new KeyValuePair<string, string>(item.RuleName, item.RuleName));
+            }
+
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
+            {
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
             }
         }
         public string SavePostInfo(string username)

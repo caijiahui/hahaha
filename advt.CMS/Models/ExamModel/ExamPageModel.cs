@@ -590,37 +590,31 @@ namespace advt.CMS.Models
                     else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
                     {  //实践是否通过并更新等级
 
-                        //var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode }).OrderByDescending(x => x.CreateDate);
-                        //if (pract.Count() > 0 && pract != null)
-                        //{
-                        //    var le = pract.FirstOrDefault().SkillName;
-                        //    var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, ApplicationLevel = le });
-                        //    if (userinfo != null && userinfo.Count() > 0)
-                        //    {
-                        //        foreach (var item in userinfo)
-                        //        {
-                        //            var rule = Data.ExamRule.Get_All_ExamRule(new { SubjectName=item.SubjectName});
-                        //            var practscore = rule.FirstOrDefault().PassPracticeScore;
-                        //            if (pract.FirstOrDefault().PracticeScore >= practscore)
-                        //            {
-                        //                if (Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) < 8)
-                        //                {
-                        //                    int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
-                        //                    item.ApplicationLevel = Convert.ToInt32(item.ApplicationLevel.Substring(0, 1)) + ss.ToString();
-                        //                }
-                        //                if (Convert.ToInt32(item.SubjectName.Substring(1, 1)) < 8)
-                        //                {
-                        //                    int ss = Convert.ToInt32(item.SubjectName.Substring(item.SubjectName.Length - 1, item.SubjectName.Length)) + 1;
-                        //                    item.SubjectName = item.SubjectName.Substring(0, item.SubjectName.Length - 1) + ss;
-                        //                }
+                        var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode }).OrderByDescending(x => x.CreateDate);
+                        if (pract.Count() > 0 && pract != null)
+                        {
+                            var le = pract.FirstOrDefault().SkillName;
+                            var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, ApplicationLevel = le });
+                            if (userinfo != null && userinfo.Count() > 0)
+                            {
+                                foreach (var item in userinfo)
+                                {
+                                    var rule = Data.ExamRule.Get_All_ExamRule(new { SubjectName = item.SubjectName });
+                                    var practscore = rule.FirstOrDefault().PassPracticeScore;
+                                    if (pract.FirstOrDefault().PracticeScore >= practscore)
+                                    {
+                                        if (Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) < 8)
+                                        {
+                                            int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
+                                            item.ApplicationLevel = Convert.ToInt32(item.ApplicationLevel.Substring(0, 1)) + ss.ToString();
+                                        }                                       
+                                        Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+                                    }
 
-                        //                Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-                        //            }
-                                    
-                        //        }
-                        //    }
+                                }
+                            }
 
-                        //}
+                        }
 
                     }
                 }

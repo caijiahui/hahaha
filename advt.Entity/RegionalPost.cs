@@ -15,5 +15,6 @@ namespace advt.Entity
         public string PostName { get; set; }//岗位-工种
         public string RuleName { get; set; }//岗位-工种
         public string RuleTwoName { get; set; }//岗位2-工种
+        public string ExamType { get; set; }
     }
 }

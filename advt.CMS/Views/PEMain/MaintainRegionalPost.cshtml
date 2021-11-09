@@ -32,6 +32,7 @@
             <el-table-column label="区域" prop="RegionalPlace" sortable></el-table-column>
             <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="岗位编号" prop="PostID" sortable></el-table-column>
+            <el-table-column label="考试类型" prop="ExamType" sortable></el-table-column>
             <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
             <el-table-column label="考试规则2" prop="RuleTwoName" sortable></el-table-column>
             <el-table-column align="right">
@@ -60,6 +61,11 @@
 
                 <el-form-item label="岗位" :label-width="formLabelWidth">
                     <el-input v-model="VregionalPost.PostName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="考试类型" :label-width="formLabelWidth">
+                    <el-select v-model="VregionalPost.ExamType" clearable filterable placeholder="请选择考试类型">
+                        <el-option v-for="item in ListExamType" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="考试规则" :label-width="formLabelWidth">
                     <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
@@ -115,7 +121,8 @@
             PostID:'',
             DepartCode:'',
             ListExamRule: [],
-            ListExamRuleTwo:[],
+            ListExamRuleTwo: [],
+            ListExamType:[],
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -203,6 +210,7 @@
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
+                    _this.ListExamType = response.data.ListExamType;
                     _this.VregionalPost = {};
                 });
                 _this.dialogFormVisible = true;
@@ -237,6 +245,7 @@
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
+                    _this.ListExamType = response.data.ListExamType;
                 });
                 _this.dialogFormVisible = true;
             },
