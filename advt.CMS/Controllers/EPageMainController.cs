@@ -120,10 +120,7 @@ namespace advt.Web.Controllers
                         examguid = model.InsertScoreData(model);
                         var name = this.UserNameContext;
                         model.InsertRecoredData(model, name, examguid);
-                        if (model.VExamUserInfo.ExamType == "职等考试")
-                        {
-                            model.UpdateLevel(model, name, examguid);
-                        }
+                        model.UpdateLevel(model, name, examguid);
                     }
                     else
                     {
@@ -136,10 +133,7 @@ namespace advt.Web.Controllers
                             examguid = model.InsertScoreData(model);
                             var name = this.UserNameContext;
                             model.InsertRecoredData(model, name, examguid);
-                            if (model.VExamUserInfo.ExamType == "职等考试")
-                            {
-                                model.UpdateLevel(model, name, examguid);
-                            }
+                            model.UpdateLevel(model, name, examguid);
                         }
 
 
