@@ -86,7 +86,7 @@
                             <template slot-scope="scope">
 
                                 <el-button size="mini"
-                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
+                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName,scope.row.ApplyLevel)">实践</el-button>
                                 <el-button size="mini"
                                            @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
                                 <el-button size="mini"
@@ -167,7 +167,7 @@
                     <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="技能" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.SkillName" autocomplete="off"></el-input>
+                    <el-input v-model="VPracticeInfo.SkillName" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
 
                 <el-form-item label="上传附件" :label-width="formLabelWidth">
@@ -481,10 +481,11 @@
                
             },
             //上传实践操作
-            handlePractical(usercode,username) {
+            handlePractical(usercode, username, ApplyLevel) {
                 var _this = this;
                 _this.VPracticeInfo.UserCode = usercode;
                 _this.VPracticeInfo.UserName = username;
+                _this.VPracticeInfo.SkillName = ApplyLevel;
                 axios.post('/PEMain/SearchPracticeByCode', {
                     model: usercode
                 }).then(function (res) {
