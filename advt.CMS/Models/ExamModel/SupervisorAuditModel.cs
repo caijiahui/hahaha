@@ -91,35 +91,39 @@ namespace advt.CMS.Models.ExamModel
                     var examRule = Data.ExamRule.Get_ExamRule(new { RuleName = item.RuleName });
                     if (examRule != null)
                     {
-                        var ListPract = new List<PracticeInfo>();
-                        if (!string.IsNullOrEmpty(item.SubjectName))
+                        if (examRule.PassPracticeScore != 0)
                         {
-                            ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName=item.ApplyLevel, TypeName=item.TypeName,SubjectName = item.SubjectName, UserCode = item.UserCode });
-                        }
-                        else
-                        {
-                            ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, UserCode = item.UserCode });
-                        }
-                        var Pract = new PracticeInfo();
-                        if (ListPract.Count() > 0)
-                        {
-                            Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
-                            if (Pract.PracticeScore < examRule.PassPracticeScore)
+                            var ListPract = new List<PracticeInfo>();
+                            if (!string.IsNullOrEmpty(item.SubjectName))
                             {
-                                Result = item.UserName + "实践分数未达标,不可报名。考试规则要求实践分数" + examRule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
+                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, SubjectName = item.SubjectName, UserCode = item.UserCode });
                             }
-                            if (Pract.ValidityDate != null)
+                            else
                             {
-                                if (Pract.ValidityDate < DateTime.Now)
+                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, UserCode = item.UserCode });
+                            }
+                            var Pract = new PracticeInfo();
+                            if (ListPract.Count() > 0)
+                            {
+                                Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                                if (Pract.PracticeScore < examRule.PassPracticeScore)
                                 {
-                                    Result = item.UserName + item.TypeName + item.SubjectName + "实践成绩已过期,请重新填写";
+                                    Result = item.UserName + "实践分数未达标,不可报名。考试规则要求实践分数" + examRule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
+                                }
+                                if (Pract.ValidityDate != null)
+                                {
+                                    if (Pract.ValidityDate < DateTime.Now)
+                                    {
+                                        Result = item.UserName + item.TypeName + item.SubjectName + "实践成绩已过期,请重新填写";
+                                    }
                                 }
                             }
+                            else
+                            {
+                                Result = "未找到" + item.UserName + item.TypeName + item.SubjectName + "的实践成绩，不可报名";
+                            }
                         }
-                        else
-                        {
-                            Result = "未找到" + item.UserName +item.TypeName+item.SubjectName+ "的实践成绩，不可报名";
-                        }
+                        
                     }
                     else
                     {
@@ -168,6 +172,7 @@ namespace advt.CMS.Models.ExamModel
                 }
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                 LSignedupUser = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code);
+                GetAllExamUserDetailInfo(username);
             }
             catch (Exception ex)
             {

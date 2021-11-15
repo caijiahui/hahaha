@@ -550,25 +550,11 @@
             },
             handleStop(ID) {
                 var _this = this;
-                this.$confirm('是否取消?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    axios.post('/PEMain/StopUser', {
-                        model: ID
-                    }).then(function (res) {
-                        _this.$alert('已成功取消', '取消信息', {
-                            confirmButtonText: '确定'
-                        });
-                        _this.LSignedupUser = res.data.LSignedupUser;
-                        console.log(res.data.LSignedupUser, 123);
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消动作'
-                    });
+                axios.post('/PEMain/StopUser', {
+                    model: ID
+                }).then(function (res) {
+                    _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
+                    _this.LSignedupUser = res.data.LSignedupUser;
                 });
             },
             ChangeAch: function (ach) {

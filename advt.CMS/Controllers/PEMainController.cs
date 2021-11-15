@@ -673,7 +673,7 @@ namespace advt.Web.Controllers
             SupervisorAuditModel models = new SupervisorAuditModel();
             var username = this.UserNameContext;
             models.Stopuser(model, username);
-            return Json(new { ListExamUserDetailInfos = models.ListDirectorUserInfos,  LSignedupUser = models.LSignedupUser });
+            return Json(new { LCheckAudtiUser = models.LCheckAudtiUser,  LSignedupUser = models.LSignedupUser });
         }
         //Hr审核
         [MyAuthorize]
