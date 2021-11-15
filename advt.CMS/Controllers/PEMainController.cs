@@ -642,7 +642,8 @@ namespace advt.Web.Controllers
         public ActionResult SavePracticeInfo(PracticeInfo model)
         {
             SupervisorAuditModel models = new SupervisorAuditModel();
-            models.InsertPracticeInfo(model);
+            var username = this.UserNameContext;
+            models.InsertPracticeInfo(model,username);
             return Json(new {}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]

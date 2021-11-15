@@ -55,6 +55,9 @@
                         <el-table-column label="考试类型"
                                          prop="TypeName" sortable>
                         </el-table-column>
+                        <el-table-column label="考试科目"
+                                         prop="SubjectName" sortable>
+                        </el-table-column>
                         <el-table-column label="姓名"
                                          prop="UserName" sortable>
                         </el-table-column>
@@ -86,7 +89,7 @@
                             <template slot-scope="scope">
 
                                 <el-button size="mini"
-                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName,scope.row.ApplyLevel)">实践</el-button>
+                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName,scope.row.ApplyLevel,scope.row.SubjectName,scope.row.TypeName)">实践</el-button>
                                 <el-button size="mini"
                                            @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
                                 <el-button size="mini"
@@ -169,7 +172,12 @@
                 <el-form-item label="技能" :label-width="formLabelWidth">
                     <el-input v-model="VPracticeInfo.SkillName" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
-
+                <el-form-item label="考试类型" :label-width="formLabelWidth">
+                    <el-input v-model="VPracticeInfo.TypeName" autocomplete="off" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试科目" :label-width="formLabelWidth">
+                    <el-input v-model="VPracticeInfo.SubjectName" autocomplete="off" :disabled="true"></el-input>
+                </el-form-item>
                 <el-form-item label="上传附件" :label-width="formLabelWidth">
                     <el-input v-model="VPracticeInfo.Enclosure" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
@@ -216,6 +224,12 @@
                         @*v-if="scope.row.Enclosure!=''*@
                         <span v-if="scope.row.Enclosure!=''&&scope.row.Enclosure!=null"> <a :href="'/Attachment/Practice/'+scope.row.Enclosure"> <i class="el-icon-download"></i></a></span>
                     </template>
+                </el-table-column>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="考试科目"
+                                 prop="SubjectName" sortable>
                 </el-table-column>
                 <el-table-column label="技能"
                                  prop="SkillName" sortable>
@@ -459,7 +473,6 @@
                 var _this = this;
                 _this.checkBoxData.forEach(function (item) {
                     //item['IsExam'] = _this.VAuditCheck.IsExam;
-                    item['RuleName'] = _this.VAuditCheck.RuleName;
                     item['ExamStatus'] = 'Signup';
                     //item['EntryDate'] = _this.changeDate(item['EntryDate'] );
                 })
@@ -481,11 +494,13 @@
 
             },
             //上传实践操作
-            handlePractical(usercode, username, ApplyLevel) {
+            handlePractical(usercode, username, ApplyLevel, SubjectName,TypeName) {
                 var _this = this;
                 _this.VPracticeInfo.UserCode = usercode;
                 _this.VPracticeInfo.UserName = username;
                 _this.VPracticeInfo.SkillName = ApplyLevel;
+                _this.VPracticeInfo.SubjectName = SubjectName;
+                _this.VPracticeInfo.TypeName = TypeName;
                 axios.post('/PEMain/SearchPracticeByCode', {
                     model: usercode
                 }).then(function (res) {
