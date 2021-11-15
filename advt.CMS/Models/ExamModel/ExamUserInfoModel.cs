@@ -140,7 +140,8 @@ namespace advt.CMS.Models.ExamModel
                             SubjectName = row["SubjectName"].ToString(),
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
                             RuleName = row["RuleName"].ToString(),
-                            IsUserExam = row["IsUserExam"].ToString()
+                            IsUserExam = row["IsUserExam"].ToString(),
+                            ReadExamDate= row["ReadExamDate"].ToString()
                         });
                     }
                     ListUserInfo11 = ListUserInfo.ToList();
@@ -488,6 +489,7 @@ namespace advt.CMS.Models.ExamModel
         public DateTime? PracticeTime { get; set; }// 最近一次实践考试时间
         public string IsUserExam { get; set; }
         public string ReverseBuckle { get; set; }
+        public string ReadExamDate { get; set; }
 
     }
     public class SearchUserData
