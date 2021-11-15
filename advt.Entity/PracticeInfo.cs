@@ -35,6 +35,9 @@ namespace advt.Entity
         public DateTime? UpdateDate { get; set; }
 
         public string Result { get; set; }
+
+        public string SubjectName { get; set; }
+        public string TypeName { get; set; }
         #endregion
     }
 }

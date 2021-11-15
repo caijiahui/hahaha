@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region PracticeInfo , (Ver:2.3.8) at: 2021/2/5 11:41:00
         #region Var: 
         private string[] PracticeInfo_key_a = { "ID" };
-        private string PracticeInfo_item_str = "[ID],[UserCode],[UserName],[ValidityDate],[PracticeScore],[PracticeRemark],[Enclosure],[SkillName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],Result";
+        private string PracticeInfo_item_str = "[ID],[UserCode],[UserName],[ValidityDate],[PracticeScore],[PracticeRemark],[Enclosure],[SkillName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],Result,SubjectName,TypeName";
         private string[][] PracticeInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -32,7 +32,10 @@ namespace advt.Data.SqlServer
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] {"UpdateUser", "NVarChar", "500"},
             new string[] {"UpdateDate", "DateTime", "16"},
-            new string[] { "Result", "NVarChar", "500"}
+            new string[] { "Result", "NVarChar", "500"},
+            new string[]{ "SubjectName", "NVarChar", "500" },
+            new string[]{ "TypeName", "NVarChar", "500" }
+            
         };
         #endregion
 

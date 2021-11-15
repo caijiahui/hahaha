@@ -73,9 +73,9 @@ namespace advt.CMS.Models.ExamModel
         {
             LPracticeInfo = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = code }).OrderByDescending(x=>x.CreateDate).ToList();
         }
-        public void InsertPracticeInfo(PracticeInfo data)
+        public void InsertPracticeInfo(PracticeInfo data,string username)
         {
-            data.CreateUser = "";
+            data.CreateUser = username;
             data.CreateDate = DateTime.Now;
             Data.PracticeInfo.Insert_PracticeInfo(data, null, new string[] { "ID" });
           
@@ -88,10 +88,56 @@ namespace advt.CMS.Models.ExamModel
                 var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
                 foreach (var item in data)
                 {
-                    item.DirectorCreateDate = DateTime.Now;
-                    item.DirectorCreateUser = username;
-                    item.RuleName = item.RuleName;
-                    Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    var examRule = Data.ExamRule.Get_ExamRule(new { RuleName = item.RuleName });
+                    if (examRule != null)
+                    {
+                        if (examRule.PassPracticeScore != 0)
+                        {
+                            var ListPract = new List<PracticeInfo>();
+                            if (!string.IsNullOrEmpty(item.SubjectName))
+                            {
+                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, SubjectName = item.SubjectName, UserCode = item.UserCode });
+                            }
+                            else
+                            {
+                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, UserCode = item.UserCode });
+                            }
+                            var Pract = new PracticeInfo();
+                            if (ListPract.Count() > 0)
+                            {
+                                Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                                if (Pract.PracticeScore < examRule.PassPracticeScore)
+                                {
+                                    Result = item.UserName + "实践分数未达标,不可报名。考试规则要求实践分数" + examRule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
+                                }
+                                if (Pract.ValidityDate != null)
+                                {
+                                    if (Pract.ValidityDate < DateTime.Now)
+                                    {
+                                        Result = item.UserName + item.TypeName + item.SubjectName + "实践成绩已过期,请重新填写";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Result = "未找到" + item.UserName + item.TypeName + item.SubjectName + "的实践成绩，不可报名";
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        Result = "未找到" + item.UserName + "对应的考试规则"+item.RuleName+"，不可报名";
+                    }
+                    if (string.IsNullOrEmpty(Result))
+                    {
+                        var part = Data.PracticeInfo.Get_PracticeInfo(new { SubjectName = item.SubjectName });
+                        item.DirectorCreateDate = DateTime.Now;
+                        item.DirectorCreateUser = username;
+                        item.RuleName = item.RuleName;
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    }
+                    
 
                 };
                 GetAllExamUserDetailInfo(username);
@@ -126,6 +172,7 @@ namespace advt.CMS.Models.ExamModel
                 }
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                 LSignedupUser = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code);
+                GetAllExamUserDetailInfo(username);
             }
             catch (Exception ex)
             {
@@ -196,6 +243,8 @@ namespace advt.CMS.Models.ExamModel
                                 PracticeScore = Convert.ToDecimal(dr[3].ToString()),
                                 PracticeRemark = dr[4].ToString().Trim(),
                                 SkillName = dr[5].ToString().Trim(),
+                                TypeName = dr[6].ToString().Trim(),
+                                SubjectName = dr[7].ToString().Trim()
                             };
                     LPrac = q.ToList();
                 }
