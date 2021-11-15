@@ -823,7 +823,7 @@ namespace advt.Web.Controllers
             
             return Json(new { Result = model.Result, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
         }
-        public FileResult ShunFengExcel(string TypeName,string UserCode,string DepartCode)
+        public FileResult ShunFengExcel(string TypeName,string UserCode,string DepartCode,string ReadyExamDate)
         {
             try
             {
@@ -839,11 +839,19 @@ namespace advt.Web.Controllers
                     UserCode =null;
                 }
                 data.UserCode = UserCode;
+                if (DepartCode == "undefined")
+                {
+                    DepartCode = null;
+                }
                 data.DepartCode = DepartCode;
+                if (ReadyExamDate == "undefined")
+                {
+                    ReadyExamDate = null;
+                }
+                data.ReadyExamDate = ReadyExamDate;
                 models.GetUserInfo(data);
                 //获取list数据
                 var tlst = models.ListUserInfo11;
-                //给sheet1添加第一行的头部标题
                 NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
                 row1.CreateCell(0).SetCellValue("工号");
                 row1.CreateCell(1).SetCellValue("姓名");

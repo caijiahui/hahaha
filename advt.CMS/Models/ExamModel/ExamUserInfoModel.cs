@@ -80,6 +80,7 @@ namespace advt.CMS.Models.ExamModel
                         cmd.Parameters.Add("@ExamType", SqlDbType.NVarChar, 500);                        
                         cmd.Parameters.Add("@UserCode", SqlDbType.NVarChar, 500);
                         cmd.Parameters.Add("@DepartCode", SqlDbType.NVarChar, 500);
+                        cmd.Parameters.Add("@ReadyExamDate", SqlDbType.NVarChar, 500);
                         cmd.Parameters["@ExamType"].SqlValue = data.TypeName;
                         if (data.UserCode != null)
                             cmd.Parameters["@UserCode"].SqlValue = data.UserCode;
@@ -93,6 +94,12 @@ namespace advt.CMS.Models.ExamModel
                         {
                             cmd.Parameters["@DepartCode"].SqlValue = DBNull.Value;
                         }
+                        if (data.ReadyExamDate != null)
+                            cmd.Parameters["@ReadyExamDate"].SqlValue = data.ReadyExamDate;
+                        else
+                        {
+                            cmd.Parameters["@ReadyExamDate"].SqlValue = DBNull.Value;
+                        }
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(result);
                     }
@@ -104,6 +111,7 @@ namespace advt.CMS.Models.ExamModel
                         decimal score = 0;
                         DateTime? now = null;
                         DateTime? practicetime = null;
+                        var ReadyExamDate = "";
                         if (row["TheoreticalAchievement"].ToString() != "")
                         {
                             score = Convert.ToDecimal(row["TheoreticalAchievement"].ToString());
@@ -115,6 +123,10 @@ namespace advt.CMS.Models.ExamModel
                         if (row["PariceDate"].ToString() != "")
                         {
                             practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
+                        }
+                        if (data.TypeName == "53")
+                        {
+                            ReadyExamDate = row["ReadyExamDate"].ToString();
                         }
 
                         ListUserInfo.Add(new UserInfo
@@ -141,7 +153,8 @@ namespace advt.CMS.Models.ExamModel
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
                             RuleName = row["RuleName"].ToString(),
                             IsUserExam = row["IsUserExam"].ToString(),
-                            ReadExamDate= row["ReadExamDate"].ToString()
+                            
+                            ReadExamDate= ReadyExamDate
                         });
                     }
                     ListUserInfo11 = ListUserInfo.ToList();
@@ -497,5 +510,6 @@ namespace advt.CMS.Models.ExamModel
         public string TypeName { get; set; }
         public string UserCode { get; set; }
         public string DepartCode { get; set; }
+        public string ReadyExamDate { get; set; }
     }
 }
