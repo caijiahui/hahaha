@@ -598,7 +598,7 @@ namespace advt.CMS.Models
                         {
                             foreach (var item in userinfo)
                             {
-                                var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode,SkillName= item.ApplicationLevel }).OrderByDescending(x => x.CreateDate);
+                                var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode,SkillName= item.ApplicationLevel, TypeName = model.VExamUserInfo.ExamType, SubjectName = model.VExamUserInfo.ExamSubject }).OrderByDescending(x => x.CreateDate);
                                 if (pract.Count() > 0 && pract != null)
                                 {
                                     var practscore = pract.FirstOrDefault().PracticeScore;
