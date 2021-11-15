@@ -38,7 +38,7 @@
                     </div>
                     <div style="float:left;margin-left:20px">
                         <a href="/Attachment/temp/Template/Importpractice.xlsx">
-                            <el-button size="small" type="primary" ><i class="el-icon-download"></i> 实践模板</el-button>
+                            <el-button size="small" type="primary"><i class="el-icon-download"></i> 实践模板</el-button>
                         </a>
                     </div>
                     <div style="float:left;margin-left:20px">
@@ -385,17 +385,17 @@
             dialogUpdateVisible: false,
             dialogSearchVisible: false,
             form: [],
-            LCheckAudtiUser:[],
+            LCheckAudtiUser: [],
             formLabelWidth: '120px',
             search: '',
             VPracticeInfo: {},
             checkBoxData: [],
             LRules: [],
             VAuditCheck: {},
-            LExamUserDetailInfo:[],
+            LExamUserDetailInfo: [],
             LPracticeInfo: [],
             LSignedupUser: [],
-            activeName:'first'
+            activeName: 'first'
         },
         mounted: function () {
             this.getdata();
@@ -442,7 +442,7 @@
                     }
 
                 })
-            }, 
+            },
             //批量上传实践
             handleImportPrac() {
                 var _this = this;
@@ -474,11 +474,11 @@
                         _this.LSignedupUser = res.data.LSignedupUser;
                         _this.dialogUpdateVisible = false;
                         _this.VAuditCheck.IsExam = '';
-                        _this.VAuditCheck.RuleName='';
+                        _this.VAuditCheck.RuleName = '';
                     }
-                   
+
                 });
-               
+
             },
             //上传实践操作
             handlePractical(usercode, username, ApplyLevel) {
@@ -518,7 +518,7 @@
                     _this.LExamUserDetailInfo = res.data.LExamUserDetailInfo;
                     console.log(_this.LExamUserDetailInfo, 5555);
 
-                    });
+                });
                 _this.dialogSearchVisible = true;
             },
             handleDelete(index, row) {
@@ -540,7 +540,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/PEMain/StopUser',  {
+                    axios.post('/PEMain/StopUser', {
                         model: ID
                     }).then(function (res) {
                         _this.$alert('已成功取消', '取消信息', {
