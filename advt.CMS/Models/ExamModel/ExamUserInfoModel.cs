@@ -160,7 +160,14 @@ namespace advt.CMS.Models.ExamModel
                     ListUserInfo11 = ListUserInfo.ToList();
                     YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true"&&!string.IsNullOrEmpty(x.RuleName)).ToList();
                     var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName });
+                    if (!string.IsNullOrEmpty(data.DepartCode))
+                    {
+                        ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName, DepartCode = data.DepartCode });
+                    }
+                    else
+                    {
+                        ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName});
+                    }
                 }
 
             }
