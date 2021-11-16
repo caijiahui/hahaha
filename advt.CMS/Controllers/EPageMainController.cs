@@ -65,9 +65,14 @@ namespace advt.Web.Controllers
                 {
                     var dtdate = DateTime.Now;
                     var ddate = Convert.ToDateTime(detail.ExamDate);
-                    if ( dtdate < ddate)
+                    var edate = ddate.ToString("yyyy-MM-dd");
+                    var nowdate = DateTime.Now.ToString("yyyy-MM-dd");
+                    if (edate != nowdate || dtdate < ddate)
                     {
-                        model.IsExam = "未到考试时间,不可考试";
+                        if (dtdate <= ddate)
+                        {
+                            model.IsExam = "不符合考试时间:"+ detail.ExamDate + ",不可考试";
+                        }
                     }
                     else
                     {
