@@ -230,7 +230,8 @@ namespace advt.CMS.Models.ExamModel
                         }
                     }
                 }
-                
+
+                DateTime? v = new DateTime();
                 using (var ds = dt)
                 {
                     var q = from DataRow dr in ds.Rows
@@ -239,7 +240,7 @@ namespace advt.CMS.Models.ExamModel
                             {
                                 UserCode = dr[0].ToString().Trim(),
                                 UserName = dr[1].ToString().Trim(),
-                                ValidityDate = dr[2].ToString()!=""? Convert.ToDateTime(dr[2].ToString()):null,
+                                ValidityDate = dr[2].ToString() != "" ? Convert.ToDateTime(dr[2].ToString()) : v,
                                 PracticeScore = Convert.ToDecimal(dr[3].ToString()),
                                 PracticeRemark = dr[4].ToString().Trim(),
                                 SkillName = dr[5].ToString().Trim(),
