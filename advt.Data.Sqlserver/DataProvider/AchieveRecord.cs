@@ -17,15 +17,15 @@ namespace advt.Data.SqlServer
         #region AchieveRecord , (Ver:2.3.8) at: 2021/2/5 11:41:00
         #region Var: 
         private string[] AchieveRecord_key_a = { "ID" };
-        private string AchieveRecord_item_str = "[ID],[UserCode],[CreateUser],[CreateDate],[Achievement],RecordType";
+        private string AchieveRecord_item_str = "ID,UserCode,CreateUser,CreateDate,Achievement,RecordType";
         private string[][] AchieveRecord_item_prop_a =
         {
-            new string[] {"ID", "Int", "4"},
-            new string[] {"UserCode", "NVarChar", "500"},
-            new string[] {"CreateUser", "NVarChar", "500"},
-            new string[] {"CreateDate", "DateTime", "16"},
-             new string[] { "Achievement", "NVarChar", "500"},
-             new string[] { "RecordType", "NVarChar", "500"}
+            new string[] { "ID", "Int", "4"},
+            new string[] { "UserCode", "NVarChar", "50"},
+            new string[] { "CreateUser", "NVarChar", "50"},
+            new string[] { "CreateDate", "DateTime", "16"},
+            new string[] { "Achievement", "NVarChar", "50"},
+            new string[] { "RecordType", "NVarChar", "50"}
              
         };
         #endregion
@@ -39,7 +39,7 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(AchieveRecord_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
+       
         public int Insert_AchieveRecord(Entity.AchieveRecord info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();
