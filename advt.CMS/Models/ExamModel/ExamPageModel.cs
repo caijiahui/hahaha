@@ -609,6 +609,7 @@ namespace advt.CMS.Models
                                         {
                                             int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
                                             item.ApplicationLevel = item.ApplicationLevel.Substring(0, 1) + ss.ToString();
+                                            item.Achievement = null;
                                         }
                                         Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                                     }
