@@ -63,10 +63,9 @@ namespace advt.Web.Controllers
                 var detail = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = usercode.UserCode, RuleName = RuleName, IsStop = false, IsExam = false });
                 if (detail != null)
                 {
-                    var dtdate = DateTime.Now.ToString("yyyy-MM-dd");
-                    var ddate = "";
-                    ddate = Convert.ToDateTime(detail.ExamDate).ToString("yyyy-MM-dd");
-                    if ( dtdate != ddate)
+                    var dtdate = DateTime.Now;
+                    var ddate = Convert.ToDateTime(detail.ExamDate);
+                    if ( dtdate < ddate)
                     {
                         model.IsExam = "未到考试时间,不可考试";
                     }
