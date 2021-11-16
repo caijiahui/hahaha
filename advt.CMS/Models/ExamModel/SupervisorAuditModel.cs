@@ -239,7 +239,7 @@ namespace advt.CMS.Models.ExamModel
                             {
                                 UserCode = dr[0].ToString().Trim(),
                                 UserName = dr[1].ToString().Trim(),
-                                ValidityDate = Convert.ToDateTime(dr[2].ToString()),
+                                ValidityDate = dr[2].ToString()!=""? Convert.ToDateTime(dr[2].ToString()):null,
                                 PracticeScore = Convert.ToDecimal(dr[3].ToString()),
                                 PracticeRemark = dr[4].ToString().Trim(),
                                 SkillName = dr[5].ToString().Trim(),
