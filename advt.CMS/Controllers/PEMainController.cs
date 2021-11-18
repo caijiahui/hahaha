@@ -823,7 +823,7 @@ namespace advt.Web.Controllers
             
             return Json(new { Result = model.Result, CPListUserInfo = model.ListDetailInfo }, JsonRequestBehavior.AllowGet);
         }
-        public FileResult ShunFengExcel(string TypeName,string UserCode,string DepartCode,string ReadyExamDate)
+        public FileResult ShunFengExcel(string TypeName,string UserCode,string DepartCode,string ReadyExamDate,string WorkPlace)
         {
             try
             {
@@ -849,6 +849,11 @@ namespace advt.Web.Controllers
                     ReadyExamDate = null;
                 }
                 data.ReadyExamDate = ReadyExamDate;
+                if (WorkPlace == "undefined")
+                {
+                    WorkPlace = null;
+                }
+                data.WorkPlace = WorkPlace;
                 models.GetUserInfo(data);
                 //获取list数据
                 var tlst = models.ListUserInfo11;
