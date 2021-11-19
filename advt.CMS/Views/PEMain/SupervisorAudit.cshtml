@@ -468,11 +468,6 @@
             },
             handleSave() {
                 var _this = this;
-                _this.checkBoxData.forEach(function (item) {
-                    //item['IsExam'] = _this.VAuditCheck.IsExam;
-                    item['ExamStatus'] = 'Signup';
-                    //item['EntryDate'] = _this.changeDate(item['EntryDate'] );
-                })
                 console.log(_this.checkBoxData, 333);
                 axios.post('/PEMain/InsertUserDetail', {
                     model: _this.checkBoxData

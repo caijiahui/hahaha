@@ -86,8 +86,10 @@ namespace advt.CMS.Models.ExamModel
             {
                 var Result = "";
                 var ListExamUserDetailInfos = new List<ExamUserDetailInfo>();
-                foreach (var item in data)
+                foreach (var items in data)
                 {
+                    var item = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = items.ID });
+                    item.ExamStatus = "Signup";
                     var examRule = Data.ExamRule.Get_ExamRule(new { RuleName = item.RuleName });
                     if (examRule != null)
                     {
@@ -112,7 +114,8 @@ namespace advt.CMS.Models.ExamModel
                                 }
                                 if (Pract.ValidityDate != null)
                                 {
-                                    if (Pract.ValidityDate < DateTime.Now)
+                                    var da = DateTime.Now.AddDays(1);
+                                    if (Pract.ValidityDate < da)
                                     {
                                         Result = item.UserName + item.TypeName + item.SubjectName + "实践成绩已过期,请重新填写";
                                     }
@@ -162,8 +165,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
                 c.IsStop = true;
-                c.HrCheckCreateDate = DateTime.Now;
-                c.HrCheckCreateUser = username;
+                c.StopCreateDate = DateTime.Now;
+                c.StopCreateUser = username;
                 var code = "";
                 var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
                 if (user != null)
@@ -181,7 +184,7 @@ namespace advt.CMS.Models.ExamModel
             }
           
         }
-        public void UploadPractice(string filepath)
+        public void UploadPractice(string filepath,string username)
         {
             DataTable dt = new DataTable();
             FileStream files = null;
@@ -245,7 +248,9 @@ namespace advt.CMS.Models.ExamModel
                                 PracticeRemark = dr[4].ToString().Trim(),
                                 SkillName = dr[5].ToString().Trim(),
                                 TypeName = dr[6].ToString().Trim(),
-                                SubjectName = dr[7].ToString().Trim()
+                                SubjectName = dr[7].ToString().Trim(),
+                                CreateUser=username,
+                                CreateDate=DateTime.Now
                             };
                     LPrac = q.ToList();
                 }
