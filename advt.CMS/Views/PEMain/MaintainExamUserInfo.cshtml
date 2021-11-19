@@ -28,6 +28,8 @@
             </el-input>
             <el-input placeholder="下一次可考时间" v-model="VSearch.ReadyExamDate" style="width:200px">
             </el-input>
+             <el-input placeholder="区域" v-model="VSearch.WorkPlace" style="width:200px">
+            </el-input>
             <el-button slot="append" @@click="SearchinByTypeName">查询</el-button>
         </template>
         <template>
@@ -61,6 +63,7 @@
                 <el-table-column label="本次申请等级" prop="ApplicationLevel" sortable></el-table-column>
                 <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
                 <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
+                <el-table-column label="区域" prop="WorkPlace" sortable></el-table-column>
             </el-table>
         </div>
 
@@ -144,7 +147,7 @@
                     </a>
                 </template>
                 <template>
-                    <a style="color:white" :href="'/PEMain/ShunFengExcel?TypeName='+VSearch.TypeName+'&UserCode='+VSearch.UserCode+'&DepartCode='+VSearch.DepartCode+'&ReadyExamDate='+VSearch.ReadyExamDate">
+                    <a style="color:white" :href="'/PEMain/ShunFengExcel?TypeName='+VSearch.TypeName+'&UserCode='+VSearch.UserCode+'&DepartCode='+VSearch.DepartCode+'&ReadyExamDate='+VSearch.ReadyExamDate+'&WorkPlace='+VSearch.WorkPlace">
                         <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
                             导出
                         </el-button>
@@ -202,7 +205,7 @@
                         <i class="el-icon-close" v-if="scope.row.IsAchment=='false'"></i>
                     </template>
                 </el-table-column>
-
+                <el-table-column label="区域" prop="WorkPlace" sortable></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template slot="header" slot-scope="scope">
                         <el-input v-model="search"

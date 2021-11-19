@@ -81,6 +81,7 @@ namespace advt.CMS.Models.ExamModel
                         cmd.Parameters.Add("@UserCode", SqlDbType.NVarChar, 500);
                         cmd.Parameters.Add("@DepartCode", SqlDbType.NVarChar, 500);
                         cmd.Parameters.Add("@ReadyExamDate", SqlDbType.NVarChar, 500);
+                        cmd.Parameters.Add("@WorkPlace", SqlDbType.NVarChar, 500);
                         cmd.Parameters["@ExamType"].SqlValue = data.TypeName;
                         if (data.UserCode != null)
                             cmd.Parameters["@UserCode"].SqlValue = data.UserCode;
@@ -99,6 +100,12 @@ namespace advt.CMS.Models.ExamModel
                         else
                         {
                             cmd.Parameters["@ReadyExamDate"].SqlValue = DBNull.Value;
+                        }
+                        if (data.WorkPlace != null)
+                            cmd.Parameters["@WorkPlace"].SqlValue = data.WorkPlace;
+                        else
+                        {
+                            cmd.Parameters["@WorkPlace"].SqlValue = DBNull.Value;
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(result);
@@ -152,6 +159,7 @@ namespace advt.CMS.Models.ExamModel
                             SubjectName = row["SubjectName"].ToString(),
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
                             RuleName = row["RuleName"].ToString(),
+                            WorkPlace = row["WorkPlace"].ToString(),
                             IsUserExam = row["IsUserExam"].ToString(),
                             
                             ReadExamDate= ReadyExamDate
@@ -160,7 +168,14 @@ namespace advt.CMS.Models.ExamModel
                     ListUserInfo11 = ListUserInfo.ToList();
                     YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true"&&!string.IsNullOrEmpty(x.RuleName)).ToList();
                     var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
-                    ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName });
+                    if (!string.IsNullOrEmpty(data.DepartCode))
+                    {
+                        ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName, DepartCode = data.DepartCode });
+                    }
+                    else
+                    {
+                        ListDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "HrSignUp", IsStop = false, TypeName = tyname.FirstOrDefault().TypeName});
+                    }
                 }
 
             }
@@ -503,6 +518,7 @@ namespace advt.CMS.Models.ExamModel
         public string IsUserExam { get; set; }
         public string ReverseBuckle { get; set; }
         public string ReadExamDate { get; set; }
+        public string WorkPlace { get; set; }
 
     }
     public class SearchUserData
@@ -511,5 +527,6 @@ namespace advt.CMS.Models.ExamModel
         public string UserCode { get; set; }
         public string DepartCode { get; set; }
         public string ReadyExamDate { get; set; }
+        public string WorkPlace { get; set; }
     }
 }
