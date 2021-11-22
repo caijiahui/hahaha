@@ -410,6 +410,7 @@ namespace advt.Web.Controllers
         public JsonResult Upload_TEL_Practice(HttpPostedFileBase file)
         {
             string filepath = "";
+            var username = this.UserNameContext;
             if (file != null)
             {
                 string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
@@ -427,7 +428,7 @@ namespace advt.Web.Controllers
                 file.SaveAs(filepath);//上传路径
             }
             var model = new SupervisorAuditModel();
-            model.UploadPractice(filepath);
+            model.UploadPractice(filepath,username);
 
             return Json(new { Result = model.Result}, JsonRequestBehavior.AllowGet);
         }

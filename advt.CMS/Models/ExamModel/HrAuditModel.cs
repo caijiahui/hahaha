@@ -68,11 +68,14 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-                foreach (var item in model)
+                foreach (var items in model)
                 {
-                    item.DirectorCreateUser = username;
-                    item.DirectorCreateDate = DateTime.Now;
-                    Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                    var item = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = items.ID });
+                    items.HrCheckCreateUser = username;
+                    items.HrCheckCreateDate = DateTime.Now;
+                    items.HrCreateDate = item.HrCreateDate;
+                    items.DirectorCreateDate = item.DirectorCreateDate;
+                    Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(items, null, new string[] { "ID" });
                 }
                 //EmailHelper v = new EmailHelper();
                 //v.SendEmail();
