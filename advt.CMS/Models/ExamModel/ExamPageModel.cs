@@ -367,7 +367,7 @@ namespace advt.CMS.Models
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck" });
+                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop=false });
                     if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                     {
                         foreach (var item in ListExamUserDetailInfo)
