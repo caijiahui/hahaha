@@ -13,6 +13,7 @@ namespace advt.CMS.Models
 {
     public class ExamPageModel
     {
+        public List<ExamScoreInfo> Listexam { get; set; }
         public ExamRule Current { get; set; }
         public ExamView examList { get; set; }
         public List<ExamView> ListBankView { get; set; }
@@ -43,6 +44,7 @@ namespace advt.CMS.Models
             VExamUserInfo = new ExamUserInfo();
             VExamUserInfo.LExamViews = new List<ExamView>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
+            Listexam = new List<ExamScoreInfo>();
         }
         public string GetExamBankNum(string RuleName)
         {
@@ -290,16 +292,14 @@ namespace advt.CMS.Models
             examList = ListBankView.Where(x => x.index == nowItem).FirstOrDefault();
 
         }
-        public string InsertScoreData(ExamPageModel model)
+
+        public string InsertScoreDatas(ExamPageModel model)
         {
-            var id = "";
+            var guid = Guid.NewGuid().ToString();
             if (model.VExamUserInfo.LExamViews.Count() > 0)
             {
-                
-
                 ExamScore sc = new ExamScore();
                 sc.ExamType = model.VExamUserInfo.ExamType;
-
                 sc.CreateDate = DateTime.Now;
                 sc.CreateUser = model.VExamUserInfo.UserName;
                 sc.IsTest = model.VExamUserInfo.IsTest;
@@ -311,7 +311,7 @@ namespace advt.CMS.Models
 
                 int sd = 0;
                 int score = 0;
-
+             
                 if (sc.IsQuestion == true)
                 {
                     sc.CorrectScore = 0;
@@ -322,13 +322,48 @@ namespace advt.CMS.Models
                     sc.TotalScore = model.VExamUserInfo.TotalScore;
                     foreach (var item in model.VExamUserInfo.LExamViews)
                     {
-
+                        string Remarks = string.Empty;
+                        ExamRecord record = new ExamRecord();
+                        //正确答案ABCD
                         var ss = item.RightKey.OrderBy(x => x).ToArray();
+                        var test = string.Empty;
+                        var ltest = string.Empty;
+                        for (int i = 0; i < item.selectItem.Length; i++)
+                        {
+                            var ids = Convert.ToInt32(item.selectItem[i]);
+                            test += item.ansowerList[ids].ansowerflag+";";
+                            if (item.selectItem[i].Equals("0"))
+                            {
+                                ltest += "A;";
+                            }
+                            else if (item.selectItem[i].Equals("1"))
+                            {
+                                ltest += "B;";
+                            }
+                            else if (item.selectItem[i].Equals("2"))
+                            {
+                                ltest += "C;";
+                            }
+
+                            else if (item.selectItem[i].Equals("3"))
+                            {
+                                ltest += "D;";
+                            }
+
+                            else if (item.selectItem[i].Equals("4"))
+                            {
+                                ltest += "E;";
+                            }
+
+                        }
+                        item.LselectItem = test.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                        record.WriteAnsower = ltest;
+                        var altest = ltest.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        //我选择的答案abcd
                         if (item.LselectItem != null)
                         {
-                            var sl = item.LselectItem.OrderBy(x => x).ToArray();
                             //答对题数CorrectNum
-
                             if (Enumerable.SequenceEqual(ss, sl))
                             {
                                 sd++;
@@ -338,36 +373,145 @@ namespace advt.CMS.Models
                             }
                             else
                             {
+                                //错误之后找出正确答案
                                 foreach (var ii in item.RightKey)
                                 {
                                     if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
                                     {
-                                        Remark += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
+                                        Remarks += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower+";";
                                     }
                                 }
 
                             }
+                            if (string.IsNullOrEmpty(Remarks))
+                            {
+                                record.IsRight = true;
+                            }
                         }
+                        //题目列表ansowerList B
+                        //我选择的答案item.selectItem 0,1
+                        //LTEST 我选择的答案页面呈现对应的abcd
+                        //test 我选择的题目背后答案abcd
+                        //LselectItem我选择的题目背后答案abcd
+                        //rightkey正确答案ABCD
+                        #region
+                        record.ExamGuid = guid;
+                        record.TopicTitle = item.proName;
+                        if (item.TopicTitlePic != null)
+                        {
+                            record.TopicTitlePicNum = item.TopicTitlePic;
 
+                        }
+                        record.TopicNum = Convert.ToInt32(item.TopicScore);
+                        record.Type = item.type;
+                        record.Remark = item.Remark;
+                        if (item.RightKey.Count() > 0)
+                        {
+                            foreach (var sr in item.RightKey)
+                            {
+                                //正确的答案转成a;b;c;d
+                                record.CorrectAnsower += sr + ';';
+                            }
+                        }
+                        //把题目集合往选项ABC里面插入
+                        if (item.ansowerList != null && item.ansowerList.Count() > 0)
+                        {
+                            for (int i = 0; i < item.ansowerList.Count();)
+                            {
+                                if (item.ansowerList[0] != null)
+                                {
+                                    record.OptionA = item.ansowerList[0].ansower;
+                                    record.OptionAPicNum = item.ansowerList[0].ansowerpic;
+                                }
+
+                                if (item.ansowerList[1] != null)
+                                {
+                                    record.OptionB = item.ansowerList[1].ansower;
+                                    record.OptionBPicNum = item.ansowerList[1].ansowerpic;
+
+                                }
+                                if (item.ansowerList.Count() >= 3)
+                                {
+                                    if (item.ansowerList[2] != null)
+                                    {
+                                        record.OptionC = item.ansowerList[2].ansower;
+                                        record.OptionCPicNum = item.ansowerList[2].ansowerpic;
+
+                                    }
+                                }
+                                if (item.ansowerList.Count() >= 4)
+                                {
+                                    if (item.ansowerList[3] != null)
+                                    {
+                                        record.OptionD = item.ansowerList[3].ansower;
+                                        record.OptionDPicNum = item.ansowerList[3].ansowerpic;
+
+                                    }
+                                }
+                                if (item.ansowerList.Count() >= 5)
+                                {
+                                    if (item.ansowerList[4] != null)
+                                    {
+                                        record.OptionE = item.ansowerList[4].ansower;//题目
+                                        record.OptionEPicNum = item.ansowerList[4].ansowerpic;//图片
+                                    }
+                                }
+
+                                i++;
+                            }
+
+                        }
+                        record.DaRemark = Remarks;
+                        record.CreateUser = model.VExamUserInfo.UserName;
+                        record.CreateDate = DateTime.Now;
+                        //插入试题
+                        Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
+                        #endregion
+
+                        #region 呈现试题
+                       
+                        Listexam.Add(new ExamScoreInfo
+                        {
+                            ExamID =guid,
+                            TopicTitle = record.TopicTitle,
+                            TopicNum = record.TopicNum,
+                            ansowerList = item.ansowerList,
+                            isright = record.IsRight,
+                            Type = record.Type,
+                            selectItem = item.selectItem,
+                            CorrectAnsower = record.CorrectAnsower,
+                            WriteItem = record.WriteAnsower,
+                            TopicTitlePicNum = record.TopicTitlePicNum,
+                            Remark = record.Remark,
+                            TopicTitlePic = record.TopicTitlePicNum,
+                            DeRemark = Remarks
+                        });
+
+
+
+
+
+
+                        #endregion
                     }
 
-                    if (sc.CorrectNum == null)
-                    { sc.CorrectNum = 0; }
-                    sc.CorrectScore = score;
+
+                  
+
                 }
-
-                var guid = Guid.NewGuid();
-                sc.ExamGuid = guid.ToString();
-                id = sc.ExamGuid;
-
-                
+                //插入分数记录
+                if (sc.CorrectNum == null)
+                { sc.CorrectNum = 0; }
+                sc.CorrectScore = score;
+                sc.ExamGuid = guid;
                 Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
+                VExamScore = sc;
 
 
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop=false });
+                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false });
                     if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
                     {
                         foreach (var item in ListExamUserDetailInfo)
@@ -386,161 +530,13 @@ namespace advt.CMS.Models
                         }
 
                     }
-                   
+
                 }
 
 
             }
 
-            return id;
-         
-        }
-        public void InsertRecoredData(ExamPageModel model,string name,string examguid)
-        {
-            var usercode = "";
-            int examid = 0;
-            var usersheet = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = name });
-            if (usersheet != null)
-            {
-                usercode = usersheet.UserCode;
-            }
-            var ee = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
-            if (ee.Count() > 0)
-            {
-                examid = ee.FirstOrDefault().ExamID;
-            }
-
-            foreach (var item in model.VExamUserInfo.LExamViews)
-            {
-                var RightMeno = string.Empty;
-                var IsRight = false;
-                ExamRecord record = new ExamRecord();
-
-                record.ExamID = examid.ToString();
-                record.TopicTitle = item.proName;
-                if (item.TopicTitlePic != null)
-                {
-                    record.TopicTitlePicNum = item.TopicTitlePic;
-
-                }
-                record.TopicNum = Convert.ToInt32(item.TopicScore);
-                record.Type = item.type;
-                record.Remark = item.Remark;
-                if (item.selectItem != null)
-                {
-                    foreach (var ss in item.selectItem)
-                    {
-                        var sr = "";
-                        if (ss == "0")
-                        {
-                            sr = "A";
-                        }
-                        if (ss == "1")
-                        {
-                            sr = "B";
-                        }
-                        if (ss == "2")
-                        {
-                            sr = "C";
-                        }
-                        if (ss == "3")
-                        {
-                            sr = "D";
-                        }
-                        if (ss == "4")
-                        {
-                            sr = "E";
-                        }
-
-                        //选择的答案
-                        record.WriteAnsower += sr + ';';
-                    }
-                }
-
-                if (item.RightKey.Count() > 0)
-                {
-                    foreach (var sr in item.RightKey)
-                    {
-                        //选择的答案
-                        record.CorrectAnsower += sr + ';';
-                    }
-                }
-                var sss = item.RightKey.OrderBy(x => x).ToArray();
-                if (item.LselectItem != null)
-                {
-                    var sl = item.LselectItem.OrderBy(x => x).ToArray();
-                    //答错的情况把正确答案捞出
-                    if (!Enumerable.SequenceEqual(sss, sl))
-                    {
-                        foreach (var ii in item.RightKey)
-                        {
-                            if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
-                            {
-                                RightMeno += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower;
-                            }
-                        }
-                    }
-                    if (string.IsNullOrEmpty(RightMeno))
-                    {
-                        IsRight = true;
-                    }
-                }
-                if (item.ansowerList != null && item.ansowerList.Count() > 0)
-                {
-                    for (int i = 0; i < item.ansowerList.Count();)
-                    {
-                        if (item.ansowerList[0] != null)
-                        {
-                            record.OptionA = item.ansowerList[0].ansower;
-                            record.OptionAPicNum = item.ansowerList[0].ansowerpic;
-                        }
-
-                        if (item.ansowerList[1] != null)
-                        {
-                            record.OptionB = item.ansowerList[1].ansower;
-                            record.OptionBPicNum = item.ansowerList[1].ansowerpic;
-
-                        }
-                        if (item.ansowerList.Count() >= 3)
-                        {
-                            if (item.ansowerList[2] != null)
-                            {
-                                record.OptionC = item.ansowerList[2].ansower;
-                                record.OptionCPicNum = item.ansowerList[2].ansowerpic;
-
-                            }
-                        }
-                        if (item.ansowerList.Count() >= 4)
-                        {
-                            if (item.ansowerList[3] != null)
-                            {
-                                record.OptionD = item.ansowerList[3].ansower;
-                                record.OptionDPicNum = item.ansowerList[3].ansowerpic;
-
-                            }
-                        }
-                        if (item.ansowerList.Count() >= 5)
-                        {
-                            if (item.ansowerList[4] != null)
-                            {
-                                record.OptionE = item.ansowerList[4].ansower;
-                                record.OptionEPicNum = item.ansowerList[4].ansowerpic;
-                            }
-                        }
-
-                        i++;
-                    }
-
-                }
-
-                record.IsRight = IsRight;
-                record.DaRemark = RightMeno;
-                record.CreateUser = model.VExamUserInfo.UserName;
-                record.CreateDate = DateTime.Now;
-                Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
-
-            }
-
+            return guid;
         }
 
         public void UpdateLevel(ExamPageModel model, string name, string examguid)
@@ -558,65 +554,52 @@ namespace advt.CMS.Models
                 var PassScore = guid.FirstOrDefault().PassScore;
                 if (CorrectScore >= PassScore)
                 {
-                    if (model.VExamUserInfo.ExamType == "职等考试")
+                    var userinfos = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName =VExamUserInfo.ExamType});
+                    if (userinfos.Count() > 0 && userinfos != null)
                     {
-                        var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = "职等考试" });
-                        if (userinfo.Count() > 0 && userinfo != null)
+                        foreach (var item in userinfos)
                         {
-                            foreach (var item in userinfo)
+                            if (!string.IsNullOrEmpty(item.ApplicationLevel))
                             {
-                                var applevel = item.ApplicationLevel;
-                                if (!string.IsNullOrEmpty(applevel))
-                                {
-                                    if (Convert.ToInt32(applevel.Substring(1, 1)) < 3)
-                                    {
-                                        int ss = Convert.ToInt32(applevel.Substring(1, 1)) + 1;
-                                        item.ApplicationLevel = "A" + ss.ToString();
-                                    }
-                                }                               
-                                if (!string.IsNullOrEmpty(item.RankName))
-                                {
-                                    if (Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) < 3)
-                                    {
-                                        int ran = Convert.ToInt32(item.RankName.Substring(item.RankName.Length-1, 1)) + 1;
-                                        item.RankName = "A-" + ran;                                        
-                                    }
-                                    if (item.RankName== "A-3" && item.PostName == "作业员")
-                                    {
-                                        item.PostName = "技术员";
-                                    }
-                                }
-                                Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-                            }
-
-                        }
-                    }
-                    else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
-                    {  //实践是否通过并更新等级
-                        var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = "关键岗位技能等级" });
-                        if (userinfo.Count() > 0 && userinfo != null)
-                        {
-                            foreach (var item in userinfo)
-                            {
-                                var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode,SkillName= item.ApplicationLevel, TypeName = model.VExamUserInfo.ExamType, SubjectName = model.VExamUserInfo.ExamSubject }).OrderByDescending(x => x.CreateDate);
+                                var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode, SkillName = item.ApplicationLevel, TypeName = model.VExamUserInfo.ExamType, SubjectName = model.VExamUserInfo.ExamSubject }).OrderByDescending(x => x.CreateDate);
                                 if (pract.Count() > 0 && pract != null)
                                 {
                                     var practscore = pract.FirstOrDefault().PracticeScore;
                                     var rules = Data.ExamRule.Get_All_ExamRule(new { SubjectName = VExamUserInfo.ExamSubject });
                                     if (rules.FirstOrDefault().PassPracticeScore <= practscore)
                                     {
-                                        if (Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) < 8)
+                                        if (!string.IsNullOrEmpty(item.ApplicationLevel))
                                         {
-                                            int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
-                                            item.ApplicationLevel = item.ApplicationLevel.Substring(0, 1) + ss.ToString();
-                                            item.Achievement = null;
+                                            var level = Convert.ToInt32(item.ApplicationLevel.Substring(item.ApplicationLevel.Length - 1, 1));
+                                            int levels = level + 1;
+                                            if (model.VExamUserInfo.ExamType == "职等考试")
+                                            {
+                                                if (level < 3)
+                                                {
+                                                    item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
+                                                    item.RankName = item.RankName.Substring(0, item.RankName.Length - 1) + levels.ToString();
+                                                }
+                                                if (item.RankName == "A-3" && item.PostName == "作业员")
+                                                {
+                                                    item.PostName = "技术员";
+                                                }
+                                            }
+                                            else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
+                                            {
+                                                if (level < 8)
+                                                {
+                                                    item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
+                                                    item.Achievement = null;
+                                                }
+                                            }
+                                            Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                                         }
-                                        Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                                     }
                                 }
-                            }
-                        }                       
 
+                            }
+
+                        }
                     }
                 }
 

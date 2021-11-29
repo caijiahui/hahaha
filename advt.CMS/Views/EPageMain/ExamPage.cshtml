@@ -209,14 +209,7 @@
                                     <div><img v-if="item.TopicTitlePic!=null&&item.TopicTitlePic!=''" :src="'/Attachment/BankPic/'+item.TopicTitlePic" width="100" height="100" /></div>
 
                                     <div class="detail-content">
-                                        <el-radio-group v-if="item.Type==0" v-model="item.selectOption">
-                                            <el-radio :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
-                                                <div>{{abcChange(index)}}.{{list.ansower}}</div>
-                                                <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
-
-                                            </el-radio>
-                                        </el-radio-group>
-                                        <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1">
+                                        <el-checkbox-group v-model="item.selectItem" v-if="item.Type==1||item.Type==0">
                                             <el-checkbox :label="index.toString()" disabled v-for="(list,index) in item.ansowerList">
                                                 <div>{{abcChange(index)}}.{{list.ansower}}</div>
                                                 <div><img v-if="list.ansowerpic!=null&&list.ansowerpic!=''" :src="'/Attachment/BankPic/'+list.ansowerpic" width="100" height="100" /></div>
@@ -389,20 +382,14 @@
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
                                                 axios.post('/EPageMain/InsertScore', {
                                                     model: obj
-                                                }).then(function (res) {
-                                                    _this.examid = res.data.examid;
-                                                    axios.post('/EPageMain/ExamFinishInfo', {
-                                                        test: _this.VExamScore.IsTest,
-                                                        examguid:_this.examid
-                                                    }).then(function (responese) {
-                                                        _this.VExamScore = responese.data.VExamScore;
-                                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                            _this.isSuccess = true;
-                                                        }
-                                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                        _this.examLists = responese.data.examList;
+                                                }).then(function (responese) {
+                                                    _this.VExamScore = responese.data.VExamScore;
+                                                    if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                        _this.isSuccess = true;
+                                                    }
+                                                    _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                    _this.examLists = responese.data.examList;
 
-                                                    })
                                                     _this.dialogFormVisible = true;
                                                 });
                                                 //window.location.href = "/EPageMain/ExamFinish";
@@ -483,20 +470,13 @@
                                                     obj.VExamUserInfo = _this.VExamUserInfo;
                                                     axios.post('/EPageMain/InsertScore', {
                                                         model: obj
-                                                    }).then(function (res) {
-                                                        _this.examid = res.data.examid;
-                                                        axios.post('/EPageMain/ExamFinishInfo', {
-                                                            test: _this.VExamScore.IsTest,
-                                                            examguid: _this.examid
-                                                        }).then(function (responese) {
-                                                            _this.VExamScore = responese.data.VExamScore;
-                                                            if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                                _this.isSuccess = true;
-                                                            }
-                                                            _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                            _this.examLists = responese.data.examList;
-
-                                                        })
+                                                    }).then(function (responese) {
+                                                        _this.VExamScore = responese.data.VExamScore;
+                                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                            _this.isSuccess = true;
+                                                        }
+                                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                        _this.examLists = responese.data.examList;
                                                         _this.dialogFormVisible = true;
                                                     });
 
@@ -550,20 +530,13 @@
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
                                                 axios.post('/EPageMain/InsertScore', {
                                                     model: obj
-                                                }).then(function (res) {
-                                                    _this.examid = res.data.examid;
-                                                    axios.post('/EPageMain/ExamFinishInfo', {
-                                                        test: _this.VExamScore.IsTest,
-                                                        examguid: _this.examid
-                                                    }).then(function (responese) {
-                                                        _this.VExamScore = responese.data.VExamScore;
-                                                        if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                            _this.isSuccess = true;
-                                                        }
-                                                        _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                        _this.examLists = responese.data.examList;
-
-                                                    })
+                                                }).then(function (responese) {
+                                                    _this.VExamScore = responese.data.VExamScore;
+                                                    if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                        _this.isSuccess = true;
+                                                    }
+                                                    _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                                    _this.examLists = responese.data.examList;
                                                     _this.dialogFormVisible = true;
                                                 });
 
@@ -618,20 +591,13 @@
                                         obj.VExamUserInfo = _this.VExamUserInfo;
                                         axios.post('/EPageMain/InsertScore', {
                                             model: obj
-                                        }).then(function (res) {
-                                            _this.examid = res.data.examid;
-                                            axios.post('/EPageMain/ExamFinishInfo', {
-                                                test: _this.VExamScore.IsTest,
-                                                examguid: _this.examid
-                                            }).then(function (responese) {
-                                                _this.VExamScore = responese.data.VExamScore;
-                                                if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
-                                                    _this.isSuccess = true;
-                                                }
-                                                _this.isQuestion = responese.data.VExamScore.IsQuestion;
-                                                _this.examLists = responese.data.examList;
-
-                                            })
+                                        }).then(function (responese) {
+                                            _this.VExamScore = responese.data.VExamScore;
+                                            if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
+                                                _this.isSuccess = true;
+                                            }
+                                            _this.isQuestion = responese.data.VExamScore.IsQuestion;
+                                            _this.examLists = responese.data.examList;
                                             _this.dialogFormVisible = true;
                                         });
 

@@ -37,15 +37,15 @@ namespace advt.CMS.Models
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
             {
                 var ss = Data.ExamScore.Get_All_ExamScore(new { ExamGuid = examguid }).Max(x => x.ExamID);
-                if(ss!=0)
+                if (ss != 0)
                 {
                     VExamScore = Data.ExamScore.Get_ExamScore(ss);
 
                     ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ss);
                     ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ss.ToString()).ToList();
- 
+
                 }
-                
+
             }
         }
 
@@ -53,12 +53,12 @@ namespace advt.CMS.Models
         {
             var guid = "";
             var exa = Convert.ToInt32(ID);
-            var id = Data.ExamScore.Get_All_ExamScore(new { ExamID =exa});
+            var id = Data.ExamScore.Get_All_ExamScore(new { ExamID = exa });
             if (id.Count() > 0)
                 guid = id.FirstOrDefault().ExamGuid;
             return guid;
         }
-        public void GetExamListInfo(int id, string name,string test,string examid)
+        public void GetExamListInfo(int id, string name, string test, string examid)
         {
             var usercode = "";
             if (Data.ExamScore.Get_All_ExamScore().Count() > 0)
@@ -73,15 +73,13 @@ namespace advt.CMS.Models
                 {
                     ID = ss.FirstOrDefault().ExamID;
                     VExamScore = Data.ExamScore.Get_ExamScore(ID);
-
-                    ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(ID);
-                    ListVexamRecord = ListVexamRecord.Where(x => x.ExamID == ID.ToString()).ToList();
+                    ListVexamRecord = Data.ExamRecord.Get_All_ExamRecord(new { ExamGuid = examid }).ToList();
                 }
-                
+
             }
             if (ID != 0)
             {
-                foreach (var item in ListVexamRecord.Where(x => x.ExamID == ID.ToString()))
+                foreach (var item in ListVexamRecord)
                 {
                     var output = new string[] { };
                     var list = new string[] { };
@@ -146,79 +144,41 @@ namespace advt.CMS.Models
                             ansowerpic = item.OptionFPicNum
                         });
                     }
-                    if (item.Type == "0")
+                    if (item.WriteAnsower != null)
                     {
-                        if (item.WriteAnsower != null)
+                        var listnum = "";
+                        output = item.WriteAnsower.Split(';');
+                        var tt = "";
+                        foreach (var w in output)
                         {
-                            list = item.WriteAnsower.Split(';');
-                            option = list.FirstOrDefault();
-                            var ss = "";
-                            if (!string.IsNullOrEmpty(option))
+                            if (!string.IsNullOrEmpty(w))
                             {
-                                if (option.Equals("A"))
+                                if (w.Equals("A"))
                                 {
-                                    ss = "0";
+                                    tt = "0";
                                 }
-                                else if (option.Equals("B"))
+                                else if (w.Equals("B"))
                                 {
-                                    ss = "1";
+                                    tt = "1";
                                 }
-                                else if (option.Equals("C"))
+                                else if (w.Equals("C"))
                                 {
-                                    ss = "2";
+                                    tt = "2";
                                 }
-                                else if (option.Equals("D"))
+                                else if (w.Equals("D"))
                                 {
-                                    ss = "3";
+                                    tt = "3";
                                 }
-                                else if (option.Equals("E"))
+                                else if (w.Equals("E"))
                                 {
-                                    ss = "4";
+                                    tt = "4";
                                 }
-                                option = ss;
 
-
+                                listnum += tt + ';';
                             }
-                        }
-                    }
-                    else if (item.Type == "1")
-                    {
-                        if (item.WriteAnsower != null)
-                        {
-                            var listnum = "";
-                            output = item.WriteAnsower.Split(';');
-                            var tt = "";
-                            foreach (var w in output)
-                            {
-                                if (!string.IsNullOrEmpty(w))
-                                {
-                                    if (w.Equals("A"))
-                                    {
-                                        tt = "0";
-                                    }
-                                    else if (w.Equals("B"))
-                                    {
-                                        tt = "1";
-                                    }
-                                    else if (w.Equals("C"))
-                                    {
-                                        tt = "2";
-                                    }
-                                    else if (w.Equals("D"))
-                                    {
-                                        tt = "3";
-                                    }
-                                    else if (w.Equals("E"))
-                                    {
-                                        tt = "4";
-                                    }
 
-                                    listnum += tt + ';';
-                                }
-
-                            }
-                            output = listnum.Split(';');
                         }
+                        output = listnum.Split(';');
                     }
 
                     examList.Add(new ExamScoreInfo
@@ -230,7 +190,6 @@ namespace advt.CMS.Models
                         isright = item.IsRight,
                         Type = item.Type,
                         selectItem = output,
-                        selectOption = option,
                         CorrectAnsower = item.CorrectAnsower,
                         WriteItem = item.WriteAnsower,
                         TopicTitlePicNum = item.TopicTitlePicNum,

@@ -13,7 +13,7 @@ namespace advt.Data.SqlServer
         #region RegionalPost , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] RegionalPost_key_a = { "ID" };
-        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName],RuleName,RuleTwoName,ExamType";
+        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName],RuleName,RuleTwoName,ExamType,CreateUser,CreateDate";
         private string[][] RegionalPost_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -23,7 +23,9 @@ namespace advt.Data.SqlServer
             new string[] { "PostName", "NVarChar", "500"},
             new string[] { "RuleName", "NVarChar", "500"},
             new string[] { "RuleTwoName", "NVarChar", "500"},
-            new string[] { "ExamType", "NVarChar", "500"}
+            new string[] { "ExamType", "NVarChar", "500"},
+            new string[] { "CreateUser", "NVarChar", "50"},
+            new string[] { "CreateDate", "DateTime", "16"}
 
         };
         #endregion

@@ -56,6 +56,8 @@ namespace advt.CMS.Models.ExamModel
             }
             else
             {
+                VregionalPost.CreateUser = username;
+                VregionalPost.CreateDate = DateTime.Now;
                 Data.RegionalPost.Insert_RegionalPost(VregionalPost, null, new string[] { "ID" });
             }
             ListRegionalPost = Data.RegionalPost.Get_All_RegionalPost();

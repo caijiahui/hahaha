@@ -115,44 +115,14 @@ namespace advt.Web.Controllers
             try
             {
                 var examguid = "";
+                model.GetExam();
+                examguid = model.InsertScoreDatas(model);
+                var name = this.UserNameContext;
                 if (model.VExamUserInfo.IsTest == false)
                 {
-                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject });
-                    if (set.Count() == 0)
-                    {
-                        model.GetExam();
-                        examguid = model.InsertScoreData(model);
-                        var name = this.UserNameContext;
-                        model.InsertRecoredData(model, name, examguid);
-                        model.UpdateLevel(model, name, examguid);
-                    }
-                    else
-                    {
-                        var date = set.FirstOrDefault().CreateDate;
-                        DateTime da = DateTime.Now;
-                        TimeSpan ts = da.Subtract(Convert.ToDateTime(date)).Duration();
-                        if (ts.TotalMinutes > 10)
-                        {
-                            model.GetExam();
-                            examguid = model.InsertScoreData(model);
-                            var name = this.UserNameContext;
-                            model.InsertRecoredData(model, name, examguid);
-                            model.UpdateLevel(model, name, examguid);
-                        }
-
-
-                    }
-                    
+                    model.UpdateLevel(model, name, examguid);
                 }
-                else
-                {
-                    model.GetExam();
-                    examguid = model.InsertScoreData(model);
-                    var name = this.UserNameContext;
-                    model.InsertRecoredData(model, name, examguid);
-                   
-                }
-                return Json(new { examList = model, examid = examguid }, JsonRequestBehavior.AllowGet);
+                return Json(new { examList = model.Listexam, examid = examguid, VExamScore = model.VExamScore }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

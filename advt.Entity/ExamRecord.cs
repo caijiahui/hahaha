@@ -57,6 +57,7 @@ namespace advt.Entity
         public string Remark { get; set; }
         public string DaRemark { get; set; }
         public bool IsRight { get; set; }
+        public string ExamGuid { get; set; }
         #endregion
     }
 }

@@ -502,7 +502,7 @@ namespace advt.Web.Controllers
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
             model.GetUserInfo(data);
-            return Json(new { tableData = model.ListUserInfo11, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo, LExamType=model.LExamType }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = model.ListUserInfo11, YListUserInfo = model.YListUserInfo, CPListUserInfo = model.ListDetailInfo, LExamType=model.LExamType, LWorkPlace = model.LWorkPlace }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Upload_UserAch(HttpPostedFileBase file)
         {
@@ -850,7 +850,7 @@ namespace advt.Web.Controllers
                     ReadyExamDate = null;
                 }
                 data.ReadyExamDate = ReadyExamDate;
-                if (WorkPlace == "undefined")
+                if (string.IsNullOrEmpty(WorkPlace))
                 {
                     WorkPlace = null;
                 }

@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamRecord , (Ver:2.3.8) at: 2021/1/30 14:28:04
         #region Var: 
         private string[] ExamRecord_key_a = { "ID" };
-        private string ExamRecord_item_str = "[ID],[ExamID],[TopicTitle],[TopicTitlePicNum],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum],[CreateDate],[CreateUser],[TopicNum],[CorrectAnsower],[WriteAnsower],[Type],[Remark],DaRemark,IsRight";
+        private string ExamRecord_item_str = "[ID],[ExamID],[TopicTitle],[TopicTitlePicNum],[OptionA],[OptionAPicNum],[OptionB],[OptionBPicNum],[OptionC],[OptionCPicNum],[OptionD],[OptionDPicNum],[OptionE],[OptionEPicNum],[OptionF],[OptionFPicNum],[CreateDate],[CreateUser],[TopicNum],[CorrectAnsower],[WriteAnsower],[Type],[Remark],DaRemark,IsRight,ExamGuid";
         private string[][] ExamRecord_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -45,6 +45,7 @@ namespace advt.Data.SqlServer
             new string[] { "Remark", "NVarChar", "500"},
             new string[] { "DaRemark", "NVarChar", "500"},
             new string[] { "IsRight", "Bit", "1"},
+            new string[] { "ExamGuid", "NVarChar", "500"}
 
         };
         #endregion

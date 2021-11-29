@@ -33,6 +33,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
         public List<AchieveRecord> LExamUserMeritsRecord { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
+        public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
         public string Results { get; set; }
         public bool IsHrSign { get; set; }
         public ExamUserInfoModel() : base()
@@ -54,17 +55,24 @@ namespace advt.CMS.Models.ExamModel
             LExamType = new List<KeyValuePair<string, string>>();
             ListUserInfo11 = new List<UserInfo>();
             LExamUserMeritsRecord = new List<AchieveRecord>();
+            
 
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
             {
                 LExamType.Add(new KeyValuePair<string, string>(item.ID.ToString(), item.TypeName));
             }
+            LWorkPlace = new List<KeyValuePair<string, string>>();
+            LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamUserInfo.Get_All_ExamUserInfo().Where(x=>x.WorkPlace!=null).GroupBy(x=>x.WorkPlace))
+            {
+                LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
+            }
         }
         public void GetUserInfo(SearchUserData data)
         {
-            var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
-            //var connectionString = @"Data Source=172.21.128.84\CTOSTEST;Initial Catalog=ExamDBYin;Persist Security Info=True;User ID=adminims;Password=Ifs2015Pri";
+            //var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
+            var connectionString = @"Data Source=172.21.128.84\CTOSTEST;Initial Catalog=ExamDBTT;Persist Security Info=True;User ID=adminims;Password=Ifs2015Pri";
             DataSet result = new DataSet();
             if (string.IsNullOrEmpty(data.TypeName))
             {
@@ -346,7 +354,7 @@ namespace advt.CMS.Models.ExamModel
                         v.DepartCode = item.DepartCode;
                         v.PostName = item.PostName;
                         v.RankName = item.RankName;
-                        v.SkillName = item.SkillLevel; //本职等技能G1
+                        v.SkillName = item.ApplicationLevel; //本职等技能G1
                         v.EntryDate = item.EntryDate; //入职日期
                         v.Achievement = item.Achievement;//绩效
                         v.PracticeScore = item.PracticalID;

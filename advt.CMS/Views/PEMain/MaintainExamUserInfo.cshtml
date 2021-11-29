@@ -28,8 +28,11 @@
             </el-input>
             <el-input placeholder="下一次可考时间" v-model="VSearch.ReadyExamDate" style="width:200px">
             </el-input>
-             <el-input placeholder="区域" v-model="VSearch.WorkPlace" style="width:200px">
-            </el-input>
+            <el-select v-model="VSearch.WorkPlace" placeholder="请选择区域">
+                <el-option v-for="item in LWorkPlace" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+            </el-select>
+            @*<el-input placeholder="区域" v-model="VSearch.WorkPlace" style="width:200px">
+            </el-input>*@
             <el-button slot="append" @@click="SearchinByTypeName">查询</el-button>
         </template>
         <template>
@@ -451,7 +454,8 @@
             VSearch:{},
             checkBoxData: [],
             checkBoxData11: [],
-            LExamType:[],
+            LExamType: [],
+            LWorkPlace:[],
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
@@ -480,6 +484,7 @@
                     _this.YListUserInfo = responese.data.YListUserInfo;
                     _this.CPListUserInfo = responese.data.CPListUserInfo;
                     _this.LExamType = responese.data.LExamType;
+                    _this.LWorkPlace = responese.data.LWorkPlace;
                     _this.setPaginations();
                     console.log(responese.data.tableData);
                 })
@@ -545,6 +550,7 @@
                     _this.YListUserInfo = res.data.YListUserInfo;
                     _this.CPListUserInfo = res.data.CPListUserInfo;
                     _this.LExamType = res.data.LExamType;
+                    _this.LWorkPlace = res.data.LWorkPlace;
                     _this.setPaginations();
                 });
             },
