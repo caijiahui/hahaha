@@ -72,7 +72,6 @@ namespace advt.CMS.Models.ExamModel
         public void GetUserInfo(SearchUserData data)
         {
             var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
-            //var connectionString = @"Data Source=172.21.128.84\CTOSTEST;Initial Catalog=ExamDBTT;Persist Security Info=True;User ID=adminims;Password=Ifs2015Pri";
             DataSet result = new DataSet();
             if (string.IsNullOrEmpty(data.TypeName))
             {

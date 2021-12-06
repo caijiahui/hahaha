@@ -32,18 +32,9 @@ namespace advt.CMS.Models.ExamModel
             var Result = "";
             if (VexamSubject.ID!=0)
             {
-                ListExamSubjectName = Data.ExamSubject.Get_All_ExamSubjectInfo(VexamSubject.SubjectName, VexamSubject.TypeName);
-                if (ListExamSubjectName.Count() > 0 && ListExamSubjectName != null)
-                {
-                    Result += VexamSubject.SubjectName + "此考试类型下的科目已存在";
-                }
-                else
-                {
-
-                    VexamSubject.CreateUser = username;
-                    VexamSubject.CreateDate = DateTime.Now;
-                    Data.ExamSubject.Update_ExamSubject(VexamSubject, null, new string[] { "ID" });
-                }
+                VexamSubject.CreateUser = username;
+                VexamSubject.CreateDate = DateTime.Now;
+                Data.ExamSubject.Update_ExamSubject(VexamSubject, null, new string[] { "ID" });
             }
             else
             {

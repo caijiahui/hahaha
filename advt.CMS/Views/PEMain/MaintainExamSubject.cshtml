@@ -25,8 +25,8 @@
     <div style="margin-top:20px">
         <el-table :data="tableData"
                   style="width: 100% ">
-            <el-table-column label="考试类型" prop="TypeName" sortable ></el-table-column>
-            <el-table-column label="考试科目" prop="SubjectName" sortable ></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
+            <el-table-column label="考试科目" prop="SubjectName" sortable></el-table-column>
 
             <el-table-column label="创建人" prop="CreateUser" sortable></el-table-column>
             <el-table-column label="创建时间"
@@ -35,13 +35,34 @@
                     <span>{{changeDate(scope.row.CreateDate)}}</span>
                 </template>
             </el-table-column>
+            <el-table-column label="HC限制" prop="HCLimit" sortable></el-table-column>
+            @*  <el-table-column label="是否系统串实践" prop="IsSysPractice" sortable width="150"></el-table-column>*@
+            <el-table-column label="是否系统串实践"
+                             prop="IsSysPractice"
+                             width="150"
+                             filter-placement="bottom-end">
+                <template slot-scope="scope">
+                    <div class="lst-box" :class="scope.row.IsSysPractice? 'el-icon-check' : 'el-icon-close'">
+                    </div>
+                </template>
+            </el-table-column>
+            @*<el-table-column label="是否跨制程考核" prop="IsProAssess" sortable width="150"></el-table-column>*@
+            <el-table-column label="是否跨制程考核"
+                             prop="IsProAssess"
+                             width="150"
+                             filter-placement="bottom-end">
+                <template slot-scope="scope">
+                    <div class="lst-box" :class="scope.row.IsProAssess? 'el-icon-check' : 'el-icon-close'">
+                    </div>
+                </template>
+            </el-table-column>
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName, scope.row)">Edit</el-button>
+                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName,scope.row.HCLimit,scope.row.IsSysPractice,scope.row.IsProAssess, scope.row)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
@@ -65,6 +86,16 @@
                 </el-form-item>
                 <el-form-item label="考试科目" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="HC限制" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.HCLimit" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="是否系统串实践" prop="IsSysPractice">
+                    <el-switch v-model="VexamSubject.IsSysPractice"></el-switch>
+                </el-form-item>
+               
+                <el-form-item label="是否跨制程考核" prop="IsProAssess">
+                    <el-switch v-model="VexamSubject.IsProAssess"></el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -203,11 +234,14 @@
                 _this.dialogFormVisible = false;           
 
             },
-            handleEdit(index, name, tname, row) {
+            handleEdit(index, name, tname, HCLimit, IsSysPractice, IsProAssess, row) {
                 var _this = this;
                 _this.VexamSubject.SubjectName = name;
                 _this.VexamSubject.TypeName = tname;
                 _this.VexamSubject.ID = index;
+                _this.VexamSubject.HCLimit = HCLimit;
+                _this.VexamSubject.IsSysPractice = IsSysPractice;
+                _this.VexamSubject.IsProAssess = IsProAssess;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
 
