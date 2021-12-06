@@ -15,6 +15,7 @@ namespace advt.Entity
         public int HCLimit { get; set; }//HC限制
         public bool IsSysPractice { get; set; }//实践成绩是否自动从系统串入
         public bool IsProAssess { get; set; }//是否跨制程考核
+        public string  DepartCode { get; set; }
 
     }
 }
