@@ -494,10 +494,6 @@ namespace advt.CMS.Models
 
                         #endregion
                     }
-
-
-                  
-
                 }
                 //插入分数记录
                 if (sc.CorrectNum == null)
@@ -524,6 +520,20 @@ namespace advt.CMS.Models
                             }
                             else
                             {
+                                var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName = model.VExamUserInfo.ExamSubject });
+                                if (ruleinfo.Count() > 0 && ruleinfo != null)
+                                {
+                                    var PassScore = ruleinfo.FirstOrDefault().PassScore;
+                                    if (score>=PassScore)
+                                    {
+                                        item.IsExamPass = true;
+                                    }
+                                    else
+                                    {
+                                        item.IsExamPass = false;
+                                    }
+                                }
+                                
                                 item.IsExam = "true";
                             }
                             Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });

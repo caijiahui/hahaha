@@ -63,6 +63,7 @@ namespace advt.Entity
         public DateTime? UserExamDate { get; set; }
         public string IsUserExam { get; set; }
         public bool ExamStatue { get; set; }
+        public bool IsExamPass { get; set; }
         #endregion
     }
 }
