@@ -114,7 +114,7 @@ namespace advt.CMS.Models.ExamModel
                                 }
                                 if (Pract.ValidityDate != null)
                                 {
-                                    var da = DateTime.Now.AddDays(1);
+                                     var da = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                                     if (Pract.ValidityDate < da)
                                     {
                                         Result = item.UserName + item.TypeName + item.SubjectName + "实践成绩已过期,请重新填写";
