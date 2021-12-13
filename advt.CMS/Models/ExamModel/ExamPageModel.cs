@@ -571,70 +571,42 @@ namespace advt.CMS.Models
                         {
                             if (!string.IsNullOrEmpty(item.ApplicationLevel))
                             {
-                                var level = Convert.ToInt32(item.ApplicationLevel.Substring(item.ApplicationLevel.Length - 1, 1));
-                                int levels = level + 1;
                                 if (model.VExamUserInfo.ExamType == "职等考试")
                                 {
-                                    if (level < 3)
+                                    var applevel = item.ApplicationLevel;
+                                    if (!string.IsNullOrEmpty(applevel))
                                     {
-                                        item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
-                                        item.RankName = item.RankName.Substring(0, item.RankName.Length - 1) + levels.ToString();
+                                        if (Convert.ToInt32(applevel.Substring(1, 1)) < 3)
+                                        {
+                                            int ss = Convert.ToInt32(applevel.Substring(1, 1)) + 1;
+                                            item.ApplicationLevel = "A" + ss.ToString();
+                                        }
                                     }
-                                    if (item.RankName == "A-3" && item.PostName == "作业员")
+                                    if (!string.IsNullOrEmpty(item.RankName))
                                     {
-                                        item.PostName = "技术员";
+                                        if (Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) < 3)
+                                        {
+                                            int ran = Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) + 1;
+                                            item.RankName = "A-" + ran;
+                                        }
+                                        if (item.RankName == "A-3" && item.PostName == "作业员")
+                                        {
+                                            item.PostName = "技术员";
+                                        }
                                     }
                                 }
                                 else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
                                 {
-                                    if (level < 8)
+                                    if (Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) < 8)
                                     {
-                                        item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
+                                        int ss = Convert.ToInt32(item.ApplicationLevel.Substring(1, 1)) + 1;
+                                        item.ApplicationLevel = item.ApplicationLevel.Substring(0, 1) + ss.ToString();
                                         item.Achievement = null;
                                     }
                                 }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }
-                            //if (!string.IsNullOrEmpty(item.ApplicationLevel))
-                            //{
-                            //    var pract = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = usercode, SkillName = item.ApplicationLevel, TypeName = model.VExamUserInfo.ExamType, SubjectName = model.VExamUserInfo.ExamSubject }).OrderByDescending(x => x.CreateDate);
-                            //    if (pract.Count() > 0 && pract != null)
-                            //    {
-                            //        var practscore = pract.FirstOrDefault().PracticeScore;
-                            //        var rules = Data.ExamRule.Get_All_ExamRule(new { SubjectName = VExamUserInfo.ExamSubject });
-                            //        if (rules.FirstOrDefault().PassPracticeScore <= practscore)
-                            //        {
-                            //            if (!string.IsNullOrEmpty(item.ApplicationLevel))
-                            //            {
-                            //                var level = Convert.ToInt32(item.ApplicationLevel.Substring(item.ApplicationLevel.Length - 1, 1));
-                            //                int levels = level + 1;
-                            //                if (model.VExamUserInfo.ExamType == "职等考试")
-                            //                {
-                            //                    if (level < 3)
-                            //                    {
-                            //                        item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
-                            //                        item.RankName = item.RankName.Substring(0, item.RankName.Length - 1) + levels.ToString();
-                            //                    }
-                            //                    if (item.RankName == "A-3" && item.PostName == "作业员")
-                            //                    {
-                            //                        item.PostName = "技术员";
-                            //                    }
-                            //                }
-                            //                else if (model.VExamUserInfo.ExamType == "关键岗位技能等级")
-                            //                {
-                            //                    if (level < 8)
-                            //                    {
-                            //                        item.ApplicationLevel = item.ApplicationLevel.Substring(0, item.ApplicationLevel.Length - 1) + levels.ToString();
-                            //                        item.Achievement = null;
-                            //                    }
-                            //                }
-                            //                Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-                            //            }
-                            //        }
-                            //    }
-
-                            //}
-
+                          
                         }
                     }
                 }
