@@ -135,14 +135,14 @@
                                         <el-button class="pro-btn" @@click="preBtn()" v-if="nowItem!=1">上一题</el-button>
                                     </div>
                                     <div>
-                                        <el-button class="pro-btn" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                        <el-button class="pro-btn" :disabled="submitLoading" @@click="submitForm('ruleForm')">{{nowItem==total?'确认提交':'下一题'}}</el-button>
                                     </div>
                                 </div>
 
 
                                 <div class="footer-btn-box" v-if="nowItem==1" style="display:block">
                                     <div>
-                                        <el-button class="pro-btn" @@click="submitForm('ruleForm')" style="width:200px">{{nowItem==total?'确认提交':'下一题'}}</el-button>
+                                        <el-button class="pro-btn" :disabled="submitLoading" @@click="submitForm('ruleForm')" style="width:200px">{{nowItem==total?'确认提交':'下一题'}}</el-button>
                                     </div>
                                     <div>
 
@@ -293,7 +293,8 @@
                     isQuestion: false,
                     dialogFormVisible: false,
                     dialogTilteFormVisible: false,
-                    examid:'',
+                    examid: '',
+                    submitLoading: false,
                     rules: {
                         selectItem: [
                             { required: true, message: '请填写答案！', trigger: 'blur' }
@@ -383,6 +384,7 @@
                                                 axios.post('/EPageMain/InsertScore', {
                                                     model: obj
                                                 }).then(function (responese) {
+                                                    _this.submitLoading = true;
                                                     _this.VExamScore = responese.data.VExamScore;
                                                     if (responese.data.VExamScore.CorrectScore >= responese.data.VExamScore.PassScore) {
                                                         _this.isSuccess = true;
@@ -464,7 +466,7 @@
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
                                                 obj.LselectItem = _this.LselectItem;
                                                 if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
-
+                                                    _this.submitLoading = true;
                                                     obj.examList = _this.examList;
                                                     obj.ListBankView = _this.ListBankView;
                                                     obj.VExamUserInfo = _this.VExamUserInfo;
@@ -525,6 +527,8 @@
                                             obj.VExamUserInfo = _this.VExamUserInfo;
                                             obj.LselectItem = _this.LselectItem;
                                             if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+
+                                                _this.submitLoading = true;
                                                 obj.examList = _this.examList;
                                                 obj.ListBankView = _this.ListBankView;
                                                 obj.VExamUserInfo = _this.VExamUserInfo;
@@ -585,7 +589,9 @@
                                     obj.ListBankView = _this.ListBankView;
                                     obj.VExamUserInfo = _this.VExamUserInfo;
                                     obj.LselectItem = _this.LselectItem;
-                                    if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
+                                    if (_this.nowItem == _this.total) {
+
+                                        _this.submitLoading = true;//第二个按钮最后为提交事件
                                         obj.examList = _this.examList;
                                         obj.ListBankView = _this.ListBankView;
                                         obj.VExamUserInfo = _this.VExamUserInfo;

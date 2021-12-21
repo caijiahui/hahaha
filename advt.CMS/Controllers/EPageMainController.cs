@@ -114,14 +114,37 @@ namespace advt.Web.Controllers
         {
             try
             {
-                var examguid = "";
+                var examguid = ""; 
                 model.GetExam();
-                examguid = model.InsertScoreDatas(model);
-                var name = this.UserNameContext;
                 if (model.VExamUserInfo.IsTest == false)
                 {
-                    model.UpdateLevel(model, name, examguid);
+                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject });
+                    if (set.Count() == 0)
+                    {                       
+                        examguid = model.InsertScoreDatas(model);
+                        var name = this.UserNameContext;
+                        model.UpdateLevel(model, name, examguid);
+                    }
+                    else
+                    {
+                        var date = set.FirstOrDefault().CreateDate;
+                        DateTime da = DateTime.Now;
+                        TimeSpan ts = da.Subtract(Convert.ToDateTime(date)).Duration();
+                        if (ts.TotalMinutes > 10)
+                        {
+                            examguid = model.InsertScoreDatas(model);
+                            var name = this.UserNameContext;
+                            model.UpdateLevel(model, name, examguid);
+                        }
+
+
+                    }
                 }
+                else
+                {
+                    examguid = model.InsertScoreDatas(model);
+                }
+               
                 return Json(new { examList = model.Listexam, examid = examguid, VExamScore = model.VExamScore }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
