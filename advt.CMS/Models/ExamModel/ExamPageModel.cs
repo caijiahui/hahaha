@@ -557,7 +557,7 @@ namespace advt.CMS.Models
             {
                 usercode = usersheet.UserCode;
             }
-            var guid = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid });
+            var guid = Data.ExamScore.Get_All_ExamScore(new { CreateUser = usercode, ExamGuid = examguid,IsTest=false});
             if (guid.Count() > 0)
             {
                 var CorrectScore = guid.FirstOrDefault().CorrectScore;
