@@ -78,7 +78,15 @@ namespace advt.CMS.Models
                         Result += item.TopicMajor + item.TopicLevel + Rule.SubjectName + c + " 在题库中数量不够,需要" + TopicNum + "道题目,题库中只有" + bank.Count() + "道题目";
                     }
                 }
-                var ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { TypeName = Rule.TypeName, UserCode = usercode });
+                var ListPract = new List<PracticeInfo>();
+                if (!string.IsNullOrEmpty(Rule.SubjectName))
+                {
+                    ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { TypeName = Rule.TypeName, SubjectName = Rule.SubjectName, UserCode = usercode });
+                }
+                else
+                {
+                    ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { TypeName = Rule.TypeName, UserCode = usercode });
+                }
                 var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
                 if (Pract == null)
                 {
