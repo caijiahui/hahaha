@@ -51,6 +51,7 @@ namespace advt.Web.Controllers
             return Json(new { ListUsersubject = model.ListUsersubject, username, model.usercode }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
+        [MyAuthorize]
         public ActionResult ExamPage(string IsTest = null, string RuleName = null)
         {
             var model = new ExamPageModel();
@@ -65,23 +66,15 @@ namespace advt.Web.Controllers
                 {
                     var dtdate = DateTime.Now;
                     var ddate = Convert.ToDateTime(detail.ExamDate);
-                    var edate = ddate.ToString("yyyy-MM-dd");
-                    var nowdate = DateTime.Now.ToString("yyyy-MM-dd");
-                    if (edate != nowdate || dtdate < ddate)
+                    model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
+                    if (dtdate <= ddate || detail.ExamDate == null)
                     {
-                        if (dtdate <= ddate)
-                        {
-                            model.IsExam = "不符合考试时间:"+ detail.ExamDate + ",不可考试";
-                        }
-                    }
-                    else
-                    {
-                        model.ExamFailResult = model.GetExamBankNum(RuleName);
+                        model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
                     }
                 }
                 else
                 {
-                    model.ExamFailResult = "没有考试资格";
+                    model.ExamFailResult += "没有考试资格";
                 }
             }
             return View(model);

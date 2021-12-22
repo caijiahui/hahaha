@@ -46,7 +46,7 @@ namespace advt.CMS.Models
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
             Listexam = new List<ExamScoreInfo>();
         }
-        public string GetExamBankNum(string RuleName)
+        public string GetExamBankNum(string RuleName, string usercode)
         {
             var Result = "";
             //获取规则
@@ -66,15 +66,27 @@ namespace advt.CMS.Models
                         if (item.TopicType == "0")
                         {
                             c = "单选";
-                        }else if (item.TopicType == "1")
+                        }
+                        else if (item.TopicType == "1")
                         {
                             c = "多选";
-                        }else if (item.TopicType == "2")
+                        }
+                        else if (item.TopicType == "2")
                         {
                             c = "问答";
                         }
-                        Result +=  item.TopicMajor + item.TopicLevel + Rule.SubjectName + c + " 在题库中数量不够,需要"+TopicNum+"道题目,题库中只有"+bank.Count()+"道题目";
+                        Result += item.TopicMajor + item.TopicLevel + Rule.SubjectName + c + " 在题库中数量不够,需要" + TopicNum + "道题目,题库中只有" + bank.Count() + "道题目";
                     }
+                }
+                var ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { TypeName = Rule.TypeName, UserCode = usercode });
+                var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                if (Pract == null)
+                {
+                    Result += "未找到对应实践分数,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore;
+                }
+                else if (Pract.PracticeScore < Rule.PassPracticeScore)
+                {
+                    Result += "实践分数未达标,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
                 }
             }
 
