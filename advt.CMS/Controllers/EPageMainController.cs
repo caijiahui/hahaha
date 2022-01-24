@@ -64,13 +64,26 @@ namespace advt.Web.Controllers
                 var detail = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = usercode.UserCode, RuleName = RuleName, IsStop = false, IsExam = false });
                 if (detail != null)
                 {
-                    var dtdate = DateTime.Now;
-                    var ddate = Convert.ToDateTime(detail.ExamDate);
-                    model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
-                    if (dtdate <= ddate || detail.ExamDate == null)
+                    if (IsTest == "formal")
                     {
-                        model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
+                        var dtdate = DateTime.Now;
+                        if (detail.ExamDate == null)
+                        {
+                            model.ExamFailResult += "未维护考试时间:" + detail.ExamDate + ",不可考试";
+                        }
+                        else
+                        {
+                            var ddate = Convert.ToDateTime(detail.ExamDate);
+
+                            model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
+                            if (dtdate <= ddate || detail.ExamDate == null)
+                            {
+                                model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
+                            }
+                        }
+
                     }
+
                 }
                 else
                 {

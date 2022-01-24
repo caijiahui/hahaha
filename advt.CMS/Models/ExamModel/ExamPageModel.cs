@@ -527,37 +527,36 @@ namespace advt.CMS.Models
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false });
-                    if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
-                    {
-                        foreach (var item in ListExamUserDetailInfo)
+                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false });
+                      
+                    if (details.Count()>0&&details!=null)
+                    { 
+                        var detail = details.Where( x=>x.UserExamDate == null).OrderByDescending(x => x.ExamDate).FirstOrDefault();
+                        detail.ExamScore = score;
+                        detail.UserExamDate = DateTime.Now;
+                        if (model.VExamUserInfo.IsTest == true)
                         {
-                            item.ExamScore = score;
-                            item.UserExamDate = DateTime.Now;
-                            if (model.VExamUserInfo.IsTest == true)
-                            {
-                                item.IsExam = "false";
-                            }
-                            else
-                            {
-                                var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName = model.VExamUserInfo.ExamSubject });
-                                if (ruleinfo.Count() > 0 && ruleinfo != null)
-                                {
-                                    var PassScore = ruleinfo.FirstOrDefault().PassScore;
-                                    if (score>=PassScore)
-                                    {
-                                        item.IsExamPass = true;
-                                    }
-                                    else
-                                    {
-                                        item.IsExamPass = false;
-                                    }
-                                }
-                                
-                                item.IsExam = "true";
-                            }
-                            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
+                            detail.IsExam = "false";
                         }
+                        else
+                        {
+                            var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName = model.VExamUserInfo.ExamSubject });
+                            if (ruleinfo.Count() > 0 && ruleinfo != null)
+                            {
+                                var PassScore = ruleinfo.FirstOrDefault().PassScore;
+                                if (score >= PassScore)
+                                {
+                                    detail.IsExamPass = true;
+                                }
+                                else
+                                {
+                                    detail.IsExamPass = false;
+                                }
+                            }
+
+                            detail.IsExam = "true";
+                        }
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(detail, null, new string[] { "ID" });
 
                     }
 
