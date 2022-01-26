@@ -35,29 +35,51 @@ namespace advt.CMS.Models.ExamModel
 
                     ////技能等级通过后可晋升的新职等
                     //var NewRankName = "";
-                    
+
                     ////晋升加给
                     //var PromotionBonus = "";
                     //var Bonus = Data.RankInfo.get(new { SkillName = SkillName });
+                    DateTime? prdate = null;
+                    if (!string.IsNullOrEmpty(item.SkillName))
+                    {
+                        var pralist = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName =item.ApplyLevel, UserCode =item.UserCode});
+                        if (pralist.Count() > 0 && pralist != null)
+                        {
+                            prdate = pralist.OrderByDescending(x => x.CreateDate).FirstOrDefault().CreateDate;
+                        }
+                    }
+                    DateTime? entrydate = null;
+                    var PostName = "";
+                    var rank = "";
+                    var level = "";
+                    if (!string.IsNullOrEmpty(item.UserCode))
+                    {
+                        var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode=item.UserCode});
+                        if (userinfo.Count() > 0 && userinfo != null)
+                        {
+                            entrydate = userinfo.FirstOrDefault().EntryDate;
+                            PostName = userinfo.FirstOrDefault().PostName;
+                            rank = userinfo.FirstOrDefault().RankName;
+                            level = userinfo.FirstOrDefault().ApplicationLevel;
+                        }
+                    }
 
-                    ListPageInfo.Add(new PageInfo
+                        ListPageInfo.Add(new PageInfo
                     {
                         UserCode = item.UserCode,
                         UserName = item.UserName,
                         DepartCode = item.DepartCode,
-                        PostName = item.PostName,
-                        RankName = item.RankName,
-                        EntryDate = item.EntryDate,
+                        PostName = PostName,
+                        RankName =rank,
+                        EntryDate = entrydate,
                         OrganizingFunction = "",
                         CurrentLevel = item.SkillName,//本职等技能
-                        ApplyLevel = item.ApplyLevel,//目前技能等级
+                        ApplyLevel = level,//目前技能等级
                         CurrectExamDate = item.UserExamDate,//最近一次考试时间
-                         //PostState="在职",
-                         //PostJob="BPE",
                         SubjectName = item.SubjectName,
                         ExamScore = item.ExamScore,//最近一次理论成绩
                         PracticeScore = item.PracticeScore,
-                        PracticeDate = DateTime.Now,//最近一次实践成绩通过时间
+                        PracticeDate = prdate,//最近一次实践成绩通过时间
                         FullScale = "是"
                     });
                 }
