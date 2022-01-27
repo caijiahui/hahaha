@@ -168,8 +168,9 @@ namespace advt.CMS.Models.ExamModel
                             RuleName = row["RuleName"].ToString(),
                             WorkPlace = row["WorkPlace"].ToString(),
                             IsUserExam = row["IsUserExam"].ToString(),
-                            
-                            ReadExamDate= ReadyExamDate
+                            //每年应复审时间段
+                            ExamineMonth = row["ExamineMonth"].ToString(),
+                            ReadExamDate = ReadyExamDate
                         });
                     }
                     ListUserInfo11 = ListUserInfo.ToList();
@@ -526,6 +527,7 @@ namespace advt.CMS.Models.ExamModel
         public string ReverseBuckle { get; set; }
         public string ReadExamDate { get; set; }
         public string WorkPlace { get; set; }
+        public string ExamineMonth { get; set; }
 
     }
     public class SearchUserData

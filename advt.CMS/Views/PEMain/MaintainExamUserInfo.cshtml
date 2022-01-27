@@ -51,7 +51,7 @@
                 <el-button size="small" type="primary" @@click="handlesert()">报名</el-button>
             </template>
             <el-table :data="YListUserInfo" border
-                      style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                      style="width: 100%;margin-top:20px "  @@selection-change="changeFun">
                 <el-table-column type="selection" width="55">
 
                 </el-table-column>
@@ -181,11 +181,7 @@
                     </template>
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
-        <el-table-column label="最近一次通过理论时间" width="110">
-            <template slot-scope="scope">
-                <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeDate(scope.row.LastExamTime)}}</span>
-            </template>
-        </el-table-column>
+        
         <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
 
         <el-table-column label="最近一次实践考核通过时间">
@@ -199,6 +195,7 @@
                 <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
                 <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
                 <el-table-column label="待考试时间" prop="ReadExamDate" sortable></el-table-column>
+                <el-table-column label="每年应复审时间段"  width="100" prop="ExamineMonth" sortable></el-table-column>                
                 <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
 
                 <el-table-column label="绩效是否符合">
