@@ -84,12 +84,24 @@ namespace advt.Data
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
         //ExamStatus = "HrSignUp", IsStop = false, UserCode = item.UserCode 
-        public static List<Entity.ExamUserDetailInfo> Get_All_UserAduitInfo(string ExamStatus, string UserCode)
+        //主管审核下面根据hr报名找到所有主管管理下的人员 关键技能岗位
+        public static List<Entity.ExamUserDetailInfo> Get_All_UserAduitInfo(string ExamStatus, string UserCode,string typename)
         {
-            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode);
+            IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode, typename);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
-
+        //主管审核下面根据主管找到下面
+        public static List<Entity.ExamUserDetailInfo> Get_All_PostCanSignUser(string UserCode)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_PostCanSignUser( UserCode);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+        //主管下判断是否有电子岗位报名信息
+        public static Entity.ExamUserDetailInfo GetCanSignUpAudit(string usercode)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetCanSignUpAudit(usercode);
+            return SqlHelper.GetReaderToFirstOrDefault<Entity.ExamUserDetailInfo>(reader);
+        }
         #endregion
     }
 }

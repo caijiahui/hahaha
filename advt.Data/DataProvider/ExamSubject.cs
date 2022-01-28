@@ -88,7 +88,12 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetSubject(ExamType,SubjectName);
             return SqlHelper.GetReaderToList<Entity.ExamSubject>(reader);
         }
-        
+        public static List<Entity.ExamSubject> Get_All_ExamGetByDepart(string Depart)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamGetByDepart(Depart);
+            return SqlHelper.GetReaderToList<Entity.ExamSubject>(reader);
+        }
+
         #endregion
     }
 }

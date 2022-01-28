@@ -16,7 +16,7 @@
         </el-breadcrumb>
 
     </template>
-    <div>
+<div>
 
         <template>
 
@@ -100,6 +100,7 @@
                     </div>
                 </template>
             </div>
+            </div>
             <div style="margin-top:20px;clear:both">
                 <template>
                     <el-input placeholder="搜查考试类型" v-model="VSCheckData.TypeName" style="width:200px">
@@ -118,7 +119,7 @@
             <div style="margin-top:20px;clear:both">
                 <template>
 
-                    <el-table :data="ListHrAuditSuccessUser"
+                    <el-table :data="ListHrAuditSuccessUser.filter(data => !search )"
                               style="width: 100%;margin-top:20px;clear:both " border @@selection-change="changeFun">
                         <el-table-column type="selection">
                         </el-table-column>
@@ -479,7 +480,6 @@
                 _this.paginations.total = _this.ListHrAuditSuccessUser.length; //数据的数量
                 _this.paginations.page_index = 1; //默认显示第一页
                 _this.paginations.page_size = 5; //每页显示多少数据
-
                 //显示数据
                 _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
                     return index < _this.paginations.page_size;
@@ -496,7 +496,7 @@
             handleCurrentChange(page) {
                 var _this = this;
                 axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.SearchCheckdata
+                    model: _this.VSCheckData
                 }).then(function (res) {
                     _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
 

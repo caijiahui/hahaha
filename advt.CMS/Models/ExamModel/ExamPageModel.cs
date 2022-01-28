@@ -78,6 +78,7 @@ namespace advt.CMS.Models
                         Result += item.TopicMajor + item.TopicLevel + Rule.SubjectName + c + " 在题库中数量不够,需要" + TopicNum + "道题目,题库中只有" + bank.Count() + "道题目";
                     }
                 }
+               
                 var ListPract = new List<PracticeInfo>();
                 if (!string.IsNullOrEmpty(Rule.SubjectName))
                 {

@@ -21,6 +21,7 @@ namespace advt.Data
         IDataReader GetSubjectList(object objparams);
         IDataReader Get_All_ExamSubjectInfo(string SubjectName,string TypeName);
         IDataReader Get_All_ExamGetSubject(string ExamType,string SubjectName);
+        IDataReader Get_All_ExamGetByDepart(string Depart);
         
 
         #endregion

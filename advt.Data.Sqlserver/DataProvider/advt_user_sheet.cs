@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region advt_user_sheet , (Ver:2.3.8) at: 2021/3/18 14:33:08
         #region Var: 
         private string[] advt_user_sheet_key_a = { };
-        private string advt_user_sheet_item_str = "[UserCode],[UserAccount],[UserEmail],[UserDspName],[UserCostCenter],[UserGroup],[UserJobTitle]";
+        private string advt_user_sheet_item_str = "[UserCode],[UserAccount],[UserEmail],[UserDspName],[UserCostCenter],[UserGroup],[UserJobTitle],[UserJobType]";
         private string[][] advt_user_sheet_item_prop_a =
         {
             new string[] {"UserCode", "NVarChar", "50"},
@@ -26,7 +26,9 @@ namespace advt.Data.SqlServer
             new string[] {"UserDspName", "NVarChar", "50"},
             new string[] {"UserCostCenter", "NVarChar", "50"},
             new string[] {"UserGroup", "NVarChar", "50"},
-            new string[] {"UserJobTitle", "NVarChar", "50"}
+            new string[] {"UserJobTitle", "NVarChar", "50"},
+            new string[] { "UserJobType", "NVarChar", "50"},
+            
         };
         #endregion
 
@@ -39,7 +41,13 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(advt_user_sheet_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
+        public IDataReader Get_All_advt_user_sheet_ElectronicUser(string sdata)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select a.* from advt_user_sheet a where a.UserCode not in ( select UserCode from ElectronicUser  where IsEnable=0) and (a.UserCode = '" + sdata+ "'  or a.UserDspName='" + sdata + "' or a.UserCostCenter='" + sdata + "')");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+        
         public int Insert_advt_user_sheet(Entity.advt_user_sheet info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();

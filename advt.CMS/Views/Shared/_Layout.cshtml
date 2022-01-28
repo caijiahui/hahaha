@@ -165,6 +165,7 @@
                     axios.post('/Account/GetUser').then(res => {
                         _this.admin = res.data.admin;
                         _this.LRole = res.data.LRole;
+                        console.log(_this.LRole,33);
                     })
 
                 },
@@ -228,6 +229,7 @@
                     else if (ids == "考试报表") { window.location.href = "/PEMain/MaintainExamPage" }
                     else if (ids == "权限管控") { window.location.href = "/PEMain/UserManager" }
                     else if (ids == "角色设定") { window.location.href = "/PEMain/MaintainExamRole" }
+                    else if (ids == "数据管理") { window.location.href = "/Report/ExamDataReport" }
 
                 },
                 isMobile() {

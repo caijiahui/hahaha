@@ -709,6 +709,7 @@
                         var idExamFailResults = _this.$refs.idExamFailResult.value;
                         var falgs = 0;
                         if (IsTest == "test") {
+                            console.log(idExamFailResults, 23);
                             if (idExamFailResults != '') {
                                 _this.$alert(idExamFailResults, '提示', {
                                     confirmButtonText: '确定',
@@ -725,7 +726,7 @@
                             }
                         }
                         if (IsTest == "formal") {
-                            console.log("23");
+                            console.log(idExamFailResults, 32);
                             if (IsExams != '' || idExamFailResults != '') {
                                 _this.$alert(IsExams + idExamFailResults, '提示', {
                                     confirmButtonText: '确定',

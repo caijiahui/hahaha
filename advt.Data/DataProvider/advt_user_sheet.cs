@@ -16,6 +16,12 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_user_sheet(objparams);
             return SqlHelper.GetReaderToList<Entity.advt_user_sheet>(reader);
         }
+        //根据科目工号部门人名找到电子端可报名人员
+        public static List<Entity.advt_user_sheet> Get_All_advt_user_sheet_ElectronicUser(string sdata)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_user_sheet_ElectronicUser(sdata);
+            return SqlHelper.GetReaderToList<Entity.advt_user_sheet>(reader);
+        }
 
         public static List<Entity.advt_user_sheet> Get_All_advt_user_sheet()
         {
@@ -47,6 +53,7 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Insert_advt_user_sheet(info, Include, Exclude);
         }
+
         #endregion
     }
 }

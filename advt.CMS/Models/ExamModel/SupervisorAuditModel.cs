@@ -19,6 +19,8 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LSignedupUser { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
         public List<ExamUserDetailInfo> LCheckAudtiUser { get; set; }
+        public List<KeyValuePair<string, string>> LExamType { get; set; }//考试类型
+        public List<KeyValuePair<string, string>> LExamSubject { get; set; }//考试科目
         public string Result { get; set; }
         public SupervisorAuditModel() : base()
         {
@@ -28,6 +30,8 @@ namespace advt.CMS.Models.ExamModel
             LPracticeInfo = new List<PracticeInfo>();
             LCheckAudtiUser = new List<ExamUserDetailInfo>();
             LSignedupUser = new List<ExamUserDetailInfo>();
+            LExamSubject = new List<KeyValuePair<string, string>>();
+            LExamType = new List<KeyValuePair<string, string>>();
         }
         public void GetAllExamUserDetailInfo(string username=null)
         {
@@ -41,12 +45,12 @@ namespace advt.CMS.Models.ExamModel
                 }
                 var usersheets = Data.advt_user_sheet.Get_advt_user_sheet_UserJobTitle(code);
                 //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
-                var audata= Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp",code);
+                var audata= Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp",code,"");
                 if (audata != null && audata.Count() != 0)
                 {
                     LCheckAudtiUser.AddRange(audata);
                 }
-                var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code);
+                var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code,"");
                 LSignedupUser.AddRange(adata);
                 if (LCheckAudtiUser.Count() != 0)
                 {
@@ -60,6 +64,11 @@ namespace advt.CMS.Models.ExamModel
                 LCheckAudtiUser = LCheckAudtiUser.OrderByDescending(x => x.TypeName).ToList();
                 //主管需要审核的人员
                 LSignedupUser = LSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+                LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+                foreach (var item in Data.ExamType.Get_All_ExamType())
+                {
+                    LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+                }
             }
             catch (Exception ex)
             {
@@ -68,6 +77,49 @@ namespace advt.CMS.Models.ExamModel
             }
 
 
+        }
+
+        //根据考试类型筛选出可报名人员
+        public void GetAllExamUserByType(string typename,string username=null)
+        {
+            var code = "";
+            var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
+            if (user != null)
+            {
+                code = user.UserCode;
+            }
+            //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
+            var audata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code, typename);
+            LCheckAudtiUser.AddRange(audata);
+            var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code, typename);
+            LSignedupUser.AddRange(adata);
+            LCheckAudtiUser = LCheckAudtiUser.OrderByDescending(x => x.DepartCode).ToList();
+            //主管需要审核的人员
+            LSignedupUser = LSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+            LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamType.Get_All_ExamType())
+            {
+                LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
+            }
+        }
+
+        //根据选择的报名人员筛选出可以选择的考试科目
+        public void GetSignSubject(string depart)
+        {
+            var ListCode = depart.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            var ListCodes = ListCode.Distinct().ToList();
+            var codestring = string.Empty;
+            foreach (var item in ListCodes)
+            {
+            
+               codestring += "or  a.DepartCode like '%" + item + "%' ";
+               
+            }
+            codestring = codestring.Substring(2, codestring.Length - 2);
+            var data = Data.ExamSubject.Get_All_ExamGetByDepart(codestring);
+            var c = data.Select(x => new KeyValuePair<string, string>(x.SubjectName, x.TypeName));
+            LExamSubject.AddRange(c);
+            LExamSubject = LExamSubject.Distinct().ToList();
         }
         public void SearchPracticeInfo(string code)
         {
@@ -168,14 +220,14 @@ namespace advt.CMS.Models.ExamModel
                 c.StopCreateDate = DateTime.Now;
                 c.StopCreateUser = username;
                 var code = "";
+                var typename = c.TypeName;
                 var user = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = username });
                 if (user != null)
                 {
                     code = user.UserCode;
                 }
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-                LSignedupUser = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code);
-                GetAllExamUserDetailInfo(username);
+                GetAllExamUserByType(typename, username);
             }
             catch (Exception ex)
             {
@@ -257,8 +309,12 @@ namespace advt.CMS.Models.ExamModel
                 var successcount = 0;
                 foreach (var item in LPrac)
                 {
-                    var c = Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
-                    successcount += c;
+                    if (item.PracticeScore != null && item.PracticeScore != 0)
+                    {
+                        var c = Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
+                        successcount += c;
+                    }
+
                 }
                 Result = successcount + "成功插入" + successcount + "记录";
 
