@@ -859,36 +859,40 @@ namespace advt.Web.Controllers
                 //获取list数据
                 var tlst = models.ListUserInfo11;
                 NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
-                row1.CreateCell(0).SetCellValue("工号");
-                row1.CreateCell(1).SetCellValue("姓名");
-                row1.CreateCell(2).SetCellValue("入职日期");
-                row1.CreateCell(3).SetCellValue("职等");
-                row1.CreateCell(4).SetCellValue("职位");
-                row1.CreateCell(5).SetCellValue("入职初始等级");
-                row1.CreateCell(6).SetCellValue("考核通过等级");
-                row1.CreateCell(7).SetCellValue("考核通过等级");
-                row1.CreateCell(8).SetCellValue("最高可考等级");
-                row1.CreateCell(9).SetCellValue("下次可考等级");
-                row1.CreateCell(10).SetCellValue("每年应复审时间段");
-                row1.CreateCell(11).SetCellValue("科目");
-                row1.CreateCell(12).SetCellValue("规则");
+                row1.CreateCell(0).SetCellValue("区域");
+                row1.CreateCell(1).SetCellValue("部门");
+                row1.CreateCell(2).SetCellValue("工号");
+                row1.CreateCell(3).SetCellValue("姓名");
+                row1.CreateCell(4).SetCellValue("入职日期");
+                row1.CreateCell(5).SetCellValue("职等");
+                row1.CreateCell(6).SetCellValue("职位");
+                row1.CreateCell(7).SetCellValue("入职初始等级");
+                row1.CreateCell(8).SetCellValue("考核通过等级");
+                row1.CreateCell(9).SetCellValue("考核通过等级");
+                row1.CreateCell(10).SetCellValue("最高可考等级");
+                row1.CreateCell(11).SetCellValue("下次可考等级");
+                row1.CreateCell(12).SetCellValue("每年应复审时间段");
+                row1.CreateCell(13).SetCellValue("科目");
+                row1.CreateCell(14).SetCellValue("规则");
                 //将数据逐步写入sheet1各个行
                 for (int i = 0; i < tlst.Count; i++)
                 {
                     NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
-                    rowtemp.CreateCell(0).SetCellValue(tlst[i].UserCode);//工号
-                    rowtemp.CreateCell(1).SetCellValue(tlst[i].UserName);//姓名
-                    rowtemp.CreateCell(2).SetCellValue(tlst[i].EntryDate.ToString());//入职日期
-                    rowtemp.CreateCell(3).SetCellValue(tlst[i].RankName);//职等
-                    rowtemp.CreateCell(4).SetCellValue(tlst[i].PostName);//职位
-                    rowtemp.CreateCell(5).SetCellValue(tlst[i].ReverseBuckle);
-                    rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);
-                    rowtemp.CreateCell(7).SetCellValue(tlst[i].LastExamTime.ToString());
-                    rowtemp.CreateCell(8).SetCellValue(tlst[i].HighestTestSkill);
-                    rowtemp.CreateCell(9).SetCellValue(tlst[i].ApplicationLevel);
-                    rowtemp.CreateCell(10).SetCellValue(tlst[i].ExamineMonth);
-                    rowtemp.CreateCell(11).SetCellValue(tlst[i].SubjectName);
-                    rowtemp.CreateCell(12).SetCellValue(tlst[i].RuleName);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].WorkPlace);//工号
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].DepartCode);//工号
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].UserCode);//工号
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].UserName);//姓名
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].EntryDate.ToString());//入职日期
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].RankName);//职等
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].PostName);//职位
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].ReverseBuckle);
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].CurrentSkillLevel);
+                    rowtemp.CreateCell(9).SetCellValue(tlst[i].LastExamTime.ToString());
+                    rowtemp.CreateCell(10).SetCellValue(tlst[i].HighestTestSkill);
+                    rowtemp.CreateCell(11).SetCellValue(tlst[i].ApplicationLevel);
+                    rowtemp.CreateCell(12).SetCellValue(tlst[i].ExamineMonth);
+                    rowtemp.CreateCell(13).SetCellValue(tlst[i].SubjectName);
+                    rowtemp.CreateCell(14).SetCellValue(tlst[i].RuleName);
                       
                 }
                 // 写入到客户端 
