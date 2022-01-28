@@ -157,29 +157,32 @@
         </div>
         <!-- #region 上传实践弹窗 -->
         <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
-            <el-form :model="VPracticeInfo" class="demo-form-inline" :inline="true" :rules="ruleform">
-                <el-form-item label="工号" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.UserCode" autocomplete="off" :disabled="true"></el-input>
+            <el-form :inline="true" :model="VPracticeInfo" class="demo-form-inline">
+                <el-form-item label="工号">
+                    <el-input v-model="VPracticeInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.UserName" autocomplete="off" :disabled="true"></el-input>
+                <el-form-item label="姓名">
+                    <el-input v-model="VPracticeInfo.UserName" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="有效期" :label-width="formLabelWidth">
+                <el-form-item label="技能">
+                    <el-input v-model="VPracticeInfo.SkillName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试类型">
+                    <el-input v-model="VPracticeInfo.TypeName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试科目">
+                    <el-input v-model="VPracticeInfo.SubjectName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="有效期">
                     <el-date-picker v-model="VPracticeInfo.ValidityDate" type="date" placeholder="选择日" @@change="dataSearch" value-format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="成绩" :label-width="formLabelWidth">
+                <el-form-item label="成绩">
                     <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off" prop="PracticeScore"></el-input>
                 </el-form-item>
-                <el-form-item label="技能" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.SkillName" autocomplete="off" :disabled="true"></el-input>
+                <el-form-item label="备注">
+                    <el-input type="textarea" :cols="40" v-model="VPracticeInfo.PracticeRemark" autocomplete="off" :label-width="100"></el-input>
                 </el-form-item>
-                <el-form-item label="考试类型" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.TypeName" autocomplete="off" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="考试科目" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.SubjectName" autocomplete="off" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="上传附件" :label-width="formLabelWidth">
+                <el-form-item label="上传附件">
                     <el-input v-model="VPracticeInfo.Enclosure" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -193,9 +196,7 @@
                         </template>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="备注" :label-width="formLabelWidth">
-                    <el-input type="textarea" :cols="40" v-model="VPracticeInfo.PracticeRemark" autocomplete="off" :label-width="100"></el-input>
-                </el-form-item>
+
             </el-form>
             <el-table :data="LPracticeInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">

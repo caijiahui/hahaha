@@ -225,8 +225,10 @@
         <!-- #endregion -->
         <!-- #region 上传实践弹窗 -->
         <el-dialog title="查看实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
+
             <el-table :data="LPracticeInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+
                 <el-table-column label="姓名"
                                  prop="UserName" sortable
                                  fixed>
