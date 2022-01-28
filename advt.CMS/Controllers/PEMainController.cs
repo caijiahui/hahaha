@@ -869,17 +869,9 @@ namespace advt.Web.Controllers
                 row1.CreateCell(7).SetCellValue("考核通过等级");
                 row1.CreateCell(8).SetCellValue("最高可考等级");
                 row1.CreateCell(9).SetCellValue("下次可考等级");
-                row1.CreateCell(10).SetCellValue("科目");
-                row1.CreateCell(11).SetCellValue("规则");
-                //row1.CreateCell(5).SetCellValue("本职等对应技能等级");
-                //row1.CreateCell(6).SetCellValue("已经考取技能等级");
-                //row1.CreateCell(7).SetCellValue("最近一次理论考试成绩");
-                //row1.CreateCell(8).SetCellValue("最近一次通过理论时间");
-                //row1.CreateCell(9).SetCellValue("最近一次实践成绩");
-                //row1.CreateCell(10).SetCellValue("最近一次实践考核通过时间");
-                //row1.CreateCell(11).SetCellValue("最高可考技能等级");
-                //row1.CreateCell(12).SetCellValue("可申请技能等级");
-                //row1.CreateCell(13).SetCellValue("最近一次绩效成绩要求");
+                row1.CreateCell(10).SetCellValue("每年应复审时间段");
+                row1.CreateCell(11).SetCellValue("科目");
+                row1.CreateCell(12).SetCellValue("规则");
                 //将数据逐步写入sheet1各个行
                 for (int i = 0; i < tlst.Count; i++)
                 {
@@ -894,17 +886,10 @@ namespace advt.Web.Controllers
                     rowtemp.CreateCell(7).SetCellValue(tlst[i].LastExamTime.ToString());
                     rowtemp.CreateCell(8).SetCellValue(tlst[i].HighestTestSkill);
                     rowtemp.CreateCell(9).SetCellValue(tlst[i].ApplicationLevel);
-                    rowtemp.CreateCell(10).SetCellValue(tlst[i].SubjectName);
-                    rowtemp.CreateCell(11).SetCellValue(tlst[i].RuleName);
-                    //rowtemp.CreateCell(5).SetCellValue(tlst[i].SkillLevel);//本职等对应技能等级
-                    //rowtemp.CreateCell(6).SetCellValue(tlst[i].CurrentSkillLevel);//已经考取技能等级
-                    //rowtemp.CreateCell(7).SetCellValue(tlst[i].ExamScore);//最近一次理论考试成绩
-                    //rowtemp.CreateCell(8).SetCellValue(tlst[i].LastExamTime.ToString());//最近一次通过理论时间
-                    //rowtemp.CreateCell(9).SetCellValue(tlst[i].TheoreticalAchievement.ToString());//最近一次实践成绩
-                    //rowtemp.CreateCell(10).SetCellValue(tlst[i].PracticeTime.ToString());//最近一次实践考核通过时间
-                    //rowtemp.CreateCell(11).SetCellValue(tlst[i].HighestTestSkill);//最高可考技能等级
-                    //rowtemp.CreateCell(12).SetCellValue(tlst[i].ApplicationLevel);//可申请技能等级
-                    //rowtemp.CreateCell(13).SetCellValue(tlst[i].Achievement);//最近一次绩效成绩要求    
+                    rowtemp.CreateCell(10).SetCellValue(tlst[i].ExamineMonth);
+                    rowtemp.CreateCell(11).SetCellValue(tlst[i].SubjectName);
+                    rowtemp.CreateCell(12).SetCellValue(tlst[i].RuleName);
+                      
                 }
                 // 写入到客户端 
                 System.IO.MemoryStream ms = new System.IO.MemoryStream();
