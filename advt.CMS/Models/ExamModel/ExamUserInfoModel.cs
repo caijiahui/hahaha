@@ -160,14 +160,14 @@ namespace advt.CMS.Models.ExamModel
                             TheoreticalAchievement = score,//实践成绩
                             PracticeTime = practicetime,//最后一次实践成绩
                             HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                            ApplicationLevel = row["ApplicationLevel"].ToString(),//本次申请等级      
+                            ApplicationLevel = row["examapply"].ToString(),//本次申请等级      
                             IsAchment = row["IsAchment"].ToString(),
                             Achievement = row["Achievement"].ToString(),
                             SubjectName = row["SubjectName"].ToString(),
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
                             RuleName = row["RuleName"].ToString(),
                             WorkPlace = row["WorkPlace"].ToString(),
-                            IsUserExam = row["IsUserExam"].ToString(),
+                            IsUserExam = row["IsUserExams"].ToString(),
                             //每年应复审时间段
                             ExamineMonth = row["ExamineMonth"].ToString(),
                             ReadExamDate = ReadyExamDate
