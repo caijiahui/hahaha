@@ -67,7 +67,7 @@ namespace advt.Web.Controllers
                     if (IsTest == "formal")
                     {
                         var dtdate = DateTime.Now;
-                        if (detail.ExamDate == null)
+                        if(detail.ExamDate == null)
                         {
                             model.ExamFailResult += "未维护考试时间:" + detail.ExamDate + ",不可考试";
                         }
@@ -83,7 +83,7 @@ namespace advt.Web.Controllers
                         }
 
                     }
-
+                    
                 }
                 else
                 {

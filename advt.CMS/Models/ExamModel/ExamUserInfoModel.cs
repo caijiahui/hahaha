@@ -395,8 +395,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = ID });
                 c.IsStop = true;
-                c.HrCheckCreateDate = DateTime.Now;
-                c.HrCheckCreateUser = username;
+                c.StopCreateDate = DateTime.Now;
+                c.StopCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
                         }
             catch (Exception ex)

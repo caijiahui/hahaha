@@ -29,7 +29,8 @@ namespace advt.Data.SqlServer
             new string[] { "HCLimit", "Int", "4"},
             new string[] { "IsSysPractice", "Bit", "1"},
             new string[] { "IsProAssess", "Bit", "1"},
-            new string[] { "DepartCode", "NVarChar", "50"}
+            new string[] { "DepartCode", "NVarChar", "50"},
+            new string[] { "ElectronicQuota", "Int", "4"}
         };
         #endregion
 
@@ -118,6 +119,20 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@SubjectName", (DbType)SqlDbType.NVarChar, 150, SubjectName));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public IDataReader Get_All_ExamGetByDepart(string Depart)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("select a.SubjectName,typename=case when b.counts is null then a.SubjectName+N'可报'+convert(nvarchar, a.HCLimit)+N'人' else "+
+" a.SubjectName + N'可报' + convert(nvarchar, a.HCLimit - b.counts) + N'人' end from ExamSubject a left join (" +
+                "  select b.SubjectName,counts= COUNT(*) from (select * from ExamSubject a where  " + Depart + ")a " +
+                "  inner join ( select * from ExamUserDetailInfo where TypeName=N'电子端岗位技能津贴' and IsStop=0 and IsExam='false' " +
+                "  union all select * from ExamUserDetailInfo where TypeName=N'电子端岗位技能津贴' and IsStop=0 and IsExam='true' and IsExamPass=1) " +
+                "  b on a.SubjectName = b.SubjectName group by b.SubjectName ) b on a.SubjectName = b.SubjectName  where   " + Depart 
+                ) ; 
+            
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+        
         #endregion
     }
 }

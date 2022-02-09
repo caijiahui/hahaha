@@ -65,6 +65,7 @@
     <Compile Include="DataProvider\AchieveRecord.cs" />
     <Compile Include="DataProvider\advt_Attachment.cs" />
     <Compile Include="DataProvider\advt_Attach_Files.cs" />
+    <Compile Include="DataProvider\ElectronicUser.cs" />
     <Compile Include="DataProvider\ExamUsersFromehr.cs" />
     <Compile Include="DataProvider\ExamRolePartDetail.cs" />
     <Compile Include="DataProvider\advt_user_sheet.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="IDataProvider\ExamBank.cs" />
     <Compile Include="IDataProvider\ExamRolePart.cs" />
     <Compile Include="IDataProvider\ExamRole.cs" />
+    <Compile Include="IDataProvider\ElectronicUser.cs" />
     <Compile Include="IDataProvider\ExamUsersFromehr.cs" />
     <Compile Include="IDataProvider\ExamRolePartDetail.cs" />
     <Compile Include="IDataProvider\ExamRuleTopicType.cs" />

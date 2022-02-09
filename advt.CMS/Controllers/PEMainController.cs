@@ -607,7 +607,7 @@ namespace advt.Web.Controllers
             SupervisorAuditModel model = new SupervisorAuditModel();
             var name = this.UserNameContext;
             model.GetAllExamUserDetailInfo(name);
-            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser });
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser, LExamType=model.LExamType });
         }
         public JsonResult Upload_Supervisor(HttpPostedFileBase file)
         {
@@ -1170,6 +1170,21 @@ namespace advt.Web.Controllers
             RegionalPostModel mode = new RegionalPostModel();
             mode.Delete_ExamPost(model);
             return Json(new { tableData = mode.ListRegionalPost }, JsonRequestBehavior.AllowGet);
-        }        
+        }
+        [MyAuthorize]
+        public ActionResult SearchAuditUserByType(string subject)
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            var name = this.UserNameContext;
+            model.GetAllExamUserByType(subject,name);
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType });
+        }
+        [MyAuthorize]
+        public ActionResult AduitSigupBySubject(string usercode)
+        {
+            SupervisorAuditModel model = new SupervisorAuditModel();
+            model.GetSignSubject(usercode);
+            return Json(new { LExamSubject = model.LExamSubject });
+        }
     }
 }

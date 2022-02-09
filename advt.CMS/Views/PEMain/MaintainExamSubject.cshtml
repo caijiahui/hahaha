@@ -29,6 +29,7 @@
             <el-table-column label="考试科目" prop="SubjectName" sortable></el-table-column>
             <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="HC限制" prop="HCLimit" sortable></el-table-column>
+            <el-table-column label="津贴额度" prop="ElectronicQuota" sortable></el-table-column>
             <el-table-column label="是否系统串实践"
                              prop="IsSysPractice"
                              width="150"
@@ -86,11 +87,14 @@
                 <el-form-item label="考试科目" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="部门代码" :label-width="formLabelWidth">
+                @*<el-form-item label="部门代码" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.DepartCode" autocomplete="off"></el-input>
-                </el-form-item>
+                </el-form-item>*@
                 <el-form-item label="HC限制" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.HCLimit" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="津贴额度" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.ElectronicQuota" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="是否系统串实践" prop="IsSysPractice">
                     <el-switch v-model="VexamSubject.IsSysPractice"></el-switch>

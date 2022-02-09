@@ -164,14 +164,34 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 
-        public IDataReader Get_ExamUserAuditInfo(string ExamStatus,  string UserCode)
+        public IDataReader Get_ExamUserAuditInfo(string ExamStatus,  string UserCode,string typename)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select distinct a.*,c.* from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='" + UserCode+"'" +
+            commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='" + UserCode + "'" +
                  " and (UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b" +
-                 " on a.UserCostCenter=b.UserCostCenter inner join ExamUserDetailInfo c on c.UserCode = a.UserCode where   ExamStatus='"+ ExamStatus + "' and IsStop=0" +
-                "");
+                 " on a.UserCostCenter=b.UserCostCenter inner join ExamUserDetailInfo c on c.UserCode = a.UserCode where   ExamStatus='" + ExamStatus + "' and IsStop=0" +
+                " and a.UserCostCenter = c.DepartCode and c.TypeName = N'"+ typename + "'");
 
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+
+        public IDataReader Get_All_PostCanSignUser( string UserCode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select distinct TypeName=N'电子端岗位技能津贴', UserCode=a.UserCode,UserName=a.UserName,DepartCode=a.Department,SubjectName=a.SubjectName from ElectronicUser a " +
+                " inner join (select * from [advt_user_sheet] where UserCode='"+UserCode+"'  and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b   " +
+              "   on a.Department = b.UserCostCenter where a.UserCode not in ( select a.UserCode from ElectronicUser a inner join ExamUserDetailInfo b on a.SubjectName = b.SubjectName and b.IsStop=0 ) ");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+
+        public IDataReader GetCanSignUpAudit(string usercode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ( select * from ExamUserDetailInfo where TypeName=N'电子端岗位技能津贴' " +
+                " and IsStop=0 and IsExam='false'   union all select * from ExamUserDetailInfo " +
+                " where TypeName=N'电子端岗位技能津贴' and IsStop=0 and IsExam='true' and IsExamPass=1 )a " +
+                " where a.UserCode='"+ usercode + "'"
+                );
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         #endregion

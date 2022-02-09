@@ -17,6 +17,10 @@
 
     </template>
     <div>
+        <el-select v-model="TypeNames" placeholder="请选择考试类型">
+            <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
+        <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
         <el-tabs v-model="activeName">
             <el-tab-pane label="可报名人员" name="first">
             </el-tab-pane>
@@ -55,8 +59,8 @@
                         <el-table-column label="考试类型"
                                          prop="TypeName" sortable>
                         </el-table-column>
-                        <el-table-column label="考试科目"
-                                         prop="SubjectName" sortable>
+                        <el-table-column  label="考试科目"
+                                         prop="SubjectName" sortable v-if="LCheckAudtiUser.TypeName=='关键岗位技能等级'">
                         </el-table-column>
                         <el-table-column label="姓名"
                                          prop="UserName" sortable>
@@ -68,13 +72,13 @@
                                          prop="UserCode" sortable>
                         </el-table-column>
                         <el-table-column label="考试规则"
-                                         prop="RuleName" sortable>
+                                         prop="RuleName" sortable v-if="LCheckAudtiUser.TypeName=='关键岗位技能等级'">
                         </el-table-column>
                         <el-table-column label="最高可考技能"
-                                         prop="HighestLevel" sortable>
+                                         prop="HighestLevel" sortable v-if="LCheckAudtiUser.TypeName=='关键岗位技能等级'">
                         </el-table-column>
                         <el-table-column label="本次申请等级"
-                                         prop="ApplyLevel" sortable>
+                                         prop="ApplyLevel" sortable v-if="LCheckAudtiUser.TypeName=='关键岗位技能等级'">
                         </el-table-column>
                         <el-table-column label="预计考试时间"
                                          sortable>
@@ -153,29 +157,32 @@
         </div>
         <!-- #region 上传实践弹窗 -->
         <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
-            <el-form :model="VPracticeInfo" class="demo-form-inline" :inline="true">
-                <el-form-item label="工号" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.UserCode" autocomplete="off" :disabled="true"></el-input>
+            <el-form :inline="true" :model="VPracticeInfo" class="demo-form-inline">
+                <el-form-item label="工号">
+                    <el-input v-model="VPracticeInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.UserName" autocomplete="off" :disabled="true"></el-input>
+                <el-form-item label="姓名">
+                    <el-input v-model="VPracticeInfo.UserName" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="有效期" :label-width="formLabelWidth">
+                <el-form-item label="技能">
+                    <el-input v-model="VPracticeInfo.SkillName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试类型">
+                    <el-input v-model="VPracticeInfo.TypeName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试科目">
+                    <el-input v-model="VPracticeInfo.SubjectName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="有效期">
                     <el-date-picker v-model="VPracticeInfo.ValidityDate" type="date" placeholder="选择日" @@change="dataSearch" value-format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="成绩" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off"></el-input>
+                <el-form-item label="成绩">
+                    <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off" prop="PracticeScore"></el-input>
                 </el-form-item>
-                <el-form-item label="技能" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.SkillName" autocomplete="off" :disabled="true"></el-input>
+                <el-form-item label="备注">
+                    <el-input type="textarea" :cols="40" v-model="VPracticeInfo.PracticeRemark" autocomplete="off" :label-width="100"></el-input>
                 </el-form-item>
-                <el-form-item label="考试类型" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.TypeName" autocomplete="off" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="考试科目" :label-width="formLabelWidth">
-                    <el-input v-model="VPracticeInfo.SubjectName" autocomplete="off" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="上传附件" :label-width="formLabelWidth">
+                <el-form-item label="上传附件">
                     <el-input v-model="VPracticeInfo.Enclosure" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -189,9 +196,7 @@
                         </template>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="备注" :label-width="formLabelWidth">
-                    <el-input type="textarea" :cols="40" v-model="VPracticeInfo.PracticeRemark" autocomplete="off" :label-width="100"></el-input>
-                </el-form-item>
+
             </el-form>
             <el-table :data="LPracticeInfo"
                       style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
@@ -256,6 +261,7 @@
                 <el-form-item label="人员" :label-width="formLabelWidth">
                     <el-input v-model="VAuditCheck.Users" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
+                
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
                     <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
                 </el-form-item>
@@ -397,6 +403,10 @@
             dialogSearchVisible: false,
             form: [],
             LCheckAudtiUser: [],
+            LExamType: [],
+            LExamSubject: [],
+            Subjects:'',
+            TypeNames: '',
             formLabelWidth: '120px',
             search: '',
             VPracticeInfo: {},
@@ -406,8 +416,14 @@
             LExamUserDetailInfo: [],
             LPracticeInfo: [],
             LSignedupUser: [],
-            activeName: 'first'
+            activeName: 'first',
+            ruleform: {
+                PracticeScore: [
+                    { required: true, message: '请输入实践成绩', trigger: 'blur' }
+                ]
+            }
         },
+
         mounted: function () {
             this.getdata();
         },
@@ -468,7 +484,6 @@
             },
             handleSave() {
                 var _this = this;
-                console.log(_this.checkBoxData, 333);
                 axios.post('/PEMain/InsertUserDetail', {
                     model: _this.checkBoxData
                 }).then(function (res) {
@@ -573,13 +588,24 @@
                 //console.log(new Date(date).getFullYear())
                 return year + '-' + mon + '-' + day;
             },
-            getdata: function () {
+            //查找考试类型下的人员
+            SearchinByTypeName() {
                 var _this = this;
-                axios.post('/PEMain/GetSupervisorAuditUser').then(function (responese) {
+                axios.post('/PEMain/SearchAuditUserByType', {
+                    subject: _this.TypeNames
+                }).then(function (responese) {
                     _this.LCheckAudtiUser = responese.data.LCheckAudtiUser;
                     _this.LRules = responese.data.LRules;
                     _this.LSignedupUser = responese.data.LSignedupUser;
+                    _this.LExamType = responese.data.LExamType;
+                });
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/PEMain/GetSubjectInfo').then(res => {
+                    _this.LExamType = res.data.LExamType;
                 })
+              
             }
         }
 
