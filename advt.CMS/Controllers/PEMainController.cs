@@ -908,6 +908,78 @@ namespace advt.Web.Controllers
             }
 
         }
+        public FileResult ExamExcel(string TypeName, string UserCode, string DepartCode, string ReadyExamDate, string WorkPlace)
+        {
+            try
+            {
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                ExamUserInfoModel models = new ExamUserInfoModel();
+                SearchUserData data = new SearchUserData();
+                data.TypeName = TypeName;
+                if (UserCode == "undefined")
+                {
+                    UserCode = null;
+                }
+                data.UserCode = UserCode;
+                if (DepartCode == "undefined")
+                {
+                    DepartCode = null;
+                }
+                data.DepartCode = DepartCode;
+                if (ReadyExamDate == "undefined")
+                {
+                    ReadyExamDate = null;
+                }
+                data.ReadyExamDate = ReadyExamDate;
+                if (string.IsNullOrEmpty(WorkPlace))
+                {
+                    WorkPlace = null;
+                }
+                data.WorkPlace = WorkPlace;
+                models.GetUserInfo(data);
+                //获取list数据
+                var tlst = models.YListUserInfo;
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("考试类型");
+                row1.CreateCell(1).SetCellValue("工号");
+                row1.CreateCell(2).SetCellValue("姓名");
+                row1.CreateCell(3).SetCellValue("部门");
+                row1.CreateCell(4).SetCellValue("本次申请等级");
+                row1.CreateCell(5).SetCellValue("科目");
+                row1.CreateCell(6).SetCellValue("规则");
+                row1.CreateCell(7).SetCellValue("区域");
+               
+                //将数据逐步写入sheet1各个行
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].TypeName);//工号
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].UserCode);//工号
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].UserName);//姓名
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].DepartCode);//工号
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].ApplicationLevel);
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].SubjectName);
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].RuleName);
+
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].WorkPlace);//工号
+                    
+
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", "考试人员信息" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public FileResult SignUpExamExcel()
         {
     /* string TypeName,string Usercode,string DepartCode*/
