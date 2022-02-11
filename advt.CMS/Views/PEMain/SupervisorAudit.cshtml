@@ -605,6 +605,14 @@
                 axios.post('/PEMain/GetSubjectInfo').then(res => {
                     _this.LExamType = res.data.LExamType;
                 })
+                axios.post('/PEMain/SearchAuditUserByType', {
+                    subject: _this.TypeNames
+                }).then(function (responese) {
+                    _this.LCheckAudtiUser = responese.data.LCheckAudtiUser;
+                    _this.LRules = responese.data.LRules;
+                    _this.LSignedupUser = responese.data.LSignedupUser;
+                    _this.LExamType = responese.data.LExamType;
+                });
               
             }
         }

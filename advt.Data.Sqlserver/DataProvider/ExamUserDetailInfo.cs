@@ -170,8 +170,11 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='" + UserCode + "'" +
                  " and (UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b" +
                  " on a.UserCostCenter=b.UserCostCenter inner join ExamUserDetailInfo c on c.UserCode = a.UserCode where   ExamStatus='" + ExamStatus + "' and IsStop=0" +
-                " and a.UserCostCenter = c.DepartCode and c.TypeName = N'"+ typename + "'");
-
+                " and a.UserCostCenter = c.DepartCode ");
+            if (!string.IsNullOrEmpty(typename))
+            {
+                commandText.AppendLine( "and c.TypeName = N'"+ typename + "'");
+            }
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 

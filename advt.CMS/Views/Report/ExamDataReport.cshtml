@@ -26,7 +26,7 @@
             </template>
         </el-button>
     </div>
-    <div id="hostChart" style="width:100%;height:300px"></div>
+    <div id="hostChart" style="width:100%;height:350px"></div>
     <div v-if="ListElectronicUserView.length!=0"> 
         <template>
             <el-table :data="ListElectronicUserView"
@@ -284,12 +284,18 @@
                 });
                 myChart.clear();
                 option = {
+                    grid: {
+                        y2:150
+                    },
                     xAxis: {
                         type: 'category',
                         data: dateList,
                         axisLabel: {
                             interval: 0,
-                            rotate: 40
+                            rotate: 90
+                        },
+                        splitArea: {
+                            show: true
                         }
                     },
                     yAxis: {
