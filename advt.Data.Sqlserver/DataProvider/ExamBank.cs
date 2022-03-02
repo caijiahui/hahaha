@@ -152,7 +152,7 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" DELETE FROM [ExamBank] ");
             List<DbParameter> l_parms = new List<DbParameter>();
             var texts = " where 1=1  ";
-            if (!string.IsNullOrEmpty(ExamSubject))
+            if (!string.IsNullOrEmpty(TypeName))
             {
                 texts += " and ExamType like N'%" + TypeName + "%' ";
             }
