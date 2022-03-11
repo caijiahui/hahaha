@@ -181,7 +181,7 @@ namespace advt.CMS.Models.ExamModel
                         int i = 0;
                         foreach (var item in listinfo)
                         {
-                            var dff = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { TypeName = item.TypeName, ApplyLevel = item.ApplicationLevel, UserCode = item.UserCode, UserName = item.UserName, SubjectName = item.SubjectName, RuleName = item.RuleName, ExamStatus = "HrSignUp", IsStop = false, IsExam = "false" });
+                            var dff = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { TypeName = item.TypeName, ApplyLevel = item.ApplicationLevel, UserCode = item.UserCode, UserName = item.UserName, SubjectName = item.SubjectName, RuleName = item.RuleName,  IsStop = false, IsExam = "false" });
                             if (dff.Count() == 0)
                             {
                                 i++;
@@ -212,6 +212,7 @@ namespace advt.CMS.Models.ExamModel
                                     IsUserExam = item.IsUserExam,
                                     ExamineMonth = item.ExamineMonth,
                                     ReadExamDate = item.ReadExamDate
+                                    
                                 });
                             }
 
