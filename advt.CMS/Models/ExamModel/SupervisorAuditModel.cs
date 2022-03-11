@@ -150,7 +150,7 @@ namespace advt.CMS.Models.ExamModel
                             var ListPract = new List<PracticeInfo>();
                             if (!string.IsNullOrEmpty(item.SubjectName))
                             {
-                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, SubjectName = item.SubjectName, UserCode = item.UserCode });
+                                ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new {  TypeName = item.TypeName, SubjectName = item.SubjectName, UserCode = item.UserCode });
                             }
                             else
                             {

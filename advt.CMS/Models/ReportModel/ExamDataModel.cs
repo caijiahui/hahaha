@@ -46,12 +46,15 @@ namespace advt.CMS.Models
         }
         public bool GetSigupElectronicUser(string usercode, string UserCostCenter, string SubjectName,string sdata,string typename,string username)
         {
+
             var su=Data.ElectronicUser.Insert_ElectronicUser_usercode(usercode, UserCostCenter,SubjectName, username);
             ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata);
             GetExamInfo(typename);
             var user = Data.ElectronicUser.Get_ElectronicUser(new { UserCode = usercode });
             UserInfo model = new UserInfo();
             List<UserInfo> Listusers = new List<UserInfo>();
+            var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
+            var exmser = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode });
             if (su > 0)
             {
                 model.TypeName = typename;
@@ -59,6 +62,7 @@ namespace advt.CMS.Models
                 model.UserCode = usercode;
                 model.UserName = user.UserName;
                 model.PostName = user.ElectronicPost;
+                model.RuleName = rule!=null?rule.RuleName:"";
                 model.DepartCode = UserCostCenter;
                 Listusers.Add(model);
                 ExamUserInfoModel models = new ExamUserInfoModel();

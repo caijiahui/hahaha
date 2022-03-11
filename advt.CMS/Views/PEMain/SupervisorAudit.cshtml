@@ -157,7 +157,7 @@
         </div>
         <!-- #region 上传实践弹窗 -->
         <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
-            <el-form :inline="true" :model="VPracticeInfo" class="demo-form-inline">
+            <el-form :inline="true" :model="VPracticeInfo" class="demo-form-inline" :rules="PracRule" ref="dialogForm">
                 <el-form-item label="工号">
                     <el-input v-model="VPracticeInfo.UserCode" :disabled="true"></el-input>
                 </el-form-item>
@@ -176,8 +176,8 @@
                 <el-form-item label="有效期">
                     <el-date-picker v-model="VPracticeInfo.ValidityDate" type="date" placeholder="选择日" @@change="dataSearch" value-format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="成绩">
-                    <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off" prop="PracticeScore"></el-input>
+                <el-form-item label="成绩" prop="PracticeScore">
+                    <el-input v-model="VPracticeInfo.PracticeScore" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input type="textarea" :cols="40" v-model="VPracticeInfo.PracticeRemark" autocomplete="off" :label-width="100"></el-input>
@@ -279,7 +279,7 @@
         <!-- #region 查看明细 -->
         <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
             <el-table :data="LExamUserDetailInfo"
-                      style="width: 100%;margin-top:20px " border @@selection-change="changeFun">
+                      style="width: 100%;margin-top:20px " border @@selection-change="changeFun" :rules="ruleform">
                 <el-table-column label="考试类型"
                                  prop="TypeName" sortable>
                 </el-table-column>
@@ -407,6 +407,7 @@
             LExamSubject: [],
             Subjects:'',
             TypeNames: '',
+
             formLabelWidth: '120px',
             search: '',
             VPracticeInfo: {},
@@ -414,14 +415,23 @@
             LRules: [],
             VAuditCheck: {},
             LExamUserDetailInfo: [],
-            LPracticeInfo: [],
+            LPracticeInfo: [{
+                PracticeScore:0
+
+            }],
             LSignedupUser: [],
             activeName: 'first',
             ruleform: {
                 PracticeScore: [
                     { required: true, message: '请输入实践成绩', trigger: 'blur' }
                 ]
-            }
+            },
+            PracRule: {
+                PracticeScore: [
+                    {  required: true, message: '必填', trigger: 'blur' }
+
+                ]
+            },
         },
 
         mounted: function () {
@@ -517,13 +527,19 @@
             },
             handlePracticalSave(flag) {
                 var _this = this;
+                _this.$refs.dialogForm.validate(function (v) {
+                    if (v) {
+                        axios.post('/PEMain/SavePracticeInfo', {
+                            model: _this.VPracticeInfo
+                        }).then(function (res) {
+                            _this.VPracticeInfo = {};
+                        }); 
+                        _this.dialogFormPractical = false
+                    }
+                   
 
-                axios.post('/PEMain/SavePracticeInfo', {
-                    model: _this.VPracticeInfo
-                }).then(function (res) {
-                    _this.VPracticeInfo = {};
-                });
-                _this.dialogFormPractical = false
+                })
+
             },
             handleAannexSuccess(Result) {
                 var _this = this;
