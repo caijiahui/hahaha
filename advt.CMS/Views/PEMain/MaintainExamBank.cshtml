@@ -62,7 +62,6 @@
                             <el-button size="small" type="primary">
                                 导出
                             </el-button>
-
                         </a>
                     </div>
                     <div style="float:left;margin-left:20px;margin-top:30px">
@@ -170,12 +169,12 @@
             <el-form-item label="题目内容" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.TopicTitle" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="题目图片" :label-width="formLabelWidth">
-                <el-input v-model="VExamBank.TopicTitlePicNum" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item v-if="VExamBank.TopicTitlePicNum" label="选项A图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.TopicTitlePicNum" />
-            </el-form-item>
+        <el-form-item v-if="VExamBank.TopicTitlePicNum" label="题目图片" :label-width="formLabelWidth">
+            <div class="demo-image__preview">
+                <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.TopicTitlePicNum" 
+                     :preview-src-list="srcList"></el-image>
+            </div>
+        </el-form-item>
             <el-form-item label="正确答案" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.RightKey" autocomplete="off"></el-input>
             </el-form-item>
@@ -189,7 +188,10 @@
                 <el-input v-model="VExamBank.OptionAPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionAPicNum" label="选项A图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionAPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionAPicNum"
+                              :preview-src-list="srcAList"></el-image>
+                </div>
             </el-form-item>
             <el-form-item label="选项B" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionB" autocomplete="off"></el-input>
@@ -198,7 +200,10 @@
                 <el-input v-model="VExamBank.OptionBPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionBPicNum" label="选项B图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionBPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionBPicNum"
+                              :preview-src-list="srcBList"></el-image>
+                </div>
             </el-form-item>
             <el-form-item label="选项C" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionC" autocomplete="off"></el-input>
@@ -207,7 +212,10 @@
                 <el-input v-model="VExamBank.OptionCPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionCPicNum" label="选项C图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionCPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionCPicNum"
+                              :preview-src-list="srcCList"></el-image>
+                </div>
             </el-form-item>
             <el-form-item label="选项D" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionD" autocomplete="off"></el-input>
@@ -216,7 +224,10 @@
                 <el-input v-model="VExamBank.OptionDPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionDPicNum" label="选项D图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionDPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionDPicNum"
+                              :preview-src-list="srcDList"></el-image>
+                </div>
             </el-form-item>
             <el-form-item label="选项E" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionE" autocomplete="off"></el-input>
@@ -225,7 +236,10 @@
                 <el-input v-model="VExamBank.OptionEPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionEPicNum" label="选项E图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionEPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionEPicNum"
+                              :preview-src-list="srcEList"></el-image>
+                </div>
             </el-form-item>
             <el-form-item label="选项F" :label-width="formLabelWidth">
                 <el-input v-model="VExamBank.OptionF" autocomplete="off"></el-input>
@@ -234,7 +248,10 @@
                 <el-input v-model="VExamBank.OptionFPicNum" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item v-if="VExamBank.OptionFPicNum" label="选项F图片" :label-width="formLabelWidth">
-                <img :src="'/Attachment/BankPic/'+VExamBank.OptionFPicNum" />
+                <div class="demo-image__preview">
+                    <el-image style="width: 100px; height: 100px" :src="'/Attachment/BankPic/'+VExamBank.OptionFPicNum"
+                              :preview-src-list="srcFList"></el-image>
+                </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -298,6 +315,13 @@
                 page_sizes: [5, 10, 15, 20],
                 layout: 'total, sizes, prev, pager, next, jumper'
             },
+            srcList: [],
+            srcAList: [],
+            srcBList: [],
+            srcCList: [],
+            srcDList: [],
+            srcEList: [],
+            srcFList: [],
             allTableData: [],
             LTopicType: [
                 {
@@ -331,6 +355,10 @@
             //this.getInfoList();
         },
         methods: {
+            onPreview() {
+                var _this = this;
+                this.$refs.preview.clickHandler()
+            },
             changeFun(val) {
                 var _this = this;
                 _this.checkBoxData = val;
@@ -444,7 +472,15 @@
                     ID: ID
                 }).then(function (res) {
                     _this.VExamBank = res.data.VExamBank;
+                    _this.srcList = ["/Attachment/BankPic/" + _this.VExamBank.TopicTitlePicNum];
+                    _this.srcAList = ["/Attachment/BankPic/" + _this.VExamBank.OptionAPicNum];
+                    _this.srcBList = ["/Attachment/BankPic/" + _this.VExamBank.OptionBPicNum];
+                    _this.srcCList = ["/Attachment/BankPic/" + _this.VExamBank.OptionCPicNum];
+                    _this.srcDList = ["/Attachment/BankPic/" + _this.VExamBank.OptionDPicNum];
+                    _this.srcEList = ["/Attachment/BankPic/" + _this.VExamBank.OptionEPicNum];
+                    _this.srcFList = ["/Attachment/BankPic/" + _this.VExamBank.OptionFPicNum];
                 });
+              
                 _this.dialogFormVisible = true;
             },
             handleSave() {
