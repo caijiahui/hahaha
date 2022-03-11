@@ -174,7 +174,49 @@ namespace advt.CMS.Models.ExamModel
                         });
                     }
                     ListUserInfo11 = ListUserInfo.ToList();
-                    YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true"&&!string.IsNullOrEmpty(x.RuleName)).ToList();
+                    //YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName)).ToList();
+                    var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
+                    if (listinfo.Count() > 0 && listinfo != null)
+                    {
+                        int i = 0;
+                        foreach (var item in listinfo)
+                        {
+                            var dff = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { TypeName = item.TypeName, ApplyLevel = item.ApplicationLevel, UserCode = item.UserCode, UserName = item.UserName, SubjectName = item.SubjectName, RuleName = item.RuleName, ExamStatus = "HrSignUp", IsStop = false, IsExam = "false" });
+                            if (dff.Count() == 0)
+                            {
+                                i++;
+                                YListUserInfo.Add(new UserInfo
+                                {
+                                    Id = i,
+                                    TypeName = item.TypeName,
+                                    UserCode = item.UserCode,
+                                    UserName = item.UserName,
+                                    EntryDate = item.EntryDate,
+                                    RankName = item.RankName,
+                                    PostName = item.PostName,
+                                    DepartCode = item.DepartCode,
+                                    SkillLevel = item.SkillLevel,
+                                    CurrentSkillLevel = item.CurrentSkillLevel,
+                                    ExamScore = item.ExamScore,
+                                    LastExamTime = item.LastExamTime,
+                                    TheoreticalAchievement = item.TheoreticalAchievement,
+                                    PracticeTime = item.PracticeTime,
+                                    HighestTestSkill = item.HighestTestSkill,
+                                    ApplicationLevel = item.ApplicationLevel,
+                                    IsAchment = item.IsAchment,
+                                    Achievement = item.Achievement,
+                                    SubjectName = item.SubjectName,
+                                    ReverseBuckle = item.ReverseBuckle,
+                                    RuleName = item.RuleName,
+                                    WorkPlace = item.WorkPlace,
+                                    IsUserExam = item.IsUserExam,
+                                    ExamineMonth = item.ExamineMonth,
+                                    ReadExamDate = item.ReadExamDate
+                                });
+                            }
+
+                        }
+                    }
                     var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
                     if (!string.IsNullOrEmpty(data.DepartCode))
                     {

@@ -540,22 +540,20 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult InsertUserDetailInfo(List<UserInfo> model)
+        public ActionResult InsertUserDetailInfo(List<UserInfo> model, SearchUserData data)
         {
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
-            SearchUserData data = new SearchUserData();
             var result=models.InsertUserDetail(model, username);
             models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }
         [MyAuthorize]
-        public ActionResult DeleteExamUserInfo(int model)
+        public ActionResult DeleteExamUserInfo(int model, SearchUserData data)
         {
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.DeleteExamUserInfo(model);
-            SearchUserData data = new SearchUserData();
             models.GetUserInfo(data);
             return Json(new { tableData = models.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }
@@ -572,11 +570,10 @@ namespace advt.Web.Controllers
 
 
         [MyAuthorize]
-        public ActionResult SaveVExamUserInfo(ExamUserInfoModel model)
+        public ActionResult SaveVExamUserInfo(ExamUserInfoModel model, SearchUserData data)
         {
             var username = this.UserNameContext;
             model.SaveUserInfo(username);
-            SearchUserData data = new SearchUserData();
             model.GetUserInfo(data);
             return Json(new { tableData = model.ListUserInfo }, JsonRequestBehavior.AllowGet);
         }

@@ -10,7 +10,7 @@
         width: 50px;
     }
 </style>
-<div id="app" style="margin-left:20px;margin-right:20px">   
+<div id="app" style="margin-left:20px;margin-right:20px">
     <template>
         <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
@@ -32,7 +32,7 @@
                 <el-option v-for="item in LWorkPlace" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
             </el-select>
             @*<el-input placeholder="区域" v-model="VSearch.WorkPlace" style="width:200px">
-            </el-input>*@
+                </el-input>*@
             <el-button slot="append" @@click="SearchinByTypeName">查询</el-button>
         </template>
         <template>
@@ -55,15 +55,21 @@
                     </el-button>
                 </a>
             </template>
-           
+
             <el-table :data="YListUserInfo" border
-                      style="width: 100%;margin-top:20px "  @@selection-change="changeFun">
+                      style="width: 100%;margin-top:20px " @@selection-change="changeFun">
                 <el-table-column type="selection" width="55">
 
                 </el-table-column>
+                <el-table-column label="序号" prop="Id" sortable></el-table-column>
                 <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
                 <el-table-column prop="UserCode"
                                  label="工号">
+                </el-table-column>
+                <el-table-column label="入职日期" width="110">
+                    <template slot-scope="scope">
+                        <span>{{changeDate(scope.row.EntryDate)}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
                 <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
@@ -105,7 +111,7 @@
             <el-table :data="CPListUserInfo" border
                       style="width:100%;margin-top:20px;">
                 @*<el-table-column type="selection">
-                </el-table-column>*@
+                    </el-table-column>*@
                 <el-table-column fixed
                                  prop="UserCode"
                                  label="工号">
@@ -187,21 +193,21 @@
                     </template>
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
-        
-        <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
 
-        <el-table-column label="最近一次实践考核通过时间">
-            <template slot-scope="scope">
-                <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
-            </template>
-        </el-table-column>*@
+                    <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
+
+                    <el-table-column label="最近一次实践考核通过时间">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
+                        </template>
+                    </el-table-column>*@
                 <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
                 <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
                 <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
                 <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
                 <el-table-column label="待考试时间" prop="ReadExamDate" sortable></el-table-column>
-                <el-table-column label="每年应复审时间段"  width="100" prop="ExamineMonth" sortable></el-table-column>                
+                <el-table-column label="每年应复审时间段" width="100" prop="ExamineMonth" sortable></el-table-column>
                 <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
 
                 <el-table-column label="绩效是否符合">
@@ -241,7 +247,7 @@
                            :total="paginations.total">
             </el-pagination>
             <!-- #region 上传实践弹窗 -->
-            <el-dialog title="上传实践"  :visible.sync="dialogFormPractical" :close-on-click-modal="false">
+            <el-dialog title="上传实践" :visible.sync="dialogFormPractical" :close-on-click-modal="false">
                 <el-table :data="LPracticeInfo" border
                           style="width: 100%;margin-top:20px ">
                     <el-table-column label="姓名"
@@ -443,7 +449,7 @@
             topicratioProps: { multiple: true, label: 'Text', },
             tableData: [],
             activeName: 'third',
-            TypeName:'',
+            TypeName: '',
             dialogFormVisible: false,
             dialogFormPractical: false,
             dialogSearchVisible: false,
@@ -451,14 +457,14 @@
             VExamUserInfo: [],
             LPracticeInfo: [],
             LExamUserDetailInfo: [],
-            LExamUserMeritsRecord:[],
+            LExamUserMeritsRecord: [],
             YListUserInfo: [],
             CPListUserInfo: [],
-            VSearch:{},
+            VSearch: {},
             checkBoxData: [],
             checkBoxData11: [],
             LExamType: [],
-            LWorkPlace:[],
+            LWorkPlace: [],
             formLabelWidth: '120px',
             search: '',
             labelPosition: 'right',
@@ -492,7 +498,7 @@
                     console.log(responese.data.tableData);
                 })
             },
-            
+
             setPaginations() {
                 var _this = this;
                 _this.paginations.total = _this.tableData.length; //数据的数量
@@ -562,7 +568,8 @@
                 var objs = {};
                 objs.VExamUserInfo = _this.VExamUserInfo;
                 axios.post('/PEMain/SaveVExamUserInfo', {
-                    model: objs
+                    model: objs,
+                    data: _this.VSearch
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
                     _this.setPaginations();
@@ -604,7 +611,7 @@
                 });
                 _this.dialogMeritsRecord = true;
             },
-            
+
 
 
             StopComplete(ID) {
@@ -619,24 +626,26 @@
                 var _this = this;
                 _this.checkBoxData11 = [];
                 _this.checkBoxData.forEach(function (item, index) {
-                    item.EntryDate = _this.changeDate(item.EntryDate)                    
+                    item.EntryDate = _this.changeDate(item.EntryDate)
                     _this.checkBoxData11.push(item);
+                   
                 })
                 axios.post('/PEMain/InsertUserDetailInfo', {
-                    model: _this.checkBoxData11
+                    model: _this.checkBoxData11,
+                    data: _this.VSearch
                 }).then(function (res) {
-                    if (res.data.Results =='已报名成功!') {
+                    if (res.data.Results == '已报名成功!') {
                         _this.$message({
                             message: res.data.Results,
                             type: 'success'
-                        });   
+                        });
                         _this.tableData = res.data.tableData;
                         _this.YListUserInfo = res.data.YListUserInfo;
                         _this.CPListUserInfo = res.data.CPListUserInfo;
                     }
                     else {
                         _this.$message.error(res.data.Results);
-                    }                 
+                    }
                 });
             },
             handleEdit(index, row) {
@@ -660,7 +669,8 @@
             handleDelete(index) {
                 var _this = this;
                 axios.post('/PEMain/DeleteExamUserInfo', {
-                    model: index
+                    model: index,
+                    data: _this.VSearch
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
                     _this.setPaginations();
@@ -711,7 +721,7 @@
                     message: Result.Result,
                     type: 'success'
                 });
-            },           
+            },
             handleExamSuccess(Result, CPListUserInfo) {
                 var _this = this;
                 _this.CPListUserInfo = Result.CPListUserInfo;
@@ -720,7 +730,7 @@
                     type: 'success'
                 });
             },
-           
+
         },
 
     })
