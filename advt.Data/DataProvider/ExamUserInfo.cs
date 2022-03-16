@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using advt.Entity;
 using System.Collections.Generic;
-
+using advt.Model.ExamModel;
 
 namespace advt.Data
 {
@@ -33,12 +33,20 @@ namespace advt.Data
         {
             return Get_ExamUserInfo(new { ID = ID });
         }
-
+        
+        public static int Insert_ElectronicUser_usercode(string usercode, string UserCostCenter, string SubjectName, string username)
+        {
+            return DatabaseProvider.GetInstance().Insert_ElectronicUser_usercode(usercode, UserCostCenter, SubjectName, username);
+        }
         public static int Insert_ExamUserInfo(Entity.ExamUserInfo info)
         {
             return Insert_ExamUserInfo(info, null, null);
         }
-
+        public static List<ElectronicUserView> Get_All_ElectronicUserView()
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ElectronicUserView();
+            return SqlHelper.GetReaderToList<ElectronicUserView>(reader);
+        }
         public static int Insert_ExamUserInfo(Entity.ExamUserInfo info, string[] Include)
         {
             return Insert_ExamUserInfo(info, Include, null);

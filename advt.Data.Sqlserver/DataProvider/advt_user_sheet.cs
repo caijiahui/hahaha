@@ -44,7 +44,7 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_advt_user_sheet_ElectronicUser(string sdata)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select a.* from advt_user_sheet a where a.UserCode not in ( select UserCode from ElectronicUser  where IsEnable=0) and (a.UserCode = '" + sdata+ "'  or a.UserDspName='" + sdata + "' or a.UserCostCenter='" + sdata + "')");
+            commandText.AppendLine(" select a.* from advt_user_sheet a where a.UserCode not in ( select UserCode from ExamUserInfo  where IsEnable=0 and TypeName=N'电子端岗位技能津贴') and (a.UserCode = '" + sdata+ "'  or a.UserDspName='" + sdata + "' or a.UserCostCenter='" + sdata + "')");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         

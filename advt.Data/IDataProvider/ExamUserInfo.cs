@@ -14,12 +14,14 @@ namespace advt.Data
         IDataReader Get_All_ExamUserInfo(object objparams);
 
         int Insert_ExamUserInfo(Entity.ExamUserInfo info, string[] Include, string[] Exclude);
-
+        IDataReader Get_All_ElectronicUserView();
         int Update_ExamUserInfo(Entity.ExamUserInfo info, string[] Include, string[] Exclude);
 
         int Delete_ExamUserInfo(int ID);
         int Get_UpdateExamUserInfo(string UserCode, string Achievement);
         int ReverseExamUserInfo(int ID,string Level,string username);
+        int Insert_ElectronicUser_usercode(string usercode, string UserCostCenter, string SubjectName, string username);
+
         #endregion
     }
 }

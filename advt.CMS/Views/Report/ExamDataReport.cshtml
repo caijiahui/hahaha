@@ -7,6 +7,9 @@
     #app {
         padding: 20px 30px
     }
+    .el-dialog {
+        width: 80%;
+    }
 </style>
 <div id="app" style="margin-left:20px">
     <template>
@@ -70,7 +73,7 @@
         </template>
         <template>
             @*人员明细弹窗*@
-            <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
+            <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false" >
                 <el-form :inline="true" class="demo-form-inline">
                     <el-form-item label="现有人数">
                         <el-input v-model="VSearchInfo.CurrentNumber" :disabled="true"></el-input>
@@ -83,7 +86,7 @@
                           style="width: 100%;margin-top:20px " border>
 
                     <el-table-column label="部门"
-                                     prop="Department" sortable>
+                                     prop="DepartCode" sortable>
                     </el-table-column>
                     <el-table-column label="工号"
                                      prop="UserCode">
@@ -92,7 +95,16 @@
                                      prop="UserName" sortable>
                     </el-table-column>
                     <el-table-column label="岗位"
-                                     prop="ElectronicPost" sortable>
+                                     prop="PostID" sortable>
+                    </el-table-column>
+                    <el-table-column label="状态"
+                                     sortable>
+                       
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.EStatus==true">已录取</span>
+                            <span v-if="scope.row.EStatus==false">已报名</span>
+                        </template>
+
                     </el-table-column>
                     <el-table-column label="取得津贴时间"
                                      sortable>
@@ -190,20 +202,32 @@
         methods: {
             handleDelete(ID) {
                 var _this = this;
-                axios.post('/Report/DeleteElectronicUser', {
-                    ID: ID,
-                    SubjectNames: _this.SubjectNames,
-                    typename: _this.TypeNames
-                }).then(function (res) {
-                    _this.ListElectronicUser = res.data.ListElectronicUser;
-                    _this.ListElectronicUserView = res.data.ListElectronicUserView;
-                    if (res.data.success == true) {
-                        _this.VSearchInfo.CurrentNumber = _this.VSearchInfo.CurrentNumber-1;
-                        _this.VSearchInfo.Vacancy = _this.VSearchInfo.Vacancy + 1;
-                        _this.getchats();
-                    }
-                    
+                _this.$confirm('此操作将取消人员津贴,请确认是否执行', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Report/DeleteElectronicUser', {
+                        ID: ID,
+                        SubjectNames: _this.SubjectNames,
+                        typename: _this.TypeNames
+                    }).then(function (res) {
+                        _this.ListElectronicUser = res.data.ListElectronicUser;
+                        _this.ListElectronicUserView = res.data.ListElectronicUserView;
+                        if (res.data.success == true) {
+                            _this.VSearchInfo.CurrentNumber = _this.VSearchInfo.CurrentNumber - 1;
+                            _this.VSearchInfo.Vacancy = _this.VSearchInfo.Vacancy + 1;
+                            _this.getchats();
+                        }
+
+                    });
+                }).catch(() => {
+                    _this.$message({
+                        type: 'info',
+                        message: '已取消操作'
+                    });
                 });
+               
             },
             //报名
             handleSigup(usercode, UserCostCenter) {
