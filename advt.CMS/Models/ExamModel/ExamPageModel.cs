@@ -528,7 +528,7 @@ namespace advt.CMS.Models
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false });
+                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false, TypeName = model.VExamUserInfo.ExamType });
                       
                     if (details.Count()>0&&details!=null)
                     { 
@@ -580,7 +580,7 @@ namespace advt.CMS.Models
             if (exam != null)
             {
                 exam.EStatus = true;
-                Data.ExamUserInfo.Update_ExamUserInfo(exam);
+                Data.ExamUserInfo.Update_ExamUserInfo(exam, null, new string[] { "ID" });
             }
 
 

@@ -125,7 +125,7 @@ namespace advt.Web.Controllers
                 model.GetExam();
                 if (model.VExamUserInfo.IsTest == false)
                 {
-                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject });
+                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject, ExamType = model.VExamUserInfo.ExamType });
                     if (set.Count() == 0)
                     {                       
                         examguid = model.InsertScoreDatas(model);
