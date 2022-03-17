@@ -43,6 +43,15 @@ namespace advt.Entity
         public string PostID { get; set; }//岗位编号
         public string WorkPlace { get; set; }//区域
         public bool isJobStatus { get; set; }//区域
+
+        public decimal? Quota { get; set; }//津贴
+
+        public string StopUser { get; set; } //停止人员
+        public DateTime? StopDate { get; set; } //停止时间
+
+        public bool EStatus { get; set; } //是否考试通过
+
+        public bool IsEnable { get; set; }//是否有效
         #endregion
     }
 }

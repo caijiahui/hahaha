@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserInfo , (Ver:2.3.8) at: 2021/2/5 11:25:22
         #region Var: 
         private string[] ExamUserInfo_key_a = { "ID" };
-        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID,WorkPlace,isJobStatus";
+        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID,WorkPlace,isJobStatus,Quota,StopUser,StopDate,EStatus,IsEnable";
         private string[][] ExamUserInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -40,7 +40,12 @@ namespace advt.Data.SqlServer
             new string[] { "ApplicationLevel", "NVarChar", "500"},
             new string[] { "PostID", "NVarChar", "500"},
              new string[] { "WorkPlace", "NVarChar", "500"},
-            new string[] { "isJobStatus", "Bit", "1"}
+            new string[] { "isJobStatus", "Bit", "1"},
+             new string[] { "Quota", "Decimal", "500"},
+            new string[] { "StopUser", "NVarChar", "500"},
+             new string[] { "StopDate", "DateTime", "16"},
+            new string[] { "EStatus", "Bit", "1"},
+            new string[] { "IsEnable", "Bit", "1"}
 
 
         };
@@ -55,6 +60,16 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamUserInfo_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+        public int Insert_ElectronicUser_usercode(string usercode, string UserCostCenter, string SubjectName, string username)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("insert ExamUserInfo(UserCode,PostID,CreateDate,Quota,IsEnable,UserName,DepartCode,SubjectName,CreateUser,EStatus,TypeName)  ");
+            commandText.AppendLine(" select distinct a.UserCode,a.UserJobType ,GETDATE(),b.ElectronicQuota ");
+            commandText.AppendLine(" ,CONVERT(bit,0),a.UserDspName,a.UserCostCenter,b.SubjectName, '" + username + "','false',N'电子端岗位技能津贴' from advt_user_sheet a ");
+            commandText.AppendLine(" inner join ExamSubject b on b.SubjectName=N'" + SubjectName + "' ");
+            commandText.AppendLine(" where a.UserCode='" + usercode + "'  and a.UserCostCenter='" + UserCostCenter + "' ");
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString());
+        }
 
         public int Insert_ExamUserInfo(Entity.ExamUserInfo info, string[] Include, string[] Exclude)
         {
@@ -65,6 +80,12 @@ namespace advt.Data.SqlServer
             SqlHelper.Get_Inserte_Set(ExamUserInfo_item_prop_a, Include, Exclude, info, ref item_name, ref item_value, ref l_parms);
             commandText.AppendLine("INSERT INTO [ExamUserInfo] (" + item_name + ") VALUES (" + item_value + ")");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public IDataReader Get_All_ElectronicUserView()
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" SELECT * from ViewExamElectronicInfo");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 
         public int Update_ExamUserInfo(Entity.ExamUserInfo info, string[] Include, string[] Exclude)

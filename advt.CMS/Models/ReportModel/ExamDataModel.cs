@@ -15,13 +15,13 @@ namespace advt.CMS.Models
 {
     public class ExamDataModel
     {
-        public List<ElectronicUser> ListElectronicUser { get; set; }
+        public List<Entity.ExamUserInfo> ListElectronicUser { get; set; }
         public List<ElectronicUserView> ListElectronicUserView { get; set; }
         public List<advt_user_sheet> ListUsers { get; set; }
 
         public ExamDataModel() : base()
         {
-            ListElectronicUser = new List<ElectronicUser>();
+            ListElectronicUser = new List<Entity.ExamUserInfo>();
             ListElectronicUserView = new List<ElectronicUserView>();
             ListUsers = new List<advt_user_sheet>();
 
@@ -31,39 +31,40 @@ namespace advt.CMS.Models
             if (typename == "电子端岗位技能津贴")
             {
                 
-                ListElectronicUserView = Data.ElectronicUser.Get_All_ElectronicUserView();
+                ListElectronicUserView = Data.ExamUserInfo.Get_All_ElectronicUserView();
                 
             }
         }
         public void GetExamByTypeName(string typename)
         {
-            ListElectronicUser = Data.ElectronicUser.Get_All_ElectronicUser(new { SubjectName = typename, IsEnable = 0 });
+            ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0 }).ToList();
         }
         public void GetExamUserBySubjectName(string SearchData)
         {
             ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData);
             
         }
+        //添加完
         public bool GetSigupElectronicUser(string usercode, string UserCostCenter, string SubjectName,string sdata,string typename,string username)
         {
 
-            var su=Data.ElectronicUser.Insert_ElectronicUser_usercode(usercode, UserCostCenter,SubjectName, username);
+            var su=Data.ExamUserInfo.Insert_ElectronicUser_usercode(usercode, UserCostCenter,SubjectName, username);
             ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata);
             GetExamInfo(typename);
-            var user = Data.ElectronicUser.Get_ElectronicUser(new { UserCode = usercode });
+            var user = Data.ExamUserInfo.Get_ExamUserInfo(new { SubjectName = SubjectName, UserCode = usercode, IsEnable = 0 });
             UserInfo model = new UserInfo();
             List<UserInfo> Listusers = new List<UserInfo>();
             var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
-            var exmser = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode });
             if (su > 0)
             {
                 model.TypeName = typename;
                 model.SubjectName = SubjectName;
                 model.UserCode = usercode;
-                model.UserName = user.UserName;
-                model.PostName = user.ElectronicPost;
+                model.UserName = username;
+                model.PostName = user.PostID;
                 model.RuleName = rule!=null?rule.RuleName:"";
                 model.DepartCode = UserCostCenter;
+             
                 Listusers.Add(model);
                 ExamUserInfoModel models = new ExamUserInfoModel();
                 models.InsertUserDetail(Listusers, username);
@@ -74,12 +75,12 @@ namespace advt.CMS.Models
         public bool DeleteElectronicUser(string ID,string SubjectNames,string typename,string username)
         {
             var ids = Convert.ToInt32(ID);
-            var item = Data.ElectronicUser.Get_ElectronicUser(new { ID = ID });
+            var item = Data.ExamUserInfo.Get_ExamUserInfo(new { ID = ID });
             item.IsEnable = true;
             item.StopUser = username;
             item.StopDate = DateTime.Now;
-            var su = Data.ElectronicUser.Update_ElectronicUser(item, null, new string[] { "ID" });
-            ListElectronicUser = Data.ElectronicUser.Get_All_ElectronicUser(new { SubjectName = SubjectNames, IsEnable = 0 });
+            var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+            ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = SubjectNames, IsEnable = 0 });
             GetExamInfo(typename);
             if (su > 0)
             {
@@ -98,6 +99,8 @@ namespace advt.CMS.Models
         }
         
     }
+
+
 
 
 

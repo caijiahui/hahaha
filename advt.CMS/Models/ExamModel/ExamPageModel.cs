@@ -528,7 +528,7 @@ namespace advt.CMS.Models
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     //根据人员,科目,ExamStatus更新分数,时间，isexam
-                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false });
+                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false, TypeName = model.VExamUserInfo.ExamType });
                       
                     if (details.Count()>0&&details!=null)
                     { 
@@ -548,6 +548,10 @@ namespace advt.CMS.Models
                                 if (score >= PassScore)
                                 {
                                     detail.IsExamPass = true;
+                                    if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
+                                    {
+                                        UpdateElectronicUser(model.VExamUserInfo.UserName,model.VExamUserInfo.ExamSubject);
+                                    }
                                 }
                                 else
                                 {
@@ -569,6 +573,18 @@ namespace advt.CMS.Models
             return guid;
         }
 
+        //电子端考试成功之后update ElectronicUser 状态
+        public void UpdateElectronicUser( string usercode,string ExamSubject)
+        {
+            var exam = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode,SubjectName= ExamSubject,IsEnable=0, EStatus=0 });
+            if (exam != null)
+            {
+                exam.EStatus = true;
+                Data.ExamUserInfo.Update_ExamUserInfo(exam, null, new string[] { "ID" });
+            }
+
+
+        }
         public void UpdateLevel(ExamPageModel model, string name, string examguid)
         {
             var usercode = "";

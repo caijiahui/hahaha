@@ -521,13 +521,25 @@
             //取消
             handleStop(ID) {
                 var _this = this;
-                axios.post('/PEMain/StopHrAuditUser', {
-                    model: ID
-                }).then(function (res) {
-                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                    _this.LSignedupUser = res.data.LSignedupUser;
+                _this.$confirm('此操作将取消人员考试资格,请确认是否执行', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/PEMain/StopHrAuditUser', {
+                        model: ID
+                    }).then(function (res) {
+                        _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                        _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                        _this.LSignedupUser = res.data.LSignedupUser;
+                    });
+                }).catch(() => {
+                    _this.$message({
+                        type: 'info',
+                        message: '已取消操作'
+                    });
                 });
+                
             },
             //查看实践
             handlePractical(usercode, username) {

@@ -64,6 +64,7 @@ namespace advt.Web.Controllers
                 var detail = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = usercode.UserCode, RuleName = RuleName, IsStop = false, IsExam = false });
                 if (detail != null)
                 {
+                    model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
                     if (IsTest == "formal")
                     {
                         var dtdate = DateTime.Now;
@@ -75,7 +76,7 @@ namespace advt.Web.Controllers
                         {
                             var ddate = Convert.ToDateTime(detail.ExamDate);
 
-                            model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
+                            
                             if (dtdate <= ddate || detail.ExamDate == null)
                             {
                                 model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
@@ -124,7 +125,7 @@ namespace advt.Web.Controllers
                 model.GetExam();
                 if (model.VExamUserInfo.IsTest == false)
                 {
-                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject });
+                    var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject, ExamType = model.VExamUserInfo.ExamType });
                     if (set.Count() == 0)
                     {                       
                         examguid = model.InsertScoreDatas(model);
