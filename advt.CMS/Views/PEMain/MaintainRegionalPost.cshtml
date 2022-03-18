@@ -35,6 +35,8 @@
             <el-table-column label="考试类型" prop="ExamType" sortable></el-table-column>
             <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
             <el-table-column label="考试规则2" prop="RuleTwoName" sortable></el-table-column>
+            <el-table-column label="岗位类型" prop="PostType" sortable></el-table-column>
+            <el-table-column label="岗位周期" prop="PostCycle" sortable></el-table-column>
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
@@ -86,6 +88,16 @@
                 <el-form-item label="岗位编号" :label-width="formLabelWidth">
                     <el-input v-model="VregionalPost.PostID" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="岗位类型" :label-width="formLabelWidth">
+                    <el-select v-model="VregionalPost.PostType" clearable filterable placeholder="请选择类型">
+                        <el-option v-for="item in LPostType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="岗位周期" :label-width="formLabelWidth">
+                    <el-select v-model="VregionalPost.PostCycle" clearable filterable placeholder="请选择周期">
+                        <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
@@ -119,10 +131,16 @@
             search: '',
             RegionalPlace: '',
             PostID:'',
-            DepartCode:'',
+            DepartCode: '',
+            PostType: '',
+            PostCycle: '',
+            ExamType: '',
+            RuleTwoName:'',
             ListExamRule: [],
             ListExamRuleTwo: [],
-            ListExamType:[],
+            ListExamType: [],
+            LPostType: [],
+            LPostCycleType:[],
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -144,6 +162,8 @@
                     _this.LExamRule = res.data.LExamRule;
                     _this.LExamRuleTwo = res.data.LExamRuleTwo;
                     _this.VregionalPost = res.data.VregionalPost;
+                    _this.LPostType = res.data.LPostType;
+                    _this.LPostCycleType = res.data.LPostCycleType;
                     _this.setPaginations();
                 })
             },
@@ -211,6 +231,8 @@
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.ListExamType = response.data.ListExamType;
+                    _this.LPostType = response.data.LPostType;
+                    _this.LPostCycleType = response.data.LPostCycleType;
                     _this.VregionalPost = {};
                 });
                 _this.dialogFormVisible = true;
@@ -241,11 +263,16 @@
                 _this.VregionalPost.RegionalPlace = row.RegionalPlace;
                 _this.VregionalPost.DepartCode = row.DepartCode;
                 _this.VregionalPost.PostID = row.PostID;
+                _this.VregionalPost.PostType = row.PostType;
+                _this.VregionalPost.PostCycle = row.PostCycle;
+                _this.VregionalPost.ExamType = row.ExamType;
                 _this.VregionalPost.ID = index;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.ListExamType = response.data.ListExamType;
+                    _this.LPostType = response.data.LPostType;
+                    _this.LPostCycleType = response.data.LPostCycleType;
                 });
                 _this.dialogFormVisible = true;
             },

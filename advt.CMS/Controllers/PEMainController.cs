@@ -1144,7 +1144,7 @@ namespace advt.Web.Controllers
         {
             RegionalPostModel model = new RegionalPostModel();
             model.GetPostName(RuleName, PostName, RuleTwoName);
-            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo, LPostType=model.LPostType, LPostCycleType=model.LPostCycleType }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SavePostInfo(RegionalPostModel model)
@@ -1158,7 +1158,9 @@ namespace advt.Web.Controllers
         {
             var LExamRules = Data.ExamRule.Get_All_ExamRule();
             var LExamType = Data.ExamType.Get_All_ExamType();
-            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType }, JsonRequestBehavior.AllowGet);
+            RegionalPostModel model = new RegionalPostModel();
+            model.GetPostName(null, null, null);
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType }, JsonRequestBehavior.AllowGet);
         }
         
         [MyAuthorize]

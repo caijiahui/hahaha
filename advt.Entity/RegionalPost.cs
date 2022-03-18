@@ -18,5 +18,7 @@ namespace advt.Entity
         public string ExamType { get; set; }
         public DateTime CreateDate { get; set; }
         public string  CreateUser { get; set; }
+        public string PostType { get; set; }//Chassis岗位类型：一般岗、技术岗
+        public string PostCycle { get; set; }//Chassis岗位周期
     }
 }

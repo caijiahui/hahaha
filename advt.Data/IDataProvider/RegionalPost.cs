@@ -22,7 +22,7 @@ namespace advt.Data
 
         IDataReader Get_All_RegionalPostInfo(string RuleName, string PostName,string RuleTwoName);
 
-        int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName);
+        int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName, string PostType, string PostCycle);
         #endregion
     }
 }
