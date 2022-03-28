@@ -495,6 +495,10 @@ namespace advt.Web.Controllers
         public ActionResult MaintainExamUserInfo()
         {
             ExamUserInfoModel model = new ExamUserInfoModel();
+            //string start = "2022-1-1";
+            //string end = "2022-3-31";
+            //string user = "Q-02321,Q-02974,Q-03215";
+            //model.Test(start, end, user);
             return View(model);
         }
         [MyAuthorize]
@@ -733,6 +737,32 @@ namespace advt.Web.Controllers
 
             return Json(new { Result = model.Result, ListHrAuditUser = model.ListHrAuditUser, ListHrAuditSuccessUser = model.ListHrAuditSuccessUser }, JsonRequestBehavior.AllowGet);
         }
+
+        //上传实践成绩
+        public JsonResult Upload_Practice(HttpPostedFileBase file)
+        {
+            string filepath = "";
+
+            var username = this.UserNameContext;
+            if (file != null)
+            {
+                string path = Server.MapPath(_AttachmentUploadDirectory_temp);//设定上传的文件路径
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                String gcode = System.Guid.NewGuid().ToString("N");
+                string filenName = '\\' + gcode + file.FileName;
+
+                filepath = path + filenName;
+
+                file.SaveAs(filepath);//上传路径
+            }
+            var model = new HrAuditModel();
+            model.UploadPractice(filepath, username);
+            return Json(new { Result = model.Result, ListHrAuditUser = model.ListHrAuditUser, ListHrAuditSuccessUser = model.ListHrAuditSuccessUser }, JsonRequestBehavior.AllowGet);
+        }
+
         [MyAuthorize]
         [HttpPost]
         public ActionResult SearchPracticeUserDetail(string model)
@@ -1142,7 +1172,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult GetRegionalPost(string RuleName, string PostName,string RuleTwoName)
         {
-            RegionalPostModel model = new RegionalPostModel();
+            RegionalPostModel model = new RegionalPostModel();           
             model.GetPostName(RuleName, PostName, RuleTwoName);
             return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo, LPostType=model.LPostType, LPostCycleType=model.LPostCycleType }, JsonRequestBehavior.AllowGet);
         }

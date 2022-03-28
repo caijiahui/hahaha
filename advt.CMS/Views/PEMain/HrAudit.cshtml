@@ -84,7 +84,6 @@
                                        ref="upload"
                                        :multiple="false"
                                        :on-success="handleExcelSuccess"
-
                                        action="/PEMain/Upload_Qualification">
                                 <el-button size="small" type="primary">考试资格汇入</el-button>
                             </el-upload>
@@ -97,6 +96,23 @@
                         <div style="float:left;margin-left:20px">
                             <el-button size="small" type="primary" @@click="handleUpdate()">维护考试时间、地点</el-button>
                         </div>
+                        <div style="float:left">
+                            <a href="/Attachment/temp/Template/PracticeTemplate.xlsx">
+                                <el-button size="small" type="primary" style="margin-left:20px">实践模板下载</el-button>
+                            </a>
+                        </div>
+                        <div style="float:left;">
+                            <el-upload class="upload-demo"
+                                       ref="upload"
+                                       :multiple="false"
+                                       :on-success="uploadPracticeSuccess"
+                                       action="/PEMain/Upload_Practice">
+                                <el-button size="small" type="primary" style="margin-left:20px">人员实践成绩汇入</el-button>
+                            </el-upload>
+                        </div>
+
+
+
                     </div>
                 </template>
             </div>
@@ -469,6 +485,14 @@
 
             },
             handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
+                this.$alert(Result.Result, '结果', {
+                    dangerouslyUseHTMLString: true
+                });
+                var _this = this;
+                _this.ListHrAuditUser = Result.ListHrAuditUser;
+                _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
+            },
+            uploadPracticeSuccess(Result) {
                 this.$alert(Result.Result, '结果', {
                     dangerouslyUseHTMLString: true
                 });

@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserInfo , (Ver:2.3.8) at: 2021/2/5 11:25:22
         #region Var: 
         private string[] ExamUserInfo_key_a = { "ID" };
-        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID,WorkPlace,isJobStatus,Quota,StopUser,StopDate,EStatus,IsEnable";
+        private string ExamUserInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[EntryDate],[Achievement],[TypeName],[SubjectName],[CreateUser],[CreateDate],[UpdateUser],[UpdateDate],[ReverseBuckle],[ReverseBuckleDate],[ReverseBuckleUser],ApplicationLevel,PostID,WorkPlace,isJobStatus,Quota,StopUser,StopDate,EStatus,IsEnable,LocalGrade";
         private string[][] ExamUserInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -45,7 +45,9 @@ namespace advt.Data.SqlServer
             new string[] { "StopUser", "NVarChar", "500"},
              new string[] { "StopDate", "DateTime", "16"},
             new string[] { "EStatus", "Bit", "1"},
-            new string[] { "IsEnable", "Bit", "1"}
+            new string[] { "IsEnable", "Bit", "1"},
+            new string[] { "LocalGrade", "NVarChar", "500"}
+            
 
 
         };

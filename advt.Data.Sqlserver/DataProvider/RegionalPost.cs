@@ -61,7 +61,7 @@ namespace advt.Data.SqlServer
             SqlHelper.Get_Update_Set(RegionalPost_key_a, RegionalPost_item_prop_a, Include, Exclude, info, ref set_str, ref l_parms);
             commandText.AppendLine(" UPDATE [RegionalPost]");
             commandText.AppendLine("   SET " + set_str);
-            commandText.AppendLine("   " + SqlHelper.Get_Where_Str(ExamSubject_key_a));
+            commandText.AppendLine("   " + SqlHelper.Get_Where_Str(RegionalPost_key_a));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 

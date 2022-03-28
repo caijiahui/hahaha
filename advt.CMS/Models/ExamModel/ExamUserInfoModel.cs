@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Xml;
 
 namespace advt.CMS.Models.ExamModel
 {
@@ -36,6 +37,7 @@ namespace advt.CMS.Models.ExamModel
         public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
         public string Results { get; set; }
         public bool IsHrSign { get; set; }
+        public MesUserInfo MesUserInfoModel { get; set; }
         public ExamUserInfoModel() : base()
         {
             UserInfoList = new UserInfo();
@@ -55,7 +57,9 @@ namespace advt.CMS.Models.ExamModel
             LExamType = new List<KeyValuePair<string, string>>();
             ListUserInfo11 = new List<UserInfo>();
             LExamUserMeritsRecord = new List<AchieveRecord>();
-            
+            MesUserInfoModel = new MesUserInfo();
+
+
 
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -533,6 +537,59 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
+
+        public void Test(string startdate, string endate, string userlist)
+        {
+            MESWebService.ETL_ServiceSoapClient et = new MESWebService.ETL_ServiceSoapClient();
+            try
+            {
+                string sParam = "<root><METHOD ID='Advantech.ETL.ETL.BLL.QryUserQualityPointScore'/>" +
+                 "<QUALITY_POINT>" +
+                 "<START_DATE >" + startdate + "</START_DATE>" +
+                 "<END_DATE>" + endate + "</END_DATE>" +
+                 "<USER_LIST>" + userlist + "</USER_LIST>" +
+                 "</QUALITY_POINT ></root>";
+                var a = et.SFIS_Rv_Xml(sParam, "AKMU3");
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(a);
+                var YEAR = xmlDoc.GetElementsByTagName("YEAR");
+                var MONTH = xmlDoc.GetElementsByTagName("MONTH");
+                var USER_NO = xmlDoc.GetElementsByTagName("USER_NO");
+                var USER_NAME = xmlDoc.GetElementsByTagName("USER_NAME");
+                var POINT_SCORE = xmlDoc.GetElementsByTagName("POINT_SCORE");
+                for (int i = 0; i < USER_NO.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(USER_NO[i].InnerText))
+                    {
+                        //model.Add(new MesUserInfo { YEAR = YEAR[i].InnerText, MONTH = MONTH[i].InnerText, UserCode = USER_NO[i].InnerText, userName = USER_NAME[i].InnerText, POINT_SCORE = POINT_SCORE[i].InnerText });
+                        
+                        var Scoreinfo= Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = YEAR[i].InnerText, Month = MONTH[i].InnerText });
+                        if (Scoreinfo.Count() == 0)
+                        {
+                            ExamPointScore score = new ExamPointScore();
+                            score.UserCode = USER_NO[i].InnerText;
+                            score.UserName = USER_NAME[i].InnerText;
+                            score.Year = YEAR[i].InnerText;
+                            score.Month = MONTH[i].InnerText;
+                            score.PointScore = POINT_SCORE[i].InnerText;
+                            Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
+                        }
+                        else
+                        {
+                            var existscore = Scoreinfo.FirstOrDefault();
+                            existscore.PointScore= POINT_SCORE[i].InnerText;
+                            Data.ExamPointScore.Update_ExamPointScore(existscore, null, new string[] { "ID" });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+
+        }
     }
     public class UserInfo
     {
@@ -580,5 +637,13 @@ namespace advt.CMS.Models.ExamModel
         public string DepartCode { get; set; }
         public string ReadyExamDate { get; set; }
         public string WorkPlace { get; set; }
+    }
+    public class MesUserInfo
+    {
+        public string YEAR { get; set; }
+        public string MONTH { get; set; }
+        public string UserCode { get; set; }
+        public string userName { get; set; }
+        public string POINT_SCORE { get; set; }
     }
 }

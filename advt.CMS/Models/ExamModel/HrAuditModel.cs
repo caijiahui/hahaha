@@ -19,6 +19,7 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LExamUserDetailInfo { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }
         public List<PracticeInfo> LPracticeInfo { get; set; }
+        public List<PracticeInfo> ListPracticeInfo { get; set; }
         public HrAuditModel() : base()
         {
             ListHrAuditUser = new List<ExamUserDetailInfo>();
@@ -26,6 +27,7 @@ namespace advt.CMS.Models.ExamModel
             LExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LPracticeInfo = new List<PracticeInfo>();
             LExamType = new List<KeyValuePair<string, string>>();
+            ListPracticeInfo = new List<PracticeInfo>();
         }
         public void GetHrAuditUser(SearchHrData model=null)
         {
@@ -217,6 +219,97 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
+        public void UploadPractice(string filepath, string username)
+        {
+            DataTable dt = new DataTable();
+            FileStream files = null;
+            IWorkbook Workbook = null;
+            var LDetail = new List<PracticeInfo>();
+            try
+            {
+
+                using (files = new FileStream(filepath, FileMode.Open, FileAccess.Read))//C#文件流读取文件
+                {
+                    if (filepath.IndexOf(".xlsx") > 0)
+                        //把xlsx文件中的数据写入Workbook中
+                        Workbook = new XSSFWorkbook(files);
+
+                    else if (filepath.IndexOf(".xls") > 0)
+                        //把xls文件中的数据写入Workbook中
+                        Workbook = new HSSFWorkbook(files);
+
+                    if (Workbook != null)
+                    {
+                        ISheet sheet = Workbook.GetSheetAt(0);//读取第一个sheet
+                        System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+                        //得到Excel工作表的行 
+                        IRow headerRow = sheet.GetRow(0);
+                        //得到Excel工作表的总列数  
+                        int cellCount = headerRow.LastCellNum;
+
+                        for (int j = 0; j < cellCount; j++)
+                        {
+                            //得到Excel工作表指定行的单元格  
+                            ICell cell = headerRow.GetCell(j);
+                            dt.Columns.Add(cell.ToString());
+                        }
+
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                        {
+                            IRow row = sheet.GetRow(i);
+                            DataRow dataRow = dt.NewRow();
+                            if (row != null)
+                            {
+                                for (int j = row.FirstCellNum; j < cellCount; j++)
+                                {
+                                    if (row.GetCell(j) != null)
+                                        dataRow[j] = row.GetCell(j);
+                                }
+                                dt.Rows.Add(dataRow);
+                            }
+                        }
+                    }
+                }
+                using (var ds = dt)
+                {
+                    foreach (DataRow item in ds.Rows)
+                    {
+                        if (item != null)
+                        {
+                            LDetail.Add(new PracticeInfo
+                            {
+                                TypeName = item[0].ToString().Trim(),
+                                SubjectName = item[1].ToString().Trim(),
+                                UserCode = item[2].ToString().Trim(),
+                                UserName = item[3].ToString().Trim(),
+                                PracticeScore =Convert.ToDecimal(item[4].ToString().Trim()),
+                                SkillName = item[5].ToString().Trim()
+                            });
+                        }
+                    }
+                }
+                foreach (var item in LDetail)
+                {
+                    var subject = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = item.SubjectName, TypeName =item.TypeName, UserCode =item.UserCode, IsStop = false, IsExam = "false" });
+                    if (subject != null)
+                    {
+                        item.CreateDate = DateTime.Now;
+                        item.CreateUser = username;
+                        item.ValidityDate = DateTime.Now;
+                        Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
+                    } 
+                }
+                GetHrAuditUser();
+                Result = "成功插入";
+            }
+
+            catch (Exception ex)
+            {
+                Result = ex.Message;
+                files.Close();//关闭当前流并释放资源
+            }
+        }
+
     }
     public class SearchHrData
     {
@@ -225,4 +318,5 @@ namespace advt.CMS.Models.ExamModel
         public string SubjectName { get; set; }
         public string DepartCode { get; set; }
     }
+  
 }

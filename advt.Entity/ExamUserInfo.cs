@@ -52,6 +52,7 @@ namespace advt.Entity
         public bool EStatus { get; set; } //是否考试通过
 
         public bool IsEnable { get; set; }//是否有效
+        public string LocalGrade { get; set; }//等级：初级、高级
         #endregion
     }
 }

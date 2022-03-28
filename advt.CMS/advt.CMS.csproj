@@ -169,6 +169,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\MESWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\EPageMainController.cs" />
     <Compile Include="Controllers\ExamController.cs" />
@@ -256,10 +261,18 @@
     <Content Include="Attachment\temp\Template\ExamUser.xlsx" />
     <Content Include="Attachment\temp\Template\QualificationTemplate.xlsx" />
     <Content Include="Attachment\temp\Template\Importpractice.xlsx" />
+    <Content Include="Attachment\temp\Template\PracticeTemplate.xlsx" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.disco" />
     <None Include="Connected Services\MembershipWebservice\configuration91.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\configuration.svcinfo" />
     <None Include="Connected Services\MembershipWebservice\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\MESWebService\etl_service.disco" />
+    <None Include="Connected Services\MESWebService\configuration91.svcinfo" />
+    <None Include="Connected Services\MESWebService\configuration.svcinfo" />
+    <None Include="Connected Services\MESWebService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -354,6 +367,7 @@
     <Content Include="Scripts\fonts\roboto\Roboto-Thin.woff2" />
     <None Include="Connected Services\MembershipWebservice\MembershipWebservice.wsdl" />
     <Content Include="Properties\DataSources\System.Data.DataSet.datasource" />
+    <None Include="Connected Services\MESWebService\etl_service.wsdl" />
     <None Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\elementUI\lib\theme-chalk\fonts\element-icons.ttf" />
@@ -530,6 +544,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\MembershipWebservice\" />
+    <WCFMetadataStorage Include="Connected Services\MESWebService\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
