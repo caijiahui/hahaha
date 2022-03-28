@@ -494,20 +494,29 @@
             },
             handleSave() {
                 var _this = this;
-                axios.post('/PEMain/InsertUserDetail', {
-                    model: _this.checkBoxData
-                }).then(function (res) {
-                    if (res.data.Result != '') {
-                        _this.$message.error(res.data.Result);
-                    } else {
-                        _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
-                        _this.LSignedupUser = res.data.LSignedupUser;
-                        _this.dialogUpdateVisible = false;
-                        _this.VAuditCheck.IsExam = '';
-                        _this.VAuditCheck.RuleName = '';
+                _this.$refs.dialogForm.validate(function (v) {
+                    if (v) {
+                        axios.post('/PEMain/InsertUserDetail', {
+                            model: _this.checkBoxData
+                        }).then(function (res) {
+                            if (res.data.Result != '') {
+                                _this.$message.error(res.data.Result);
+                            } else {
+                                _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
+                                _this.LSignedupUser = res.data.LSignedupUser;
+                                _this.dialogUpdateVisible = false;
+                                _this.VAuditCheck.IsExam = '';
+                                _this.VAuditCheck.RuleName = '';
+                            }
+
+                        });
                     }
 
-                });
+                })
+
+
+
+              
 
             },
             //上传实践操作
