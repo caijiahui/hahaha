@@ -494,11 +494,7 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult MaintainExamUserInfo()
         {
-            ExamUserInfoModel model = new ExamUserInfoModel();
-            //string start = "2022-1-1";
-            //string end = "2022-3-31";
-            //string user = "Q-02321,Q-02974,Q-03215";
-            //model.Test(start, end, user);
+            ExamUserInfoModel model = new ExamUserInfoModel();            
             return View(model);
         }
         [MyAuthorize]
@@ -553,6 +549,25 @@ namespace advt.Web.Controllers
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }
+
+        [MyAuthorize]
+        public ActionResult SyncQuantityPoint(SearchUserData data)
+        {
+            var username = this.UserNameContext;
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.GetUserInfo(data);
+            var startdate = DateTime.Now.AddDays(1 - DateTime.Now.Day).ToString("yyyy-MM-dd");
+            var endate = DateTime.Now.AddDays(1 - DateTime.Now.Day).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd");
+            var userlist = string.Join(",",models.ListDetailInfo.Select(x=>x.UserCode));
+            //string user = "Q-02321,Q-02974,Q-03215";
+            //model.Test(start, end, user);
+            var result = models.SyncQuantityPoint(startdate, endate, userlist);
+            //models.GetUserInfo(data);
+            models.GetUserComInfo();
+            return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
+        }
+
+
         [MyAuthorize]
         public ActionResult DeleteExamUserInfo(int model, SearchUserData data)
         {

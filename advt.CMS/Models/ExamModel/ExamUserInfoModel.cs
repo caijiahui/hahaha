@@ -215,11 +215,9 @@ namespace advt.CMS.Models.ExamModel
                                     WorkPlace = item.WorkPlace,
                                     IsUserExam = item.IsUserExam,
                                     ExamineMonth = item.ExamineMonth,
-                                    ReadExamDate = item.ReadExamDate
-                                    
+                                    ReadExamDate = item.ReadExamDate                                    
                                 });
                             }
-
                         }
                     }
                     var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
@@ -538,8 +536,10 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
-        public void Test(string startdate, string endate, string userlist)
+        public string SyncQuantityPoint(string startdate, string endate, string userlist)
         {
+            var result = string.Empty;
+
             MESWebService.ETL_ServiceSoapClient et = new MESWebService.ETL_ServiceSoapClient();
             try
             {
@@ -580,14 +580,15 @@ namespace advt.CMS.Models.ExamModel
                             existscore.PointScore= POINT_SCORE[i].InnerText;
                             Data.ExamPointScore.Update_ExamPointScore(existscore, null, new string[] { "ID" });
                         }
+                        result = "同步完成";
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                result = ex.Message;
             }
-           
+            return result;
 
         }
     }

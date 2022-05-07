@@ -59,7 +59,7 @@
                         <el-table-column label="考试类型"
                                          prop="TypeName" sortable>
                         </el-table-column>
-                        <el-table-column  label="考试科目"
+                        <el-table-column label="考试科目"
                                          prop="SubjectName" sortable v-if="LCheckAudtiUser.TypeName=='关键岗位技能等级'">
                         </el-table-column>
                         <el-table-column label="姓名"
@@ -261,7 +261,7 @@
                 <el-form-item label="人员" :label-width="formLabelWidth">
                     <el-input v-model="VAuditCheck.Users" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
-                
+
                 <el-form-item label="是否报名" :label-width="formLabelWidth">
                     <el-checkbox :check="true" v-model="VAuditCheck.IsExam"></el-checkbox>
                 </el-form-item>
@@ -405,7 +405,7 @@
             LCheckAudtiUser: [],
             LExamType: [],
             LExamSubject: [],
-            Subjects:'',
+            Subjects: '',
             TypeNames: '',
 
             formLabelWidth: '120px',
@@ -416,7 +416,7 @@
             VAuditCheck: {},
             LExamUserDetailInfo: [],
             LPracticeInfo: [{
-                PracticeScore:0
+                PracticeScore: 0
 
             }],
             LSignedupUser: [],
@@ -428,7 +428,7 @@
             },
             PracRule: {
                 PracticeScore: [
-                    {  required: true, message: '必填', trigger: 'blur' }
+                    { required: true, message: '必填', trigger: 'blur' }
 
                 ]
             },
@@ -491,36 +491,45 @@
                     message: Result.Result,
                     type: 'success'
                 });
-            },
+            },           
             handleSave() {
                 var _this = this;
-                _this.$refs.dialogForm.validate(function (v) {
-                    if (v) {
-                        axios.post('/PEMain/InsertUserDetail', {
-                            model: _this.checkBoxData
-                        }).then(function (res) {
-                            if (res.data.Result != '') {
-                                _this.$message.error(res.data.Result);
-                            } else {
-                                _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
-                                _this.LSignedupUser = res.data.LSignedupUser;
-                                _this.dialogUpdateVisible = false;
-                                _this.VAuditCheck.IsExam = '';
-                                _this.VAuditCheck.RuleName = '';
-                            }
-
-                        });
+                axios.post('/PEMain/InsertUserDetail', {
+                    model: _this.checkBoxData
+                }).then(function (res) {
+                    if (res.data.Result != '') {
+                        _this.$message.error(res.data.Result);
+                    } else {
+                        _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
+                        _this.LSignedupUser = res.data.LSignedupUser;
+                        _this.dialogUpdateVisible = false;
+                        _this.VAuditCheck.IsExam = '';
+                        _this.VAuditCheck.RuleName = '';
                     }
 
-                })
+                });
+                //_this.$refs.dialogForm.validate(function (v) {
+                //    if (v) {
+                //        axios.post('/PEMain/InsertUserDetail', {
+                //            model: _this.checkBoxData
+                //        }).then(function (res) {
+                //            if (res.data.Result != '') {
+                //                _this.$message.error(res.data.Result);
+                //            } else {
+                //                _this.LCheckAudtiUser = res.data.LCheckAudtiUser;
+                //                _this.LSignedupUser = res.data.LSignedupUser;
+                //                _this.dialogUpdateVisible = false;
+                //                _this.VAuditCheck.IsExam = '';
+                //                _this.VAuditCheck.RuleName = '';
+                //            }
 
+                //        });
+                //    }
 
-
-              
-
+                //})
             },
             //上传实践操作
-            handlePractical(usercode, username, ApplyLevel, SubjectName,TypeName) {
+            handlePractical(usercode, username, ApplyLevel, SubjectName, TypeName) {
                 var _this = this;
                 _this.VPracticeInfo.UserCode = usercode;
                 _this.VPracticeInfo.UserName = username;
@@ -542,10 +551,10 @@
                             model: _this.VPracticeInfo
                         }).then(function (res) {
                             _this.VPracticeInfo = {};
-                        }); 
+                        });
                         _this.dialogFormPractical = false
                     }
-                   
+
 
                 })
 
@@ -599,7 +608,7 @@
                         message: '已取消操作'
                     });
                 });
-               
+
             },
             ChangeAch: function (ach) {
                 if (ach == false) {
@@ -650,7 +659,7 @@
                     _this.LSignedupUser = responese.data.LSignedupUser;
                     _this.LExamType = responese.data.LExamType;
                 });
-              
+
             }
         }
 

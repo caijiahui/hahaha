@@ -167,6 +167,7 @@
                             导出
                         </el-button>
                     </a>
+                    <el-button size="small" type="primary" @@click="SyncQuantityPoint()">同步品质信息</el-button>
                 </template>
 
             </div>
@@ -636,6 +637,25 @@
                     data: _this.VSearch
                 }).then(function (res) {
                     if (res.data.Results == '已报名成功!') {
+                        _this.$message({
+                            message: res.data.Results,
+                            type: 'success'
+                        });
+                        _this.tableData = res.data.tableData;
+                        _this.YListUserInfo = res.data.YListUserInfo;
+                        _this.CPListUserInfo = res.data.CPListUserInfo;
+                    }
+                    else {
+                        _this.$message.error(res.data.Results);
+                    }
+                });
+            },
+            SyncQuantityPoint() {
+                axios.post('/PEMain/SyncQuantityPoint', {
+                     data: _this.VSearch
+                }).then(function (res) {
+                    if (res.data.Results == '同步完成') {
+
                         _this.$message({
                             message: res.data.Results,
                             type: 'success'
