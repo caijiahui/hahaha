@@ -411,7 +411,7 @@ namespace advt.CMS.Models.ExamModel
                         v.ApplyLevel = item.ApplicationLevel;//本次申请等级满级                   
                         v.IsAchievement = item.IsAchment;//是否符合绩效
                         v.HighestLevel = item.HighestTestSkill;//最高可考技能
-                        v.IsExam ="false";
+                        v.IsExam = "false";
                         v.IsUserExam = item.IsUserExam;
                         v.HrCreateUser = username;
                         v.HrCreateDate = DateTime.Now;

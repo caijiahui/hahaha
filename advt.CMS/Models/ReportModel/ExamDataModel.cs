@@ -60,7 +60,7 @@ namespace advt.CMS.Models
                 model.TypeName = typename;
                 model.SubjectName = SubjectName;
                 model.UserCode = usercode;
-                model.UserName = username;
+                model.UserName = user.UserName;
                 model.PostName = user.PostID;
                 model.RuleName = rule!=null?rule.RuleName:"";
                 model.DepartCode = UserCostCenter;
