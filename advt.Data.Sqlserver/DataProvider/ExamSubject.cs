@@ -21,7 +21,7 @@ namespace advt.Data.SqlServer
         private string[][] ExamSubject_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
-            new string[] {"SubjectName", "NText", "2147483646"},
+            new string[] {"SubjectName", "NVarChar", "2147483646"},
             new string[] {"CreateUser", "NText", "2147483646"},
             new string[] {"CreateDate", "DateTime", "16"},
             new string[] { "TypeName", "NText", "2147483646"},

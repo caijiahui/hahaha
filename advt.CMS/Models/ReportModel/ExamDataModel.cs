@@ -39,9 +39,18 @@ namespace advt.CMS.Models
         {
             ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0 }).ToList();
         }
-        public void GetExamUserBySubjectName(string SearchData)
+        public void GetExamUserBySubjectName(string SearchData,string subject)
         {
-            ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData);
+            var subjecs = Data.ExamSubject.Get_ExamSubject(new { SubjectName = subject });
+            if (subjecs.IsProAssess)
+            {
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData,subject);
+            }
+            else
+            {
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData);
+            }
+            
             
         }
         //添加完
@@ -49,7 +58,15 @@ namespace advt.CMS.Models
         {
 
             var su=Data.ExamUserInfo.Insert_ElectronicUser_usercode(usercode, UserCostCenter,SubjectName, username);
-            ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata);
+            var subjecs = Data.ExamSubject.Get_ExamSubject(new { SubjectName = SubjectName });
+            if (subjecs.IsProAssess)
+            {
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata, SubjectName);
+            }
+            else
+            {
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata);
+            }
             GetExamInfo(typename);
             var user = Data.ExamUserInfo.Get_ExamUserInfo(new { SubjectName = SubjectName, UserCode = usercode, IsEnable = 0 });
             UserInfo model = new UserInfo();

@@ -41,10 +41,19 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(advt_user_sheet_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-        public IDataReader Get_All_advt_user_sheet_ElectronicUser(string sdata)
+        public IDataReader Get_All_advt_user_sheet_ElectronicUser(string sdata,string subject)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select a.* from advt_user_sheet a where a.UserCode not in ( select UserCode from ExamUserInfo  where IsEnable=0 and TypeName=N'电子端岗位技能津贴') and (a.UserCode = '" + sdata+ "'  or a.UserDspName='" + sdata + "' or a.UserCostCenter='" + sdata + "')");
+            var cmd = string.Empty;
+            if (!string.IsNullOrEmpty(subject))
+            {
+                cmd = "select UserCode from ExamUserInfo  where IsEnable=0 and TypeName=N'电子端岗位技能津贴' and SubjectName=N'"+ subject + "'";
+            }
+            else
+            {
+                cmd = "select UserCode from ExamUserInfo  where IsEnable = 0 and TypeName = N'电子端岗位技能津贴'";
+            }
+            commandText.AppendLine(" select a.* from advt_user_sheet a where a.UserCode not in ( "+cmd+") and (a.UserCode = '" + sdata+ "'  or a.UserDspName='" + sdata + "' or a.UserCostCenter='" + sdata + "')");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         

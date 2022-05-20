@@ -255,7 +255,8 @@
             handleSearchUser(SubjectName) {
                 var _this = this;
                 axios.post('/Report/GetExamUserBySubjectName', {
-                    SearchData: _this.SearchData
+                    SearchData: _this.SearchData,
+                    subject: SubjectName
                 }).then(function (res) {
                     _this.ListUsers = res.data.ListUsers;
                    

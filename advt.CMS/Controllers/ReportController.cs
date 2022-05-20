@@ -35,10 +35,10 @@ namespace advt.Web.Controllers
             model.GetExamByTypeName(typename);
             return Json(new { ListElectronicUser = model.ListElectronicUser }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetExamUserBySubjectName(string SearchData)
+        public ActionResult GetExamUserBySubjectName(string SearchData,string subject)
         {
             ExamDataModel model = new ExamDataModel();
-            model.GetExamUserBySubjectName(SearchData);
+            model.GetExamUserBySubjectName(SearchData, subject);
             return Json(new { ListUsers = model.ListUsers }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetSigupElectronicUser(string usercode, string UserCostCenter, string SubjectName, string sdata,string typename)
