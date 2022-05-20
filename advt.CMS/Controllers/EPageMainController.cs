@@ -51,7 +51,6 @@ namespace advt.Web.Controllers
             return Json(new { ListUsersubject = model.ListUsersubject, username, model.usercode }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        [MyAuthorize]
         public ActionResult ExamPage(string IsTest = null, string RuleName = null)
         {
             var model = new ExamPageModel();
@@ -67,20 +66,27 @@ namespace advt.Web.Controllers
                     model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
                     if (IsTest == "formal")
                     {
-                        var dtdate = DateTime.Now;
                         if(detail.ExamDate == null)
                         {
                             model.ExamFailResult += "未维护考试时间:" + detail.ExamDate + ",不可考试";
                         }
                         else
                         {
-                            var ddate = Convert.ToDateTime(detail.ExamDate);
-
-                            
-                            if (dtdate <= ddate || detail.ExamDate == null)
+                            var ddate = DateTime.Now.ToString("d");
+                            var examdetail =Convert.ToDateTime(detail.ExamDate).ToString("d");
+                            var examendtime =string.Format("{0}/{1}/{2} {3}:{4}",Convert.ToDateTime(detail.ExamDate).Year, Convert.ToDateTime(detail.ExamDate).Month, Convert.ToDateTime(detail.ExamDate).Day,"20","00");
+                            if (ddate != examdetail)
                             {
                                 model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
                             }
+                            else
+                            {
+                                if (DateTime.Now < detail.ExamDate || DateTime.Now > Convert.ToDateTime(examendtime))
+                                {
+                                    model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
+                                }
+                            }
+
                         }
 
                     }
