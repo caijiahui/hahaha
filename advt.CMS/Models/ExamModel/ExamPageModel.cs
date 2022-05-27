@@ -625,7 +625,7 @@ namespace advt.CMS.Models
                                             int ran = Convert.ToInt32(item.RankName.Substring(item.RankName.Length - 1, 1)) + 1;
                                             item.RankName = "A-" + ran;
                                         }
-                                        if (item.RankName == "A-3" && item.PostName == "作业员")
+                                        if (item.RankName.Contains("A-3") && item.PostName.Contains("作业员"))
                                         {
                                             item.PostName = "技术员";
                                         }

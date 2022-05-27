@@ -102,6 +102,7 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().GetCanSignUpAudit(usercode);
             return SqlHelper.GetReaderToFirstOrDefault<Entity.ExamUserDetailInfo>(reader);
         }
+       
         #endregion
     }
 }

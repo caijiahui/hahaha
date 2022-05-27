@@ -25,12 +25,20 @@ namespace advt.Data
         {
             return Get_All_AchieveRecord(new { UserCode = UserCode, SkillName = SkillName });
         }
+
+      
+        public static List<Entity.AchieveRecord> Get_All_Record(string startdate, string endate)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_Record(startdate, endate);
+            return SqlHelper.GetReaderToList<Entity.AchieveRecord>(reader);
+        }
+
         public static Entity.AchieveRecord Get_AchieveRecord(object objparams)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_AchieveRecord(objparams);
             return SqlHelper.GetReaderToFirstOrDefault<Entity.AchieveRecord>(reader);
         }
-
+       
 
         public static Entity.AchieveRecord Get_AchieveRecord(int ID)
         {
@@ -71,6 +79,8 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Delete_AchieveRecord(ID);
         }
+
+       
         #endregion
     }
 }

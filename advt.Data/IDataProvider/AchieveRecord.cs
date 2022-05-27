@@ -19,6 +19,7 @@ namespace advt.Data
 
         int Delete_AchieveRecord(int ID);
 
+        IDataReader Get_All_Record(string startdate, string endate);
         #endregion
     }
 }

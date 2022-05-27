@@ -556,13 +556,10 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.GetUserInfo(data);
-            var startdate = DateTime.Now.AddDays(1 - DateTime.Now.Day).ToString("yyyy-MM-dd");
-            var endate = DateTime.Now.AddDays(1 - DateTime.Now.Day).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd");
-            var userlist = string.Join(",",models.ListDetailInfo.Select(x=>x.UserCode));
-            //string user = "Q-02321,Q-02974,Q-03215";
-            //model.Test(start, end, user);
-            var result = models.SyncQuantityPoint(startdate, endate, userlist);
-            //models.GetUserInfo(data);
+            var startdate = string.Format("{0}/{1}/{2} {3}:{4}", Convert.ToDateTime(DateTime.Now).Year, Convert.ToDateTime(DateTime.Now).Month,1);
+            var enddate = DateTime.Now.ToShortDateString();
+            var result=models.GetChassisAchieveUser(startdate, enddate);
+            models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }

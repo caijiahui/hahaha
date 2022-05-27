@@ -37,6 +37,7 @@ namespace advt.CMS.Models.ExamModel
         public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
         public string Results { get; set; }
         public bool IsHrSign { get; set; }
+        public List<AchieveRecord> ListAchieveRecord { get; set; }
         public MesUserInfo MesUserInfoModel { get; set; }
         public ExamUserInfoModel() : base()
         {
@@ -58,6 +59,7 @@ namespace advt.CMS.Models.ExamModel
             ListUserInfo11 = new List<UserInfo>();
             LExamUserMeritsRecord = new List<AchieveRecord>();
             MesUserInfoModel = new MesUserInfo();
+            ListAchieveRecord = new List<AchieveRecord>();
 
 
 
@@ -535,7 +537,15 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
-
+        public string GetChassisAchieveUser(string startdate, string endate)
+        {
+            var result = string.Empty;
+            ListAchieveRecord = Data.AchieveRecord.Get_All_Record(startdate,endate);
+            var userlist = string.Join(",", ListAchieveRecord.Select(x => x.UserCode));
+            SyncQuantityPoint(startdate, endate, userlist);
+            result = "同步完成";
+            return result;
+        }
         public string SyncQuantityPoint(string startdate, string endate, string userlist)
         {
             var result = string.Empty;

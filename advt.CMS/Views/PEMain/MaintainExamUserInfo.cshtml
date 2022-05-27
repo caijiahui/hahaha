@@ -655,19 +655,17 @@
                      data: _this.VSearch
                 }).then(function (res) {
                     if (res.data.Results == '同步完成') {
-
+                        _this.tableData = res.data.tableData;
                         _this.$message({
                             message: res.data.Results,
                             type: 'success'
-                        });
-                        _this.tableData = res.data.tableData;
-                        _this.YListUserInfo = res.data.YListUserInfo;
-                        _this.CPListUserInfo = res.data.CPListUserInfo;
+                        });                      
                     }
                     else {
                         _this.$message.error(res.data.Results);
                     }
                 });
+              
             },
             handleEdit(index, row) {
                 var _this = this;

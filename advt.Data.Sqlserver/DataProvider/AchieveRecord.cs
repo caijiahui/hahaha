@@ -72,6 +72,14 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@ID", (DbType)SqlDbType.Int, 4, ID));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+
+        public IDataReader Get_All_Record(string startdate, string endate)
+        {
+            StringBuilder commandText = new StringBuilder();           
+            commandText.AppendLine("select * from ExamUserInfo  b inner join (select * from AchieveRecord where CreateDate >= '"+startdate+ "' and CreateDate <= '" + endate + "') a on a.UserCode = b.UserCode and a.Achievement = N'符合'and b.TypeName = N'Chassis技能等级考试'");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         #endregion
     }
 }
