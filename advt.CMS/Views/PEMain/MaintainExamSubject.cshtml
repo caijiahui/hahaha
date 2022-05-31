@@ -30,6 +30,7 @@
             <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="HC限制" prop="HCLimit" sortable></el-table-column>
             <el-table-column label="津贴额度" prop="ElectronicQuota" sortable></el-table-column>
+            <el-table-column label="专业加给" prop="MajorQuota" sortable></el-table-column>
             <el-table-column label="是否系统串实践"
                              prop="IsSysPractice"
                              width="150"
@@ -62,7 +63,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName,scope.row.HCLimit,scope.row.IsSysPractice,scope.row.IsProAssess,scope.row.DepartCode, scope.row)">Edit</el-button>
+                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName,scope.row.HCLimit,scope.row.IsSysPractice,scope.row.IsProAssess,scope.row.DepartCode,scope.row.ElectronicQuota,scope.row.MajorQuota, scope.row)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
@@ -88,13 +89,16 @@
                     <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
                 </el-form-item>
                 @*<el-form-item label="部门代码" :label-width="formLabelWidth">
-                    <el-input v-model="VexamSubject.DepartCode" autocomplete="off"></el-input>
-                </el-form-item>*@
+            <el-input v-model="VexamSubject.DepartCode" autocomplete="off"></el-input>
+        </el-form-item>*@
                 <el-form-item label="HC限制" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.HCLimit" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="津贴额度" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.ElectronicQuota" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="专业加给" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.MajorQuota" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="是否系统串实践" prop="IsSysPractice">
                     <el-switch v-model="VexamSubject.IsSysPractice"></el-switch>
@@ -240,7 +244,7 @@
                 _this.dialogFormVisible = false;           
 
             },
-            handleEdit(index, name, tname, HCLimit, IsSysPractice, IsProAssess, DepartCode,row) {
+            handleEdit(index, name, tname, HCLimit, IsSysPractice, IsProAssess, DepartCode, ElectronicQuota, MajorQuota,row) {
                 var _this = this;
                 _this.VexamSubject.SubjectName = name;
                 _this.VexamSubject.TypeName = tname;
@@ -249,6 +253,8 @@
                 _this.VexamSubject.IsSysPractice = IsSysPractice;
                 _this.VexamSubject.IsProAssess = IsProAssess;
                 _this.VexamSubject.DepartCode = DepartCode;
+                _this.VexamSubject.ElectronicQuota = ElectronicQuota;
+                _this.VexamSubject.MajorQuota = MajorQuota;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
 

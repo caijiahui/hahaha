@@ -17,6 +17,7 @@ namespace advt.Entity
         public bool IsSysPractice { get; set; }//实践成绩是否自动从系统串入
         public bool IsProAssess { get; set; }//是否跨制程考核
         public string  DepartCode { get; set; }
+        public int MajorQuota { get; set; }
 
     }
 }
