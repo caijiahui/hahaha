@@ -195,13 +195,13 @@
                 </el-table-column>
                 @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
 
-                    <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
+        <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
 
-                    <el-table-column label="最近一次实践考核通过时间">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
-                        </template>
-                    </el-table-column>*@
+        <el-table-column label="最近一次实践考核通过时间">
+            <template slot-scope="scope">
+                <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
+            </template>
+        </el-table-column>*@
                 <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
                 <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
@@ -210,6 +210,7 @@
                 <el-table-column label="待考试时间" prop="ReadExamDate" sortable></el-table-column>
                 <el-table-column label="每年应复审时间段" width="100" prop="ExamineMonth" sortable></el-table-column>
                 <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
+                @*  <el-table-column label="级别" prop="LocalGrade" sortable></el-table-column>*@
 
                 <el-table-column label="绩效是否符合">
                     <template slot-scope="scope">
@@ -229,7 +230,7 @@
                         <el-button type="text" size="small"
                                    @@click="Reverse(scope.row.Id)">倒扣</el-button>
                         <el-button type="text" size="small"
-                                   @@click="handleEdit(scope.row.Id, scope.row)">编辑</el-button>
+                                   @@click="handleEdit(scope.row.Id)">编辑</el-button>
                         <el-button type="text" size="small"
                                    @@click="handlePractical(scope.row.UserCode,scope.row.UserName)">实践</el-button>
                         <el-button type="text" size="small"
@@ -409,6 +410,9 @@
                     <el-table-column label="是否符合技能"
                                      prop="IsAchment" sortable>
                     </el-table-column>
+                    @*<el-table-column label="级别"
+                                     prop="LocalGrade" sortable>
+                    </el-table-column>*@
 
                 </el-table>
 
@@ -651,6 +655,7 @@
                 });
             },
             SyncQuantityPoint() {
+                var _this = this;
                 axios.post('/PEMain/SyncQuantityPoint', {
                      data: _this.VSearch
                 }).then(function (res) {
@@ -667,7 +672,7 @@
                 });
               
             },
-            handleEdit(index, row) {
+            handleEdit(index) {
                 var _this = this;
                 axios.post('/PEMain/GetExamUser', {
                     ID: index

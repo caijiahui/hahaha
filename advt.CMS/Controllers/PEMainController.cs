@@ -556,8 +556,8 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.GetUserInfo(data);
-            var startdate = string.Format("{0}/{1}/{2} {3}:{4}", Convert.ToDateTime(DateTime.Now).Year, Convert.ToDateTime(DateTime.Now).Month,1);
-            var enddate = DateTime.Now.ToShortDateString();
+            var startdate = DateTime.Now.AddMonths(-6).ToShortDateString();
+            var enddate = DateTime.Now.AddDays(1).ToShortDateString();
             var result=models.GetChassisAchieveUser(startdate, enddate);
             models.GetUserInfo(data);
             models.GetUserComInfo();
