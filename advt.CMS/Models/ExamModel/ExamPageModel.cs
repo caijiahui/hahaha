@@ -640,6 +640,14 @@ namespace advt.CMS.Models
                                         item.Achievement = null;
                                     }
                                 }
+                                else if (model.VExamUserInfo.ExamType == "Chassis技能等级考试")
+                                {
+                                    if (item.ApplicationLevel=="中级")
+                                    {
+                                        item.ApplicationLevel = "高级";
+                                        item.Achievement = null;
+                                    }
+                                }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }
                           
