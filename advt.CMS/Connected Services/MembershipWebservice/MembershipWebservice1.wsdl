@@ -3,6 +3,166 @@
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="SendRegReminder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="reg" type="tns:MemberRegStepOne" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MemberRegStepOne">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="MemberRegStepOneID" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Pass" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CallBackURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CallBackName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Company" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="JobFunction" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TelAreacode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TelNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TelExt" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fax_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InterestedProduct" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BAA" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HowLearn" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastUpdBy" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastUpdDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="CloseDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Lang" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendRegReminderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SendRegReminderResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="reg" type="tns:MemberRegStepOne" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberReportByRBU">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMemberReportByRBUResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMemberReportByRBUResult" type="tns:ArrayOfReportMemberRBU" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfReportMemberRBU">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ReportMemberRBU" nillable="true" type="tns:ReportMemberRBU" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ReportMemberRBU">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="RBU" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RegTotal" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddSimpleFormRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="record" type="tns:MEMBER_SIMPLE" />
+            <s:element minOccurs="0" maxOccurs="1" name="answers" type="tns:ArrayOfMemberSimpleMultiQuestionObject" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MEMBER_SIMPLE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SimpleFromID" nillable="true" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneAreaCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneExt" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Campaign" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CampaignValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Answer" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactRowID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ActionRowID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ActionType" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="CallbackURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CallbackURLName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MemberSource" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MemberSourceID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="utm_source" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="utm_medium" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="utm_campaign" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IN_PRODUCT_VALUES" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="JobTitle" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="JobFunction" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CallbackURLId" nillable="true" type="s1:guid" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfMemberSimpleMultiQuestionObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberSimpleMultiQuestionObject" nillable="true" type="tns:MemberSimpleMultiQuestionObject" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MemberSimpleMultiQuestionObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="question" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="answerOptions" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="answerType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="answer" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="answerIsMandatory" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddSimpleFormRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddSimpleFormRecordResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSimpleFormReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="simpleFormID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSimpleFormReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSimpleFormReportResult" type="tns:ArrayOfMEMBER_SIMPLE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMEMBER_SIMPLE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MEMBER_SIMPLE" nillable="true" type="tns:MEMBER_SIMPLE" />
+        </s:sequence>
+      </s:complexType>
       <s:element name="RequestForgetPassword">
         <s:complexType>
           <s:sequence>
@@ -17,6 +177,23 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="RequestForgetPasswordResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreatePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lang" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pageURL" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreatePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreatePasswordResult" type="s:boolean" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -127,6 +304,21 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="LoginForEZUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginForEZUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginForEZUserResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="validateTempid">
         <s:complexType>
           <s:sequence>
@@ -197,6 +389,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="login_password" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="first_name" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="last_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FullName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="email_addr" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="email_addr2" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="mobile" type="s:string" />
@@ -207,6 +400,9 @@
           <s:element minOccurs="1" maxOccurs="1" name="date_last_changed" nillable="true" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="date_registered" nillable="true" type="s:dateTime" />
           <s:element minOccurs="0" maxOccurs="1" name="job_title" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RBU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Group" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="job_family" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="job_function" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="department" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="url" type="s:string" />
@@ -259,6 +455,8 @@
           <s:element minOccurs="1" maxOccurs="1" name="isSavedToSiebel" type="s:boolean" />
           <s:element minOccurs="1" maxOccurs="1" name="isCreateActivityWhenRegister" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="legalForm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParentOrg" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GroupSectorACC" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Insert_date" nillable="true" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="Birthday" nillable="true" type="s:dateTime" />
           <s:element minOccurs="0" maxOccurs="1" name="recommendEmail" type="s:string" />
@@ -275,6 +473,15 @@
           <s:element minOccurs="0" maxOccurs="1" name="lang" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="IP" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="GCLID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MOBIL_VERIFY" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactOrg" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactEmail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactTeam" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactTeamEmail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountOwner" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PrivacyPolicy" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PrimaryContactGroupInfo" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="AccountInfo">
@@ -312,11 +519,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:complexType name="ArrayOfString">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="isExist">
         <s:complexType>
           <s:sequence>
@@ -789,6 +991,7 @@
             <s:element minOccurs="0" maxOccurs="1" name="contactDataSource" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="ownerEmail" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="userType" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="faoIds" type="tns:ArrayOfString" />
             <s:element minOccurs="0" maxOccurs="1" name="contactID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="activityID" type="s:string" />
           </s:sequence>
@@ -826,6 +1029,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="productCategory" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="productGroup" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="BAA" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="sectorName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="serialNumber" type="s:string" />
@@ -835,11 +1039,13 @@
           <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="descriptionOriginal" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ownerEmail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NotifyEmail" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ldrEmails" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="requestType" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="activityType" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="activitySource" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="contactDataSource" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="srDataSource" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="userType" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="requestRowID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="contactRowID" type="s:string" />
@@ -870,6 +1076,7 @@
               <s:element minOccurs="1" maxOccurs="1" name="activityTypeEnum" type="tns:EnumActivityType" />
               <s:element minOccurs="1" maxOccurs="1" name="activitySourceEnum" type="tns:EnumActivitySource" />
               <s:element minOccurs="1" maxOccurs="1" name="userTypeEnum" type="tns:EnumUserType" />
+              <s:element minOccurs="1" maxOccurs="1" name="EnumSRTicketType" type="tns:ServiceRequestProcess" />
               <s:element minOccurs="1" maxOccurs="1" name="cacheTime" type="s:dateTime" />
               <s:element minOccurs="0" maxOccurs="1" name="leadID" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="eNewsletter" type="s:string" />
@@ -883,9 +1090,25 @@
               <s:element minOccurs="0" maxOccurs="1" name="JobTitle" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="JobFunction" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="CampaignOrg" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CampaignSource" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="RelatedSRID" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="SiebelCampaign" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="SiebelCampaignID" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Tag" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="IsReceiveEmail" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="SrNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="FaoIds" type="tns:ArrayOfString" />
+              <s:element minOccurs="0" maxOccurs="1" name="MainBU" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ProcessId" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsCreateActivity" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreateSiebelContactResult" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreateSiebelContactErrMsg" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreateSiebelContactExceptionErrMsg" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Cellular" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsInternalDataProcessOnly" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="ShouldSendPrivacyEmail" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsDefaultBU" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="Attachments" type="tns:ArrayOfString" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -980,6 +1203,45 @@
           <s:enumeration value="SimpleForm_Download_Datasheet" />
           <s:enumeration value="SimpleForm_Download_Software" />
           <s:enumeration value="SimpleForm_Download_Manual" />
+          <s:enumeration value="eStore_Order_by_PN" />
+          <s:enumeration value="IoTMart_Browse_All_Products" />
+          <s:enumeration value="IoTMart_Print_Product_Page" />
+          <s:enumeration value="IoTMart_Browse_Category_Page" />
+          <s:enumeration value="IoTMart_Browse_Widget_Page" />
+          <s:enumeration value="IoTMart_Browse_Product_Page" />
+          <s:enumeration value="IoTMart_Search_Product" />
+          <s:enumeration value="IoTMart_See_Configured_Systems" />
+          <s:enumeration value="IoTMart_Browse_Product_Related_Material" />
+          <s:enumeration value="IoTMart_Download_Datasheet" />
+          <s:enumeration value="IoTMart_Download_Files" />
+          <s:enumeration value="IoTMart_Download_Driver" />
+          <s:enumeration value="IoTMart_Download_Manual" />
+          <s:enumeration value="IoTMart_Download_Utilities" />
+          <s:enumeration value="IoTMart_Registration" />
+          <s:enumeration value="IoTMart_Browse_My_Quote" />
+          <s:enumeration value="IoTMart_View_Cart" />
+          <s:enumeration value="IoTMart_Browse_My_Order" />
+          <s:enumeration value="IoTMart_Compare_Product" />
+          <s:enumeration value="IoTMart_Get_to_Quote" />
+          <s:enumeration value="IoTMart_Add_To_Cart" />
+          <s:enumeration value="IoTMart_Purchase" />
+          <s:enumeration value="IoTMart_Check_Out" />
+          <s:enumeration value="IoTMart_Abort_Check_Out" />
+          <s:enumeration value="IoTMart_Order_by_PN" />
+          <s:enumeration value="IoTMart_Call_Inbound" />
+          <s:enumeration value="IoTMart_Email_Inbound" />
+          <s:enumeration value="IoTMart_Sales_Inquiry" />
+          <s:enumeration value="IoTMart_General_Inquiries" />
+          <s:enumeration value="Event_Connect" />
+          <s:enumeration value="IoT_Academy_Class_Finish" />
+          <s:enumeration value="Wistia_Watch_Video_90Percent" />
+          <s:enumeration value="Live_Stream_Registrants_system_use" />
+          <s:enumeration value="MyAdvantech_Registration" />
+          <s:enumeration value="Online_Webinar_Registration" />
+          <s:enumeration value="WISE_Marketplace_Download_PriceBook" />
+          <s:enumeration value="WISE_Marketplace_Contact_Us" />
+          <s:enumeration value="WISE_Marketplace_Request_for_Demo" />
+          <s:enumeration value="AConnect_Browse_Video" />
         </s:restriction>
       </s:simpleType>
       <s:simpleType name="EnumActivitySource">
@@ -992,6 +1254,12 @@
           <s:enumeration value="eStore" />
           <s:enumeration value="SimpleForm" />
           <s:enumeration value="CustomerFeedback" />
+          <s:enumeration value="IoTMart" />
+          <s:enumeration value="IoT_Academy" />
+          <s:enumeration value="WISTIA" />
+          <s:enumeration value="Live_Stream" />
+          <s:enumeration value="WISE_Marketplace" />
+          <s:enumeration value="AConnect" />
         </s:restriction>
       </s:simpleType>
       <s:simpleType name="EnumUserType">
@@ -1003,6 +1271,19 @@
           <s:enumeration value="eStore" />
           <s:enumeration value="AGS" />
           <s:enumeration value="SimpleForm" />
+          <s:enumeration value="IoTMart" />
+          <s:enumeration value="IoT_Academy" />
+          <s:enumeration value="WISTIA" />
+          <s:enumeration value="Live_Stream" />
+          <s:enumeration value="WISE_Marketplace" />
+          <s:enumeration value="AConnect" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ServiceRequestProcess">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="SiebelSR" />
+          <s:enumeration value="ZendeskTicket" />
         </s:restriction>
       </s:simpleType>
       <s:element name="AddOnlineRequestV2WithWSResponse">
@@ -1146,8 +1427,10 @@
             <s:element minOccurs="0" maxOccurs="1" name="strCountry" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="strState" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="userType" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="faoIds" type="tns:ArrayOfString" />
             <s:element minOccurs="0" maxOccurs="1" name="contactID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="srID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="srNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1157,6 +1440,7 @@
             <s:element minOccurs="1" maxOccurs="1" name="AddServiceRequestWithWSResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="contactID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="srID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="srNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1227,43 +1511,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:complexType name="MEMBER_SIMPLE">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="SimpleFromID" nillable="true" type="s1:guid" />
-          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="PhoneAreaCode" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="PhoneNO" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="PhoneExt" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Campaign" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="CampaignValue" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Answer" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ContactRowID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ActionRowID" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="ActionType" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="CallbackURL" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="CallbackURLName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="MemberSource" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="MemberSourceID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="utm_source" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="utm_medium" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="utm_campaign" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="IN_PRODUCT_VALUES" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="JobTitle" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="JobFunction" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="getSimpleFormLogByEmail">
         <s:complexType>
           <s:sequence>
@@ -1287,20 +1534,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:complexType name="ArrayOfMemberSimpleMultiQuestionObject">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberSimpleMultiQuestionObject" nillable="true" type="tns:MemberSimpleMultiQuestionObject" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="MemberSimpleMultiQuestionObject">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="question" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="answerOptions" type="tns:ArrayOfString" />
-          <s:element minOccurs="0" maxOccurs="1" name="answerType" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="answer" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="answerIsMandatory" type="s:boolean" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="UpdateSimpleFormLogResponse">
         <s:complexType>
           <s:sequence>
@@ -1336,6 +1569,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="QuestionType" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Seq" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="IsRequired" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="QuestionDescription" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="getServiceCenterEmailByCountry">
@@ -1406,6 +1640,23 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="getCountryListForChinaSite">
+        <s:complexType />
+      </s:element>
+      <s:element name="getCountryListForChinaSiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCountryListForChinaSiteResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetCountryListInJson">
         <s:complexType />
       </s:element>
@@ -1413,6 +1664,16 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetCountryListInJsonResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCountryListInJsonForChinaSite">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetCountryListInJsonForChinaSiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCountryListInJsonForChinaSiteResult" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1472,6 +1733,27 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="getStateListByCountryForChinaSite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getStateListByCountryForChinaSiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getStateListByCountryForChinaSiteResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetStateListByCountryInJson">
         <s:complexType>
           <s:sequence>
@@ -1483,6 +1765,20 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetStateListByCountryInJsonResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStateListByCountryInJsonForChinaSite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStateListByCountryInJsonForChinaSiteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStateListByCountryInJsonForChinaSiteResult" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1626,6 +1922,30 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="IsExeternalWebApp">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ip" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsExeternalWebAppResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsExeternalWebAppResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIP">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetIPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIPResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="isEmployeeForWebsites">
         <s:complexType>
           <s:sequence>
@@ -1689,109 +2009,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="SendRegReminder">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="reg" type="tns:MemberRegStepOne" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="MemberRegStepOne">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="MemberRegStepOneID" type="s1:guid" />
-          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Pass" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="CallBackURL" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="CallBackName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Company" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="JobFunction" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="TelAreacode" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="TelNO" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="TelExt" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Fax_NO" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ZIP" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="InterestedProduct" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="BAA" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="HowLearn" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="LastUpdBy" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="LastUpdDate" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="CloseDate" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="Lang" type="s:string" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="SendRegReminderResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="SendRegReminderResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="reg" type="tns:MemberRegStepOne" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetMemberReportByRBU">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetMemberReportByRBUResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMemberReportByRBUResult" type="tns:ArrayOfReportMemberRBU" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfReportMemberRBU">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="ReportMemberRBU" nillable="true" type="tns:ReportMemberRBU" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ReportMemberRBU">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="RBU" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="RegTotal" type="s:int" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="AddSimpleFormRecord">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="record" type="tns:MEMBER_SIMPLE" />
-            <s:element minOccurs="0" maxOccurs="1" name="answers" type="tns:ArrayOfMemberSimpleMultiQuestionObject" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="AddSimpleFormRecordResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="AddSimpleFormRecordResult" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSimpleFormReport">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="simpleFormID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSimpleFormReportResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetSimpleFormReportResult" type="tns:ArrayOfMEMBER_SIMPLE" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfMEMBER_SIMPLE">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="MEMBER_SIMPLE" nillable="true" type="tns:MEMBER_SIMPLE" />
-        </s:sequence>
-      </s:complexType>
     </s:schema>
     <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
       <s:simpleType name="guid">
@@ -1801,11 +2018,41 @@
       </s:simpleType>
     </s:schema>
   </wsdl:types>
+  <wsdl:message name="SendRegReminderSoapIn">
+    <wsdl:part name="parameters" element="tns:SendRegReminder" />
+  </wsdl:message>
+  <wsdl:message name="SendRegReminderSoapOut">
+    <wsdl:part name="parameters" element="tns:SendRegReminderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberReportByRBUSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMemberReportByRBU" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberReportByRBUSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMemberReportByRBUResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddSimpleFormRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:AddSimpleFormRecord" />
+  </wsdl:message>
+  <wsdl:message name="AddSimpleFormRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:AddSimpleFormRecordResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSimpleFormReportSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSimpleFormReport" />
+  </wsdl:message>
+  <wsdl:message name="GetSimpleFormReportSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSimpleFormReportResponse" />
+  </wsdl:message>
   <wsdl:message name="RequestForgetPasswordSoapIn">
     <wsdl:part name="parameters" element="tns:RequestForgetPassword" />
   </wsdl:message>
   <wsdl:message name="RequestForgetPasswordSoapOut">
     <wsdl:part name="parameters" element="tns:RequestForgetPasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreatePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:CreatePassword" />
+  </wsdl:message>
+  <wsdl:message name="CreatePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:CreatePasswordResponse" />
   </wsdl:message>
   <wsdl:message name="ValidateForgetPasswordIDSoapIn">
     <wsdl:part name="parameters" element="tns:ValidateForgetPasswordID" />
@@ -1842,6 +2089,12 @@
   </wsdl:message>
   <wsdl:message name="loginForEUMyAdvantechSoapOut">
     <wsdl:part name="parameters" element="tns:loginForEUMyAdvantechResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoginForEZUserSoapIn">
+    <wsdl:part name="parameters" element="tns:LoginForEZUser" />
+  </wsdl:message>
+  <wsdl:message name="LoginForEZUserSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginForEZUserResponse" />
   </wsdl:message>
   <wsdl:message name="validateTempidSoapIn">
     <wsdl:part name="parameters" element="tns:validateTempid" />
@@ -2155,11 +2408,23 @@
   <wsdl:message name="getCountryListSoapOut">
     <wsdl:part name="parameters" element="tns:getCountryListResponse" />
   </wsdl:message>
+  <wsdl:message name="getCountryListForChinaSiteSoapIn">
+    <wsdl:part name="parameters" element="tns:getCountryListForChinaSite" />
+  </wsdl:message>
+  <wsdl:message name="getCountryListForChinaSiteSoapOut">
+    <wsdl:part name="parameters" element="tns:getCountryListForChinaSiteResponse" />
+  </wsdl:message>
   <wsdl:message name="GetCountryListInJsonSoapIn">
     <wsdl:part name="parameters" element="tns:GetCountryListInJson" />
   </wsdl:message>
   <wsdl:message name="GetCountryListInJsonSoapOut">
     <wsdl:part name="parameters" element="tns:GetCountryListInJsonResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCountryListInJsonForChinaSiteSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCountryListInJsonForChinaSite" />
+  </wsdl:message>
+  <wsdl:message name="GetCountryListInJsonForChinaSiteSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCountryListInJsonForChinaSiteResponse" />
   </wsdl:message>
   <wsdl:message name="getCountryByCountrySoapIn">
     <wsdl:part name="parameters" element="tns:getCountryByCountry" />
@@ -2179,11 +2444,23 @@
   <wsdl:message name="getStateListByCountrySoapOut">
     <wsdl:part name="parameters" element="tns:getStateListByCountryResponse" />
   </wsdl:message>
+  <wsdl:message name="getStateListByCountryForChinaSiteSoapIn">
+    <wsdl:part name="parameters" element="tns:getStateListByCountryForChinaSite" />
+  </wsdl:message>
+  <wsdl:message name="getStateListByCountryForChinaSiteSoapOut">
+    <wsdl:part name="parameters" element="tns:getStateListByCountryForChinaSiteResponse" />
+  </wsdl:message>
   <wsdl:message name="GetStateListByCountryInJsonSoapIn">
     <wsdl:part name="parameters" element="tns:GetStateListByCountryInJson" />
   </wsdl:message>
   <wsdl:message name="GetStateListByCountryInJsonSoapOut">
     <wsdl:part name="parameters" element="tns:GetStateListByCountryInJsonResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStateListByCountryInJsonForChinaSiteSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStateListByCountryInJsonForChinaSite" />
+  </wsdl:message>
+  <wsdl:message name="GetStateListByCountryInJsonForChinaSiteSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStateListByCountryInJsonForChinaSiteResponse" />
   </wsdl:message>
   <wsdl:message name="updateOppSalesStageSoapIn">
     <wsdl:part name="parameters" element="tns:updateOppSalesStage" />
@@ -2233,6 +2510,18 @@
   <wsdl:message name="EnableUserSoapOut">
     <wsdl:part name="parameters" element="tns:EnableUserResponse" />
   </wsdl:message>
+  <wsdl:message name="IsExeternalWebAppSoapIn">
+    <wsdl:part name="parameters" element="tns:IsExeternalWebApp" />
+  </wsdl:message>
+  <wsdl:message name="IsExeternalWebAppSoapOut">
+    <wsdl:part name="parameters" element="tns:IsExeternalWebAppResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIPSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIP" />
+  </wsdl:message>
+  <wsdl:message name="GetIPSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIPResponse" />
+  </wsdl:message>
   <wsdl:message name="isEmployeeForWebsitesSoapIn">
     <wsdl:part name="parameters" element="tns:isEmployeeForWebsites" />
   </wsdl:message>
@@ -2257,35 +2546,36 @@
   <wsdl:message name="SendNotificationPasswordUpdatedSoapOut">
     <wsdl:part name="parameters" element="tns:SendNotificationPasswordUpdatedResponse" />
   </wsdl:message>
-  <wsdl:message name="SendRegReminderSoapIn">
-    <wsdl:part name="parameters" element="tns:SendRegReminder" />
-  </wsdl:message>
-  <wsdl:message name="SendRegReminderSoapOut">
-    <wsdl:part name="parameters" element="tns:SendRegReminderResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetMemberReportByRBUSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMemberReportByRBU" />
-  </wsdl:message>
-  <wsdl:message name="GetMemberReportByRBUSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMemberReportByRBUResponse" />
-  </wsdl:message>
-  <wsdl:message name="AddSimpleFormRecordSoapIn">
-    <wsdl:part name="parameters" element="tns:AddSimpleFormRecord" />
-  </wsdl:message>
-  <wsdl:message name="AddSimpleFormRecordSoapOut">
-    <wsdl:part name="parameters" element="tns:AddSimpleFormRecordResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetSimpleFormReportSoapIn">
-    <wsdl:part name="parameters" element="tns:GetSimpleFormReport" />
-  </wsdl:message>
-  <wsdl:message name="GetSimpleFormReportSoapOut">
-    <wsdl:part name="parameters" element="tns:GetSimpleFormReportResponse" />
-  </wsdl:message>
   <wsdl:portType name="MembershipWebserviceSoap">
+    <wsdl:operation name="SendRegReminder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Send temp reg. data to database and the system will send a reminder letter to the user for registration.</wsdl:documentation>
+      <wsdl:input message="tns:SendRegReminderSoapIn" />
+      <wsdl:output message="tns:SendRegReminderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberReportByRBU">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get report of registrants by RBU</wsdl:documentation>
+      <wsdl:input message="tns:GetMemberReportByRBUSoapIn" />
+      <wsdl:output message="tns:GetMemberReportByRBUSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSimpleFormRecord">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Simple Form record to database.</wsdl:documentation>
+      <wsdl:input message="tns:AddSimpleFormRecordSoapIn" />
+      <wsdl:output message="tns:AddSimpleFormRecordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSimpleFormReport">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Simple Form report by Simple Form ID.</wsdl:documentation>
+      <wsdl:input message="tns:GetSimpleFormReportSoapIn" />
+      <wsdl:output message="tns:GetSimpleFormReportSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="RequestForgetPassword">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Request forget password, then the system will send an email to the user.</wsdl:documentation>
       <wsdl:input message="tns:RequestForgetPasswordSoapIn" />
       <wsdl:output message="tns:RequestForgetPasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreatePassword">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Request to create password, then the system will send an email to the user.</wsdl:documentation>
+      <wsdl:input message="tns:CreatePasswordSoapIn" />
+      <wsdl:output message="tns:CreatePasswordSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="ValidateForgetPasswordID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Validate the temp ID for forget password.</wsdl:documentation>
@@ -2316,6 +2606,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"> Login Method for EU MyAdvantechIf login fail, return blank, else return TempID</wsdl:documentation>
       <wsdl:input message="tns:loginForEUMyAdvantechSoapIn" />
       <wsdl:output message="tns:loginForEUMyAdvantechSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginForEZUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Login for EZ user.</wsdl:documentation>
+      <wsdl:input message="tns:LoginForEZUserSoapIn" />
+      <wsdl:output message="tns:LoginForEZUserSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="validateTempid">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Validate TempID from login.Over 30 mins login are invalid. Local IP is ignored now duo to proxy issue.</wsdl:documentation>
@@ -2555,9 +2850,17 @@
       <wsdl:input message="tns:getCountryListSoapIn" />
       <wsdl:output message="tns:getCountryListSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="getCountryListForChinaSite">
+      <wsdl:input message="tns:getCountryListForChinaSiteSoapIn" />
+      <wsdl:output message="tns:getCountryListForChinaSiteSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetCountryListInJson">
       <wsdl:input message="tns:GetCountryListInJsonSoapIn" />
       <wsdl:output message="tns:GetCountryListInJsonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCountryListInJsonForChinaSite">
+      <wsdl:input message="tns:GetCountryListInJsonForChinaSiteSoapIn" />
+      <wsdl:output message="tns:GetCountryListInJsonForChinaSiteSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="getCountryByCountry">
       <wsdl:input message="tns:getCountryByCountrySoapIn" />
@@ -2571,9 +2874,17 @@
       <wsdl:input message="tns:getStateListByCountrySoapIn" />
       <wsdl:output message="tns:getStateListByCountrySoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="getStateListByCountryForChinaSite">
+      <wsdl:input message="tns:getStateListByCountryForChinaSiteSoapIn" />
+      <wsdl:output message="tns:getStateListByCountryForChinaSiteSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetStateListByCountryInJson">
       <wsdl:input message="tns:GetStateListByCountryInJsonSoapIn" />
       <wsdl:output message="tns:GetStateListByCountryInJsonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStateListByCountryInJsonForChinaSite">
+      <wsdl:input message="tns:GetStateListByCountryInJsonForChinaSiteSoapIn" />
+      <wsdl:output message="tns:GetStateListByCountryInJsonForChinaSiteSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="updateOppSalesStage">
       <wsdl:input message="tns:updateOppSalesStageSoapIn" />
@@ -2612,6 +2923,16 @@
       <wsdl:input message="tns:EnableUserSoapIn" />
       <wsdl:output message="tns:EnableUserSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="IsExeternalWebApp">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">IsExeternalWebApp</wsdl:documentation>
+      <wsdl:input message="tns:IsExeternalWebAppSoapIn" />
+      <wsdl:output message="tns:IsExeternalWebAppSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIP">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get your IP</wsdl:documentation>
+      <wsdl:input message="tns:GetIPSoapIn" />
+      <wsdl:output message="tns:GetIPSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="isEmployeeForWebsites">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">If the user is an employee for websites, some exceptions from EZ.</wsdl:documentation>
       <wsdl:input message="tns:isEmployeeForWebsitesSoapIn" />
@@ -2632,31 +2953,56 @@
       <wsdl:input message="tns:SendNotificationPasswordUpdatedSoapIn" />
       <wsdl:output message="tns:SendNotificationPasswordUpdatedSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="SendRegReminder">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Send temp reg. data to database and the system will send a reminder letter to the user for registration.</wsdl:documentation>
-      <wsdl:input message="tns:SendRegReminderSoapIn" />
-      <wsdl:output message="tns:SendRegReminderSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetMemberReportByRBU">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get report of registrants by RBU</wsdl:documentation>
-      <wsdl:input message="tns:GetMemberReportByRBUSoapIn" />
-      <wsdl:output message="tns:GetMemberReportByRBUSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="AddSimpleFormRecord">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Simple Form record to database.</wsdl:documentation>
-      <wsdl:input message="tns:AddSimpleFormRecordSoapIn" />
-      <wsdl:output message="tns:AddSimpleFormRecordSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetSimpleFormReport">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Simple Form report by Simple Form ID.</wsdl:documentation>
-      <wsdl:input message="tns:GetSimpleFormReportSoapIn" />
-      <wsdl:output message="tns:GetSimpleFormReportSoapOut" />
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="MembershipWebserviceSoap" type="tns:MembershipWebserviceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendRegReminder">
+      <soap:operation soapAction="http://tempuri.org/SendRegReminder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberReportByRBU">
+      <soap:operation soapAction="http://tempuri.org/GetMemberReportByRBU" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSimpleFormRecord">
+      <soap:operation soapAction="http://tempuri.org/AddSimpleFormRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSimpleFormReport">
+      <soap:operation soapAction="http://tempuri.org/GetSimpleFormReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="RequestForgetPassword">
       <soap:operation soapAction="http://tempuri.org/RequestForgetPassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePassword">
+      <soap:operation soapAction="http://tempuri.org/CreatePassword" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2711,6 +3057,15 @@
     </wsdl:operation>
     <wsdl:operation name="loginForEUMyAdvantech">
       <soap:operation soapAction="http://tempuri.org/loginForEUMyAdvantech" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginForEZUser">
+      <soap:operation soapAction="http://tempuri.org/LoginForEZUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -3186,8 +3541,26 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getCountryListForChinaSite">
+      <soap:operation soapAction="http://tempuri.org/getCountryListForChinaSite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetCountryListInJson">
       <soap:operation soapAction="http://tempuri.org/GetCountryListInJson" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountryListInJsonForChinaSite">
+      <soap:operation soapAction="http://tempuri.org/GetCountryListInJsonForChinaSite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -3222,8 +3595,26 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getStateListByCountryForChinaSite">
+      <soap:operation soapAction="http://tempuri.org/getStateListByCountryForChinaSite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetStateListByCountryInJson">
       <soap:operation soapAction="http://tempuri.org/GetStateListByCountryInJson" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStateListByCountryInJsonForChinaSite">
+      <soap:operation soapAction="http://tempuri.org/GetStateListByCountryInJsonForChinaSite" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -3303,6 +3694,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="IsExeternalWebApp">
+      <soap:operation soapAction="http://tempuri.org/IsExeternalWebApp" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIP">
+      <soap:operation soapAction="http://tempuri.org/GetIP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="isEmployeeForWebsites">
       <soap:operation soapAction="http://tempuri.org/isEmployeeForWebsites" style="document" />
       <wsdl:input>
@@ -3339,47 +3748,56 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SendRegReminder">
-      <soap:operation soapAction="http://tempuri.org/SendRegReminder" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMemberReportByRBU">
-      <soap:operation soapAction="http://tempuri.org/GetMemberReportByRBU" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="AddSimpleFormRecord">
-      <soap:operation soapAction="http://tempuri.org/AddSimpleFormRecord" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSimpleFormReport">
-      <soap:operation soapAction="http://tempuri.org/GetSimpleFormReport" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="MembershipWebserviceSoap12" type="tns:MembershipWebserviceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendRegReminder">
+      <soap12:operation soapAction="http://tempuri.org/SendRegReminder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberReportByRBU">
+      <soap12:operation soapAction="http://tempuri.org/GetMemberReportByRBU" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSimpleFormRecord">
+      <soap12:operation soapAction="http://tempuri.org/AddSimpleFormRecord" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSimpleFormReport">
+      <soap12:operation soapAction="http://tempuri.org/GetSimpleFormReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="RequestForgetPassword">
       <soap12:operation soapAction="http://tempuri.org/RequestForgetPassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePassword">
+      <soap12:operation soapAction="http://tempuri.org/CreatePassword" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -3434,6 +3852,15 @@
     </wsdl:operation>
     <wsdl:operation name="loginForEUMyAdvantech">
       <soap12:operation soapAction="http://tempuri.org/loginForEUMyAdvantech" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginForEZUser">
+      <soap12:operation soapAction="http://tempuri.org/LoginForEZUser" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -3909,8 +4336,26 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getCountryListForChinaSite">
+      <soap12:operation soapAction="http://tempuri.org/getCountryListForChinaSite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetCountryListInJson">
       <soap12:operation soapAction="http://tempuri.org/GetCountryListInJson" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountryListInJsonForChinaSite">
+      <soap12:operation soapAction="http://tempuri.org/GetCountryListInJsonForChinaSite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -3945,8 +4390,26 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getStateListByCountryForChinaSite">
+      <soap12:operation soapAction="http://tempuri.org/getStateListByCountryForChinaSite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetStateListByCountryInJson">
       <soap12:operation soapAction="http://tempuri.org/GetStateListByCountryInJson" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStateListByCountryInJsonForChinaSite">
+      <soap12:operation soapAction="http://tempuri.org/GetStateListByCountryInJsonForChinaSite" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -4026,6 +4489,24 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="IsExeternalWebApp">
+      <soap12:operation soapAction="http://tempuri.org/IsExeternalWebApp" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIP">
+      <soap12:operation soapAction="http://tempuri.org/GetIP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="isEmployeeForWebsites">
       <soap12:operation soapAction="http://tempuri.org/isEmployeeForWebsites" style="document" />
       <wsdl:input>
@@ -4062,49 +4543,13 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SendRegReminder">
-      <soap12:operation soapAction="http://tempuri.org/SendRegReminder" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMemberReportByRBU">
-      <soap12:operation soapAction="http://tempuri.org/GetMemberReportByRBU" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="AddSimpleFormRecord">
-      <soap12:operation soapAction="http://tempuri.org/AddSimpleFormRecord" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSimpleFormReport">
-      <soap12:operation soapAction="http://tempuri.org/GetSimpleFormReport" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="MembershipWebservice">
     <wsdl:port name="MembershipWebserviceSoap" binding="tns:MembershipWebserviceSoap">
-      <soap:address location="http://member.advantech.com/MembershipWebservice.asmx" />
+      <soap:address location="https://member.advantech.com/MembershipWebservice.asmx" />
     </wsdl:port>
     <wsdl:port name="MembershipWebserviceSoap12" binding="tns:MembershipWebserviceSoap12">
-      <soap12:address location="http://member.advantech.com/MembershipWebservice.asmx" />
+      <soap12:address location="https://member.advantech.com/MembershipWebservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

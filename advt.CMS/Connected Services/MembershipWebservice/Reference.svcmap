@@ -19,11 +19,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://member.advantech.com/MembershipWebservice.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://member.advantech.com/MembershipWebservice.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MembershipWebservice.wsdl" MetadataType="Wsdl" ID="3f99e45d-0b92-424d-bda8-5f684b1b1e09" SourceId="1" SourceUrl="http://member.advantech.com/MembershipWebservice.asmx?wsdl" />
-    <MetadataFile FileName="MembershipWebservice.disco" MetadataType="Disco" ID="bbc61124-0426-47c3-9b5c-dfe4422a66b4" SourceId="1" SourceUrl="http://member.advantech.com/MembershipWebservice.asmx?disco" />
+    <MetadataFile FileName="MembershipWebservice1.wsdl" MetadataType="Wsdl" ID="40f86f5c-98a6-4ee1-9365-9586569f4220" SourceId="1" SourceUrl="https://member.advantech.com/MembershipWebservice.asmx?wsdl" />
+    <MetadataFile FileName="MembershipWebservice1.disco" MetadataType="Disco" ID="19282640-a27a-4cb3-803c-bad5c31c588a" SourceId="1" SourceUrl="https://member.advantech.com/MembershipWebservice.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
