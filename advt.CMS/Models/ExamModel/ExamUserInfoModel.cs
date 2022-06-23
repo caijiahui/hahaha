@@ -183,10 +183,12 @@ namespace advt.CMS.Models.ExamModel
                     //YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName)).ToList();
                     var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
                     if (listinfo.Count() > 0 && listinfo != null)
-                    {
+                    { 
                         int i = 0;
                         foreach (var item in listinfo)
                         {
+                            
+                            
                             var dff = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { TypeName = item.TypeName, ApplyLevel = item.ApplicationLevel, UserCode = item.UserCode, UserName = item.UserName, SubjectName = item.SubjectName, RuleName = item.RuleName,  IsStop = false, IsExam = "false" });
                             if (dff.Count() == 0)
                             {

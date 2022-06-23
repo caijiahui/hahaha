@@ -64,6 +64,7 @@ namespace advt.Entity
         public string IsUserExam { get; set; }
         public bool ExamStatue { get; set; }
         public bool IsExamPass { get; set; }
+        public string WorkPlace { get; set; }
         #endregion
     }
 }
