@@ -38,7 +38,6 @@
             <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
             <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
             <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
-
             <el-table-column label="职称" prop="PostName" sortable></el-table-column>
             <el-table-column label="职等" prop="RankName" sortable></el-table-column>
             <el-table-column label="入职日期">
@@ -46,20 +45,20 @@
                     <span v-if="scope.row.EntryDate!=''&&scope.row.EntryDate!=null">{{changeDate(scope.row.EntryDate)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="组织职能性质" prop="OrganizingFunction" sortable></el-table-column>
+            @*<el-table-column label="组织职能性质" prop="OrganizingFunction" sortable></el-table-column>*@
             <el-table-column label="本职等技能" prop="CurrentLevel" sortable></el-table-column>
             <el-table-column label="目前技能等级" prop="ApplyLevel" sortable></el-table-column>
             <el-table-column label="最近一次考试时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.CurrectExamDate!=''&&scope.row.CurrectExamDate!=null">{{changeDate(scope.row.CurrectExamDate)}}</span>
+                    <span v-if="scope.row.UserExamDate!=''&&scope.row.UserExamDate!=null">{{changeallDate(scope.row.UserExamDate)}}</span>
                 </template>
             </el-table-column>
             <el-table-column label="最近一次理论成绩" prop="ExamScore" sortable></el-table-column>
-            <el-table-column label="最近一次实践成绩通过时间">
-                <template slot-scope="scope">
+            <!--<el-table-column label="最近一次实践成绩通过时间" prop="PracticeDate" sortable>-->
+                @*<template slot-scope="scope">
                     <span v-if="scope.row.PracticeDate!=''&&scope.row.PracticeDate!=null">{{changeDate(scope.row.PracticeDate)}}</span>
-                </template>
-            </el-table-column>
+                </template>*@
+            <!--</el-table-column>-->
 
         </el-table>
         <el-pagination @@size-change="handleSizeChange"
@@ -173,6 +172,23 @@
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
                 return year + '-' + mon + '-' + day;
+            },
+            changeallDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                
+                var NewDtime = Y + M + D + h + m + s;
+                console.log(NewDtime)
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return NewDtime;
             },
             SearchDetailInfo() {
                 var _this = this;

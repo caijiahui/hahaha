@@ -146,7 +146,7 @@ namespace advt.Data.SqlServer
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" select *  from ExamUserDetailInfo ");
             List<DbParameter> l_parms = new List<DbParameter>();
-            var texts = " where IsExam='true'  ";
+            var texts = " where IsExam='true' and IsStop=0 and ExamStatus='HrCheck' ";
             if (!string.IsNullOrEmpty(UserCode))
             {
                 texts += " and UserCode like N'%" + UserCode + "%' ";
