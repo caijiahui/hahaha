@@ -702,7 +702,7 @@ namespace advt.Web.Controllers
         {
             HrAuditModel models = new HrAuditModel();
             models.GetHrAuditUser(model);
-            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser,LExamType= models.LExamType });
+            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser,LExamType= models.LExamType,models.ListOrgName,models.ListWorkPlace });
         }
         [MyAuthorize]
         [HttpPost]
@@ -720,7 +720,7 @@ namespace advt.Web.Controllers
             HrAuditModel models = new HrAuditModel();
             var username = this.UserNameContext;
             models.StopHrAuditUser(model, username);
-            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser });
+            return Json(new { ListHrAuditUser = models.ListHrAuditUser, ListHrAuditSuccessUser = models.ListHrAuditSuccessUser,models.ListProcessUser });
         }
         //上传考试资格
         public JsonResult Upload_Qualification(HttpPostedFileBase file)
@@ -1225,6 +1225,22 @@ namespace advt.Web.Controllers
             SupervisorAuditModel model = new SupervisorAuditModel();
             model.GetSignSubject(usercode);
             return Json(new { LExamSubject = model.LExamSubject });
+        }
+        [MyAuthorize]
+        public ActionResult GetProcessUser(SearchHrData data)
+        {
+            HrAuditModel models = new HrAuditModel();
+            models.GetProcessUser(data);
+            return Json(new { models.ListProcessUser });
+        }
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult StopProUser(string model, SearchHrData data)
+        {
+            HrAuditModel models = new HrAuditModel();
+            var username = this.UserNameContext;
+            models.StopProUser(model, username, data);
+            return Json(new { models.ListProcessUser });
         }
     }
 }

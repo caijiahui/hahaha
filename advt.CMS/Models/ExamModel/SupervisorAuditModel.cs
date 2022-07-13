@@ -143,6 +143,7 @@ namespace advt.CMS.Models.ExamModel
                     var item = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { ID = items.ID });
                     item.ExamStatus = "Signup";
                     var examRule = Data.ExamRule.Get_ExamRule(new { RuleName = item.RuleName });
+                    var Pract = new PracticeInfo();
                     if (examRule != null)
                     {
                         if (examRule.PassPracticeScore != 0)
@@ -156,7 +157,7 @@ namespace advt.CMS.Models.ExamModel
                             {
                                 ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { SkillName = item.ApplyLevel, TypeName = item.TypeName, UserCode = item.UserCode });
                             }
-                            var Pract = new PracticeInfo();
+                            
                             if (ListPract.Count() > 0)
                             {
                                 Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
@@ -190,6 +191,7 @@ namespace advt.CMS.Models.ExamModel
                         item.DirectorCreateDate = DateTime.Now;
                         item.DirectorCreateUser = username;
                         item.RuleName = item.RuleName;
+                        item.PracticeScore = Pract.PracticeScore;
                         Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(item, null, new string[] { "ID" });
                     }
                     
