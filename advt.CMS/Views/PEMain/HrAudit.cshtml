@@ -16,7 +16,7 @@
         </el-breadcrumb>
 
     </template>
-<div>
+    <div>
 
         <template>
 
@@ -25,6 +25,8 @@
             <el-tab-pane label="Hr审核" name="first">
             </el-tab-pane>
             <el-tab-pane label="Hr审核通过人员" name="Two">
+            </el-tab-pane>
+            <el-tab-pane label="考试进度" name="three">
             </el-tab-pane>
         </el-tabs>
 
@@ -73,7 +75,7 @@
                     </el-table-column>
                 </el-table>
             </template>
-            
+
         </div>
         <div v-show="activeName=='Two'">
             <div style="margin-bottom:20px; float:left;">
@@ -116,7 +118,7 @@
                     </div>
                 </template>
             </div>
-            
+
             <div style="margin-top:20px;clear:both">
                 <template>
                     <el-input placeholder="搜查考试类型" v-model="VSCheckData.TypeName" style="width:200px">
@@ -208,7 +210,87 @@
             </div>
 
         </div>
+    </div>
+        <div v-show="activeName=='three'">
+            <template>
+                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域"  style="width:200px;margin-top:10px">
+                    <el-option v-for="item in ListWorkPlace" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-select v-model="VProData.OrgName" placeholder="请选择部门"  style="width:200px;margin-top:10px">
+                    <el-option v-for="item in ListOrgName" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-input placeholder="部门代码" v-model="VProData.DepartCode" style="width:200px">
+                </el-input>
+                <el-input placeholder="工号" v-model="VProData.UserCode" style="width:200px">
+                </el-input>
+                <el-input placeholder="岗位" v-model="VProData.PostID" style="width:200px;margin-top:10px">
+                </el-input>
+                <el-date-picker v-model="VProData.ExamDate"
+                                type="month"
+                                placeholder="选择月"  style="width:200px;margin-top:10px">
+                </el-date-picker>
+                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型"  style="width:200px;margin-top:10px">
+                    <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                </el-select>
+                <el-select v-model="VProData.ExamProcess" clearable placeholder="考试进度" style="width:200px;margin-top:10px">
+                    <el-option label="--请选择--" value=""></el-option>
+                    <el-option label="待主管处理" value="待主管处理"></el-option>
+                    <el-option label="待HR审核" value="待HR审核"></el-option>
+                    <el-option label="待考试" value="待考试"></el-option>
+                    <el-option label="考试完成" value="考试完成"></el-option>
+                </el-select>
+                <el-button slot="append" @@click="SearchProdata" v-loading.fullscreen.lock="fullscreenLoading">Search</el-button>
+                <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
+                          :data="ListProcessUser">
+                    <el-table-column type="index"
+                                     width="50">
+                    </el-table-column>
+                    <el-table-column label="考试类型"
+                                     prop="TypeName" sortable>
+                    </el-table-column>
+                    <el-table-column label="区域"
+                                     prop="WrokPlace" sortable>
+                    </el-table-column>
+                    <el-table-column label="部门"
+                                     prop="OrgName" sortable>
+                    </el-table-column>
+                    <el-table-column label="部门代码"
+                                     prop="DepartCode" sortable>
+                    </el-table-column>
+                    <el-table-column label="工号"
+                                     prop="UserCode" sortable>
+                    </el-table-column>
+                    <el-table-column label="姓名"
+                                     prop="UserName" sortable>
+                    </el-table-column>
+                    <el-table-column label="岗位"
+                                     prop="PostID" sortable>
+                    </el-table-column>
+                    <el-table-column label="考试进度"
+                                     prop="ExamProcess" sortable>
+                    </el-table-column>
+                    <el-table-column label="考试科目"
+                                     prop="SubjectName" sortable>
+                    </el-table-column>
+                    <el-table-column label="Hr确认时间"
+                                     prop="HrCheckDate" sortable>
+                    </el-table-column>
+                    <el-table-column label="考试日期"
+                                     prop="ExamDate" sortable>
+                    </el-table-column>
+                    <el-table-column fixed="right"
+                                     label="操作"
+                                     width="50">
 
+                        <template slot-scope="scope">
+
+                            <el-button size="mini"
+                                       @@click="handleProStop(scope.row.ID)">取消</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
 
 
         <!-- #region 批量更新 -->
@@ -219,8 +301,7 @@
                 </el-form-item>
                 <el-form-item label="考试日期" :label-width="formLabelWidth">
                     <el-date-picker v-model="VAuditCheck.ValidityDate" type="datetime"
-            format="yyyy-MM-dd hh:mm"
-            value-format="yyyy-MM-dd hh:mm"  placeholder="选择日" @@change="dataSearch" ></el-date-picker>
+                                     placeholder="选择日" @@change="dataSearch"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="考试地点" :label-width="formLabelWidth">
                     <el-input v-model="VAuditCheck.ExamPlace" autocomplete="off"></el-input>
@@ -388,273 +469,312 @@
         </el-dialog>
         <!-- #endregion -->
     </div>
-<script src="~/Scripts/Vue/Vue.js"></script>
-<script src="~/Scripts/Vue/axios.js"></script>
-<script src="~/Scripts/elementUI/lib/index.js"></script>
-<script src="~/Scripts/Vue/polyfill.min.js"></script>
-<script type="text/javascript">
-    new Vue({
-        el: '#app',
-        data: {
-            dialogFormVisible: false,
-            dialogFormPractical: false,
-            dialogUpdateVisible: false,
-            dialogSearchVisible: false,
-            form: [],
-            ListHrAuditUser:[],//需要Hr审核的人
-            ListHrAuditSuccessUser:[],//Hr审核通过的人
-            LPracticeInfo: [],//实践
-            TypeName: '',
-            LExamType:[],
-            LExamUserDetailInfo: [],
-            VSCheckData: {},
-            VAuditCheck: {},
-            formLabelWidth: '120px',
-            search: '',
-            VPracticeInfo: {},
-            checkBoxData: [],
-            activeName: 'first',
-            paginations: {
-                page_index: 1,
-                total: 0,
-                page_size: 5,
-                page_sizes: [5, 10, 15, 20],
-                layout: 'total, sizes, prev, pager, next, jumper'
-            }
-          
-        },
-        mounted: function () {
-            this.getdata();
-        },
-        created() {
-            this.initData({});
-        },
-        methods: {
-            changeFun(val) {
-                var _this = this;
-                _this.checkBoxData = val;
-            },
-            dataSearch() {
-                this.getListByDataTime();
-            },
-            SearchCheckdata() {
-                var _this = this;
-                axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.VSCheckData
-                }).then(function (res) {
-                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                    _this.setPaginations();
-                });
-            },
-
-            //批量更新操作
-            handleUpdate() {
-                var _this = this;
-                _this.dialogUpdateVisible = true;
-                _this.VAuditCheck.Users = '';
-                //_this.VAuditCheck.IsExam = true;
-                _this.checkBoxData.forEach(function (item) {
-                    var c = item['UserName'];
-                    if (c != '' && c != 'undefined') {
-                        _this.VAuditCheck.Users += c + "和";
-                    }
-
-                })
-            },
-            handleclose() {
-                var _this = this;
-                _this.dialogUpdateVisible = false;
-            },
-            handleSave() {
-                var _this = this;
-                _this.checkBoxData.forEach(function (item) {
-                    //item['IsExam'] = _this.VAuditCheck.IsExam;
-                    item['ExamDate'] = _this.VAuditCheck.ValidityDate;
-                    item['ExamStatus'] = 'HrCheck';
-                    item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
-                })
-                axios.post('/PEMain/UpdateHrAduitUser', {
-                    model: _this.checkBoxData
-                }).then(function (res) {
-                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                    _this.dialogUpdateVisible = false;
-
-                });
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                dialogFormVisible: false,
+                dialogFormPractical: false,
+                dialogUpdateVisible: false,
+                dialogSearchVisible: false,
+                fullscreenLoading: false,
+                form: [],
+                ListHrAuditUser: [],//需要Hr审核的人
+                ListHrAuditSuccessUser: [],//Hr审核通过的人
+                LPracticeInfo: [],//实践
+                TypeName: '',
+                LExamType: [],
+                LExamUserDetailInfo: [],
+                VSCheckData: {},
+                VProData: {},
+                VAuditCheck: {},
+                formLabelWidth: '120px',
+                search: '',
+                VPracticeInfo: {},
+                checkBoxData: [],
+                ListProcessUser: [],
+                ListOrgName: [],
+                ListWorkPlace:[],
+                activeName: 'first',
+                paginations: {
+                    page_index: 1,
+                    total: 0,
+                    page_size: 5,
+                    page_sizes: [5, 10, 15, 20],
+                    layout: 'total, sizes, prev, pager, next, jumper'
+                }
 
             },
-            handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
-                this.$alert(Result.Result, '结果', {
-                    dangerouslyUseHTMLString: true
-                });
-                var _this = this;
-                _this.ListHrAuditUser = Result.ListHrAuditUser;
-                _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
+            mounted: function () {
+                this.getdata();
             },
-            uploadPracticeSuccess(Result) {
-                this.$alert(Result.Result, '结果', {
-                    dangerouslyUseHTMLString: true
-                });
-                var _this = this;
-                _this.ListHrAuditUser = Result.ListHrAuditUser;
-                _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
+            created() {
+                this.initData({});
             },
-            setPaginations() {
-                var _this = this;
-                _this.paginations.total = _this.ListHrAuditSuccessUser.length; //数据的数量
-                _this.paginations.page_index = 1; //默认显示第一页
-                _this.paginations.page_size = 5; //每页显示多少数据
-                //显示数据
-                _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
-                    return index < _this.paginations.page_size;
-                })
-            },
-            handleSizeChange(page_size) {
-                var _this = this;
-                _this.paginations.page_index = 1; //第一页
-                _this.paginations.page_size = page_size; //每页先显示多少数据
-                _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
-                    return index < page_size
-                })
-            },
-            handleCurrentChange(page) {
-                var _this = this;
-                axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.VSCheckData
-                }).then(function (res) {
-                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-
-                    let index = _this.paginations.page_size * (page - 1);
-                    //获取总数
-
-                    let allData = _this.paginations.page_size * page;
-                    let tablist = [];
-                    for (let i = index; i < allData; i++) {
-                        console.log(_this.ListHrAuditSuccessUser[i], 333)
-                        if (_this.ListHrAuditSuccessUser[i]) {
-
-                            tablist.push(_this.ListHrAuditSuccessUser[i]);
-                        }
-                    }
-                    _this.ListHrAuditSuccessUser = tablist;
-
-                });
-
-            },
-            //取消
-            handleStop(ID) {
-                var _this = this;
-                _this.$confirm('此操作将取消人员考试资格,请确认是否执行', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    axios.post('/PEMain/StopHrAuditUser', {
-                        model: ID
+            methods: {
+                changeFun(val) {
+                    var _this = this;
+                    _this.checkBoxData = val;
+                },
+                dataSearch() {
+                    this.getListByDataTime();
+                },
+                SearchCheckdata() {
+                    var _this = this;
+                    axios.post('/PEMain/GetHrAuditUser', {
+                        model: _this.VSCheckData
                     }).then(function (res) {
                         _this.ListHrAuditUser = res.data.ListHrAuditUser;
                         _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                        _this.LSignedupUser = res.data.LSignedupUser;
+                        _this.setPaginations();
+                    })
+                },
+                SearchProdata() {
+                    var _this = this;
+                    _this.fullscreenLoading = true;
+                    axios.post('/PEMain/GetProcessUser', {
+                        data: _this.VProData
+                    }).then(function (res) {
+                        _this.ListProcessUser = res.data.ListProcessUser;
+                        _this.fullscreenLoading = false;
                     });
-                }).catch(() => {
-                    _this.$message({
-                        type: 'info',
-                        message: '已取消操作'
+                    
+                },
+                //取消
+                handleProStop(ID) {
+                    var _this = this;
+                    _this.$confirm('此操作将取消人员考试资格,请确认是否执行', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                      
+                        axios.post('/PEMain/StopProUser', {
+                            model: ID,
+                            data: _this.VProData
+                        }).then(function (res) {
+                            _this.ListProcessUser = res.data.ListProcessUser;
+                        });
+                    }).catch(() => {
+                        _this.$message({
+                            type: 'info',
+                            message: '已取消操作'
+                        });
                     });
-                });
-                
-            },
-            //查看实践
-            handlePractical(usercode, username) {
-                var _this = this;
-                axios.post('/PEMain/SearchPracticeUserDetail', {
-                    model: usercode
-                }).then(function (res) {
-                    _this.LPracticeInfo = res.data.LPracticeInfo;
-                });
-                _this.dialogFormPractical = true;
-            },
-            //查询明细
-            handleSearchDetail(usercode) {
-                var _this = this;
-                axios.post('/PEMain/SearchPracticeUserDetail', {
-                    model: usercode
-                }).then(function (res) {
-                    _this.LExamUserDetailInfo = res.data.LExamUserDetailInfo;
-                    console.log(_this.LExamUserDetailInfo, 5555);
+                  
+                },
+                //批量更新操作
+                handleUpdate() {
+                    var _this = this;
+                    _this.dialogUpdateVisible = true;
+                    _this.VAuditCheck.Users = '';
+                    //_this.VAuditCheck.IsExam = true;
+                    _this.checkBoxData.forEach(function (item) {
+                        var c = item['UserName'];
+                        if (c != '' && c != 'undefined') {
+                            _this.VAuditCheck.Users += c + "和";
+                        }
 
-                });
-                _this.dialogSearchVisible = true;
-            },
-            SearchinByTypeName() {
-                var _this = this;
-                axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.VSCheckData
-                }).then(function (res) {
-                    _this.ListHrAuditUser = res.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                });
-                _this.dialogFormVisible = false
-            },
-            async initData(data) {
-                //获取当前时间
-                var now = new Date();
-                var monthn = now.getMonth() + 1;
-                var yearn = now.getFullYear();
-                var dayn = now.getDate();
-                var h = now.getHours();
-                var m = now.getMinutes();
-                var s = now.getSeconds();
-                this.selectDatetime = yearn + "-" + monthn + "-" + dayn + " " + h + ":" + m + ":" + s;
+                    })
+                },
+                handleclose() {
+                    var _this = this;
+                    _this.dialogUpdateVisible = false;
+                },
+                handleSave() {
+                    var _this = this;
+                    _this.checkBoxData.forEach(function (item) {
+                        //item['IsExam'] = _this.VAuditCheck.IsExam;
+                        item['ExamDate'] = _this.VAuditCheck.ValidityDate;
+                        item['ExamStatus'] = 'HrCheck';
+                        item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
+                    })
+                    axios.post('/PEMain/UpdateHrAduitUser', {
+                        model: _this.checkBoxData
+                    }).then(function (res) {
+                        _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                        _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                        _this.dialogUpdateVisible = false;
 
-                this.selectUser = parseInt(sessionStorage.getItem("userid"));
-                this.getListByDataTime();
-            },
-            async getListByDataTime(data) {
+                    });
 
-            },
+                },
+                handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
+                    this.$alert(Result.Result, '结果', {
+                        dangerouslyUseHTMLString: true
+                    });
+                    var _this = this;
+                    _this.ListHrAuditUser = Result.ListHrAuditUser;
+                    _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
+                },
+                uploadPracticeSuccess(Result) {
+                    this.$alert(Result.Result, '结果', {
+                        dangerouslyUseHTMLString: true
+                    });
+                    var _this = this;
+                    _this.ListHrAuditUser = Result.ListHrAuditUser;
+                    _this.ListHrAuditSuccessUser = Result.ListHrAuditSuccessUser;
+                },
+                setPaginations() {
+                    var _this = this;
+                    _this.paginations.total = _this.ListHrAuditSuccessUser.length; //数据的数量
+                    _this.paginations.page_index = 1; //默认显示第一页
+                    _this.paginations.page_size = 5; //每页显示多少数据
+                    //显示数据
+                    _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
+                        return index < _this.paginations.page_size;
+                    })
+                },
+                handleSizeChange(page_size) {
+                    var _this = this;
+                    _this.paginations.page_index = 1; //第一页
+                    _this.paginations.page_size = page_size; //每页先显示多少数据
+                    _this.ListHrAuditSuccessUser = _this.ListHrAuditSuccessUser.filter((item, index) => {
+                        return index < page_size
+                    })
+                },
+                handleCurrentChange(page) {
+                    var _this = this;
+                    axios.post('/PEMain/GetHrAuditUser', {
+                        model: _this.VSCheckData
+                    }).then(function (res) {
+                        _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
 
-            changeDate: function (dates) {
-                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
-                Y = date.getFullYear() + '-';
-                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
-                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
-                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
-                var NewDtime = Y + M + D + h + m + s;
-                var listDate = new Date(date);
-                var year = listDate.getFullYear();
-                var mon = listDate.getMonth() + 1;
-                var day = listDate.getDate();
-                //console.log(new Date(date).getFullYear())
-                return year + '-' + mon + '-' + day;
-            },
-            ChangeAch: function (ach) {
-                if (ach == false) {
-                    return "否";
+                        let index = _this.paginations.page_size * (page - 1);
+                        //获取总数
+
+                        let allData = _this.paginations.page_size * page;
+                        let tablist = [];
+                        for (let i = index; i < allData; i++) {
+                            if (_this.ListHrAuditSuccessUser[i]) {
+
+                                tablist.push(_this.ListHrAuditSuccessUser[i]);
+                            }
+                        }
+                        _this.ListHrAuditSuccessUser = tablist;
+
+                    });
+
+                },
+                //取消
+                handleStop(ID) {
+                    var _this = this;
+                    _this.$confirm('此操作将取消人员考试资格,请确认是否执行', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.post('/PEMain/StopHrAuditUser', {
+                            model: ID
+                        }).then(function (res) {
+                            _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                            _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                            _this.LSignedupUser = res.data.LSignedupUser;
+                        });
+                    }).catch(() => {
+                        _this.$message({
+                            type: 'info',
+                            message: '已取消操作'
+                        });
+                    });
+
+                },
+                //查看实践
+                handlePractical(usercode, username) {
+                    var _this = this;
+                    axios.post('/PEMain/SearchPracticeUserDetail', {
+                        model: usercode
+                    }).then(function (res) {
+                        _this.LPracticeInfo = res.data.LPracticeInfo;
+                    });
+                    _this.dialogFormPractical = true;
+                },
+                //查询明细
+                handleSearchDetail(usercode) {
+                    var _this = this;
+                    axios.post('/PEMain/SearchPracticeUserDetail', {
+                        model: usercode
+                    }).then(function (res) {
+                        _this.LExamUserDetailInfo = res.data.LExamUserDetailInfo;
+                        console.log(_this.LExamUserDetailInfo, 5555);
+
+                    });
+                    _this.dialogSearchVisible = true;
+                },
+                SearchinByTypeName() {
+                    var _this = this;
+                    axios.post('/PEMain/GetHrAuditUser', {
+                        model: _this.VSCheckData
+                    }).then(function (res) {
+                        _this.ListHrAuditUser = res.data.ListHrAuditUser;
+                        _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                    });
+                    _this.dialogFormVisible = false
+                },
+                async initData(data) {
+                    //获取当前时间
+                    var now = new Date();
+                    var monthn = now.getMonth() + 1;
+                    var yearn = now.getFullYear();
+                    var dayn = now.getDate();
+                    var h = now.getHours();
+                    var m = now.getMinutes();
+                    var s = now.getSeconds();
+                    this.selectDatetime = yearn + "-" + monthn + "-" + dayn + " " + h + ":" + m + ":" + s;
+
+                    this.selectUser = parseInt(sessionStorage.getItem("userid"));
+                    this.getListByDataTime();
+                },
+                async getListByDataTime(data) {
+
+                },
+
+                changeDate: function (dates) {
+                    var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                    Y = date.getFullYear() + '-';
+                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                    h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                    m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                    s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                    var NewDtime = Y + M + D + h + m + s;
+                    var listDate = new Date(date);
+                    var year = listDate.getFullYear();
+                    var mon = listDate.getMonth() + 1;
+                    var day = listDate.getDate();
+                    //console.log(new Date(date).getFullYear())
+                    return year + '-' + mon + '-' + day;
+                },
+                ChangeAch: function (ach) {
+                    if (ach == false) {
+                        return "否";
+                    }
+                    else if (ach == true) {
+                        return "是";
+                    }
+                },
+                getdata: function () {
+                    var _this = this;
+                   
+                    axios.post('/PEMain/GetHrAuditUser', {
+                        model: _this.SearchCheckdata
+                    }).then(function (responese) {
+                        _this.ListHrAuditUser = responese.data.ListHrAuditUser;
+                        _this.ListHrAuditSuccessUser = responese.data.ListHrAuditSuccessUser;
+                        _this.LExamType = responese.data.LExamType;
+                        _this.ListOrgName = responese.data.ListOrgName;
+                        _this.ListWorkPlace = responese.data.ListWorkPlace;
+                        _this.setPaginations();
+                    })
                 }
-                else if (ach == true) {
-                    return "是";
-                }
-            },
-            getdata: function () {
-                var _this = this;
-                console.log(_this.SearchCheckdata,11);
-                axios.post('/PEMain/GetHrAuditUser', {
-                    model: _this.SearchCheckdata
-                }).then(function (responese) {
-                    _this.ListHrAuditUser = responese.data.ListHrAuditUser;
-                    _this.ListHrAuditSuccessUser = responese.data.ListHrAuditSuccessUser;
-                    _this.LExamType = responese.data.LExamType;
-                    _this.setPaginations();
-                })
             }
-        }
 
-    })
+        })
 
 
-</script>
+    </script>
 

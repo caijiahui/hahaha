@@ -49,9 +49,9 @@ namespace advt.Entity
         public string StopUser { get; set; } //停止人员
         public DateTime? StopDate { get; set; } //停止时间
 
-        public bool EStatus { get; set; } //是否考试通过
+        public bool EStatus { get; set; } //电子端考试通过后变为true
 
-        public bool IsEnable { get; set; }//是否有效
+        public bool IsEnable { get; set; }//电子岗位点击删除后变为true
         public string LocalGrade { get; set; }//等级：初级、高级
         public string WorkState { get; set; }//转正、试用
         #endregion
