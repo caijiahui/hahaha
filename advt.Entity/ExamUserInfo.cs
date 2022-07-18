@@ -53,6 +53,7 @@ namespace advt.Entity
 
         public bool IsEnable { get; set; }//是否有效
         public string LocalGrade { get; set; }//等级：初级、高级
+        public string WorkState { get; set; }//转正、试用
         #endregion
     }
 }

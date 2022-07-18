@@ -13,7 +13,7 @@ namespace advt.Data.SqlServer
         #region ExamPointScore , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] ExamPointScore_key_a = { "ID" };
-        private string ExamPointScore_item_str = "[ID],UserCode,UserName,PointScore,Year,Month";
+        private string ExamPointScore_item_str = "[ID],UserCode,UserName,PointScore,Year,Month,CreateUser,CreateDate,UpdateUser,UpdateDate";
         private string[][] ExamPointScore_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -21,7 +21,11 @@ namespace advt.Data.SqlServer
             new string[] { "UserName", "NVarChar", "50"},
             new string[] { "PointScore", "NVarChar", "50"},
             new string[] { "Year", "NVarChar", "50"},
-            new string[] { "Month", "NVarChar", "50"}
+            new string[] { "Month", "NVarChar", "50"},
+            new string[] { "CreateUser", "NVarChar", "50"},
+            new string[] { "CreateDate", "DateTime", "16"},
+            new string[] { "UpdateUser", "NVarChar", "50"},
+            new string[] { "UpdateDate", "DateTime", "16"}
 
         };
         #endregion

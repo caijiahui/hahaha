@@ -558,7 +558,7 @@ namespace advt.Web.Controllers
             models.GetUserInfo(data);
             var startdate = DateTime.Now.AddMonths(-6).ToShortDateString();
             var enddate = DateTime.Now.AddDays(1).ToShortDateString();
-            var result=models.GetChassisAchieveUser(startdate, enddate);
+            var result=models.GetChassisAchieveUser(startdate, enddate, username);
             models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
