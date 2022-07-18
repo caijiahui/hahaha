@@ -77,16 +77,18 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 
-        public int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName, string PostType, string PostCycle)
+        public int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName, string PostType, string PostCycle, string ExamEntry, bool IsWorkState)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" Update [RegionalPost] set RuleName=@RuleName,RuleTwoName=@RuleTwoName,PostType=@PostType,PostCycle=@PostCycle where PostName=@PostName");
+            commandText.AppendLine(" Update [RegionalPost] set RuleName=@RuleName,RuleTwoName=@RuleTwoName,PostType=@PostType,PostCycle=@PostCycle,ExamEntry=@ExamEntry,IsWorkState=@IsWorkState where PostName=@PostName");
             List<DbParameter> l_parms = new List<DbParameter>();
             l_parms.Add(SqlHelper.MakeInParam("@RuleName", (DbType)SqlDbType.NVarChar, 150, RuleName));
             l_parms.Add(SqlHelper.MakeInParam("@PostName", (DbType)SqlDbType.NVarChar, 150, PostName));
             l_parms.Add(SqlHelper.MakeInParam("@RuleTwoName", (DbType)SqlDbType.NVarChar, 150, RuleTwoName));
             l_parms.Add(SqlHelper.MakeInParam("@PostType", (DbType)SqlDbType.NVarChar, 150, PostType));
             l_parms.Add(SqlHelper.MakeInParam("@PostCycle", (DbType)SqlDbType.NVarChar, 150, PostCycle));
+            l_parms.Add(SqlHelper.MakeInParam("@ExamEntry", (DbType)SqlDbType.NVarChar, 150, ExamEntry));
+            l_parms.Add(SqlHelper.MakeInParam("@IsWorkState", (DbType)SqlDbType.Bit, 1, IsWorkState));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
 

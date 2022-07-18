@@ -98,6 +98,12 @@
                         <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="入职考试周期" :label-width="formLabelWidth">
+                    <el-input v-model="VregionalPost.ExamEntry" autocomplete="off" style="width:240px"></el-input>
+                </el-form-item>
+                <el-form-item label="是否依据转正" prop="IsWorkState">
+                    <el-switch v-model="VregionalPost.IsWorkState"></el-switch>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
@@ -135,7 +141,8 @@
             PostType: '',
             PostCycle: '',
             ExamType: '',
-            RuleTwoName:'',
+            RuleTwoName: '',
+            ExamEntry:'',
             ListExamRule: [],
             ListExamRuleTwo: [],
             ListExamType: [],
@@ -266,6 +273,8 @@
                 _this.VregionalPost.PostType = row.PostType;
                 _this.VregionalPost.PostCycle = row.PostCycle;
                 _this.VregionalPost.ExamType = row.ExamType;
+                _this.VregionalPost.ExamEntry = row.ExamEntry;
+                _this.VregionalPost.IsWorkState = row.IsWorkState;
                 _this.VregionalPost.ID = index;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
