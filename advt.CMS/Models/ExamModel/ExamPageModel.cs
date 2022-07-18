@@ -550,7 +550,7 @@ namespace advt.CMS.Models
                                     detail.IsExamPass = true;
                                     if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
                                     {
-                                        UpdateElectronicUser(model.VExamUserInfo.UserName,model.VExamUserInfo.ExamSubject);
+                                        UpdateElectronicUser(model.VExamUserInfo.UserName, model.VExamUserInfo.ExamSubject);
                                     }
                                 }
                                 else
@@ -574,9 +574,9 @@ namespace advt.CMS.Models
         }
 
         //电子端考试成功之后update ElectronicUser 状态
-        public void UpdateElectronicUser( string usercode,string ExamSubject)
+        public void UpdateElectronicUser(string usercode, string ExamSubject)
         {
-            var exam = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode,SubjectName= ExamSubject,IsEnable=0, EStatus=0 });
+            var exam = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode, SubjectName = ExamSubject, IsEnable = 0 });
             if (exam != null)
             {
                 exam.EStatus = true;

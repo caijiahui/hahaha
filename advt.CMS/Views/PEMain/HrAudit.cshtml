@@ -242,7 +242,9 @@
                 <el-button slot="append" @@click="SearchProdata" v-loading.fullscreen.lock="fullscreenLoading">Search</el-button>
                 <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
                           :data="ListProcessUser">
-
+                    <el-table-column type="index"
+                                     width="50">
+                    </el-table-column>
                     <el-table-column label="考试类型"
                                      prop="TypeName" sortable>
                     </el-table-column>
@@ -270,6 +272,9 @@
                     <el-table-column label="考试科目"
                                      prop="SubjectName" sortable>
                     </el-table-column>
+                    <el-table-column label="Hr确认时间"
+                                     prop="HrCheckDate" sortable>
+                    </el-table-column>
                     <el-table-column label="考试日期"
                                      prop="ExamDate" sortable>
                     </el-table-column>
@@ -280,7 +285,7 @@
                         <template slot-scope="scope">
 
                             <el-button size="mini"
-                    @@click="handleProStop(scope.row.ID)">取消</el-button>
+                                       @@click="handleProStop(scope.row.ID)">取消</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

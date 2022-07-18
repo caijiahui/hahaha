@@ -64,8 +64,8 @@ namespace advt.CMS.Models.ExamModel
                     y.TypeName));
                 LExamType.AddRange(ex);
                 var user = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
-                ListWorkPlace = user.GroupBy(x => x.WorkPlace).Select(y=>y.Key).ToList();
-                ListOrgName = user.GroupBy(x => x.OrgName).Select(y => y.Key).ToList();
+                ListWorkPlace = user.GroupBy(x => x.WorkPlace).Select(y=>y.Key).Distinct().ToList();
+                ListOrgName = user.GroupBy(x => x.OrgName).Select(y => y.Key).Distinct().ToList();
                 //foreach (var item in Data.ExamType.Get_All_ExamType())
                 //{
                 //    LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));
@@ -394,10 +394,6 @@ namespace advt.CMS.Models.ExamModel
                 var mm = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop = false });
                 model = mm.Where(x =>  x.IsExam == "true").ToList();
             }
-            if (string.IsNullOrEmpty(data.ExamProcess))
-            {
-
-            }
             ListProcessUser = model.Select(y => new SearchHrData
             {
                 TypeName = y.TypeName,
@@ -409,7 +405,8 @@ namespace advt.CMS.Models.ExamModel
                 SubjectName = y.SubjectName,
                 UserName= y.UserName,
                 PostID=y.PostID,
-                ID= y.ID,
+                HrCheckDate = y.HrCheckCreateDate.ToString(),
+                ID = y.ID,
                 OrgName=y.OrgName
             }).OrderByDescending(t=>t.ExamDate).ToList();
         }
@@ -443,6 +440,7 @@ namespace advt.CMS.Models.ExamModel
         public string OrgName { get; set; }//部门
         public string ExamDate { get; set; }//考试时间
         public string UserName { get; set; }
+        public string HrCheckDate { get; set; }
         public int ID { get; set; }
     }
 
