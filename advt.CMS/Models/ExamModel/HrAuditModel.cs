@@ -326,7 +326,18 @@ namespace advt.CMS.Models.ExamModel
                         item.CreateUser = username;
                         item.ValidityDate = DateTime.Now;
                         Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
-                    } 
+                    }
+                    //关键岗位的更新绩效为空
+                    var examinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = item.UserCode, TypeName = "关键岗位技能等级" });
+                    if (examinfo != null)
+                    {
+                        foreach (var itemuser in examinfo)
+                        {
+                            itemuser.Achievement = null;
+                            Data.ExamUserInfo.Update_ExamUserInfo(itemuser, null, new string[] { "ID" });
+                        }
+                        
+                    }
                 }
                 GetHrAuditUser();
                 Result = "成功插入";
