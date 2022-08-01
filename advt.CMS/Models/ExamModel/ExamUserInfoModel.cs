@@ -539,16 +539,23 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
-        public string GetChassisAchieveUser(string startdate, string endate)
+        public string GetChassisAchieveUser(string startdate, string endate,string username)
         {
             var result = string.Empty;
             ListAchieveRecord = Data.AchieveRecord.Get_All_Record(startdate,endate);
-            var userlist = string.Join(",", ListAchieveRecord.Select(x => x.UserCode));
-            SyncQuantityPoint(startdate, endate, userlist);
-            result = "同步完成";
+            if (ListAchieveRecord != null && ListAchieveRecord.Count() > 0)
+            {
+                var userlist = string.Join(",", ListAchieveRecord.Select(x => x.UserCode));
+                SyncQuantityPoint(startdate, endate, userlist, username);
+                result = "同步完成";
+            }
+            else
+            {
+                result = "没有数据";
+            }
             return result;
         }
-        public string SyncQuantityPoint(string startdate, string endate, string userlist)
+        public string SyncQuantityPoint(string startdate, string endate, string userlist,string username)
         {
             var result = string.Empty;
 
@@ -584,12 +591,16 @@ namespace advt.CMS.Models.ExamModel
                             score.Year = YEAR[i].InnerText;
                             score.Month = MONTH[i].InnerText;
                             score.PointScore = POINT_SCORE[i].InnerText;
+                            score.CreateUser = username;
+                            score.CreateDate = DateTime.Now;
                             Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
                         }
                         else
                         {
                             var existscore = Scoreinfo.FirstOrDefault();
                             existscore.PointScore= POINT_SCORE[i].InnerText;
+                            existscore.UpdateUser = username;
+                            existscore.UpdateDate = DateTime.Now;
                             Data.ExamPointScore.Update_ExamPointScore(existscore, null, new string[] { "ID" });
                         }
                         result = "同步完成";

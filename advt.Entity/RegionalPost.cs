@@ -20,5 +20,7 @@ namespace advt.Entity
         public string  CreateUser { get; set; }
         public string PostType { get; set; }//Chassis岗位类型：一般岗、技术岗
         public string PostCycle { get; set; }//Chassis岗位周期
+        public bool IsWorkState { get; set; }//是否依据转正
+        public string ExamEntry { get; set; }//入职多长时间可以考试
     }
 }

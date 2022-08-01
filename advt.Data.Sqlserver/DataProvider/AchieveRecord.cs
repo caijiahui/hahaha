@@ -77,7 +77,7 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_Record(string startdate, string endate)
         {
             StringBuilder commandText = new StringBuilder();           
-            commandText.AppendLine("select * from ExamUserInfo  b inner join (select * from AchieveRecord where CreateDate >= '"+startdate+ "' and CreateDate < '" + endate + "') a on a.UserCode = b.UserCode and a.Achievement = N'符合'and b.TypeName = N'Chassis技能等级考试'");
+            commandText.AppendLine("select * from ExamUserInfo  b inner join (select * from AchieveRecord where CreateDate >= '"+startdate+ "' and CreateDate < '" + endate + "') a on a.UserCode = b.UserCode and a.Achievement = N'符合'");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         #endregion

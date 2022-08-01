@@ -65,7 +65,7 @@ namespace advt.CMS.Models.ExamModel
             {
                 if (!string.IsNullOrEmpty(VregionalPost.PostName))
                 {
-                    Data.RegionalPost.Update_RegionalPostInfo(VregionalPost.PostName, VregionalPost.RuleName, VregionalPost.RuleTwoName,VregionalPost.PostType,VregionalPost.PostCycle);
+                    Data.RegionalPost.Update_RegionalPostInfo(VregionalPost.PostName, VregionalPost.RuleName, VregionalPost.RuleTwoName,VregionalPost.PostType,VregionalPost.PostCycle,VregionalPost.ExamEntry,VregionalPost.IsWorkState);
                 }
                
             }

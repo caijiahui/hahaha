@@ -16,5 +16,9 @@ namespace advt.Entity
         public string PointScore { get; set; }
         public string Year { get; set; }
         public string Month { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string UpdateUser { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }
