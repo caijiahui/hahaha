@@ -69,6 +69,7 @@
     <Compile Include="DataProvider\advt_log.cs" />
     <Compile Include="DataProvider\advt_page.cs" />
     <Compile Include="DataProvider\advt_posts1.cs" />
+    <Compile Include="DataProvider\AreaPost.cs" />
     <Compile Include="DataProvider\ExamPointScore.cs" />
     <Compile Include="DataProvider\ExamUsersFromehr.cs" />
     <Compile Include="DataProvider\ExamRolePartDetail.cs" />

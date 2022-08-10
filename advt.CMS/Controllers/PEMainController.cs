@@ -1185,7 +1185,7 @@ namespace advt.Web.Controllers
         {
             RegionalPostModel model = new RegionalPostModel();           
             model.GetPostName(RuleName, PostName, RuleTwoName);
-            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo, LPostType=model.LPostType, LPostCycleType=model.LPostCycleType }, JsonRequestBehavior.AllowGet);
+            return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo, LPostType=model.LPostType, LPostCycleType=model.LPostCycleType}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SavePostInfo(RegionalPostModel model)
@@ -1201,9 +1201,33 @@ namespace advt.Web.Controllers
             var LExamType = Data.ExamType.Get_All_ExamType();
             RegionalPostModel model = new RegionalPostModel();
             model.GetPostName(null, null, null);
-            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType, ListArea = model.ListArea, LPostRank = model.LPostRank, LPostExamEntry =model.LPostExamEntry }, JsonRequestBehavior.AllowGet);
         }
-        
+        [MyAuthorize]
+        public ActionResult GetPostDepart(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetPostDepart(model);
+            return Json(new { ListPostDepart = models.ListPostDepart }, JsonRequestBehavior.AllowGet);
+        }
+
+        [MyAuthorize]
+        public ActionResult GetDepartPostName(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetPostName(model);
+            return Json(new { ListPostName = models.ListPostName }, JsonRequestBehavior.AllowGet);
+        }
+
+        [MyAuthorize]
+        public ActionResult GetDepartPostID(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            var postid = string.Empty;
+            postid =models.GetPostID(model);
+            return Json(new { PostID = postid }, JsonRequestBehavior.AllowGet);
+        }
+
         [MyAuthorize]
         public ActionResult DeletePost(int model)
         {
@@ -1241,6 +1265,14 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             models.StopProUser(model, username, data);
             return Json(new { models.ListProcessUser });
+        }
+        [HttpGet]
+        public ActionResult SendWeiXin()
+        {
+            var resu = string.Empty;
+            HrAuditModel models = new HrAuditModel();
+            resu = models.WeiXinJob();
+            return Json(new { resu });
         }
     }
 }

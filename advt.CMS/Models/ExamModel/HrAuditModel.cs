@@ -90,6 +90,9 @@ namespace advt.CMS.Models.ExamModel
                     items.HrCreateDate = item.HrCreateDate;
                     items.DirectorCreateDate = item.DirectorCreateDate;
                     Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(items, null, new string[] { "ID" });
+
+                    //微信推送
+                    //SendWeixin(items.UserCode,items.UserName,items.TypeName,items.SubjectName,items.ExamPlace,items.ExamDate.ToString());
                 }
                 //EmailHelper v = new EmailHelper();
                 //v.SendEmail();
@@ -102,6 +105,48 @@ namespace advt.CMS.Models.ExamModel
             }
 
 
+        }
+
+        public string WeiXinJob()
+        {
+            string result = string.Empty;
+            DateTime date = DateTime.Now.Date;
+            var nextday = date.AddDays(2).Date;
+            var examdetaillst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.ExamDate>date&&x.ExamDate<nextday&&!x.IsStop&&x.IsExam=="false");
+            if (examdetaillst != null && examdetaillst.Count() > 0)
+            {
+                foreach (var item in examdetaillst)
+                {
+                    result = SendWeixin(item.UserCode, item.UserName, item.TypeName, item.SubjectName, item.ExamPlace, item.ExamDate.ToString());
+                }
+            }
+           
+            return result;
+        }
+
+        public string SendWeixin(string UserCode,string UserName, string TypeName, string SubjectName, string ExamPlace, string ExamDate)
+        {
+            //<CONTEXTS><![CDATA[您推荐的【" + candMain.CAND_NAME + "】，已被公司录用，信息如下：\r\n" + wxContent + @"感谢您对公司内部推荐工作的支持！如有任何问题，请您及时与招募HR联络。谢谢！]]></CONTEXTS>
+            MESWebService.ETL_ServiceSoapClient serviceClient = new MESWebService.ETL_ServiceSoapClient();
+            var wxContent = string.Empty;
+            wxContent = ""+ UserName + "同仁您好，\r\n您本月有：“" + SubjectName+"”资格\r\n考试时间："+ExamDate+ "\r\n考试地点："+ExamPlace+ "\r\n考试说明：\r\n①模拟资格现已开通，可练习；\r\n②请您佩戴识别卡提前15分钟进入考场，正式考试需HR或区域负责人监考；\r\n③自行正式考试者，考试成绩无效；\r\n④不得将复习资料等带入考场、手机静音、除考试页面外不得登录其他页面。\r\n\r\n若有任何疑问，可与您主管确认，谢谢!";
+            string xmlParam = @"<root>
+                                    <METHOD ID='Advantech.Intergration.SAP.BLL.TxSendWeixinLOG'/>
+                                    <WEIXIN_LOG>
+                                        <GROUP_NO>EOA</GROUP_NO>
+                                        <GROUP_NAME>考试通知</GROUP_NAME>
+                                        <USERS>" + UserCode + @"</USERS>
+                                        <CONTEXTS><![CDATA[" + wxContent + @"]]></CONTEXTS>
+                                        <AGENT_ID>10</AGENT_ID>
+                                        <SAFE>0</SAFE>
+                                        <WERKS></WERKS>
+                                        <WIP_NO></WIP_NO>
+                                        <ITEM_NO></ITEM_NO>
+                                        <BRCODE_NO></BRCODE_NO>
+                                    </WEIXIN_LOG>
+                                </root>";            
+            var result=serviceClient.SFIS_Tx(xmlParam, "A", "KSOA");
+            return result; 
         }
         public void StopHrAuditUser(string id, string username)
         {
@@ -326,18 +371,22 @@ namespace advt.CMS.Models.ExamModel
                         item.CreateUser = username;
                         item.ValidityDate = DateTime.Now;
                         Data.PracticeInfo.Insert_PracticeInfo(item, null, new string[] { "ID" });
-                    }
-                    //关键岗位的更新绩效为空
-                    var examinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = item.UserCode, TypeName = "关键岗位技能等级" });
-                    if (examinfo != null)
-                    {
-                        foreach (var itemuser in examinfo)
+
+                        //关键岗位的更新绩效为空
+                        var examinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = item.UserCode, TypeName = item.TypeName = "关键岗位技能等级" });
+                        if (examinfo != null&&examinfo.Count()>0)
                         {
-                            itemuser.Achievement = null;
-                            Data.ExamUserInfo.Update_ExamUserInfo(itemuser, null, new string[] { "ID" });
+                            foreach (var itemuser in examinfo)
+                            {
+                                if (itemuser.TypeName == "关键岗位技能等级")
+                                {
+                                    itemuser.Achievement = null;
+                                    Data.ExamUserInfo.Update_ExamUserInfo(itemuser, null, new string[] { "ID" });
+                                }
+                            }
                         }
-                        
                     }
+                   
                 }
                 GetHrAuditUser();
                 Result = "成功插入";

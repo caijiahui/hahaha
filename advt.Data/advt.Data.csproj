@@ -65,6 +65,7 @@
     <Compile Include="DataProvider\AchieveRecord.cs" />
     <Compile Include="DataProvider\advt_Attachment.cs" />
     <Compile Include="DataProvider\advt_Attach_Files.cs" />
+    <Compile Include="DataProvider\AreaPost.cs" />
     <Compile Include="DataProvider\ExamPointScore.cs" />
     <Compile Include="DataProvider\ExamUsersFromehr.cs" />
     <Compile Include="DataProvider\ExamRolePartDetail.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="IDataProvider\advt_Attach_Files.cs" />
     <Compile Include="IDataProvider\advt_Category.cs" />
     <Compile Include="IDataProvider\advt_user_sheet.cs" />
+    <Compile Include="IDataProvider\AreaPost.cs" />
     <Compile Include="IDataProvider\ExamBank.cs" />
     <Compile Include="IDataProvider\ExamPointScore.cs" />
     <Compile Include="IDataProvider\ExamRolePart.cs" />

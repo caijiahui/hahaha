@@ -6,7 +6,7 @@
 <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
 
 
-<div id="app" style="margin-left:20px">
+<div id="app">
     <template>
         <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
@@ -25,9 +25,9 @@
     </template>
 
 
-    <div style="margin-top:20px">
+    <div>
         <el-table :data="tableData"
-                  style="width: 100% ">
+                  style="width: 100%;" height="550">
             <el-table-column label="岗位名称" prop="PostName" sortable></el-table-column>
             <el-table-column label="区域" prop="RegionalPlace" sortable></el-table-column>
             <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
@@ -36,14 +36,14 @@
             <el-table-column label="考试规则" prop="RuleName" sortable></el-table-column>
             <el-table-column label="考试规则2" prop="RuleTwoName" sortable></el-table-column>
             <el-table-column label="岗位类型" prop="PostType" sortable></el-table-column>
-            <el-table-column label="岗位周期" prop="PostCycle" sortable></el-table-column>
+            <el-table-column label="固定考试月份" prop="PostCycle" sortable></el-table-column>
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID,scope.row.PostName,scope.row.RuleName,scope.row)">Edit</el-button>
+                               @@click="handleEdit(scope.row)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
@@ -58,52 +58,111 @@
                        :layout="paginations.layout"
                        :total="paginations.total">
         </el-pagination>
-        <el-dialog title="规则岗位编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+    </div>
+    <div>
+        <el-dialog title="规则岗位编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="80%">
             <el-form :model="VregionalPost" ref="dialogForm">
-
-                <el-form-item label="岗位" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.PostName" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="考试类型" :label-width="formLabelWidth">
-                    <el-select v-model="VregionalPost.ExamType" clearable filterable placeholder="请选择考试类型">
-                        <el-option v-for="item in ListExamType" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="考试规则" :label-width="formLabelWidth">
-                    <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
-                        <el-option v-for="item in ListExamRule" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="考试规则2" :label-width="formLabelWidth">
-                    <el-select v-model="VregionalPost.RuleTwoName" clearable filterable placeholder="请选择考试规则2">
-                        <el-option v-for="item in ListExamRuleTwo" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="区域" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.RegionalPlace" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="部门" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.DepartCode" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="岗位编号" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.PostID" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="岗位类型" :label-width="formLabelWidth">
-                    <el-select v-model="VregionalPost.PostType" clearable filterable placeholder="请选择类型">
-                        <el-option v-for="item in LPostType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="岗位周期" :label-width="formLabelWidth">
-                    <el-select v-model="VregionalPost.PostCycle" clearable filterable placeholder="请选择周期">
-                        <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="入职考试周期" :label-width="formLabelWidth">
-                    <el-input v-model="VregionalPost.ExamEntry" autocomplete="off" style="width:240px"></el-input>
-                </el-form-item>
-                <el-form-item label="是否依据转正" prop="IsWorkState">
-                    <el-switch v-model="VregionalPost.IsWorkState"></el-switch>
-                </el-form-item>
+                <div class="divruleone">
+                    <el-form-item label="区域" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.RegionalPlace" clearable filterable placeholder="请选择区域">
+                            <el-option v-for="item in ListArea" :key="item.Area" :label="item.Area" :value="item.Area"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="部门" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.DepartCode" clearable filterable placeholder="请选择部门">
+                            <el-option v-for="item in ListPostDepart" :key="item.Dept" :label="item.Dept" :value="item.Dept"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="岗位" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.PostName" placeholder="请选择岗位" clearable filterable>
+                            <el-option v-for="item in ListPostName" :key="item.PostName" :label="item.PostName" :value="item.PostName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="岗位编号" :label-width="formLabelWidth" prop="PostID">
+                        <el-input v-model="VregionalPost.PostID" autocomplete="off" style="width:230px" :disabled="true"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="岗位类型" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.PostType" clearable filterable placeholder="请选择类型">
+                            <el-option v-for="item in LPostType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="考试类型" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.ExamType" clearable filterable placeholder="请选择考试类型">
+                            <el-option v-for="item in ListExamType" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="考试规则" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
+                            <el-option v-for="item in ListExamRule" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否判断绩效成绩" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleOneAch"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否判断品质扣分" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleOneQuality"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否判断上岗证" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleOneShangGang"></el-switch>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="考试规则2" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.RuleTwoName" clearable filterable placeholder="请选择考试规则2">
+                            <el-option v-for="item in ListExamRuleTwo" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否判断绩效成绩" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleTwoAch"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否判断品质扣分" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleTwoQuality"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否判断上岗证" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsRuleTwoShangGang"></el-switch>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="职等" :label-width="formLabelWidth">
+                        <el-select v-model="VregionalPost.RegionRank" clearable filterable placeholder="请选择职等">
+                            <el-option v-for="item in LPostRank" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="是否固定考试月份" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsPostCycle"></el-switch>
+                    </el-form-item>
+                    <el-form-item v-show="VregionalPost.IsPostCycle">
+                        <el-select v-model="value1" multiple clearable filterable placeholder="请选择周期">
+                            <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="是否要求入职时间" label-width="130px">
+                        <el-switch v-model="VregionalPost.IsExamEntry"></el-switch>
+                    </el-form-item>                    
+                    <el-form-item v-show="VregionalPost.IsExamEntry">
+                        <el-select v-model="VregionalPost.ExamEntryNum" clearable filterable placeholder="请选择入职时间2">
+                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="divruleone">
+                    <el-form-item label="是否每月运算考试" label-width="150px">
+                        <el-switch v-model="VregionalPost.IsEveryExam"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否“转正”才可考试" label-width="150px">
+                        <el-switch v-model="VregionalPost.IsWorkState"></el-switch>
+                    </el-form-item>                   
+                </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
@@ -113,7 +172,6 @@
 
             </div>
         </el-dialog>
-
     </div>
 </div>
 <script src="~/Scripts/Vue/axios.js"></script>
@@ -121,6 +179,11 @@
 <script src="~/Scripts/elementUI/lib/index.js"></script>
 
 <script src="~/Scripts/Vue/polyfill.min.js"></script>
+<style>
+    .divruleone .el-form-item {
+        display:inline-block
+    }
+</style>
 <script type="text/javascript">
     new Vue({
         el: '#app',
@@ -129,25 +192,33 @@
             dialogFormVisible: false,
             LExamRule: [], 
             LExamRuleTwo:[],
-            PostNames:'',
+            PostNames: '',
+            PostName:'',
             RuleNames: '',
             RuleTwoNames:'',
             VregionalPost: [],
             formLabelWidth: '120px',
             search: '',
             RegionalPlace: '',
-            PostID:'',
+            PostID: '',
+            PostIDSS:'',
             DepartCode: '',
             PostType: '',
             PostCycle: '',
             ExamType: '',
             RuleTwoName: '',
-            ExamEntry:'',
+            ExamEntry: '',
+            ListArea: [],
+            ListPostDepart: [],
+            ListPostName:[],
             ListExamRule: [],
             ListExamRuleTwo: [],
             ListExamType: [],
             LPostType: [],
-            LPostCycleType:[],
+            LPostCycleType: [],
+            value1: [],
+            LPostRank: [],
+            LPostExamEntry:[],
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -156,12 +227,41 @@
                 layout: 'total, sizes, prev, pager, next, jumper'
             }
         },
+        watch: {           
+            'VregionalPost.RegionalPlace': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetPostDepart', {
+                    model: newval
+                }).then(response => {
+                    _this.ListPostDepart = response.data.ListPostDepart;
+                });
+            },
+            'VregionalPost.DepartCode': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetDepartPostName', {
+                    model: newval
+                }).then(response => {
+                    _this.ListPostName = response.data.ListPostName;
+                });
+            },
+             'VregionalPost.PostName': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetDepartPostID', {
+                    model: newval
+                }).then(response => {
+                    _this.VregionalPost.PostID = response.data.PostID
+                });
+            },
+           
+        },
         mounted: function () {
             var _this = this;
             _this.getInfoList();
         },
         methods: {
-           
+            handleChange(value) {
+                console.log(value);
+            },
             getInfoList() {
                 var _this = this;
                 axios.post('/PEMain/GetRegionalPost').then(res => {
@@ -171,6 +271,8 @@
                     _this.VregionalPost = res.data.VregionalPost;
                     _this.LPostType = res.data.LPostType;
                     _this.LPostCycleType = res.data.LPostCycleType;
+                    _this.LPostRank = res.data.LPostRank;
+                    _this.LPostExamEntry = res.data.LPostExamEntry;
                     _this.setPaginations();
                 })
             },
@@ -234,13 +336,44 @@
             },
             createPost: function () {
                 var _this = this;
+                _this.value1 = [];
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
+                    _this.ListArea = response.data.ListArea;
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.ListExamType = response.data.ListExamType;
                     _this.LPostType = response.data.LPostType;
                     _this.LPostCycleType = response.data.LPostCycleType;
-                    _this.VregionalPost = {};
+                    _this.LPostRank = response.data.LPostRank;
+                    _this.LPostExamEntry = response.data.LPostExamEntry;
+                    console.log(response.data.LPostExamEntry,346)
+                    _this.VregionalPost = {
+                        RegionalPlace: '',
+                        DepartCode: '',
+                        PostID: '',
+                        PostName: '',
+                        RuleName: '',
+                        RuleTwoName: '',
+                        ExamType: '',
+                        CreateUser: '',
+                        CreateDate: '',
+                        PostType: '',
+                        PostCycle: '',
+                        IsWorkState: false,
+                        ExamEntry: '',
+                        RegionRank: '',
+                        IsExamEntry: false,
+                        IsEveryExam: false,
+                        IsShangGang: false,
+                        IsRuleOneAch: false,
+                        IsRuleTwoAch: false,
+                        IsRuleOneQuality: false,
+                        IsRuleTwoQuality: false,
+                        IsPostCycle: false,
+                        ExamEntryNum: '',
+                        IsRuleTwoShangGang: false,
+                        IsRuleOneShangGang: false
+                    };
                 });
                 _this.dialogFormVisible = true;
                
@@ -248,6 +381,10 @@
             handleSave: function () {
                 var _this = this;
                 var objs = {};
+                _this.VregionalPost.PostCycle = '';
+                _this.value1.forEach(function (key, value) {
+                    _this.VregionalPost.PostCycle += key+","
+                })
                 objs.VregionalPost = _this.VregionalPost;
                 axios.post('/PEMain/SavePostInfo', {
                     model: objs
@@ -262,26 +399,24 @@
                 _this.dialogFormVisible = false;           
 
             },
-            handleEdit(index, postname, rulename, row) {
+            handleEdit(row) {
                 var _this = this;
-                _this.VregionalPost.PostName = postname;
-                _this.VregionalPost.RuleName = rulename;
-                _this.VregionalPost.RuleTwoName = row.RuleTwoName;
-                _this.VregionalPost.RegionalPlace = row.RegionalPlace;
-                _this.VregionalPost.DepartCode = row.DepartCode;
-                _this.VregionalPost.PostID = row.PostID;
-                _this.VregionalPost.PostType = row.PostType;
-                _this.VregionalPost.PostCycle = row.PostCycle;
-                _this.VregionalPost.ExamType = row.ExamType;
-                _this.VregionalPost.ExamEntry = row.ExamEntry;
-                _this.VregionalPost.IsWorkState = row.IsWorkState;
-                _this.VregionalPost.ID = index;
+                _this.value1 = [];
+                var n = row.PostCycle.split(",");
+                n.forEach(function (key, value) {
+                    if (key != '') {
+                        _this.value1.push(key)
+                    }
+                })
+                _this.VregionalPost = row;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.ListExamType = response.data.ListExamType;
                     _this.LPostType = response.data.LPostType;
                     _this.LPostCycleType = response.data.LPostCycleType;
+                    _this.LPostRank = response.data.LPostRank;
+                    _this.LPostExamEntry = response.data.LPostExamEntry;
                 });
                 _this.dialogFormVisible = true;
             },

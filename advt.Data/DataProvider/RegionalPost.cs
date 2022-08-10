@@ -74,11 +74,7 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_RegionalPostInfo(RuleName, PostName, RuleTwoName);
             return SqlHelper.GetReaderToList<Entity.RegionalPost>(reader);
         }
-        public static int Update_RegionalPostInfo(string PostName, string RuleName,string RuleTwoName, string PostType, string PostCycle,string  ExamEntry,  bool IsWorkState)
-        {
-            return DatabaseProvider.GetInstance().Update_RegionalPostInfo(PostName, RuleName, RuleTwoName, PostType,PostCycle,ExamEntry, IsWorkState);
-        }
-        
+      
     }
     #endregion
 }
