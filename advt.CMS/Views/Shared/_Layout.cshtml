@@ -100,13 +100,65 @@
                                     <template slot="title">
                                         <i class="el-icon-location"></i>
                                         <span>
+                                            <span class="title">权限管理</span>
+                                        </span>
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item v-for="role in LRole"
+                                                      v-on:click="OpenExamType(role)" v-if="role=='角色设定'||role=='权限管控'">{{role}}</el-menu-item>
+
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-submenu index="2">
+                                    <template slot="title">
+                                        <i class="el-icon-location"></i>
+                                        <span>
                                             <span class="title">考试管理</span>
                                         </span>
                                     </template>
                                     <el-menu-item-group>
                                         <el-menu-item v-for="role in LRole"
-                                                      v-on:click="OpenExamType(role)" v-if="role!='考试页面'">{{role}}</el-menu-item>
+                                                      v-on:click="OpenExamType(role)" v-if="role=='考试类型'||role=='考试科目'||role=='题库管理'||role=='考试规则'||role=='岗位规则'">{{role}}</el-menu-item>
+
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-submenu index="3">
+                                    <template slot="title">
+                                        <i class="el-icon-location"></i>
+                                        <span>
+                                            <span class="title">考试资格</span>
+                                        </span>
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item v-for="role in LRole"
+                                                      v-on:click="OpenExamType(role)" v-if="role=='HR审核'||role=='主管审核'">{{role}}</el-menu-item>
+
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-submenu index="4">
+                                    <template slot="title">
+                                        <i class="el-icon-location"></i>
+                                        <span>
+                                            <span class="title">考生管理</span>
+                                        </span>
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item v-for="role in LRole"
+                                                      v-on:click="OpenExamType(role)" v-if="role=='考生动态'||role=='考试报表'||role=='考试页面'">{{role}}</el-menu-item>
                                         <el-menu-item v-on:click="OpenExamType('考试页面')">考试页面</el-menu-item>
+                                    </el-menu-item-group>
+                                </el-submenu>
+                                <el-submenu index="5">
+                                    <template slot="title">
+                                        <i class="el-icon-location"></i>
+                                        <span>
+                                            <span class="title">数据管理</span>
+                                        </span>
+                                    </template>
+                                    <el-menu-item-group>
+                                        <el-menu-item v-for="role in LRole"
+                                                      v-on:click="OpenExamType(role)" v-if="role=='数据管理'">{{role}}</el-menu-item>
+
                                     </el-menu-item-group>
                                 </el-submenu>
                             </el-menu>
@@ -165,7 +217,7 @@
                     axios.post('/Account/GetUser').then(res => {
                         _this.admin = res.data.admin;
                         _this.LRole = res.data.LRole;
-                        console.log(_this.LRole,33);
+                        console.log(_this.LRole, 33);
                     })
 
                 },

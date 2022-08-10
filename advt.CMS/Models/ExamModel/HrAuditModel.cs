@@ -92,7 +92,7 @@ namespace advt.CMS.Models.ExamModel
                     Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(items, null, new string[] { "ID" });
 
                     //微信推送
-                    //SendWeixin(items.UserCode,items.UserName,items.TypeName,items.SubjectName,items.ExamPlace,items.ExamDate.ToString());
+                    SendWeixin(items.UserCode, items.UserName, items.TypeName, items.SubjectName, items.ExamPlace, items.ExamDate.ToString());
                 }
                 //EmailHelper v = new EmailHelper();
                 //v.SendEmail();
@@ -129,7 +129,7 @@ namespace advt.CMS.Models.ExamModel
             //<CONTEXTS><![CDATA[您推荐的【" + candMain.CAND_NAME + "】，已被公司录用，信息如下：\r\n" + wxContent + @"感谢您对公司内部推荐工作的支持！如有任何问题，请您及时与招募HR联络。谢谢！]]></CONTEXTS>
             MESWebService.ETL_ServiceSoapClient serviceClient = new MESWebService.ETL_ServiceSoapClient();
             var wxContent = string.Empty;
-            wxContent = ""+ UserName + "同仁您好，\r\n您本月有：“" + SubjectName+"”资格\r\n考试时间："+ExamDate+ "\r\n考试地点："+ExamPlace+ "\r\n考试说明：\r\n①模拟资格现已开通，可练习；\r\n②请您佩戴识别卡提前15分钟进入考场，正式考试需HR或区域负责人监考；\r\n③自行正式考试者，考试成绩无效；\r\n④不得将复习资料等带入考场、手机静音、除考试页面外不得登录其他页面。\r\n\r\n若有任何疑问，可与您主管确认，谢谢!";
+            wxContent = ""+ UserName + "同仁您好，\r\n您本月有：“" + SubjectName+ "”考试\r\n现已开通模拟考试，请从美满人生微信公众号→A家人才→新版考试平台→考试科目列表→对应科目，开启模拟练习\r\n\r\n正式考试:\r\n时间：" + ExamDate+ "\r\n地点："+ExamPlace+ "\r\n说明：\r\n①请您佩戴识别卡提前15分钟进入考场，正式考试需HR或区域负责人监考；\r\n②自行正式考试者，考试成绩无效；\r\n③不得将复习资料等带入考场、手机静音、除考试页面外不得登录其他页面。\r\n\r\n若有任何疑问，可与主管确认，谢谢!";
             string xmlParam = @"<root>
                                     <METHOD ID='Advantech.Intergration.SAP.BLL.TxSendWeixinLOG'/>
                                     <WEIXIN_LOG>
