@@ -15,6 +15,7 @@ namespace advt.Entity
         public string PostName { get; set; }//岗位-工种
         public string RuleName { get; set; }//岗位-工种
         public string RuleTwoName { get; set; }//岗位2-工种
+
         public string ExamType { get; set; }
         public DateTime CreateDate { get; set; }
         public string  CreateUser { get; set; }
@@ -35,6 +36,11 @@ namespace advt.Entity
         public bool IsRuleTwoQuality { get; set; }//是否判断品质扣分
         public string UpdateUser { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        public string RuleThreeName { get; set; }//岗位2-工种
+        public bool IsRuleThreeAch { get; set; }//是否判断绩效成绩
+        public bool IsRuleThreeQuality { get; set; }//是否判断品质扣分
+        public bool IsRuleThreeShangGang { get; set; }//是否判断规则上岗证
 
     }
 }

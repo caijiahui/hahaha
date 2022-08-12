@@ -1201,7 +1201,7 @@ namespace advt.Web.Controllers
             var LExamType = Data.ExamType.Get_All_ExamType();
             RegionalPostModel model = new RegionalPostModel();
             model.GetPostName(null, null, null);
-            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType, ListArea = model.ListArea, LPostRank = model.LPostRank, LPostExamEntry =model.LPostExamEntry }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType, ListArea = model.ListArea, LPostRank = model.LPostRank, LPostExamEntry =model.LPostExamEntry , ListExamRuleThree = LExamRules}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult GetPostDepart(string model)

@@ -84,8 +84,6 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
-
-
         }
         public string SavePostInfo(string username)
         {
@@ -100,8 +98,7 @@ namespace advt.CMS.Models.ExamModel
                     VregionalPost.UpdateUser = username;
                     VregionalPost.UpdateDate = DateTime.Now;
                     Data.RegionalPost.Update_RegionalPost(VregionalPost, null, new string[] { "ID" });
-                }
-               
+                }               
             }
             else
             {

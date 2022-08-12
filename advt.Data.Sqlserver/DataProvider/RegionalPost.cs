@@ -13,7 +13,7 @@ namespace advt.Data.SqlServer
         #region RegionalPost , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] RegionalPost_key_a = { "ID" };
-        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName],RuleName,RuleTwoName,ExamType,CreateUser,CreateDate,PostType,PostCycle,IsWorkState,ExamEntry,RegionRank,IsExamEntry,IsEveryExam,IsRuleOneAch,IsRuleTwoAch,IsRuleOneQuality,IsRuleTwoQuality,IsPostCycle,ExamEntryNum,UpdateUser,UpdateDate,IsRuleOneShangGang,IsRuleTwoShangGang";
+        private string RegionalPost_item_str = "[ID],[RegionalPlace],[DepartCode],[PostID],[PostName],RuleName,RuleTwoName,ExamType,CreateUser,CreateDate,PostType,PostCycle,IsWorkState,ExamEntry,RegionRank,IsExamEntry,IsEveryExam,IsRuleOneAch,IsRuleTwoAch,IsRuleOneQuality,IsRuleTwoQuality,IsPostCycle,ExamEntryNum,UpdateUser,UpdateDate,IsRuleOneShangGang,IsRuleTwoShangGang,RuleThreeName,IsRuleThreeAch,IsRuleThreeQuality,IsRuleThreeShangGang";
         private string[][] RegionalPost_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -42,7 +42,11 @@ namespace advt.Data.SqlServer
             new string[] { "UpdateUser", "NVarChar", "50"},
             new string[] { "UpdateDate", "DateTime", "50"},
             new string[] { "IsRuleOneShangGang", "Bit", "1"},
-            new string[] { "IsRuleTwoShangGang", "Bit", "1"}
+            new string[] { "IsRuleTwoShangGang", "Bit", "1"},
+            new string[] { "RuleThreeName", "NVarChar", "500"},
+            new string[] { "IsRuleThreeAch", "Bit", "1"},
+            new string[] { "IsRuleThreeQuality", "Bit", "1"},
+            new string[] { "IsRuleThreeShangGang", "Bit", "1"}
 
 
         };

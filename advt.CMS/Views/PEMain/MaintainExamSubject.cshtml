@@ -164,6 +164,7 @@
                 axios.post('/PEMain/GetSubjectInfo').then(res => {
                     _this.tableData = res.data.tableData;
                     _this.LExamType = res.data.LExamType;
+                    console.log(res.data.LExamType)
                     _this.VexamSubject = res.data.VexamSubject;
                     _this.setPaginations();
                 })
