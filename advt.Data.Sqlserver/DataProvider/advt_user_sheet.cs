@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region advt_user_sheet , (Ver:2.3.8) at: 2021/3/18 14:33:08
         #region Var: 
         private string[] advt_user_sheet_key_a = { };
-        private string advt_user_sheet_item_str = "[UserCode],[UserAccount],[UserEmail],[UserDspName],[UserCostCenter],[UserGroup],[UserJobTitle],[UserJobType],[WorkPlace]";
+        private string advt_user_sheet_item_str = "[UserCode],[UserAccount],[UserEmail],[UserDspName],[UserCostCenter],[UserGroup],[UserJobTitle],[UserJobType]";
         private string[][] advt_user_sheet_item_prop_a =
         {
             new string[] {"UserCode", "NVarChar", "50"},
@@ -27,8 +27,7 @@ namespace advt.Data.SqlServer
             new string[] {"UserCostCenter", "NVarChar", "50"},
             new string[] {"UserGroup", "NVarChar", "50"},
             new string[] {"UserJobTitle", "NVarChar", "50"},
-            new string[] { "UserJobType", "NVarChar", "50"},
-             new string[] { "WorkPlace", "NVarChar", "100"}
+            new string[] { "UserJobType", "NVarChar", "50"}
 
         };
         #endregion

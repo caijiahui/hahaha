@@ -48,7 +48,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID, scope.row.TypeName)">Edit</el-button>
+                               @@click="handleEdit(scope.row.ID, scope.row.TypeName,scope.row.SuperAdmin)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row.TypeName)">Delete</el-button>
@@ -99,11 +99,12 @@
 
         methods: {
           
-            handleEdit(ID, TypeName) {
+            handleEdit(ID, TypeName, SuperAdmin) {
                
                 var _this = this;
                 _this.dialogFormVisible = true;
                 _this.VexamType.TypeName = TypeName;
+                _this.VexamType.SuperAdmin = SuperAdmin;
                 _this.VexamType.ID = ID
             }, 
             handleSave(flag) {

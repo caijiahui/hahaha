@@ -25,7 +25,7 @@ namespace advt.Entity
         public string UserJobTitle { get; set; }
         public string UserJobType { get; set; }
 
-        public string WorkPlace { get; set; }
+
         #endregion
     }
 }
