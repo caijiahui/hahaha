@@ -23,10 +23,12 @@ namespace advt.Entity
         public string PostCycle { get; set; }//是否固定考试月份
         public bool IsPostCycle { get; set; }
         public bool IsWorkState { get; set; }//是否“转正”才可考试
-        public string ExamEntry { get; set; }//是否要求入职时间,多久考试
-        public string ExamEntryNum { get; set; }
+        public string ExamEntryRuleOneNum { get; set; }//是否要求入职时间,多久考试
+        public string ExamEntryRuleTwoNum { get; set; }
+        public string ExamEntryRuleThreeNum { get; set; }
+        //public string ExamEntryNum { get; set; }
         public string RegionRank { get; set; }//职等下拉“A职等”
-        public bool IsExamEntry { get; set; }//是否要
+        //public bool IsExamEntry { get; set; }//是否要
         public bool IsEveryExam { get; set; }//是否每月考试
         public bool IsRuleOneShangGang { get; set; }//是否判断规则上岗证
         public bool IsRuleTwoShangGang { get; set; }//是否判断规则上岗证

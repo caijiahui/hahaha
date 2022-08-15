@@ -111,6 +111,11 @@
                     <el-form-item label="是否判断上岗证" label-width="130px">
                         <el-switch v-model="VregionalPost.IsRuleOneShangGang"></el-switch>
                     </el-form-item>
+                    <el-form-item label="是否要求入职时间" label-width="130px">
+                        <el-select v-model="VregionalPost.ExamEntryRuleOneNum" clearable filterable>
+                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </div>
                 <div class="divruleone">
                     <el-form-item label="考试规则2" :label-width="formLabelWidth">
@@ -127,6 +132,11 @@
                     <el-form-item label="是否判断上岗证" label-width="130px">
                         <el-switch v-model="VregionalPost.IsRuleTwoShangGang"></el-switch>
                     </el-form-item>
+                    <el-form-item label="是否要求入职时间" label-width="130px">
+                        <el-select v-model="VregionalPost.ExamEntryRuleTwoNum" clearable filterable>
+                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </div>
                 <div class="divruleone">
                     <el-form-item label="考试规则3" :label-width="formLabelWidth">
@@ -142,6 +152,11 @@
                     </el-form-item>
                     <el-form-item label="是否判断上岗证" label-width="130px">
                         <el-switch v-model="VregionalPost.IsRuleThreeShangGang"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否要求入职时间" label-width="130px">
+                        <el-select v-model="VregionalPost.ExamEntryRuleThreeNum" clearable filterable>
+                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
+                        </el-select>
                     </el-form-item>
                 </div>
                 <div class="divruleone">
@@ -160,17 +175,7 @@
                             <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
                         </el-select>
                     </el-form-item>
-                </div>
-                <div class="divruleone">
-                    <el-form-item label="是否要求入职时间" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsExamEntry"></el-switch>
-                    </el-form-item>
-                    <el-form-item v-show="VregionalPost.IsExamEntry">
-                        <el-select v-model="VregionalPost.ExamEntryNum" clearable filterable placeholder="请选择入职时间2">
-                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </div>
+                </div>               
                 <div class="divruleone">
                     <el-form-item label="是否每月运算考试" label-width="150px">
                         <el-switch v-model="VregionalPost.IsEveryExam"></el-switch>
@@ -223,7 +228,7 @@
             PostCycle: '',
             ExamType: '',
             RuleTwoName: '',
-            ExamEntry: '',
+            //ExamEntry: '',
             ListArea: [],
             ListPostDepart: [],
             ListPostName:[],
@@ -235,7 +240,10 @@
             LPostCycleType: [],
             value1: [],
             LPostRank: [],
-            LPostExamEntry:[],
+            LPostExamEntry: [],
+            ExamEntryRuleOneNum: '',
+            ExamEntryRuleTwoNum: '',
+            ExamEntryRuleThreeNum:'',
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -378,9 +386,9 @@
                         PostType: '',
                         PostCycle: '',
                         IsWorkState: false,
-                        ExamEntry: '',
+                        //ExamEntry: '',
                         RegionRank: '',
-                        IsExamEntry: false,
+                        //IsExamEntry: false,
                         IsEveryExam: false,
                         IsShangGang: false,
                         IsRuleOneAch: false,
@@ -388,12 +396,15 @@
                         IsRuleOneQuality: false,
                         IsRuleTwoQuality: false,
                         IsPostCycle: false,
-                        ExamEntryNum: '',
+                        //ExamEntryNum: '',
                         IsRuleTwoShangGang: false,
                         IsRuleOneShangGang: false,
                         IsRuleThreeQuality: false,
                         IsRuleThreeShangGang: false,
-                        IsRuleThreeAch: false
+                        IsRuleThreeAch: false,
+                        ExamEntryRuleOneNum: '',
+                        ExamEntryRuleTwoNum: '',
+                        ExamEntryRuleThreeNum:''
 
 
                     };
@@ -425,12 +436,14 @@
             handleEdit(row) {
                 var _this = this;
                 _this.value1 = [];
-                var n = row.PostCycle.split(",");
-                n.forEach(function (key, value) {
-                    if (key != '') {
-                        _this.value1.push(key)
-                    }
-                })
+                if (row.PostCycle != null && row.PostCycle.contains(",")) {
+                    var n = row.PostCycle.split(",");
+                    n.forEach(function (key, value) {
+                        if (key != '') {
+                            _this.value1.push(key)
+                        }
+                    }) }
+               
                 _this.VregionalPost = row;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;

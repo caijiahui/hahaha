@@ -75,7 +75,7 @@ namespace advt.CMS.Models.ExamModel
             LPostRank.Add(new KeyValuePair<string, string>("C职等", "C职等"));
 
             //要求入职时间判断
-            LPostExamEntry.Add(new KeyValuePair<string, string>("0", "-请选择-"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("0", "否"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("1", "每月10号前入职,下个月开始考"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("2", "每月10号后入职,下下个月开始考"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("3", "7天"));
