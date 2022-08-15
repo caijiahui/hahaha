@@ -620,7 +620,7 @@ namespace advt.Web.Controllers
             SupervisorAuditModel model = new SupervisorAuditModel();
             var name = this.UserNameContext;
             model.GetAllExamUserDetailInfo(name);
-            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser, LExamType=model.LExamType });
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules= model.LRules, LSignedupUser=model.LSignedupUser, LExamType=model.LExamType,model.LSuperExamType });
         }
         public JsonResult Upload_Supervisor(HttpPostedFileBase file)
         {
@@ -653,11 +653,11 @@ namespace advt.Web.Controllers
             return Json(new { LPracticeInfo = models.LPracticeInfo }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult SavePracticeInfo(PracticeInfo model)
+        public ActionResult SavePracticeInfo(PracticeInfo model,int DetailId)
         {
             SupervisorAuditModel models = new SupervisorAuditModel();
             var username = this.UserNameContext;
-            models.InsertPracticeInfo(model,username);
+            models.InsertPracticeInfo(model,username, DetailId);
             return Json(new {}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -689,6 +689,31 @@ namespace advt.Web.Controllers
             models.Stopuser(model, username);
             return Json(new { LCheckAudtiUser = models.LCheckAudtiUser,  LSignedupUser = models.LSignedupUser });
         }
+        //超级管理员搜索
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult SearchSuperUser(string typename, string subject, string sData)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            var username = this.UserNameContext;
+            var LSuperUsers = models.GetSuperUserByUsercode(typename, subject, sData, username);
+            return Json(new { LSuperUsers });
+        }
+        //超级管理员增加人员
+
+        [MyAuthorize]
+        [HttpPost]
+        public ActionResult InsertSuper(string usercode, string SubjectName, string typename, string depart,string WorkPlace,string sData)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            var username = this.UserNameContext;
+            var LSuperUsers = models.InsertSuper(usercode, SubjectName, typename, username, depart, WorkPlace, sData);
+            return Json(new { LSuperUsers });
+        }
+
+
+
         //Hr审核
         [MyAuthorize]
         public ActionResult HrAudit()
@@ -1241,7 +1266,8 @@ namespace advt.Web.Controllers
             SupervisorAuditModel model = new SupervisorAuditModel();
             var name = this.UserNameContext;
             model.GetAllExamUserByType(subject,name);
-            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType });
+            var IsSuper = model.LSuperExamType.Count() != 0 ? true : false;
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType,model.LSuperExamType, IsSuper });
         }
         [MyAuthorize]
         public ActionResult AduitSigupBySubject(string usercode)

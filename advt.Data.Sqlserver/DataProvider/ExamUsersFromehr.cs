@@ -52,7 +52,16 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamUsersFromehr_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
-
+        //Get_All_SuperUser
+        public IDataReader Get_All_SuperUser(string typename, string subject, string sData, string UserName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ExamUsersFromehr a inner join advt_user_sheet b on a.UserCode = b.UserCode and b.UserCostCenter = a.UserDept where a.OrgName in ( select OrgName from ExamUsersFromehr where CommpanyEmail like '%" + UserName + "%' ) ");
+            commandText.AppendLine("   and  (a.UserCode='"+ sData + "' or a.UserDept='"+sData+"' or a.UserName='"+sData+ "') and a.UserCode not in ( ");
+            commandText.AppendLine("   select b.UserCode from ExamUserDetailInfo b where b.TypeName=N'"+ typename + "' and b.SubjectName=N'"+ subject + "' ");
+            commandText.AppendLine("   and  IsExam='false' and IsStop='false' ) and a.[State]!='¿Î÷∞'");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         public int Insert_ExamUsersFromehr(Entity.ExamUsersFromehr info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();

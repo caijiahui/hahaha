@@ -44,19 +44,19 @@ namespace advt.CMS.Models.ExamModel
                     if (!string.IsNullOrEmpty(model.TypeName) || !string.IsNullOrEmpty(model.UserCode) || !string.IsNullOrEmpty(model.SubjectName) || !string.IsNullOrEmpty(model.DepartCode))
                     {
 
-                        ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x => x.TypeName).ToList();
-                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = "false", IsStop = false }).OrderByDescending(x => x.TypeName).ToList();
+                        ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x=>x.SignType).ThenBy(x => x.TypeName).ToList();
+                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = "false", IsStop = false }).OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
                     }
                     else
                     {
-                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsExam = "false", IsStop = false }).OrderByDescending(x => x.TypeName).ToList();
-                        ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.TypeName).ToList();
+                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsExam = "false", IsStop = false }).OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
+                        ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
                     }
                 }
                 else
                 {
-                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsExam = "false", IsStop = false }).OrderByDescending(x => x.TypeName).ToList();
-                    ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.TypeName).ToList();
+                    ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", IsExam = "false", IsStop = false }).OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
+                    ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail("", "", "", "").OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
 
                 }
                 LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));

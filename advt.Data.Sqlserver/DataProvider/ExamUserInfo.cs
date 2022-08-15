@@ -73,7 +73,16 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" where a.UserCode='" + usercode + "'  and a.UserCostCenter='" + UserCostCenter + "' ");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString());
         }
-
+        //Insert_Super_usercode
+        public int Insert_Super_usercode(string usercode, string typename, string SubjectName, string username, string UserCostCenter)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine("insert ExamUserInfo(UserCode,PostID,CreateDate,IsEnable,UserName,DepartCode,SubjectName,CreateUser,EStatus,TypeName)  ");
+            commandText.AppendLine(" select distinct a.UserCode,a.UserJobType ,GETDATE() ");
+            commandText.AppendLine(" ,CONVERT(bit,0),a.UserDspName,a.UserCostCenter,N'" + SubjectName + "', '" + username + "','false',N'"+ typename + "' from advt_user_sheet a ");
+            commandText.AppendLine(" where a.UserCode='" + usercode + "'  and a.UserCostCenter='" + UserCostCenter + "' ");
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString());
+        }
         public int Insert_ExamUserInfo(Entity.ExamUserInfo info, string[] Include, string[] Exclude)
         {
             List<DbParameter> l_parms = new List<DbParameter>();

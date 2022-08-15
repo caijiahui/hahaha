@@ -89,7 +89,7 @@
                                     <i class="fa fa-bars" ></i>
                                 </el-button>*@
                         </div>
-                        <el-aside width="auto" style="height:100%">
+                        <el-aside width="auto" style="height:100%" >
                             <el-menu default-active="1"
                                      class="el-menu-vertical-demo"
                                      @@open="asideHandleOpen"
@@ -132,7 +132,7 @@
                                     <el-menu-item-group>
                                         <el-menu-item v-for="role in LRole"
                                                       v-on:click="OpenExamType(role)" v-if="role=='HR审核'||role=='主管审核'">{{role}}</el-menu-item>
-
+                                       
                                     </el-menu-item-group>
                                 </el-submenu>
                                 <el-submenu index="4">
@@ -158,7 +158,7 @@
                                     <el-menu-item-group>
                                         <el-menu-item v-for="role in LRole"
                                                       v-on:click="OpenExamType(role)" v-if="role=='数据管理'">{{role}}</el-menu-item>
-
+                                      
                                     </el-menu-item-group>
                                 </el-submenu>
                             </el-menu>

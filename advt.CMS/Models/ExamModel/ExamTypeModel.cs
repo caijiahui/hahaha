@@ -58,8 +58,9 @@ namespace advt.CMS.Models.ExamModel
                     }
                     else
                     {
+                        var c = Data.ExamType.Get_ExamType(new { ID = VexamType.ID });
                         var repeat = Data.ExamType.Get_ExamType(new { TypeName = VexamType.TypeName });
-                        if (repeat != null)
+                        if (repeat != null&&repeat.TypeName!=c.TypeName)
                         {
                             Result = "考试类型不可重复添加";
                         }

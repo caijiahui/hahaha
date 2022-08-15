@@ -67,6 +67,7 @@ namespace advt.Entity
         public string WorkPlace { get; set; }
         public string PostID { get; set; }
         public string OrgName { get; set; }//区域名
+        public string SignType { get; set; }//报名类型
         #endregion
     }
 }

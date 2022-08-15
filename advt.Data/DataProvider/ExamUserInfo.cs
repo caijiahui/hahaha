@@ -38,6 +38,10 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Insert_ElectronicUser_usercode(usercode, UserCostCenter, SubjectName, username);
         }
+        public static int Insert_Super_usercode(string usercode, string typename, string SubjectName, string username,string depert)
+        {
+            return DatabaseProvider.GetInstance().Insert_Super_usercode(usercode, typename, SubjectName, username, depert);
+        }
         public static int Insert_ExamUserInfo(Entity.ExamUserInfo info)
         {
             return Insert_ExamUserInfo(info, null, null);

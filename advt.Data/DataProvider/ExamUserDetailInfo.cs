@@ -90,6 +90,12 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode, typename);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
+        //找到主管审核下超级管理员数据
+        public static List<Entity.ExamUserDetailInfo> Get_Super_UserAduitInfo(string ExamStatus, string username, string typename)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_Super_UserAduitInfo(ExamStatus,username, typename);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
         //主管审核下面根据主管找到下面
         public static List<Entity.ExamUserDetailInfo> Get_All_PostCanSignUser(string UserCode)
         {
