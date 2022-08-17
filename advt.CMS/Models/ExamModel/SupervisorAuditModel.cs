@@ -21,6 +21,9 @@ namespace advt.CMS.Models.ExamModel
         public List<ExamUserDetailInfo> LCheckAudtiUser { get; set; }
         public List<KeyValuePair<string, string>> LExamType { get; set; }//考试类型
         public List<KeyValuePair<string, string>> LExamSubject { get; set; }//考试科目
+
+        public List<advt_user_sheet> ListSuperUsers { get; set; }//主管额外报名人员
+        public List<ExamType> LSuperExamType { get; set; }//考试类型
         public string Result { get; set; }
         public SupervisorAuditModel() : base()
         {
@@ -32,7 +35,56 @@ namespace advt.CMS.Models.ExamModel
             LSignedupUser = new List<ExamUserDetailInfo>();
             LExamSubject = new List<KeyValuePair<string, string>>();
             LExamType = new List<KeyValuePair<string, string>>();
+            ListSuperUsers = new List<advt_user_sheet>();
+            LSuperExamType = new List<ExamType>();
         }
+
+        //超级管理员添加人员
+        //添加完
+        public List<ExamUserDetailInfo> InsertSuper(string usercode,  string SubjectName,  string typename, string username,string depart,string WorkPlace, string sData)
+        {
+
+            var su = Data.ExamUserInfo.Insert_Super_usercode(usercode,typename, SubjectName, username,depart);
+            var user = Data.ExamUserInfo.Get_ExamUserInfo(new { SubjectName = SubjectName, UserCode = usercode, IsEnable = 0 });
+            UserInfo model = new UserInfo();
+            List<UserInfo> Listusers = new List<UserInfo>();
+            var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
+            if (su > 0)
+            {
+                model.TypeName = typename;
+                model.SubjectName = SubjectName;
+                model.UserCode = usercode;
+                model.UserName = user.UserName;
+                model.PostName = user.PostID;
+                model.RuleName = rule != null ? rule.RuleName : "";
+                model.DepartCode = depart;
+                model.WorkPlace = WorkPlace;
+                model.SignType = "管理员报名";
+                Listusers.Add(model);
+                ExamUserInfoModel models = new ExamUserInfoModel();
+                models.InsertUserDetail(Listusers, username);
+            }
+            return GetSuperUserByUsercode(typename, SubjectName, sData, username) ;
+        }
+
+
+        //超级管理员可报名人数
+        public List<ExamUserDetailInfo> GetSuperUserByUsercode(string typename, string subject, string sData, string UserName)
+        {
+            var list = Data.ExamUsersFromehr.Get_All_SuperUser(typename, subject, sData, UserName);
+            List<ExamUserDetailInfo> data = list.Select(y => new ExamUserDetailInfo
+            {
+                TypeName = typename,
+                SubjectName = subject,
+                UserName = y.UserName,
+                UserCode = y.UserCode,
+                DepartCode  = y.UserDept,
+                WorkPlace = y.OrgName
+            }).ToList();
+            return data;
+        }
+
+
         public void GetAllExamUserDetailInfo(string username=null)
         {
             try
@@ -43,12 +95,18 @@ namespace advt.CMS.Models.ExamModel
                 {
                     code = user.UserCode;
                 }
+              
                 var usersheets = Data.advt_user_sheet.Get_advt_user_sheet_UserJobTitle(code);
                 //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
                 var audata= Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp",code,"");
                 if (audata != null && audata.Count() != 0)
                 {
                     LCheckAudtiUser.AddRange(audata);
+                }
+                var super = Data.ExamUserDetailInfo.Get_Super_UserAduitInfo("HrSignUp", username, "");
+                if(super!=null&& super.Count() != 0)
+                {
+                    LCheckAudtiUser = super.OrderByDescending(x => x.DepartCode).ToList();
                 }
                 var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code,"");
                 LSignedupUser.AddRange(adata);
@@ -64,6 +122,11 @@ namespace advt.CMS.Models.ExamModel
                 LCheckAudtiUser = LCheckAudtiUser.OrderByDescending(x => x.TypeName).ToList();
                 //主管需要审核的人员
                 LSignedupUser = LSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+                var superLSignedupUser = Data.ExamUserDetailInfo.Get_Super_UserAduitInfo("Signup", username, "");
+                if (superLSignedupUser != null && superLSignedupUser.Count() != 0)
+                {
+                    LSignedupUser = superLSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+                }
                 LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
                 foreach (var item in Data.ExamType.Get_All_ExamType())
                 {
@@ -88,14 +151,30 @@ namespace advt.CMS.Models.ExamModel
             {
                 code = user.UserCode;
             }
-            //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
-            var audata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code, typename);
+            //超级管理员考试类型
+            LSuperExamType = Data.ExamType.Get_All_ExamType(new { SuperAdmin= username });
+              //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
+              var audata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code, typename);
             LCheckAudtiUser.AddRange(audata);
+
             var adata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("Signup", code, typename);
             LSignedupUser.AddRange(adata);
             LCheckAudtiUser = LCheckAudtiUser.OrderByDescending(x => x.DepartCode).ToList();
+            var super = Data.ExamUserDetailInfo.Get_Super_UserAduitInfo("HrSignUp",username, "");
+            if (super != null && super.Count() != 0)
+            {
+                LCheckAudtiUser = super.OrderByDescending(x => x.DepartCode).ToList();
+            }
             //主管需要审核的人员
             LSignedupUser = LSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+            var superLSignedupUser = Data.ExamUserDetailInfo.Get_Super_UserAduitInfo("Signup", username, "");
+            if (superLSignedupUser != null && superLSignedupUser.Count() != 0)
+            {
+                LSignedupUser = superLSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+            }
+
+
+
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
             {
@@ -125,12 +204,14 @@ namespace advt.CMS.Models.ExamModel
         {
             LPracticeInfo = Data.PracticeInfo.Get_All_PracticeInfo(new { UserCode = code }).OrderByDescending(x=>x.CreateDate).ToList();
         }
-        public void InsertPracticeInfo(PracticeInfo data,string username)
+        public void InsertPracticeInfo(PracticeInfo data,string username,int DetailId)
         {
             data.CreateUser = username;
             data.CreateDate = DateTime.Now;
             Data.PracticeInfo.Insert_PracticeInfo(data, null, new string[] { "ID" });
-          
+            var dd = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(DetailId);
+            dd.PracticeScore = data.PracticeScore;
+            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(dd, null, new string[] { "ID" });
         }
         public string InsertUserDetail(List<ExamUserDetailInfo> data,string username)
         {

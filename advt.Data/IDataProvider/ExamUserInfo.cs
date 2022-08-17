@@ -21,7 +21,7 @@ namespace advt.Data
         int Get_UpdateExamUserInfo(string UserCode, string Achievement);
         int ReverseExamUserInfo(int ID,string Level,string username);
         int Insert_ElectronicUser_usercode(string usercode, string UserCostCenter, string SubjectName, string username);
-
+        int Insert_Super_usercode(string usercode, string typename, string SubjectName, string username, string depert);
         #endregion
     }
 }

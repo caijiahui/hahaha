@@ -61,6 +61,12 @@
                     <el-table-column label="等级"
                                      prop="ApplyLevel" sortable>
                     </el-table-column>
+                    <el-table-column label="报名类型"
+                                     sortable>
+                        <template slot-scope="scope">
+                            <el-button type="primary" size="mini" v-if="scope.row.SignType!=''&&scope.row.SignType!=null">{{scope.row.SignType}}</el-button>
+                        </template>
+                    </el-table-column>
                     <el-table-column fixed="right"
                                      label="操作"
                                      width="240">
@@ -187,6 +193,12 @@
                                 <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column label="报名类型"
+                                         sortable>
+                            <template slot-scope="scope">
+                                <el-button type="primary" size="mini" v-if="scope.row.SignType!=''&&scope.row.SignType!=null">{{scope.row.SignType}}</el-button>
+                            </template>
+                        </el-table-column>
                         <el-table-column fixed="right"
                                          label="操作"
                                          width="100">
@@ -277,6 +289,12 @@
                     </el-table-column>
                     <el-table-column label="考试日期"
                                      prop="ExamDate" sortable>
+                    </el-table-column>
+                    <el-table-column label="报名类型"
+                                     sortable>
+                        <template slot-scope="scope">
+                            <el-button type="primary" size="mini" v-if="scope.row.SignType!=''&&scope.row.SignType!=null">{{scope.row.SignType}}</el-button>
+                        </template>
                     </el-table-column>
                     <el-table-column fixed="right"
                                      label="操作"

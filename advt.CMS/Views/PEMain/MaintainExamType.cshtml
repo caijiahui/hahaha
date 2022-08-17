@@ -25,15 +25,15 @@
         <el-table :data="LexamType.filter(data => !search || data.TypeName.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100%;margin-top:20px " :default-sort="{prop: 'TypeName', order: 'CreateUser'}" border>
             <el-table-column label="考试类型"
-                             prop="TypeName" sortable
-                             >
+                             prop="TypeName" sortable>
+            </el-table-column>
+            <el-table-column label="超级管理员"
+                             prop="SuperAdmin" sortable>
             </el-table-column>
             <el-table-column label="创建人"
-                             prop="CreateUser" sortable
-                             >
+                             prop="CreateUser" sortable>
             </el-table-column>
-            <el-table-column label="创建时间"
-                            >
+            <el-table-column label="创建时间">
                 <template slot-scope="scope">
                     <span>{{changeDate(scope.row.CreateDate)}}</span>
                 </template>
@@ -48,7 +48,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID, scope.row.TypeName)">Edit</el-button>
+                               @@click="handleEdit(scope.row.ID, scope.row.TypeName,scope.row.SuperAdmin)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row.TypeName)">Delete</el-button>
@@ -60,6 +60,11 @@
             <el-form :model="VexamType">
                 <el-form-item label="考试类型" :label-width="formLabelWidth">
                     <el-input v-model="VexamType.TypeName" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-form :model="VexamType">
+                <el-form-item label="超级管理员" :label-width="formLabelWidth">
+                    <el-input v-model="VexamType.SuperAdmin" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -94,11 +99,12 @@
 
         methods: {
           
-            handleEdit(ID, TypeName) {
+            handleEdit(ID, TypeName, SuperAdmin) {
                
                 var _this = this;
                 _this.dialogFormVisible = true;
                 _this.VexamType.TypeName = TypeName;
+                _this.VexamType.SuperAdmin = SuperAdmin;
                 _this.VexamType.ID = ID
             }, 
             handleSave(flag) {

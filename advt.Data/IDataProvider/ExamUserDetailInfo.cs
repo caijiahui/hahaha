@@ -24,7 +24,8 @@ namespace advt.Data
         IDataReader Get_ExamUserAuditInfo(string ExamStatus, string UserCode, string typename);
         IDataReader Get_All_PostCanSignUser(string UserCode);
         IDataReader GetCanSignUpAudit(string usercode);
-
+        //Get_Super_UserAduitInfo
+        IDataReader Get_Super_UserAduitInfo(string  ExamStatus,string username, string typename);
         #endregion
     }
 }

@@ -425,6 +425,8 @@ namespace advt.CMS.Models.ExamModel
                         v.HrCreateUser = username;
                         v.HrCreateDate = DateTime.Now;
                         v.SubjectName = item.SubjectName;
+                        v.WorkPlace = item.WorkPlace;
+                        v.SignType = item.SignType;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                         result = "已报名成功!";
                        
@@ -657,6 +659,7 @@ namespace advt.CMS.Models.ExamModel
         public string ReadExamDate { get; set; }
         public string WorkPlace { get; set; }
         public string ExamineMonth { get; set; }
+        public string SignType { get; set; }
 
     }
     public class SearchUserData

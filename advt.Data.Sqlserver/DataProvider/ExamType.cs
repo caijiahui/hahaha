@@ -17,13 +17,14 @@ namespace advt.Data.SqlServer
         #region ExamType , (Ver:2.3.8) at: 2021/1/7 15:58:19
         #region Var: 
         private string[] ExamType_key_a = { "ID" };
-        private string ExamType_item_str = "[ID],[TypeName],[CreateUser],[CreateDate]";
+        private string ExamType_item_str = "[ID],[TypeName],[CreateUser],[CreateDate],[SuperAdmin]";
         private string[][] ExamType_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
             new string[] {"TypeName", "NVarChar", "10000"},
             new string[] {"CreateUser", "NVarChar", "10000"},
-            new string[] {"CreateDate", "DateTime", "16"}
+            new string[] {"CreateDate", "DateTime", "16"},
+             new string[] { "SuperAdmin", "NVarChar", "500"}
         };
         #endregion
 

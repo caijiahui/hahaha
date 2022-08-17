@@ -14,6 +14,8 @@ namespace advt.Data
 
         IDataReader Get_All_ExamUsersFromehr(object objparams);
 
+        IDataReader Get_All_SuperUser(string typename, string subject, string sData, string UserName);
+
         int Insert_ExamUsersFromehr(Entity.ExamUsersFromehr info, string[] Include, string[] Exclude);
 
         int Update_ExamUsersFromehr(Entity.ExamUsersFromehr info, string[] Include, string[] Exclude);

@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType";
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -58,7 +58,9 @@ namespace advt.Data.SqlServer
             new string[] { "IsExamPass", "Bit", "1"},
             new string[] { "WorkPlace", "NVarChar", "50"},
             new string[] { "PostID", "NVarChar", "50"},
-            new string[] { "OrgName", "NVarChar", "50"}
+            new string[] { "OrgName", "NVarChar", "50"},
+            new string[] { "SignType", "NVarChar", "50"}
+            
 
 
 
@@ -141,6 +143,22 @@ namespace advt.Data.SqlServer
             l_parms.Add(SqlHelper.MakeInParam("@date", (DbType)SqlDbType.DateTime, 150, date));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
+
+        //Get_Super_UserAduitInfo
+        public IDataReader Get_Super_UserAduitInfo(string ExamStatus,string username, string typename)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from ExamType a inner join ExamUserDetailInfo b on a.TypeName = b.TypeName ");
+            commandText.AppendLine(" where SuperAdmin='"+ username + "' and ExamStatus='"+ ExamStatus + "' and IsStop=0   ");
+            commandText.AppendLine(" and b.WorkPlace in (select OrgName from ExamUsersFromehr where CommpanyEmail like '%"+username+"%' ) ");
+            if (!string.IsNullOrEmpty(typename))
+            {
+                commandText.AppendLine(" and a.TypeName=N'" + typename + "' ");
+            }
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+
+
 
         public IDataReader Get_All_ExamUserGetDetailInfo(string UserCode, string SubjectName, string date, string DepartCode)
         {

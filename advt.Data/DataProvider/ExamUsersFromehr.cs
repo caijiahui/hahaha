@@ -17,6 +17,15 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUsersFromehr(objparams);
             return SqlHelper.GetReaderToList<Entity.ExamUsersFromehr>(reader);
         }
+        //找到超级管理员可报名人
+        public static List<Entity.ExamUsersFromehr> Get_All_SuperUser(string typename,string subject,string sData,string UserName)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_SuperUser(typename,subject, sData, UserName);
+            return SqlHelper.GetReaderToList<Entity.ExamUsersFromehr>(reader);
+        }
+
+
+
 
         public static List<Entity.ExamUsersFromehr> Get_All_ExamUsersFromehr()
         {

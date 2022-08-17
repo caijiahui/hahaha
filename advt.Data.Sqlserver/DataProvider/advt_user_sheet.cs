@@ -27,8 +27,8 @@ namespace advt.Data.SqlServer
             new string[] {"UserCostCenter", "NVarChar", "50"},
             new string[] {"UserGroup", "NVarChar", "50"},
             new string[] {"UserJobTitle", "NVarChar", "50"},
-            new string[] { "UserJobType", "NVarChar", "50"},
-            
+            new string[] { "UserJobType", "NVarChar", "50"}
+
         };
         #endregion
 

@@ -7,6 +7,9 @@
     #app {
         padding: 20px 30px
     }
+    .el-dialog {
+        width: 80%;
+    }
 </style>
 <div id="app" style="margin-left:20px">
     <template>
@@ -48,6 +51,9 @@
                     <div style="float:left;margin-left:20px">
                         <el-button size="small" type="primary" @@click="handleUpdate()">报名</el-button>
                     </div>
+                    <div style="float:left;margin-left:20px">
+                        <el-button size="small" type="primary" @@click="SuperAdminSign()" v-if="IsSuper">超级管理员报名</el-button>
+                    </div>
                 </template>
             </div>
             <div style="clear:both">
@@ -83,9 +89,15 @@
                         <el-table-column label="预计考试时间"
                                          sortable>
                         </el-table-column>
-                        <el-table-column label="实践成绩" prop="TheoreticalAchievement"
+                        <el-table-column label="实践成绩" prop="PracticeScore"
                                          sortable>
 
+                        </el-table-column>
+                        <el-table-column label="报名类型" 
+                                         sortable>
+                            <template slot-scope="scope">
+                                <el-button type="primary" size="mini" v-if="scope.row.SignType!=''&&scope.row.SignType!=null">{{scope.row.SignType}}</el-button>
+                            </template>
                         </el-table-column>
                         <el-table-column fixed="right"
                                          label="操作"
@@ -93,7 +105,7 @@
                             <template slot-scope="scope">
 
                                 <el-button size="mini"
-                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName,scope.row.ApplyLevel,scope.row.SubjectName,scope.row.TypeName)">实践</el-button>
+                                           @@click="handlePractical(scope.row.UserCode,scope.row.UserName,scope.row.ApplyLevel,scope.row.SubjectName,scope.row.TypeName,scope.row.ID)">实践</el-button>
                                 <el-button size="mini"
                                            @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
                                 <el-button size="mini"
@@ -276,6 +288,75 @@
 
         </el-dialog>
         <!-- #endregion -->
+        <!-- #region 超级管理员报名 -->
+        <el-dialog title="超级管理员报名" :visible.sync="dialogSuperVisible" :close-on-click-modal="false" :before-close="handleclose">
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="考试类型" prop="TypeName">
+                    <el-select v-model="Super.TypeName" placeholder="请选择考试类型">
+                        <el-option v-for="item in LSuperExamType" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="考试科目" prop="SubjectName">
+                    <el-select v-model="Super.SubjectName" placeholder="请选择考试科目" clearable filterable>
+                        <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="部门/工号/姓名">
+                    <el-input v-model="Super.Usercode"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @@click="handleSearchUser">查询</el-button>
+                </el-form-item>
+            </el-form>
+            <el-table :data="LSuperUsers"
+                      style="width: 100%;margin-top:20px ">
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="科目"
+                                 prop="SubjectName" sortable>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
+                <el-table-column label="区域"
+                                 prop="WorkPlace" sortable>
+                </el-table-column>
+                
+                <el-table-column fixed="right"
+                                 label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="handleInsertSuper(scope.row.TypeName,scope.row.SubjectName,scope.row.UserCode,scope.row.DepartCode,scope.row.WorkPlace)">添加</el-button>
+
+                    </template>
+                </el-table-column>
+            </el-table>
+
+
+
+
+
+
+
+
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    <el-button @@click="handleclose">取 消</el-button>
+                </template>
+
+            </div>
+
+        </el-dialog>
+        <!-- #endregion -->
         <!-- #region 查看明细 -->
         <el-dialog title="明细查看" :visible.sync="dialogSearchVisible" :close-on-click-modal="false">
             <el-table :data="LExamUserDetailInfo"
@@ -397,10 +478,28 @@
     new Vue({
         el: '#app',
         data: {
+            ListSubjectName: [],
+            Super: {
+                TypeName: "",
+                SubjectName: "",
+                Usercode:""
+            },
+            LSuperExamType: [],
+            LSuperUsers:[],
+            DetailId: 0,
+            IsSuper:false,
+
+
             dialogFormVisible: false,
             dialogFormPractical: false,
             dialogUpdateVisible: false,
             dialogSearchVisible: false,
+           
+
+
+
+
+            dialogSuperVisible:false,
             form: [],
             LCheckAudtiUser: [],
             LExamType: [],
@@ -440,6 +539,17 @@
         created() {
             this.initData({});
         },
+        watch: {
+            'Super.TypeName': function (newval) {
+                var _this = this;
+                //axios.post('/PEMain/GetSubjectName', {
+                axios.post('/PEMain/GetRuleTypeName', {
+                    model: newval
+                }).then(response => {
+                    _this.ListSubjectName = response.data.ListSubjectName;
+                });
+            },
+        },
         methods: {
             changeFun(val) {
                 var _this = this;
@@ -464,6 +574,49 @@
             },
             async getListByDataTime(data) {
 
+            },
+            handleclose() {
+                var _this = this;
+                _this.getdata();
+                _this.dialogSuperVisible = false;
+            },
+            //超级管理员搜索人员
+            handleSearchUser() {
+                var _this = this;
+                if (_this.Super.TypeName == "" || _this.Super.SubjectName == "") {
+                    alert("考试类型或考试科目不可为空")
+                } else {
+                    axios.post('/PEMain/SearchSuperUser', {
+                        typename: _this.Super.TypeName,
+                        subject: _this.Super.SubjectName,
+                        sData: _this.Super.Usercode
+                    }).then(function (res) {
+                        _this.LSuperUsers = res.data.LSuperUsers;
+                    });
+                }
+
+            },
+            //超级管理员报名打开功能
+            SuperAdminSign() {
+                var _this = this;
+                _this.dialogSuperVisible = true;
+                _this.LSuperUsers = [];
+                _this.Super = {};
+
+            },
+            handleInsertSuper(typename, subjectname, usercode, depart, WorkPlace) {
+                var _this = this;
+                //string usercode, string SubjectName, string typename, string depart
+                axios.post('/PEMain/InsertSuper', {
+                    usercode: usercode,
+                    SubjectName: subjectname,
+                    typename: typename,
+                    depart: depart,
+                    WorkPlace: WorkPlace,
+                    sData: _this.Super.Usercode
+                }).then(function (res) {
+                    _this.LSuperUsers = res.data.LSuperUsers;
+                });
             },
             //批量更新操作
             handleUpdate() {
@@ -529,8 +682,9 @@
                 //})
             },
             //上传实践操作
-            handlePractical(usercode, username, ApplyLevel, SubjectName, TypeName) {
+            handlePractical(usercode, username, ApplyLevel, SubjectName, TypeName,id) {
                 var _this = this;
+                _this.DetailId = id;
                 _this.VPracticeInfo.UserCode = usercode;
                 _this.VPracticeInfo.UserName = username;
                 _this.VPracticeInfo.SkillName = ApplyLevel;
@@ -548,22 +702,19 @@
                 _this.$refs.dialogForm.validate(function (v) {
                     if (v) {
                         axios.post('/PEMain/SavePracticeInfo', {
-                            model: _this.VPracticeInfo
+                            model: _this.VPracticeInfo,
+                            DetailId: _this.DetailId
                         }).then(function (res) {
                             _this.VPracticeInfo = {};
                         });
                         _this.dialogFormPractical = false
                     }
-
-
                 })
-
+                _this.getdata();
             },
             handleAannexSuccess(Result) {
                 var _this = this;
                 _this.VPracticeInfo.Enclosure = Result.fileName;
-                console.log(Result.fileName, 11);
-                console.log(_this.VPracticeInfo.Enclosure, 22);
             },
             //查询明细
             handleSearchDetail(usercode) {
@@ -572,7 +723,6 @@
                     model: usercode
                 }).then(function (res) {
                     _this.LExamUserDetailInfo = res.data.LExamUserDetailInfo;
-                    console.log(_this.LExamUserDetailInfo, 5555);
 
                 });
                 _this.dialogSearchVisible = true;
@@ -658,6 +808,8 @@
                     _this.LRules = responese.data.LRules;
                     _this.LSignedupUser = responese.data.LSignedupUser;
                     _this.LExamType = responese.data.LExamType;
+                    _this.LSuperExamType = responese.data.LSuperExamType;
+                    _this.IsSuper = responese.data.IsSuper;
                 });
 
             }
