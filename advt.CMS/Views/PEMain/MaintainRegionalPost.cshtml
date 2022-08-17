@@ -436,14 +436,15 @@
             handleEdit(row) {
                 var _this = this;
                 _this.value1 = [];
-                if (row.PostCycle != null && row.PostCycle.contains(",")) {
+                if (row.PostCycle != null) {
                     var n = row.PostCycle.split(",");
                     n.forEach(function (key, value) {
                         if (key != '') {
                             _this.value1.push(key)
                         }
-                    }) }
-               
+                    })
+                }
+                console.log(_this.value1)
                 _this.VregionalPost = row;
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListExamRule = response.data.ListExamRule;

@@ -144,9 +144,16 @@ namespace advt.CMS.Models.ExamModel
                         {
                             practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
                         }
-                        if (data.TypeName == "53"|| data.TypeName == "65")
+                        if (data.TypeName == "53"|| data.TypeName == "65" || data.TypeName == "66")
                         {
-                            ReadyExamDate = row["ReadyExamDate"].ToString();
+                            if (row["ReadyExamDate"].ToString() == "1900/1/1 0:00:00")
+                            {
+                                ReadyExamDate = null;
+                            }
+                            else
+                            {
+                                ReadyExamDate = row["ReadyExamDate"].ToString();
+                            }
                         }
 
                         ListUserInfo.Add(new UserInfo
@@ -179,7 +186,7 @@ namespace advt.CMS.Models.ExamModel
                             ReadExamDate = ReadyExamDate
                         });
                     }
-                    ListUserInfo11 = ListUserInfo.ToList();
+                    ListUserInfo11 = ListUserInfo.OrderByDescending(x=>x.ReadExamDate!=null).ToList();
                     //YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName)).ToList();
                     var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
                     if (listinfo.Count() > 0 && listinfo != null)
