@@ -166,13 +166,13 @@
                     <el-page-header @@back="goBack" content="考试科目列表">
                     </el-page-header>
                     <div class="header">
-                        <h1>{{VExamScore.ExamType}}</h1>                    
-                    </div>  
+                        <h1>{{VExamScore.ExamType}}</h1>
+                    </div>
                     <div>
                         考试科目：{{VExamScore.ExamSubject}}
                     </div>
                     <div>
-                       
+
                         考试状态：<span v-if="VExamUserInfo.IsTest==false">正式</span>
                         <span v-if="VExamUserInfo.IsTest==true">模拟</span>
                     </div>
@@ -252,16 +252,16 @@
                 </div>
             </el-dialog>*@
         </div>
-        </div>
+    </div>
 
-        <!-- end #container -->
-        <script src="~/Scripts/Vue/Vue.js"></script>
-        <script src="~/Scripts/Vue/axios.js"></script>
-        <script src="~/Scripts/elementUI/lib/index.js"></script>
-        <script src="~/Scripts/Vue/polyfill.min.js"></script>
-        <!-- Yoursite Scripts -->
-        <script>
-          
+    <!-- end #container -->
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <!-- Yoursite Scripts -->
+    <script>
+
             new Vue({
                 el: "#app",
                 data: {
@@ -314,9 +314,9 @@
                     this.getdata();
                     this.add();
 
-                    //// 监听 visibility change 事件 
+                    //// 监听 visibility change 事件
                     //document.addEventListener('visibilitychange', function () {
-                    //    // 页面变为不可见时触发 
+                    //    // 页面变为不可见时触发
                     //    if (document.visibilityState == 'hidden') {
                     //        var _this = this;
                     //        var isHidden = document.hidden;
@@ -324,7 +324,7 @@
                     //            alert("1");
                     //            this.dialogTilteFormVisible = true;
                     //        } else {
-                               
+
                     //        }
                     //    }
                     //});
@@ -395,7 +395,7 @@
                                                     _this.dialogFormVisible = true;
                                                 });
                                                 //window.location.href = "/EPageMain/ExamFinish";
-                                                
+
                                             }
                                         });
                                         window.clearInterval(time)
@@ -416,9 +416,15 @@
                     },
                     submitForm: function (formName, ii) {
                         var _this = this;
+                        if (isNaN(_this.examList.selectItem)) {
+                            if (_this.examList.selectItem.length > 0) {
+                            } else {
+                                _this.examList.selectItem = [];
+                            }
 
-
+                        }
                         this.$refs[formName].validate(function (valid) {
+                        /*_this.$refs.ruleForm.validate(function (valid) {*/
                             if (valid) {
                                 _this.examList.LselectItem = [];
                                 if (_this.examList.type == 1) {
@@ -683,7 +689,6 @@
                             }
 
 
-
                         });
                     },
                     abcChange: function (val) {
@@ -772,13 +777,13 @@
                                 _this.ListBankView = responese.data.ListBankView;
                             })
                         }
-                        
+
                     }
 
                 }
 
             })
-        </script>
+    </script>
 </body>
 </html>
 

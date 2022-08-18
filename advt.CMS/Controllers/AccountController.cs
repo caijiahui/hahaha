@@ -64,7 +64,7 @@ namespace advt.Web.Controllers
         //    return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public ActionResult Login(Model.LoginModel model, string returnUrl,string token)
+        public ActionResult Login(Model.LoginModel model, string returnUrl,string token,string userNo)
         {
             var IsLogin = "";
             try
@@ -75,6 +75,7 @@ namespace advt.Web.Controllers
                     HttpClient _httpClient = new HttpClient();
                     var parameters = new Dictionary<string, string>();
                     parameters.Add("token", token);
+                    parameters.Add("userNo", token);
                     var byteContent = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(parameters)));
                     byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     var response = _httpClient.PostAsync(" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam", byteContent);
