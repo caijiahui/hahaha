@@ -72,7 +72,7 @@ namespace advt.Web.Controllers
             try
             {
                 Entity.advt_users users = new advt_users();
-                if (!string.IsNullOrEmpty(token))
+                if (!string.IsNullOrEmpty(token)&&!string.IsNullOrEmpty(userNo))
                 {
                     var _httpClient = new HttpClient();
                     var URL = $"https://akmclearning.advantech.com.cn/SSO/ValidateUserAuth?token={token}&userNo={userNo}";
@@ -100,6 +100,34 @@ namespace advt.Web.Controllers
                             {
                                 IsLogin = "用户名不存在考试平台系统内";
                             }
+                        }
+                    }
+                }
+                else if (!string.IsNullOrEmpty(token))
+                {
+                    var _httpClient = new HttpClient();
+                    var URL = $" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam?token={token}";
+                    var resultObj = _httpClient.PostAsync(URL, null).Result.Content.ReadAsStringAsync();
+                    var result = "";
+                    if (resultObj == null)
+                    {
+                        result = Newtonsoft.Json.JsonConvert.SerializeObject(new { status = "" });
+                    }
+                    else
+                    {
+                        result = resultObj.Result;
+                    }
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = result });
+                        if (uname != null)
+                        {
+                            Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                            users = service.Authenticate(uname.EamilUsername, "123");
+                        }
+                        else
+                        {
+                            IsLogin = "用户名不存在考试平台系统内";
                         }
                     }
                 }
