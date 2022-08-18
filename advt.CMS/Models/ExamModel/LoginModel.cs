@@ -15,7 +15,9 @@ namespace advt.CMS.Models.ExamModel
     public class LoginModel
     {
        public string token { get; set; }
-        
+        public string userNo { get; set; }
+
+
         public LoginModel() : base()
         {
         }
