@@ -19,7 +19,9 @@ namespace advt.Entity
         public string  DepartCode { get; set; }
         public int MajorQuota { get; set; }//专业加给
         public int SkillsAllowance { get; set; }//技能津贴
-        public int GradePosition { get; set; }
+        public int GradePosition { get; set; }//职等晋升
+        public bool IsAddAllowance { get; set; }//津贴累积计算/津贴增加计算
+        public int PostQuota { get; set; }//岗位等级
 
     }
 }

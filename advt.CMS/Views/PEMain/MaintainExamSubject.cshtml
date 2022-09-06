@@ -27,12 +27,21 @@
                   style="width: 100% ">
             <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
             <el-table-column label="考试科目" prop="SubjectName" sortable></el-table-column>
-            <el-table-column label="部门代码" prop="DepartCode" sortable></el-table-column>
+            <el-table-column label="是否津贴累积"
+                             prop="IsAddAllowance"
+                             width="150"
+                             filter-placement="bottom-end">
+                <template slot-scope="scope">
+                    <div class="lst-box" :class="scope.row.IsAddAllowance? 'el-icon-check' : 'el-icon-close'">
+                    </div>
+                </template>
+            </el-table-column>
             <el-table-column label="HC限制" prop="HCLimit" sortable></el-table-column>
             <el-table-column label="岗位津贴" prop="ElectronicQuota" sortable></el-table-column>
             <el-table-column label="专业加给" prop="MajorQuota" sortable></el-table-column>
             <el-table-column label="技能津贴" prop="SkillsAllowance" sortable></el-table-column>
             <el-table-column label="职等晋升" prop="GradePosition" sortable></el-table-column>
+            <el-table-column label="岗位等级" prop="PostQuota" sortable></el-table-column>
             <el-table-column label="是否系统串实践"
                              prop="IsSysPractice"
                              width="150"
@@ -52,20 +61,20 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="创建人" prop="CreateUser" sortable></el-table-column>
-            <el-table-column label="创建时间"
-                             width="120">
-                <template slot-scope="scope">
-                    <span>{{changeDate(scope.row.CreateDate)}}</span>
-                </template>
-            </el-table-column>
+            @*<el-table-column label="创建人" prop="CreateUser" sortable></el-table-column>
+        <el-table-column label="创建时间"
+                         width="120">
+            <template slot-scope="scope">
+                <span>{{changeDate(scope.row.CreateDate)}}</span>
+            </template>
+        </el-table-column>*@
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input v-model="search" size="mini" placeholder="输入关键字搜索" style="width:200px" />
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini"
-                               @@click="handleEdit(scope.row.ID,scope.row.SubjectName,scope.row.TypeName,scope.row.HCLimit,scope.row.IsSysPractice,scope.row.IsProAssess,scope.row.DepartCode,scope.row.ElectronicQuota,scope.row.MajorQuota,scope.row.SkillsAllowance,scope.row.GradePosition, scope.row)">Edit</el-button>
+                               @@click="handleEdit(scope.row.ID, scope.row)">Edit</el-button>
                     <el-button size="mini"
                                type="danger"
                                @@click="handleDelete(scope.row.ID, scope.row)">Delete</el-button>
@@ -80,8 +89,8 @@
                        :layout="paginations.layout"
                        :total="paginations.total">
         </el-pagination>
-        <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-            <el-form :model="VexamSubject" ref="dialogForm">
+        <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="80%">
+            <el-form :inline="true" :model="VexamSubject" ref="dialogForm">
                 <el-form-item label="考试类型" :label-width="formLabelWidth">
                     <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
                         <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
@@ -89,6 +98,9 @@
                 </el-form-item>
                 <el-form-item label="考试科目" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.SubjectName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="是否津贴累积" prop="IsAddAllowance">
+                    <el-switch v-model="VexamSubject.IsAddAllowance"></el-switch>
                 </el-form-item>
                 @*<el-form-item label="部门代码" :label-width="formLabelWidth">
             <el-input v-model="VexamSubject.DepartCode" autocomplete="off"></el-input>
@@ -107,6 +119,9 @@
                 </el-form-item>
                 <el-form-item label="职等晋升" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.GradePosition" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="岗位等级" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.PostQuota" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="是否系统串实践" prop="IsSysPractice">
                     <el-switch v-model="VexamSubject.IsSysPractice"></el-switch>
@@ -253,19 +268,21 @@
                 _this.dialogFormVisible = false;           
 
             },
-            handleEdit(index, name, tname, HCLimit, IsSysPractice, IsProAssess, DepartCode, ElectronicQuota, MajorQuota, SkillsAllowance, GradePosition,row) {
+            handleEdit(index, row) {
                 var _this = this;
-                _this.VexamSubject.SubjectName = name;
-                _this.VexamSubject.TypeName = tname;
+                _this.VexamSubject.SubjectName = row.SubjectName;
+                _this.VexamSubject.TypeName = row.TypeName;
                 _this.VexamSubject.ID = index;
-                _this.VexamSubject.HCLimit = HCLimit;
-                _this.VexamSubject.IsSysPractice = IsSysPractice;
-                _this.VexamSubject.IsProAssess = IsProAssess;
-                _this.VexamSubject.DepartCode = DepartCode;
-                _this.VexamSubject.ElectronicQuota = ElectronicQuota;
-                _this.VexamSubject.MajorQuota = MajorQuota;
-                _this.VexamSubject.SkillsAllowance = SkillsAllowance;
-                _this.VexamSubject.GradePosition = GradePosition;
+                _this.VexamSubject.HCLimit = row.HCLimit;
+                _this.VexamSubject.IsSysPractice = row.IsSysPractice;
+                _this.VexamSubject.IsProAssess = row.IsProAssess;
+                _this.VexamSubject.DepartCode = row.DepartCode;
+                _this.VexamSubject.ElectronicQuota = row.ElectronicQuota;
+                _this.VexamSubject.MajorQuota = row.MajorQuota;
+                _this.VexamSubject.SkillsAllowance = row.SkillsAllowance;
+                _this.VexamSubject.GradePosition = row.GradePosition;
+                _this.VexamSubject.IsAddAllowance = row.IsAddAllowance;
+                _this.VexamSubject.PostQuota = row.PostQuota;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
 
