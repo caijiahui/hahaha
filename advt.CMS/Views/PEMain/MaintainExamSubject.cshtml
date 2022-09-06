@@ -90,7 +90,7 @@
                        :total="paginations.total">
         </el-pagination>
         <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="80%">
-            <el-form :inline="true" :model="VexamSubject" ref="dialogForm">
+            <el-form  :model="VexamSubject" ref="dialogForm">
                 <el-form-item label="考试类型" :label-width="formLabelWidth">
                     <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
                         <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
