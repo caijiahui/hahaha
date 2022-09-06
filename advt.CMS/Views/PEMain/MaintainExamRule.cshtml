@@ -370,8 +370,8 @@
                         //题数配比
                         _this.ListTopicInfo.forEach(item => {
                             _this.RuleGrList.forEach(o => {
-                                if (item.TopicMajor == o.TopicMajor && item.TopicLevel == o.TopicLevel && item.TopicType == o.TopicType) {
-                                    if (o.TopicNum > item.Bcount) {
+                                if ((item.TopicMajor == o.TopicMajor) && (item.TopicLevel == o.TopicLevel) && (item.TopicType == o.TopicType)) {
+                                    if (parseFloat(item.Bcount)<parseFloat(o.TopicNum)) {
                                         _this.iscount = true;
                                         _this.$alert('题目类型设置的题数不可大于题库对应下的题数!')
                                     }
@@ -452,12 +452,8 @@
                     subjectname: _this.VExamRule.SubjectName
                 }).then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
-                    _this.RuleGrList = response.data.RuleGrList;
-                    _this.ListTopicInfo = response.data.ListTopic;
-                    //_this.ListRegionalPlace = response.data.ListRegionalPlace;
-                    //_this.ListDepartCode = response.data.ListDepartCode;
-                    //_this.ListPostName = response.data.ListPostName;
-
+                    _this.RuleGrList = response.data.RuleGrList;                  
+                    _this.ListTopicInfo = response.data.ListTopic;                    
                     _this.topicratioPropsVal = [];
                     _this.ListTopicInfo.forEach(function (item,index) {
                         _this.RuleGrList.forEach(function (list, num) {
@@ -469,13 +465,11 @@
                             }
                         })
                     })
+                    _this.ListTopicInfo = _this.ListTopicInfo
+                    console.log(_this.ListTopicInfo, 469)
+                    console.log(_this.topicratioPropsVal,470)
 
-                });
-                //axios.post('/PEMain/GetSubjectList').then(response => {
-                //    _this.ListTypeName = response.data.ListTypeName;
-                //    _this.RuleGrList = response.data.ListTopic;
-
-                //});
+                });               
                 _this.dialogFormVisible = true;
             },
             handleDelete(index, row) {

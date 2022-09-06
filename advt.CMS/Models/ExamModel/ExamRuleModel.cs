@@ -265,7 +265,8 @@ namespace advt.CMS.Models.ExamModel
                 else if (item.TopicType == "1")
                 {
                     type = "多选";
-                }
+                }   
+                  
                 ss++;
                 ListTopic.Add(new TopicInfo
                 {

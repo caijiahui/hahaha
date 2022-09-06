@@ -1209,7 +1209,7 @@ namespace advt.Web.Controllers
         public ActionResult GetRegionalPost(string RuleName, string PostName,string RuleTwoName)
         {
             RegionalPostModel model = new RegionalPostModel();           
-            model.GetPostName(RuleName, PostName, RuleTwoName);
+            model.GetPostName(RuleName, PostName, RuleTwoName,null,null);
             return Json(new { tableData = model.ListRegionalPost, VregionalPost = model.VregionalPost, LExamRule = model.LExamRule, LExamRuleTwo=model.LExamRuleTwo, LPostType=model.LPostType, LPostCycleType=model.LPostCycleType}, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -1220,20 +1220,36 @@ namespace advt.Web.Controllers
             return Json(new { Result, tableData = model.ListRegionalPost }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult GetRegionalPostList()
+        public ActionResult GetRegionalPostList(string postid,string departcode,string postname)
         {
             var LExamRules = Data.ExamRule.Get_All_ExamRule();
             var LExamType = Data.ExamType.Get_All_ExamType();
             RegionalPostModel model = new RegionalPostModel();
-            model.GetPostName(null, null, null);
-            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType, ListArea = model.ListArea, LPostRank = model.LPostRank, LPostExamEntry =model.LPostExamEntry , ListExamRuleThree = LExamRules}, JsonRequestBehavior.AllowGet);
+            model.GetPostName(null, postname, null,postid,departcode);
+            return Json(new { ListExamRule = LExamRules, ListExamRuleTwo= LExamRules, ListExamType=LExamType, LPostType = model.LPostType, LPostCycleType = model.LPostCycleType, ListArea = model.ListArea, LPostRank = model.LPostRank, LPostExamEntry =model.LPostExamEntry , ListExamRuleThree = LExamRules, PostRuleList=model.ListExamPostRule }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult GetRuleList(string id,string postname,string departcode)
+        {
+            var LExamRules = Data.ExamRule.Get_All_ExamRule();
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetRulePost(id,postname,departcode);
+            return Json(new {  ListExamRuleTwo = LExamRules, LPostExamEntry = models.LPostExamEntry, PostRuleList = models.ListExamPostRule}, JsonRequestBehavior.AllowGet);
+        }
+        
         [MyAuthorize]
         public ActionResult GetPostDepart(string model)
         {
             RegionalPostModel models = new RegionalPostModel();
             models.GetPostDepart(model);
             return Json(new { ListPostDepart = models.ListPostDepart }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetExamTypeInfo(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetExamTypeInfo(model);
+            return Json(new { ListExamRuleTwo = models.ListExamRuleTwo }, JsonRequestBehavior.AllowGet);
         }
 
         [MyAuthorize]
@@ -1259,6 +1275,13 @@ namespace advt.Web.Controllers
             RegionalPostModel mode = new RegionalPostModel();
             mode.Delete_ExamPost(model);
             return Json(new { tableData = mode.ListRegionalPost }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult DeletePostRule(int model,string postname,string departcode)
+        {
+            RegionalPostModel mode = new RegionalPostModel();
+            mode.DeleteExamPostRule(model, postname, departcode);
+            return Json(new { PostRuleList = mode.ListExamPostRule }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
         public ActionResult SearchAuditUserByType(string subject)

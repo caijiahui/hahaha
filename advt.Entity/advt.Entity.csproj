@@ -70,6 +70,7 @@
     <Compile Include="advt_user_sheet.cs" />
     <Compile Include="AreaPost.cs" />
     <Compile Include="ExamPointScore.cs" />
+    <Compile Include="ExamPostRule.cs" />
     <Compile Include="ExamRolePart.cs" />
     <Compile Include="ExamRole.cs" />
     <Compile Include="ExamBank.cs" />

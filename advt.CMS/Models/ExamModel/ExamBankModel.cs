@@ -100,7 +100,7 @@ namespace advt.CMS.Models.ExamModel
                                 ExamSubject = dr[2].ToString().Trim(),
                                 //ExamSubject =!string.IsNullOrEmpty(dr[2].ToString().Trim())!=true? new Regex("(?<=;) +").Replace(dr[2].ToString().Trim(), ""):null,
                                 TopicMajor = dr[3].ToString().Trim(),
-                                TopicLevel = dr[4].ToString().Trim(),
+                                TopicLevel = dr[4].ToString().Trim()==null?"": dr[4].ToString().Trim(),
                                 TopicType = dr[5].ToString().Trim(),
                                 TopicTitle = dr[6].ToString().Trim(),
                                 TopicTitlePicNum = dr[7].ToString().Trim(),

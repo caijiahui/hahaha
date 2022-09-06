@@ -97,69 +97,6 @@
                     </el-form-item>
                 </div>
                 <div class="divruleone">
-                    <el-form-item label="考试规则" :label-width="formLabelWidth">
-                        <el-select v-model="VregionalPost.RuleName" clearable filterable placeholder="请选择考试规则">
-                            <el-option v-for="item in ListExamRule" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="是否判断绩效成绩" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleOneAch"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断品质扣分" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleOneQuality"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断上岗证" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleOneShangGang"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否要求入职时间" label-width="130px">
-                        <el-select v-model="VregionalPost.ExamEntryRuleOneNum" clearable filterable>
-                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </div>
-                <div class="divruleone">
-                    <el-form-item label="考试规则2" :label-width="formLabelWidth">
-                        <el-select v-model="VregionalPost.RuleTwoName" clearable filterable placeholder="请选择考试规则2">
-                            <el-option v-for="item in ListExamRuleTwo" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="是否判断绩效成绩" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleTwoAch"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断品质扣分" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleTwoQuality"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断上岗证" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleTwoShangGang"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否要求入职时间" label-width="130px">
-                        <el-select v-model="VregionalPost.ExamEntryRuleTwoNum" clearable filterable>
-                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </div>
-                <div class="divruleone">
-                    <el-form-item label="考试规则3" :label-width="formLabelWidth">
-                        <el-select v-model="VregionalPost.RuleThreeName" clearable filterable placeholder="请选择考试规则3">
-                            <el-option v-for="item in ListExamRuleThree" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="是否判断绩效成绩" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleThreeAch"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断品质扣分" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleThreeQuality"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否判断上岗证" label-width="130px">
-                        <el-switch v-model="VregionalPost.IsRuleThreeShangGang"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="是否要求入职时间" label-width="130px">
-                        <el-select v-model="VregionalPost.ExamEntryRuleThreeNum" clearable filterable>
-                            <el-option v-for="item in LPostExamEntry" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </div>
-                <div class="divruleone">
                     <el-form-item label="职等" :label-width="formLabelWidth">
                         <el-select v-model="VregionalPost.RegionRank" clearable filterable placeholder="请选择职等">
                             <el-option v-for="item in LPostRank" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
@@ -175,8 +112,6 @@
                             <el-option v-for="item in LPostCycleType" :key="item.Key" :label="item.Value" :value="item.Value"></el-option>
                         </el-select>
                     </el-form-item>
-                </div>               
-                <div class="divruleone">
                     <el-form-item label="是否每月运算考试" label-width="150px">
                         <el-switch v-model="VregionalPost.IsEveryExam"></el-switch>
                     </el-form-item>
@@ -184,6 +119,50 @@
                         <el-switch v-model="VregionalPost.IsWorkState"></el-switch>
                     </el-form-item>
                 </div>
+                <el-button @@click="CreateRulePost(VregionalPost.ExamType)">新增</el-button>
+                <div>
+                    <template>
+                        <el-table :data="PostRuleList">
+                            <el-table-column prop="RuleName" label="规则"></el-table-column>
+                            <el-table-column prop="PostExamEntry" label="入职天数"></el-table-column>
+                            <el-table-column label="串联绩效"
+                                             prop="IsRuleAch"
+                                             filter-placement="bottom-end">
+                                <template slot-scope="scope">
+                                    <div class="lst-box" :class="scope.row.IsRuleAch? 'el-icon-check' : 'el-icon-close'">
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="串联品质"
+                                             prop="IsRuleQuality"
+                                             filter-placement="bottom-end">
+                                <template slot-scope="scope">
+                                    <div class="lst-box" :class="scope.row.IsRuleQuality? 'el-icon-check' : 'el-icon-close'">
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="串联上岗"
+                                             prop="IsRuleShangGang"
+                                             filter-placement="bottom-end">
+                                <template slot-scope="scope">
+                                    <div class="lst-box" :class="scope.row.IsRuleShangGang? 'el-icon-check' : 'el-icon-close'">
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button @@click.native.prevent="editrule(scope.row,scope.$index)" type="text"
+                                               size="small">编辑</el-button>
+                                    <el-button @@click.native.prevent="deleteRow(scope.row.ID,scope.row)" type="text"
+                                               size="small">
+                                        移除
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <template>
@@ -192,6 +171,43 @@
                 </template>
 
             </div>
+        </el-dialog>
+        <el-dialog title="规则编辑" :visible.sync="dialogRuleFormVisible" :close-on-click-modal="false">
+            <el-form :model="RuleView" ref="dialogForm">
+                <div>
+                    <div class="divruleone">
+                        <el-form-item label="考试规则">
+                            <el-select v-model="RuleView.RuleName" clearable filterable placeholder="请选择考试规则">
+                                <el-option v-for="item in ListExamRuleTwo" :key="item.RuleName" :label="item.RuleName" :value="item.RuleName"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="入职天数">
+                            <el-select v-model="RuleView.PostExamEntry" clearable filterable placeholder="入职天数">
+                                <el-option v-for="item in LPostExamEntry" :key="item.Value" :label="item.Value" :value="item.Value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="divruleone">
+                        <el-form-item label="串联绩效">
+                            <el-switch v-model="RuleView.IsRuleAch"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="串联品质">
+                            <el-switch v-model="RuleView.IsRuleQuality"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="串联上岗">
+                            <el-switch v-model="RuleView.IsRuleShangGang"></el-switch>
+                        </el-form-item>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <template>
+                            <el-button @@click="dialogRuleFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @@click="handleRuleSave">确 定</el-button>
+                        </template>
+
+                    </div>
+                </div>
+                
+            </el-form>
         </el-dialog>
     </div>
 </div>
@@ -211,6 +227,7 @@
         data: {
             tableData: [],
             dialogFormVisible: false,
+            dialogRuleFormVisible: false,
             LExamRule: [], 
             LExamRuleTwo:[],
             PostNames: '',
@@ -243,7 +260,17 @@
             LPostExamEntry: [],
             ExamEntryRuleOneNum: '',
             ExamEntryRuleTwoNum: '',
-            ExamEntryRuleThreeNum:'',
+            ExamEntryRuleThreeNum: '',
+            isaddedit: false,
+            nowindex:null,
+            PostRuleList: [],
+            RuleView: {
+                IsRuleAch: false,
+                IsRuleQuality: false,
+                IsRuleShangGang: false,
+                PostExamEntry: '',
+                RuleName:''
+            },
             paginations: {
                 page_index: 1, 
                 total: 0,
@@ -276,8 +303,7 @@
                 }).then(response => {
                     _this.VregionalPost.PostID = response.data.PostID
                 });
-            },
-           
+            }
         },
         mounted: function () {
             var _this = this;
@@ -285,7 +311,6 @@
         },
         methods: {
             handleChange(value) {
-                console.log(value);
             },
             getInfoList() {
                 var _this = this;
@@ -362,6 +387,7 @@
             createPost: function () {
                 var _this = this;
                 _this.value1 = [];
+                _this.PostRuleList = [];
                 axios.post('/PEMain/GetRegionalPostList').then(response => {
                     _this.ListArea = response.data.ListArea;
                     _this.ListExamRule = response.data.ListExamRule;
@@ -372,7 +398,6 @@
                     _this.LPostCycleType = response.data.LPostCycleType;
                     _this.LPostRank = response.data.LPostRank;
                     _this.LPostExamEntry = response.data.LPostExamEntry;
-                    console.log(response.data.LPostExamEntry,346)
                     _this.VregionalPost = {
                         RegionalPlace: '',
                         DepartCode: '',
@@ -412,6 +437,17 @@
                 _this.dialogFormVisible = true;
                
             },
+            CreateRulePost(ExamType) {
+                var _this = this;
+                _this.isaddedit = true;
+                _this.RuleView = {};
+                axios.post('/PEMain/GetExamTypeInfo', {
+                    model: ExamType
+                }).then(function (res) {
+                    _this.ListExamRuleTwo = res.data.ListExamRuleTwo;
+                });
+                _this.dialogRuleFormVisible = true;
+            },
             handleSave: function () {
                 var _this = this;
                 var objs = {};
@@ -420,6 +456,7 @@
                     _this.VregionalPost.PostCycle += key+","
                 })
                 objs.VregionalPost = _this.VregionalPost;
+                objs.PostRuleList = _this.PostRuleList;
                 axios.post('/PEMain/SavePostInfo', {
                     model: objs
                 }).then(function (res) {
@@ -433,20 +470,36 @@
                 _this.dialogFormVisible = false;           
 
             },
-            handleEdit(row) {
+            handleRuleSave: function () {
                 var _this = this;
-                _this.value1 = [];
-                if (row.PostCycle != null) {
-                    var n = row.PostCycle.split(",");
-                    n.forEach(function (key, value) {
-                        if (key != '') {
-                            _this.value1.push(key)
+                var objs = {};
+                objs.RuleView = _this.RuleView;
+                if (_this.isaddedit) {
+                    _this.PostRuleList.push(objs.RuleView);
+                }
+                else {
+                    _this.PostRuleList.forEach(function (item, index) {
+                        if (_this.nowindex == index) {
+                            item.IsRuleAch = _this.RuleView.IsRuleAch;
+                            item.IsRuleQuality = _this.RuleView.IsRuleQuality;
+                            item.IsRuleShangGang = _this.RuleView.IsRuleShangGang;
+                            item.PostExamEntry = _this.RuleView.PostExamEntry;
                         }
                     })
                 }
-                console.log(_this.value1)
+          
+                _this.dialogRuleFormVisible = false;
+
+            },
+            handleEdit(row) {
+                var _this = this;
+                
                 _this.VregionalPost = row;
-                axios.post('/PEMain/GetRegionalPostList').then(response => {
+                axios.post('/PEMain/GetRegionalPostList', {
+                    postid: row.PostID,
+                    departcode: row.DepartCode,
+                    postname:row.PostName
+                }).then(response => {
                     _this.ListExamRule = response.data.ListExamRule;
                     _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
                     _this.ListExamRuleThree = response.data.ListExamRuleThree;
@@ -455,8 +508,28 @@
                     _this.LPostCycleType = response.data.LPostCycleType;
                     _this.LPostRank = response.data.LPostRank;
                     _this.LPostExamEntry = response.data.LPostExamEntry;
+                    _this.PostRuleList = response.data.PostRuleList;
                 });
                 _this.dialogFormVisible = true;
+            },
+            editrule(row,i) {
+                var _this = this;
+                _this.isaddedit = false;
+                _this.RuleView = JSON.parse(JSON.stringify(row))
+                _this.nowindex = i;
+                axios.post('/PEMain/GetRuleList', {
+                    id: row.ID,
+                    postname: row.PostName,
+                    departcode: row.DepartCode
+
+                }).then(response => {
+                    _this.ListExamRuleTwo = response.data.ListExamRuleTwo;
+                    _this.PostRuleList = response.data.PostRuleList;
+                    _this.LPostExamEntry = response.data.LPostExamEntry;
+                    console.log(_this.LPostExamEntry)
+
+                });
+                _this.dialogRuleFormVisible = true;
             },
             handleDelete(index, row) {
                 this.$confirm('此规则将被删除, 是否继续?', '提示', {
@@ -478,6 +551,29 @@
                     });
                 });
                 
+            },
+            deleteRow(index, row) {
+                this.$confirm('此规则将被删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    var _this = this;
+                    axios.post('/PEMain/DeletePostRule', {
+                        model: index,
+                        postname: row.PostName,
+                        departcode: row.DepartCode
+                    }).then(function (res) {
+                        _this.PostRuleList = res.data.PostRuleList;
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+
             },
            
             SearchinByPostName() {
