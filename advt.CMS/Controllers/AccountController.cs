@@ -25,10 +25,12 @@ namespace advt.Web.Controllers
         }
         //
         // GET: /Account/Login
-        public ActionResult Login(string returnUrl,string token)
+        public ActionResult Login(string returnUrl,string token,string userNo)
         {
             LoginModel model = new LoginModel();
-            model.token = token;
+                string tokenstr = System.Web.HttpUtility.UrlEncode(token, Encoding.GetEncoding("GB2312"));
+            model.token = tokenstr;
+            model.userNo = userNo;
             Manager.Login.ClearSession();
             if (Manager.Login.ValidateUser)
             {
@@ -64,27 +66,31 @@ namespace advt.Web.Controllers
         //    return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public ActionResult Login(Model.LoginModel model, string returnUrl,string token,string userNo)
+        public ActionResult Login(Model.LoginModel model, string returnUrl, string userNo, string token)
         {
             var IsLogin = "";
             try
             {
                 Entity.advt_users users = new advt_users();
-                if (!string.IsNullOrEmpty(token))
+                if (!string.IsNullOrEmpty(token)&&!string.IsNullOrEmpty(userNo))
                 {
-                    HttpClient _httpClient = new HttpClient();
-                    var parameters = new Dictionary<string, string>();
-                    parameters.Add("token", token);
-                    parameters.Add("userNo", token);
-                    var byteContent = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(parameters)));
-                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    var response = _httpClient.PostAsync(" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam", byteContent);
-                    var result = response.Result.Content.ReadAsStringAsync();
+                    var _httpClient = new HttpClient();
+                    var URL = $"https://akmclearning.advantech.com.cn/SSO/ValidateUserAuth?token={token}&userNo={userNo}";
+                    var resultObj = _httpClient.PostAsync(URL, null).Result.Content.ReadAsStringAsync();
+                    var result = "";
+                    if (resultObj == null)
+                    {
+                        result = Newtonsoft.Json.JsonConvert.SerializeObject(new { status = "" });
+                    }
+                    else
+                    {
+                        result = resultObj.Result;
+                    }
                     if (result != null)
                     {
-                        if (!string.IsNullOrEmpty(result.Result))
+                        if (result =="true")
                         {
-                            var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = result.Result });
+                            var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = userNo });
                             if (uname != null)
                             {
                                 Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
@@ -94,6 +100,34 @@ namespace advt.Web.Controllers
                             {
                                 IsLogin = "用户名不存在考试平台系统内";
                             }
+                        }
+                    }
+                }
+                else if (!string.IsNullOrEmpty(token))
+                {
+                    var _httpClient = new HttpClient();
+                    var URL = $" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam?token={token}";
+                    var resultObj = _httpClient.PostAsync(URL, null).Result.Content.ReadAsStringAsync();
+                    var result = "";
+                    if (resultObj == null)
+                    {
+                        result = Newtonsoft.Json.JsonConvert.SerializeObject(new { status = "" });
+                    }
+                    else
+                    {
+                        result = resultObj.Result;
+                    }
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = result });
+                        if (uname != null)
+                        {
+                            Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                            users = service.Authenticate(uname.EamilUsername, "123");
+                        }
+                        else
+                        {
+                            IsLogin = "用户名不存在考试平台系统内";
                         }
                     }
                 }

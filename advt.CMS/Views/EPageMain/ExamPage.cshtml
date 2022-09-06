@@ -313,21 +313,6 @@
                     }
                     this.getdata();
                     this.add();
-
-                    //// 监听 visibility change 事件
-                    //document.addEventListener('visibilitychange', function () {
-                    //    // 页面变为不可见时触发
-                    //    if (document.visibilityState == 'hidden') {
-                    //        var _this = this;
-                    //        var isHidden = document.hidden;
-                    //        if (isHidden) {
-                    //            alert("1");
-                    //            this.dialogTilteFormVisible = true;
-                    //        } else {
-
-                    //        }
-                    //    }
-                    //});
                 },
                 watch: {
                     'examList.selectItem': function (newval) {
@@ -364,6 +349,7 @@
                     num: function (n) {
                         return n < 10 ? '0' + n : '' + n
                     },
+                    //判断考试时间有没有超时
                     add() {
                         var _this = this;
                         if (_this.$refs.idtests.value != 'test') {
@@ -394,7 +380,6 @@
 
                                                     _this.dialogFormVisible = true;
                                                 });
-                                                //window.location.href = "/EPageMain/ExamFinish";
 
                                             }
                                         });
@@ -424,9 +409,19 @@
 
                         }
                         this.$refs[formName].validate(function (valid) {
-                        /*_this.$refs.ruleForm.validate(function (valid) {*/
                             if (valid) {
+                                var obj = {};
+                                obj.examList = _this.examList;
+                                obj.nowItem = _this.nowItem;
+                                obj.total = _this.total;
+                                obj.ListBankView = _this.ListBankView;
+                                obj.VExamUserInfo = _this.VExamUserInfo;
+                                obj.LselectItem = _this.LselectItem;
+                               
+                                //LselectItem  人员自己选择答案对应的a b c d
+                                //type = 0 单选择
                                 _this.examList.LselectItem = [];
+                                 //LselectItem给人员自己的选项赋值A B C D
                                 if (_this.examList.type == 1) {
                                     for (var i = 0; i < _this.examList.selectItem.length; i++) {
                                         var c = _this.examList.selectItem[i];
@@ -435,6 +430,7 @@
                                     }
                                 }
                                 else if (_this.examList.type == 0) {
+                                   
                                     var c = _this.examList.selectItem;
                                     if (_this.examList.ansowerList[c] != null)
                                         _this.examList.LselectItem.push(_this.examList.ansowerList[c].ansowerflag)
@@ -443,19 +439,18 @@
                                     _this.examList.LselectItem = _this.examList.selectItem;
                                 }
                                 if (_this.VExamUserInfo.IsTest) {
-                                    //单选多选判断对错,填空直接往下
+                                    //单选多选逻辑
                                     if (_this.examList.type == 1 || _this.examList.type == 0) {
                                         var next = "";
                                         var a = 1;
+                                        //如果选择错了
                                         if (_this.examList.LselectItem.sort().toString() != _this.examList.RightKey.sort().toString()) {
                                             for (var i = 0; i < _this.examList.ansowerList.length; i++) {
-
                                                 var cc = _this.examList.ansowerList[i].ansowerflag;
                                                 if (_this.examList.RightKey.indexOf(cc) != -1) {
                                                     next += a + ". " + _this.examList.ansowerList[i].ansower + "  ";
                                                     a++;
                                                 }
-
                                             }
                                             if (_this.examList.Remark == null)
                                                 _this.examList.Remark = ''
@@ -464,13 +459,7 @@
                                                 confirmButtonText: '下一题',
                                                 cancelButtonText: '取消'
                                             }).then(() => {
-                                                var obj = {};
-                                                obj.examList = _this.examList;
-                                                obj.nowItem = _this.nowItem;
-                                                obj.total = _this.total;
-                                                obj.ListBankView = _this.ListBankView;
-                                                obj.VExamUserInfo = _this.VExamUserInfo;
-                                                obj.LselectItem = _this.LselectItem;
+
                                                 if (_this.nowItem == _this.total) {     //第二个按钮最后为提交事件
                                                     _this.submitLoading = true;
                                                     obj.examList = _this.examList;
@@ -491,40 +480,38 @@
 
 
                                                 } else {
-
                                                     obj.PreNext = "Next";
-                                                    axios.post('/EPageMain/NextTopic', {
-                                                        model: obj
-                                                    }).then(function (res) {
-                                                        _this.examList = res.data.examList;
-                                                        _this.total = res.data.total;
-                                                        _this.nowItem = res.data.nowItem;
-                                                        _this.ListBankView = res.data.ListBank;
-                                                        _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                        if (_this.examList.selectItem == null) {
-                                                            _this.examList.selectItem = []
+                                                    obj.ListBankView.forEach(function (item) {
+                                                        if (item.index == obj.nowItem) {
+                                                            item.selectItem = obj.examList.selectItem;
+                                                            item.LselectItem = obj.examList.LselectItem;
                                                         }
-                                                        if (_this.examList.LselectItem == null) {
-                                                            _this.examList.LselectItem = []
+                                                    })
+                                                    obj.nowItem = obj.nowItem + 1;
+                                                    obj.ListBankView.forEach(function (item) {
+                                                        if (item.index == obj.nowItem) {
+                                                            obj.examList = item;
                                                         }
-                                                        if (res.data.examList.type == 0) {
-                                                            if (_this.examList.selectItem.length != 0) {
-                                                                _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                                            } else {
-                                                                _this.examList.selectItem = ''
-                                                            }
-
-                                                        }
-
-
-
-                                                    });
+                                                    })
+                                                    _this.examList = obj.examList;
+                                                    _this.total = obj.total;
+                                                    _this.nowItem = obj.nowItem;
+                                                    _this.ListBankView = obj.ListBankView;
+                                                    _this.VExamUserInfo.ListBankView = obj.ListBankView;
+                                                    if (_this.examList.selectItem == null) {
+                                                        _this.examList.selectItem = []
+                                                    }
+                                                    if (_this.examList.LselectItem == null) {
+                                                        _this.examList.LselectItem = []
+                                                    }
                                                 }
                                             }).catch(() => {
                                                 return;
                                             });
                                         }
+                                        //选择对了
                                         else {
+                                           
                                             var obj = {};
                                             obj.examList = _this.examList;
                                             obj.nowItem = _this.nowItem;
@@ -553,34 +540,31 @@
 
                                             } else {
                                                 obj.PreNext = "Next";
-                                                axios.post('/EPageMain/NextTopic', {
-                                                    model: obj
-                                                }).then(function (res) {
-                                                    _this.examList = res.data.examList;
-
-                                                    _this.total = res.data.total;
-                                                    _this.nowItem = res.data.nowItem;
-                                                    _this.ListBankView = res.data.ListBank;
-                                                    _this.VExamUserInfo = res.data.VExamUserInfo;
-                                                    if (_this.examList.selectItem == null) {
-                                                        _this.examList.selectItem = []
+                                                
+                                                obj.ListBankView.forEach(function (item) {
+                                                    if (item.index == obj.nowItem) {
+                                                        item.selectItem = obj.examList.selectItem;
+                                                        item.LselectItem = obj.examList.LselectItem;
                                                     }
-                                                    if (_this.examList.LselectItem == null) {
-                                                        _this.examList.LselectItem = []
+                                                })
+                                                obj.nowItem = obj.nowItem + 1;
+                                                obj.ListBankView.forEach(function (item) {
+                                                    if (item.index == obj.nowItem) {
+                                                        obj.examList = item;
                                                     }
-                                                    if (res.data.examList.type == 0) {
-                                                        if (_this.examList.selectItem.length != 0) {
-                                                            _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                                        } else {
-                                                            _this.examList.selectItem = ''
-                                                        }
-                                                    }
-                                                    if (res.data.examList.type == 2) {
-                                                        _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                                                    }
-
-
-                                                });
+                                                })
+                                                _this.examList = obj.examList;
+                                                _this.total = obj.total;
+                                                _this.nowItem = obj.nowItem;
+                                                _this.ListBankView = obj.ListBankView;
+                                                _this.VExamUserInfo.ListBankView = obj.ListBankView;
+                                                if (_this.examList.selectItem == null) {
+                                                    _this.examList.selectItem = []
+                                                }
+                                                if (_this.examList.LselectItem == null) {
+                                                    _this.examList.LselectItem = []
+                                                }
+                                             
                                             }
                                         }
                                     }
@@ -588,15 +572,7 @@
 
                                 }
                                 if (_this.VExamUserInfo.IsTest == false || _this.examList.type == 2) {
-                                    var obj = {};
-                                    obj.examList = _this.examList;
-                                    obj.nowItem = _this.nowItem;
-                                    obj.total = _this.total;
-                                    obj.ListBankView = _this.ListBankView;
-                                    obj.VExamUserInfo = _this.VExamUserInfo;
-                                    obj.LselectItem = _this.LselectItem;
                                     if (_this.nowItem == _this.total) {
-
                                         _this.submitLoading = true;//第二个按钮最后为提交事件
                                         obj.examList = _this.examList;
                                         obj.ListBankView = _this.ListBankView;
@@ -616,34 +592,29 @@
 
                                     } else {
                                         obj.PreNext = "Next";
-                                        axios.post('/EPageMain/NextTopic', {
-                                            model: obj
-                                        }).then(function (res) {
-                                            _this.examList = res.data.examList;
-
-                                            _this.total = res.data.total;
-                                            _this.nowItem = res.data.nowItem;
-                                            _this.ListBankView = res.data.ListBank;
-                                            _this.VExamUserInfo = res.data.VExamUserInfo;
-                                            if (_this.examList.selectItem == null) {
-                                                _this.examList.selectItem = []
+                                        obj.ListBankView.forEach(function (item) {
+                                            if (item.index == obj.nowItem) {
+                                                item.selectItem = obj.examList.selectItem;
+                                                item.LselectItem = obj.examList.LselectItem;
                                             }
-                                            if (_this.examList.LselectItem == null) {
-                                                _this.examList.LselectItem = []
+                                        })
+                                        obj.nowItem = obj.nowItem + 1;
+                                        obj.ListBankView.forEach(function (item) {
+                                            if (item.index == obj.nowItem) {
+                                                obj.examList = item;
                                             }
-                                            if (res.data.examList.type == 0) {
-                                                if (_this.examList.selectItem.length != 0) {
-                                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                                } else {
-                                                    _this.examList.selectItem = ''
-                                                }
-                                            }
-                                            if (res.data.examList.type == 2) {
-                                                _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                                            }
-
-
-                                        });
+                                        })
+                                        _this.examList = obj.examList;
+                                        _this.total = obj.total;
+                                        _this.nowItem = obj.nowItem;
+                                        _this.ListBankView = obj.ListBankView;
+                                        _this.VExamUserInfo.ListBankView = obj.ListBankView;
+                                        if (_this.examList.selectItem == null) {
+                                            _this.examList.selectItem = []
+                                        }
+                                        if (_this.examList.LselectItem == null) {
+                                            _this.examList.LselectItem = []
+                                        }
                                     }
                                 }
 
@@ -654,6 +625,7 @@
                         });
                     },
                     preBtn: function () {
+                       
                         var _this = this;
                         var objs = {};
                         objs.examList = _this.examList;
@@ -663,33 +635,29 @@
                         objs.ListBankView = _this.ListBankView;
                         objs.VExamUserInfo = _this.VExamUserInfo;
                         objs.PreNext = "Pre";
-                        axios.post('/EPageMain/NextTopic', {
-                            model: objs
-                        }).then(function (res) {
-                            _this.examList = res.data.examList;
-                            _this.total = res.data.total;
-                            _this.nowItem = res.data.nowItem;
-                            _this.ListBankView = res.data.ListBank;
-                            _this.VExamUserInfo = res.data.VExamUserInfo;
-                            if (_this.examList.selectItem == null) {
+                        objs.ListBankView.forEach(function (item) {
+                            if (item.index == objs.nowItem) {
+                                item.selectItem = objs.examList.selectItem;
+                                item.LselectItem = objs.examList.LselectItem;
+                            }
+                        })
+                        objs.nowItem = objs.nowItem - 1;
+                        objs.ListBankView.forEach(function (item) {
+                            if (item.index == objs.nowItem) {
+                                objs.examList = item;
+                            }
+                        })
+                        _this.examList = objs.examList;
+                        _this.total = objs.total;
+                        _this.nowItem = objs.nowItem;
+                        _this.ListBankView = objs.ListBankView;
+                        _this.VExamUserInfo = objs.VExamUserInfo;
+                              if (_this.examList.selectItem == null) {
                                 _this.examList.selectItem = []
                             }
                             if (_this.examList.LselectItem == null) {
                                 _this.examList.LselectItem = []
-                            }
-                            if (res.data.examList.type == 0) {
-                                if (_this.examList.selectItem.length != 0) {
-                                    _this.examList.selectItem = parseFloat(_this.examList.selectItem[0])
-                                } else {
-                                    _this.examList.selectItem = ''
-                                }
-                            }
-                            if (res.data.examList.type == 2) {
-                                _this.examList.selectItem = _this.examList.selectItem[0].toString();
-                            }
-
-
-                        });
+                        }
                     },
                     abcChange: function (val) {
                         if (val == 0) {
@@ -713,8 +681,9 @@
                         var RuleName = _this.$refs.idRuleName.value;
                         var idExamFailResults = _this.$refs.idExamFailResult.value;
                         var falgs = 0;
+                        //判断是模拟
                         if (IsTest == "test") {
-                            console.log(idExamFailResults, 23);
+                            //有错误提示转主页面
                             if (idExamFailResults != '') {
                                 _this.$alert(idExamFailResults, '提示', {
                                     confirmButtonText: '确定',
@@ -731,7 +700,6 @@
                             }
                         }
                         if (IsTest == "formal") {
-                            console.log(idExamFailResults, 32);
                             if (IsExams != '' || idExamFailResults != '') {
                                 _this.$alert(IsExams + idExamFailResults, '提示', {
                                     confirmButtonText: '确定',
@@ -770,8 +738,6 @@
                                     _this.examList.LselectItem = []
                                 }
                                 _this.minutes = responese.data.VExamUserInfo.TotalTime;
-
-
                                 _this.total = responese.data.total;
                                 _this.nowItem = responese.data.nowItem;
                                 _this.ListBankView = responese.data.ListBankView;

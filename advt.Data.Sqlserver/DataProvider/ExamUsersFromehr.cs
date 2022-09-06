@@ -49,6 +49,11 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" SELECT " + ExamUsersFromehr_item_str + "");
             commandText.AppendLine("   FROM [ExamUsersFromehr]");
             commandText.AppendLine("   " + SqlHelper.Get_Where_Obj(objparams));
+            var dd = objparams.ToString();
+            if (dd!= "{ }")
+            {
+                commandText.AppendLine("  and [State]!=N'¿Î÷∞'");
+            }
             List<DbParameter> l_parms = SqlHelper.Get_List_Params(ExamUsersFromehr_item_prop_a, objparams);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());
         }
