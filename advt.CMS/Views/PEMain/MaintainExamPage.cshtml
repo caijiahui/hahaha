@@ -16,14 +16,28 @@
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
             <el-breadcrumb-item>考试报表</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-select v-model="Search.OrgName" placeholder="请选择区域">
+            <el-option v-for="item in LWorkPlace" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+        </el-select>
+        <el-select v-model="Search.DepartCode" placeholder="请选择部门">
+            <el-option v-for="item in ListDepartCode" :key="item" :label="item" :value="item"></el-option>
+        </el-select>
+        <el-select v-model="Search.TypeName" placeholder="请选择考试类型">
+            <el-option v-for="item in LExamType" :key="item" :label="item" :value="item"></el-option>
+        </el-select>
+        <el-select v-model="Search.SubjectName" placeholder="请选择考试科目">
+            <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
+        </el-select>
 
-        <el-input v-model="UserCode" placeholder="工号" style="width:200px"></el-input>
+
+        <el-input v-model="Search.UserCode" placeholder="工号" style="width:200px"></el-input>
+        @*<el-input v-model="UserCode" placeholder="工号" style="width:200px"></el-input>
         <el-input v-model="SubjectName" placeholder="科目" style="width:200px"></el-input>
         <el-input v-model="DepartCode" placeholder="部门" style="width:200px"></el-input>
         <el-date-picker v-model="ExamDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
-        </el-date-picker>
+        </el-date-picker>*@
         <el-button type="primary" @@click="SearchDetailInfo">查询</el-button>
-        <a style="color:white" :href="'/PEMain/ExportPageExcel?UserCode='+UserCode+'&SubjectName='+SubjectName+'&DepartCode='+DepartCode+'&ExamDate='+ExamDate">
+        <a style="color:white" :href="'/PEMain/ExportPageExcel?UserCode='+Search.UserCode+'&SubjectName='+Search.SubjectName+'&TypeName='+Search.TypeName+'&OrgName='+Search.OrgName+'&DepartCode='+Search.DepartCode">
             <el-button type="primary">
                 导出
             </el-button>
@@ -83,13 +97,12 @@
             topicratioProps: { multiple: true, label: 'Text', },
             tableData: [],
             dialogFormVisible: false,
-            ListTypeName: [],
             formLabelWidth: '120px',
-            search: '',
-            UserCode: '',
-            SubjectName: '',
-            ExamDate: '',
-            DepartCode:'',
+            Search: {},
+            LExamType: [],
+            ListSubjectName: [],
+            LWorkPlace: [],
+            ListDepartCode:[],
             paginations: {
                 page_index: 1,
                 total: 0,
@@ -101,16 +114,40 @@
         mounted: function () {
             this.getdata();
         },
+        watch: {
+            'Search.OrgName': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetOrgRuleName', {
+                    model: newval
+                }).then(response => {
+                    _this.LExamType = response.data.LExamTypess;
+                    _this.ListDepartCode = response.data.ListDepartCode;
+                });
+            },
+            'Search.TypeName': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetRuleTypeName', {
+                    model: newval
+                }).then(response => {
+                    _this.ListSubjectName = response.data.ListSubjectName;
+                   
+
+                });
+            }
+        },
         methods: {
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
-                    UserCode: _this.UserCode,
-                    SubjectName: _this.SubjectName,
-                    ExamDate: _this.ExamDate,
-                    DepartCode: _this.DepartCode
+                    data: _this.Search
+                    //UserCode: _this.UserCode,
+                    //SubjectName: _this.SubjectName,
+                    //ExamDate: _this.ExamDate,
+                    //DepartCode: _this.DepartCode
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
+                    //_this.LExamType = res.data.LExamType;
+                    _this.LWorkPlace = res.data.LWorkPlace;
                     _this.setPaginations();
                 });
 
@@ -138,16 +175,18 @@
             handleCurrentChange(page) {
                 var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
-                    UserCode: _this.UserCode,
-                    SubjectName: _this.SubjectName,
-                    ExamDate: _this.ExamDate,
-                    DepartCode: _this.DepartCode
+                    data: _this.Search
+                    //UserCode: _this.UserCode,
+                    //SubjectName: _this.SubjectName,
+                    //ExamDate: _this.ExamDate,
+                    //DepartCode: _this.DepartCode
                 }).then(res => {
                     _this.tableData = res.data.tableData;
+                    //_this.LExamType = res.data.LExamType;
+                    _this.LWorkPlace = res.data.LWorkPlace;
                     let index = _this.paginations.page_size * (page - 1);
                     //获取总数
                     let allData = _this.paginations.page_size * page;
-                    console.log(_this.tableData, index, allData);
                     let tablist = [];
                     for (let i = index; i < allData; i++) {
                         if (_this.tableData[i]) {
@@ -183,7 +222,6 @@
                 s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
                 
                 var NewDtime = Y + M + D + h + m + s;
-                console.log(NewDtime)
                 var listDate = new Date(date);
                 var year = listDate.getFullYear();
                 var mon = listDate.getMonth() + 1;
@@ -193,12 +231,15 @@
             SearchDetailInfo() {
                 var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
-                    UserCode: _this.UserCode,
-                    SubjectName: _this.SubjectName,
-                    ExamDate: _this.ExamDate,
-                    DepartCode: _this.DepartCode
+                    data: _this.Search
+                    //UserCode: _this.UserCode,
+                    //SubjectName: _this.SubjectName,
+                    //ExamDate: _this.ExamDate,
+                    //DepartCode: _this.DepartCode
                 }).then(function (res) {
                     _this.tableData = res.data.tableData;
+                    //_this.LExamType = res.data.LExamType;
+                    _this.LWorkPlace = res.data.LWorkPlace;
                     _this.setPaginations();
                 });
             },

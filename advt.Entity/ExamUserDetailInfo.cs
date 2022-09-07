@@ -69,5 +69,13 @@ namespace advt.Entity
         public string OrgName { get; set; }//区域名
         public string SignType { get; set; }//报名类型
         #endregion
+
+
+        public int ElectronicQuota { get; set; }//岗位津贴       
+        public int MajorQuota { get; set; }//专业加给
+        public int SkillsAllowance { get; set; }//技能津贴
+        public int GradePosition { get; set; }//职等晋升
+        public int PostQuota { get; set; }//岗位等级
+        public int TotalQuota { get; set; }//汇总津贴
     }
 }

@@ -17,7 +17,8 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota";
+
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -59,9 +60,13 @@ namespace advt.Data.SqlServer
             new string[] { "WorkPlace", "NVarChar", "50"},
             new string[] { "PostID", "NVarChar", "50"},
             new string[] { "OrgName", "NVarChar", "50"},
-            new string[] { "SignType", "NVarChar", "50"}
-            
-
+            new string[] { "SignType", "NVarChar", "50"},
+            new string[] { "ElectronicQuota", "Int", "4"},
+            new string[] { "MajorQuota", "Int", "4"},
+            new string[] { "SkillsAllowance", "Int", "4"},
+            new string[] { "GradePosition", "Int", "4"},
+            new string[] { "PostQuota", "Int", "4"},
+            new string[] { "TotalQuota", "Int", "4"}
 
 
         };
@@ -209,7 +214,38 @@ namespace advt.Data.SqlServer
               "   on a.Department = b.UserCostCenter where a.UserCode not in ( select a.UserCode from ElectronicUser a inner join ExamUserDetailInfo b on a.SubjectName = b.SubjectName and b.IsStop=0 ) ");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
-
+        public IDataReader Get_All_ExamUserALLDetailInfo(string UserCode, string SubjectName, string TypeName, string OrgName, string DepartCode)
+        {
+            string sql = string.Empty;
+            
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select *  from ExamUserDetailInfo ");
+            List<DbParameter> l_parms = new List<DbParameter>();
+            sql = " where IsStop=0 and ExamStatus='HrCheck' ";
+            if (!string.IsNullOrEmpty(UserCode)&&UserCode!= "undefined")
+            {
+                sql += " and UserCode like N'%" + UserCode + "%' ";
+            }
+            if (!string.IsNullOrEmpty(TypeName) && TypeName != "undefined")
+            {
+                sql += " and TypeName like N'%" + TypeName + "%' ";
+            }
+            if (!string.IsNullOrEmpty(SubjectName) && SubjectName != "undefined")
+            {
+                sql += " and SubjectName like N'%" + SubjectName + "%' ";
+            }
+            if (!string.IsNullOrEmpty(OrgName) && OrgName != "undefined")
+            {
+                sql += " and OrgName like N'%" + OrgName + "%' ";
+            }
+            if (!string.IsNullOrEmpty(DepartCode) && DepartCode != "undefined")
+            {
+                sql += " and DepartCode like N'%" + DepartCode + "%' ";
+            }            
+            sql += " order by ExamDate desc";
+            commandText.AppendLine(sql);
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         public IDataReader GetCanSignUpAudit(string usercode)
         {
             StringBuilder commandText = new StringBuilder();

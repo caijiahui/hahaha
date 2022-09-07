@@ -70,7 +70,7 @@ namespace advt.CMS.Models.ExamModel
             }
             LWorkPlace = new List<KeyValuePair<string, string>>();
             LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
-            foreach (var item in Data.ExamUserInfo.Get_All_ExamUserInfo().Where(x=>x.WorkPlace!=null).GroupBy(x=>x.WorkPlace))
+            foreach (var item in Data.ExamUserInfo.Get_All_ExamUserInfo().Where(x=>x.OrgName!=null).GroupBy(x=>x.OrgName))
             {
                 LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
             }

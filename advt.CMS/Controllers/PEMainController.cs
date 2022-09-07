@@ -843,8 +843,15 @@ namespace advt.Web.Controllers
         {
             ExamRuleModel models = new ExamRuleModel();
             models.GetSubjectList(model);
-            return Json(new { ListSubjectName = models.ListExamSubject, ListTopic = models.ListTopic }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListSubjectName = models.ListExamSubject, ListTopic = models.ListTopic, LWorkPlace=models.LWorkPlace }, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetOrgRuleName(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetOrgType(model);
+            return Json(new { LExamTypess = models.LExamTypess, ListDepartCode=models.ListDepartCode }, JsonRequestBehavior.AllowGet);
+        }
+        
         public ActionResult GetRuleSubjectName(string model)
         {
             ExamRuleModel models = new ExamRuleModel();
@@ -1111,11 +1118,11 @@ namespace advt.Web.Controllers
         }
         [MyAuthorize]
         [HttpPost]
-        public ActionResult GetMaintainExamPage(string UserCode,string SubjectName,string ExamDate,string DepartCode)
+        public ActionResult GetMaintainExamPage(SerarchData data)
         {
             MaintainExamPageModel model = new MaintainExamPageModel();
-            model.GetPageInfo(UserCode, SubjectName,ExamDate, DepartCode);
-            return Json(new { tableData=model.ListExamUserDetailInfo });
+            model.GetPageInfo(data);
+            return Json(new { tableData=model.ListExamUserDetailInfo, LExamType=model.LExamType, LWorkPlace=model.LWorkPlace });
         }
         //权限管控
         [MyAuthorize]
@@ -1189,10 +1196,10 @@ namespace advt.Web.Controllers
 
             return Json(new { LPic=model.LPic}, JsonRequestBehavior.AllowGet);
         }
-        public FileResult ExportPageExcel(string UserCode, string SubjectName, string DepartCode, string ExamDate)
+        public FileResult ExportPageExcel(string UserCode, string SubjectName, string TypeName, string OrgName, string DepartCode)
         {
             var model = new MaintainExamPageModel();
-            var ms = model.GetPageExcelInfo(UserCode, SubjectName, DepartCode, ExamDate);
+            var ms = model.GetPageExcelInfo(UserCode,  SubjectName,  TypeName,  OrgName,  DepartCode);
             return File(ms, "application/vnd.ms-excel",  "考试报表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
         }

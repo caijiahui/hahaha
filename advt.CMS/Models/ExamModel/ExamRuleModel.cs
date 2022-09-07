@@ -27,6 +27,7 @@ namespace advt.CMS.Models.ExamModel
         public List<SelectListItem> ListRegionPlace { get; set; }
         public List<SelectListItem> ListRegionDepart { get; set; }
         public List<SelectListItem> ListPostName { get; set; }
+        public List<RegionalPost> LWorkPlace { get; set; }
         public ExamRuleModel() : base()
         {
             VExamRule = new ExamRule();
@@ -44,6 +45,7 @@ namespace advt.CMS.Models.ExamModel
             ListRegionPlace = new List<SelectListItem>();
             ListRegionDepart = new List<SelectListItem>();
             ListPostName = new List<SelectListItem>();
+            LWorkPlace = new List<RegionalPost>();
         }
         public void GetRuleName(string ExamType, string SubjectName,string RuleName)
         {
@@ -214,6 +216,7 @@ namespace advt.CMS.Models.ExamModel
         {
             ListExamSubject = Data.ExamRule.GetSubjectList(model);
             ListTopicInfo = Data.ExamRule.GetTopicInfo(model);
+            LWorkPlace=Data.RegionalPost.Get_All_RegionalPost(new { RegionalPlace=model });
 
 
             int ss = 0;

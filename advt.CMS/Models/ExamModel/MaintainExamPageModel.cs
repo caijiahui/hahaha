@@ -13,15 +13,28 @@ namespace advt.CMS.Models.ExamModel
         public PageInfo Model { get; set; }
         public List<PageInfo> ListPageInfo { get; set; }
         public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
+        public List<ExamType> LExamType { get; set; }
+        public SerarchData Serarch { get; set; }
+        public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
         public MaintainExamPageModel() : base()
         {
             Model = new PageInfo();
             ListPageInfo = new List<PageInfo>();
             ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
+            LExamType = new List<ExamType>();
+            Serarch = new SerarchData();
         }
-        public void GetPageInfo(string UserCode,string SubjectName,string ExamDate,string DepartCode)
+        public void GetPageInfo(SerarchData data)
         {
-            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode,SubjectName, ExamDate, DepartCode);
+            LExamType = Data.ExamType.Get_All_ExamType();
+            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode,data.SubjectName,data.TypeName,data.OrgName,data.DepartCode);
+            LWorkPlace = new List<KeyValuePair<string, string>>();
+            LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
+            foreach (var item in Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.OrgName != null).GroupBy(x => x.OrgName))
+            {
+                LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
+            }
+            //ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode,SubjectName, ExamDate, DepartCode);
             //if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
             //{
             //    foreach (var item in ListExamUserDetailInfo)
@@ -57,7 +70,7 @@ namespace advt.CMS.Models.ExamModel
 
         }
 
-        public MemoryStream GetPageExcelInfo(string UserCode, string SubjectName, string DepartCode, string ExamDate)
+        public MemoryStream GetPageExcelInfo(string UserCode, string SubjectName, string TypeName, string OrgName, string DepartCode)
         {
             try
             {
@@ -68,7 +81,7 @@ namespace advt.CMS.Models.ExamModel
                 //添加一个sheet
                 NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
                 var model = new ExamUserDetailInfo();
-                var c = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode, SubjectName, ExamDate, DepartCode);
+                var c = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(UserCode,  SubjectName,  TypeName,  OrgName,  DepartCode);
                 //获取list数据
                 var tlst = c;
                 //给sheet1添加第一行的头部标题
@@ -139,5 +152,14 @@ namespace advt.CMS.Models.ExamModel
         public DateTime? PracticeDate { get; set; }  //最近一次实践成绩通过时间
         public string FullScale { get; set; }//是否满级
         public string OrganizingFunction { get; set; }//组织职能性质
+    }
+    public class SerarchData 
+    { 
+     public string TypeName { get; set; }
+     public string SubjectName { get; set; }
+     public string OrgName { get; set; }
+     public string DepartCode { get; set; }
+     public string UserCode { get; set; }
+     public string IsExam { get; set; }
     }
 }

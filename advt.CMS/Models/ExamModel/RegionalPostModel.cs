@@ -27,7 +27,8 @@ namespace advt.CMS.Models.ExamModel
         public RuleView ruleView { get; set; }
         public List<RuleView> PostRuleList { get; set; }
 
-
+        public List<string> LExamTypess { get; set; }
+        public List<string> ListDepartCode { get; set; }
         public RegionalPostModel() : base()
         {
             VregionalPost = new RegionalPost();
@@ -46,6 +47,8 @@ namespace advt.CMS.Models.ExamModel
             ListExamRuleTwo = new List<ExamRule>();
             ruleView = new RuleView();
             PostRuleList = new List<RuleView>();
+            LExamTypess = new List<string>();
+            ListDepartCode = new List<string>();
         }
         public void GetPostName(string RuleName, string PostName,string RuleTwoName, string postid, string departcode)
         {
@@ -102,6 +105,11 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
+        }
+
+        public void GetOrgType(string model) {
+            LExamTypess = Data.RegionalPost.Get_All_RegionalPost(new { RegionalPlace = model }).Select(x => x.ExamType).Distinct().ToList();
+            ListDepartCode = Data.RegionalPost.Get_All_RegionalPost(new { RegionalPlace = model }).Select(x => x.DepartCode).Distinct().ToList(); 
         }
         public string SavePostInfo(string username)
         {
