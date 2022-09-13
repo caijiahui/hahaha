@@ -541,11 +541,11 @@ namespace advt.CMS.Models
                         }
                         else
                         {
-                            var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName = model.VExamUserInfo.ExamSubject });
+                            var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName=model.VExamUserInfo.ExamSubject });
                             if (ruleinfo.Count() > 0 && ruleinfo != null)
                             {
                                 var PassScore = ruleinfo.FirstOrDefault().PassScore;
-                                ////判断津贴是否加给
+                                //判断津贴是否加给
                                 //var issubjetc = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = model.VExamUserInfo.ExamSubject });
 
                                 //var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;

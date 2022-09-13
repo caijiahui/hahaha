@@ -1122,7 +1122,7 @@ namespace advt.Web.Controllers
         {
             MaintainExamPageModel model = new MaintainExamPageModel();
             model.GetPageInfo(data);
-            return Json(new { tableData=model.ListExamUserDetailInfo, LExamType=model.LExamType, LWorkPlace=model.LWorkPlace });
+            return Json(new { tableData=model.ListPageInfo, LExamType=model.LExamType, LWorkPlace=model.LWorkPlace });
         }
         //权限管控
         [MyAuthorize]

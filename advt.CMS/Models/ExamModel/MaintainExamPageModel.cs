@@ -27,46 +27,69 @@ namespace advt.CMS.Models.ExamModel
         public void GetPageInfo(SerarchData data)
         {
             LExamType = Data.ExamType.Get_All_ExamType();
-            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode,data.SubjectName,data.TypeName,data.OrgName,data.DepartCode);
+           
             LWorkPlace = new List<KeyValuePair<string, string>>();
             LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.OrgName != null).GroupBy(x => x.OrgName))
             {
                 LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
             }
-            //ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserGetDetailInfo(UserCode,SubjectName, ExamDate, DepartCode);
-            //if (ListExamUserDetailInfo.Count() > 0 && ListExamUserDetailInfo != null)
-            //{
-            //    foreach (var item in ListExamUserDetailInfo)
-            //    {                    
-            //        DateTime? prdate = null;
-            //        var pralist = Data.PracticeInfo.Get_All_PracticeInfo(new { SubjectName = item.SubjectName, UserCode = item.UserCode });
-            //        if (pralist.Count() > 0 && pralist != null)
-            //        {
-            //            prdate = pralist.OrderByDescending(x => x.CreateDate).FirstOrDefault().CreateDate;
-            //        }
+            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
+            foreach (var item in ListExamUserDetailInfo)
+            {
+                var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode =item.UserCode, IsStop =false, IsExam = "true" }).OrderByDescending(x=>x.ExamDate).Take(2);
+                var TypeNameTwo = string.Empty;
+                var SubjectNameTwo = string.Empty;
+                DateTime? ExamDateTwo =null;
+                var ExamResultTwo= string.Empty;
+                int PostQuotaTwo = 0;
+                int ElectronicQuotaTwo = 0;
+                int SkillsAllowanceTwo = 0;
+                int MajorQuotaTwo = 0; int TotalQuotaTwo = 0;
+                if (seclst.LastOrDefault()!=null)
+                {
+                    TypeNameTwo = seclst.LastOrDefault().TypeName;
+                    SubjectNameTwo = seclst.LastOrDefault().SubjectName;
+                    ExamDateTwo = seclst.LastOrDefault().ExamDate;
+                    ExamResultTwo = seclst.LastOrDefault().IsExamPass ? "通过" : "未通过";
+                    PostQuotaTwo = seclst.LastOrDefault().PostQuota;
+                    ElectronicQuotaTwo = seclst.LastOrDefault().ElectronicQuota;
+                    SkillsAllowanceTwo = seclst.LastOrDefault().SkillsAllowance;
+                    MajorQuotaTwo = seclst.LastOrDefault().MajorQuota;
+                    TotalQuotaTwo = seclst.LastOrDefault().TotalQuota;
+                }
+               
+                ListPageInfo.Add(new PageInfo
+                {
+                    UserCode = item.UserCode,
+                    UserName = item.UserName,
+                    DepartCode = item.DepartCode,
+                    RankName = item.RankName,
+                    EntryDate = item.EntryDate,
 
-            //        ListPageInfo.Add(new PageInfo
-            //        {
-            //            UserCode = item.UserCode,
-            //            UserName = item.UserName,
-            //            DepartCode = item.DepartCode,
-            //            PostName = item.PostName,
-            //            RankName =item.RankName,
-            //            EntryDate = item.EntryDate,
-            //            OrganizingFunction = "",
-            //            CurrentLevel = item.SkillName,//本职等技能
-            //            ApplyLevel = item.ApplyLevel,//目前技能等级
-            //            CurrectExamDate = item.UserExamDate,//最近一次考试时间
-            //            SubjectName = item.SubjectName,
-            //            ExamScore = item.ExamScore,//最近一次理论成绩
-            //            PracticeScore = item.PracticeScore,
-            //            PracticeDate = prdate,//最近一次实践成绩通过时间
-            //            FullScale = "是"
-            //        });
-            //    }
-            //}
+                    TypeNameOne = item.TypeName,
+                    SubjectNameOne = item.SubjectName,
+                    ExamDateOne = item.ExamDate,
+                    ExamResultOne = item.IsExamPass ? "通过" : "未通过",
+                    PostQuotaOne = item.PostQuota,
+                    ElectronicQuotaOne = item.ElectronicQuota,
+                    SkillsAllowanceOne = item.SkillsAllowance,
+                    MajorQuotaOne = item.MajorQuota,
+                    TotalQuotaOne = item.TotalQuota,
 
+                    TypeNameTwo = TypeNameTwo,
+                    SubjectNameTwo = SubjectNameTwo,
+                    ExamDateTwo = ExamDateTwo,
+                    ExamResultTwo = ExamResultTwo,
+                    PostQuotaTwo= PostQuotaTwo,
+                    ElectronicQuotaTwo= ElectronicQuotaTwo,
+                    SkillsAllowanceTwo= SkillsAllowanceTwo,
+                    MajorQuotaTwo= MajorQuotaTwo,
+                    TotalQuotaTwo= TotalQuotaTwo,
+                    AddData=TotalQuotaTwo- item.TotalQuota,
+                    TakeEffDate = item.ExamDate
+                });
+            }
 
         }
 
@@ -132,26 +155,34 @@ namespace advt.CMS.Models.ExamModel
         public string UserCode { get; set; }//工号
         public string UserName { get; set; }//姓名
         public string DepartCode { get; set; }//部门
-        public string PostName { get; set; }//职称
         public string RankName { get; set; }//职等
         public DateTime? EntryDate { get; set; }//入职日期
-        public string PostState { get; set; }//在职状态
-        public string PostJob { get; set; }//本职岗位
-        public string SubjectName { get; set; }//考核岗位
-        public string SkillName { get; set; } //申请等级
-        public decimal? ExamScore { get; set; }//理论考核
-        public decimal? PracticeScore { get; set; }//实践考核
-        public int SkillAllowance { get; set; }//标准等级津贴
-        public string NewRankName { get; set; }//技能等级通过后可晋升的新职等
-        public int PromotionBonus { get; set; }//晋升加给
-        public int ToatlBonus { get; set; } //此次上调金额
-        public string  CurrentMonth { get; set; }//薪资调整月份
-        public string CurrentLevel { get; set; }  //本职等技能
-        public string ApplyLevel { get; set; }  //目前技能等级
-        public DateTime? CurrectExamDate { get; set; }  //最近一次考试时间
-        public DateTime? PracticeDate { get; set; }  //最近一次实践成绩通过时间
-        public string FullScale { get; set; }//是否满级
-        public string OrganizingFunction { get; set; }//组织职能性质
+        //考试类型 考试科目    考试日期 考试结果    岗位等级 岗位津贴    技能津贴 专业加给    津贴总额
+        public string TypeNameOne { get; set; }
+        public string SubjectNameOne { get; set; }
+        public DateTime? ExamDateOne { get; set; }
+        public string ExamResultOne { get; set; }
+        public int PostQuotaOne { get; set; }//岗位等级
+        public int ElectronicQuotaOne { get; set; }//岗位津贴
+        public int SkillsAllowanceOne { get; set; }//技能津贴       
+        public int MajorQuotaOne { get; set; }//专业加给    
+        public int TotalQuotaOne { get; set; }//汇总津贴
+     
+        //考试类型 考试科目    考试日期 考试结果    岗位等级 岗位津贴    技能津贴 专业加给    津贴总额
+        public string TypeNameTwo { get; set; }
+        public string SubjectNameTwo { get; set; }
+        public DateTime? ExamDateTwo { get; set; }
+        public string ExamResultTwo{ get; set; }
+        public int PostQuotaTwo { get; set; }//岗位等级
+        public int ElectronicQuotaTwo { get; set; }//岗位津贴
+        public int SkillsAllowanceTwo { get; set; }//技能津贴       
+        public int MajorQuotaTwo { get; set; }//专业加给    
+        public int TotalQuotaTwo { get; set; }//汇总津贴
+        //本次考核后增加总额
+        public int AddData { get; set; }
+        public DateTime? TakeEffDate { get; set; }//生效日期
+
+
     }
     public class SerarchData 
     { 

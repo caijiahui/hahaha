@@ -48,31 +48,53 @@
     <div style="margin-top:20px">
         <el-table :data="tableData" border
                   style="width: 100% ">
-            <el-table-column label="工号" prop="UserCode" sortable></el-table-column>
-            <el-table-column label="姓名" prop="UserName" sortable></el-table-column>
-            <el-table-column label="部门" prop="DepartCode" sortable></el-table-column>
-            <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
-            <el-table-column label="职称" prop="PostName" sortable></el-table-column>
-            <el-table-column label="职等" prop="RankName" sortable></el-table-column>
+            <el-table-column label="部门代码" prop="DepartCode"></el-table-column>
+            <el-table-column label="工号" prop="UserCode"></el-table-column>
+            <el-table-column label="姓名" prop="UserName"></el-table-column>
             <el-table-column label="入职日期">
                 <template slot-scope="scope">
                     <span v-if="scope.row.EntryDate!=''&&scope.row.EntryDate!=null">{{changeDate(scope.row.EntryDate)}}</span>
                 </template>
             </el-table-column>
-            @*<el-table-column label="组织职能性质" prop="OrganizingFunction" sortable></el-table-column>*@
-            <el-table-column label="本职等技能" prop="CurrentLevel" sortable></el-table-column>
-            <el-table-column label="目前技能等级" prop="ApplyLevel" sortable></el-table-column>
-            <el-table-column label="最近一次考试时间">
+            <el-table-column label="职级" prop="RankName"></el-table-column>
+            <el-table-column label="上次考核通过记录">
+                @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
+                <el-table-column label="考试类型" prop="TypeNameOne"></el-table-column>
+                <el-table-column label="考试科目" prop="SubjectNameOne"></el-table-column>
+                <el-table-column label="考试日期">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDateOne!=''&&scope.row.ExamDateOne!=null">{{changeDate(scope.row.ExamDateOne)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试结果" prop="ExamResultOne"></el-table-column>
+                <el-table-column label="岗位等级" prop="PostQuotaOne"></el-table-column>
+                <el-table-column label="岗位津贴" prop="ElectronicQuotaOne"></el-table-column>
+                <el-table-column label="技能津贴" prop="SkillsAllowanceOne"></el-table-column>
+                <el-table-column label="专业加给" prop="MajorQuotaOne"></el-table-column>
+                <el-table-column label="津贴总额" prop="TotalQuotaOne"></el-table-column>
+            </el-table-column>
+            <el-table-column label="本次考核通过记录">
+                @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
+                <el-table-column label="考试类型" prop="TypeNameTwo"></el-table-column>
+                <el-table-column label="考试科目" prop="SubjectNameTwo"></el-table-column>
+                <el-table-column label="考试日期">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDateTwo!=''&&scope.row.ExamDateTwo!=null">{{changeDate(scope.row.ExamDateTwo)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试结果" prop="ExamResultTwo"></el-table-column>
+                <el-table-column label="岗位等级" prop="PostQuotaTwo"></el-table-column>
+                <el-table-column label="岗位津贴" prop="ElectronicQuotaTwo"></el-table-column>
+                <el-table-column label="技能津贴" prop="SkillsAllowanceTwo"></el-table-column>
+                <el-table-column label="专业加给" prop="MajorQuotaTwo"></el-table-column>
+                <el-table-column label="津贴总额" prop="TotalQuotaTwo"></el-table-column>
+            </el-table-column>
+            <el-table-column label="本次考核后增加总额" prop="AddData"></el-table-column>
+            <el-table-column label="生效日期">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.UserExamDate!=''&&scope.row.UserExamDate!=null">{{changeallDate(scope.row.UserExamDate)}}</span>
+                    <span v-if="scope.row.TakeEffDate!=''&&scope.row.TakeEffDate!=null">{{changeTakkDate(scope.row.TakeEffDate)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="最近一次理论成绩" prop="ExamScore" sortable></el-table-column>
-            <!--<el-table-column label="最近一次实践成绩通过时间" prop="PracticeDate" sortable>-->
-                @*<template slot-scope="scope">
-                    <span v-if="scope.row.PracticeDate!=''&&scope.row.PracticeDate!=null">{{changeDate(scope.row.PracticeDate)}}</span>
-                </template>*@
-            <!--</el-table-column>-->
 
         </el-table>
         <el-pagination @@size-change="handleSizeChange"
@@ -211,6 +233,21 @@
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
                 return year + '-' + mon + '-' + day;
+            },
+            changeTakkDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + "01";
             },
             changeallDate: function (dates) {
                 var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));

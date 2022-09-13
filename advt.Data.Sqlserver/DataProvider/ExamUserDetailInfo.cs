@@ -217,11 +217,18 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_ExamUserALLDetailInfo(string UserCode, string SubjectName, string TypeName, string OrgName, string DepartCode)
         {
             string sql = string.Empty;
-            
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select *  from ExamUserDetailInfo ");
             List<DbParameter> l_parms = new List<DbParameter>();
-            sql = " where IsStop=0 and ExamStatus='HrCheck' ";
+            if (string.IsNullOrEmpty(UserCode) && string.IsNullOrEmpty(TypeName) && string.IsNullOrEmpty(SubjectName)&& string.IsNullOrEmpty(OrgName) && string.IsNullOrEmpty(DepartCode))
+            {
+                commandText.AppendLine(" select  top 50 *  from ExamUserDetailInfo ");
+            }
+            else
+            {
+                commandText.AppendLine(" select *  from ExamUserDetailInfo "); 
+            }
+            
+            sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='true' ";
             if (!string.IsNullOrEmpty(UserCode)&&UserCode!= "undefined")
             {
                 sql += " and UserCode like N'%" + UserCode + "%' ";
