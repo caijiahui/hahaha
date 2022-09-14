@@ -12,7 +12,7 @@ namespace advt.CMS.Models.ExamModel
     {
         public PageInfo Model { get; set; }
         public List<PageInfo> ListPageInfo { get; set; }
-        public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
+        //public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
         public List<ExamType> LExamType { get; set; }
         public SerarchData Serarch { get; set; }
         public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
@@ -20,21 +20,20 @@ namespace advt.CMS.Models.ExamModel
         {
             Model = new PageInfo();
             ListPageInfo = new List<PageInfo>();
-            ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
+            //ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LExamType = new List<ExamType>();
             Serarch = new SerarchData();
         }
         public void GetPageInfo(SerarchData data)
         {
-            LExamType = Data.ExamType.Get_All_ExamType();
-           
+            LExamType = Data.ExamType.Get_All_ExamType();           
             LWorkPlace = new List<KeyValuePair<string, string>>();
             LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.OrgName != null).GroupBy(x => x.OrgName))
             {
                 LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
             }
-            ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
+            var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
             foreach (var item in ListExamUserDetailInfo)
             {
                 var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode =item.UserCode, IsStop =false, IsExam = "true" }).OrderByDescending(x=>x.ExamDate).Take(2);
@@ -45,7 +44,8 @@ namespace advt.CMS.Models.ExamModel
                 int PostQuotaTwo = 0;
                 int ElectronicQuotaTwo = 0;
                 int SkillsAllowanceTwo = 0;
-                int MajorQuotaTwo = 0; int TotalQuotaTwo = 0;
+                int MajorQuotaTwo = 0;
+                int TotalQuotaTwo = 0;
                 if (seclst.LastOrDefault()!=null)
                 {
                     TypeNameTwo = seclst.LastOrDefault().TypeName;
@@ -57,8 +57,7 @@ namespace advt.CMS.Models.ExamModel
                     SkillsAllowanceTwo = seclst.LastOrDefault().SkillsAllowance;
                     MajorQuotaTwo = seclst.LastOrDefault().MajorQuota;
                     TotalQuotaTwo = seclst.LastOrDefault().TotalQuota;
-                }
-               
+                }               
                 ListPageInfo.Add(new PageInfo
                 {
                     UserCode = item.UserCode,
@@ -86,6 +85,7 @@ namespace advt.CMS.Models.ExamModel
                     SkillsAllowanceTwo= SkillsAllowanceTwo,
                     MajorQuotaTwo= MajorQuotaTwo,
                     TotalQuotaTwo= TotalQuotaTwo,
+
                     AddData=TotalQuotaTwo- item.TotalQuota,
                     TakeEffDate = item.ExamDate
                 });
@@ -97,8 +97,6 @@ namespace advt.CMS.Models.ExamModel
         {
             try
             {
-
-
                 //创建Excel文件的对象
                 NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
                 //添加一个sheet

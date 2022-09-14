@@ -78,7 +78,7 @@ namespace advt.Data.SqlServer
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine("select  id=isnull(b.id,0),a.UserCode, a.EamilUsername  ,a.username,a.CommpanyEmail,a.UserDept,b.[type],b.[location]"
              + "  from ExamUsersFromehr a left join advt_users_type b on a.EamilUsername = b.username");
-            var texts = " where 1=1";
+            var texts = " where 1=1 and a.[State]!=N'¿Î÷∞'";
             var text= "";
             if(!string.IsNullOrEmpty(depert))
             {
