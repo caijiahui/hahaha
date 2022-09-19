@@ -546,39 +546,36 @@ namespace advt.CMS.Models
                             {
                                 var PassScore = ruleinfo.FirstOrDefault().PassScore;
                                 //判断津贴是否加给
-                                //var issubjetc = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = model.VExamUserInfo.ExamSubject });
+                                var issubjetc = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = model.VExamUserInfo.ExamSubject });
 
-                                //var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;
+                                var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;
 
-                                //if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                //{  //考生最后一笔通过记录
-                                //    var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsStop = false, IsExam = "true" }).OrderByDescending(x => x.ExamDate);                                   
-                                //    if (examrecord != null && examrecord.Count() > 0)
-                                //    {
-                                //        //考生上次通过加给
-                                //        ElectronicQuota = examrecord.FirstOrDefault().ElectronicQuota;
-                                //        SkillsAllowance = examrecord.FirstOrDefault().SkillsAllowance;
-                                //        MajorQuota = examrecord.FirstOrDefault().MajorQuota;
-                                //        GradePosition = examrecord.FirstOrDefault().GradePosition;
-                                //        PostQuota = examrecord.FirstOrDefault().PostQuota;
-                                //    }
-                                //}
-
-
+                                if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                {  //考生最后一笔通过记录
+                                    var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsStop = false, IsExam = "true" }).OrderByDescending(x => x.ExamDate);
+                                    if (examrecord != null && examrecord.Count() > 0)
+                                    {
+                                        //考生上次通过加给
+                                        ElectronicQuota = examrecord.FirstOrDefault().ElectronicQuota;
+                                        SkillsAllowance = examrecord.FirstOrDefault().SkillsAllowance;
+                                        MajorQuota = examrecord.FirstOrDefault().MajorQuota;
+                                        GradePosition = examrecord.FirstOrDefault().GradePosition;
+                                        PostQuota = examrecord.FirstOrDefault().PostQuota;
+                                    }
+                                }
                                 if (score >= PassScore)
                                 {
                                     detail.IsExamPass = true;
-                                   
-                                    //if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                    //{                                         
-                                    //    detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota - ElectronicQuota;
-                                    //    detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance - SkillsAllowance;
-                                    //    detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota - MajorQuota;
-                                    //    detail.GradePosition = issubjetc.FirstOrDefault().GradePosition - GradePosition;
-                                    //    detail.PostQuota = issubjetc.FirstOrDefault().PostQuota - PostQuota;
-                                    //    detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
 
-                                    //}
+                                    if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                    {
+                                        detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota - ElectronicQuota;
+                                        detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance - SkillsAllowance;
+                                        detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota - MajorQuota;
+                                        detail.GradePosition = issubjetc.FirstOrDefault().GradePosition - GradePosition;
+                                        detail.PostQuota = issubjetc.FirstOrDefault().PostQuota - PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                    }
 
                                     if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
                                     {
@@ -587,15 +584,15 @@ namespace advt.CMS.Models
                                 }
                                 else
                                 {
-                                    //if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                    //{ //考生没通过加给
-                                    //    detail.ElectronicQuota =  ElectronicQuota;
-                                    //    detail.SkillsAllowance = SkillsAllowance;
-                                    //    detail.MajorQuota =  MajorQuota;
-                                    //    detail.GradePosition = GradePosition;
-                                    //    detail.PostQuota = PostQuota;
-                                    //    detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
-                                    //}
+                                    if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                    { //考生没通过加给
+                                        detail.ElectronicQuota = ElectronicQuota;
+                                        detail.SkillsAllowance = SkillsAllowance;
+                                        detail.MajorQuota = MajorQuota;
+                                        detail.GradePosition = GradePosition;
+                                        detail.PostQuota = PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                    }
                                     detail.IsExamPass = false;
                                     
                                 }

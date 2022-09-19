@@ -104,7 +104,7 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("8", "360天"));
         }
 
         public void GetOrgType(string model) {

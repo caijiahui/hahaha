@@ -48,36 +48,21 @@
     <div style="margin-top:20px">
         <el-table :data="tableData" border
                   style="width: 100% ">
-            <el-table-column label="部门代码" prop="DepartCode"></el-table-column>
-            <el-table-column label="工号" prop="UserCode"></el-table-column>
-            <el-table-column label="姓名" prop="UserName"></el-table-column>
-            <el-table-column label="入职日期">
+            <el-table-column fixed label="部门代码" prop="DepartCode"></el-table-column>
+            <el-table-column fixed label="工号" prop="UserCode" width="90"></el-table-column>
+            <el-table-column fixed label="姓名" prop="UserName"></el-table-column>
+            <el-table-column  fixed label="入职日期"  width="110">
                 <template slot-scope="scope">
                     <span v-if="scope.row.EntryDate!=''&&scope.row.EntryDate!=null">{{changeDate(scope.row.EntryDate)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="职级" prop="RankName"></el-table-column>
+            <el-table-column fixed label="职级" prop="RankName"></el-table-column>
+
             <el-table-column label="上次考核通过记录">
                 @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
-                <el-table-column label="考试类型" prop="TypeNameOne"></el-table-column>
-                <el-table-column label="考试科目" prop="SubjectNameOne"></el-table-column>
-                <el-table-column label="考试日期">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.ExamDateOne!=''&&scope.row.ExamDateOne!=null">{{changeDate(scope.row.ExamDateOne)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="考试结果" prop="ExamResultOne"></el-table-column>
-                <el-table-column label="岗位等级" prop="PostQuotaOne"></el-table-column>
-                <el-table-column label="岗位津贴" prop="ElectronicQuotaOne"></el-table-column>
-                <el-table-column label="技能津贴" prop="SkillsAllowanceOne"></el-table-column>
-                <el-table-column label="专业加给" prop="MajorQuotaOne"></el-table-column>
-                <el-table-column label="津贴总额" prop="TotalQuotaOne"></el-table-column>
-            </el-table-column>
-            <el-table-column label="本次考核通过记录">
-                @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
                 <el-table-column label="考试类型" prop="TypeNameTwo"></el-table-column>
-                <el-table-column label="考试科目" prop="SubjectNameTwo"></el-table-column>
-                <el-table-column label="考试日期">
+                <el-table-column label="考试科目" prop="SubjectNameTwo" width="110"></el-table-column>
+                <el-table-column label="考试日期"  width="110">
                     <template slot-scope="scope">
                         <span v-if="scope.row.ExamDateTwo!=''&&scope.row.ExamDateTwo!=null">{{changeDate(scope.row.ExamDateTwo)}}</span>
                     </template>
@@ -89,8 +74,24 @@
                 <el-table-column label="专业加给" prop="MajorQuotaTwo"></el-table-column>
                 <el-table-column label="津贴总额" prop="TotalQuotaTwo"></el-table-column>
             </el-table-column>
+            <el-table-column label="本次考核通过记录">
+                @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
+                <el-table-column label="考试类型" prop="TypeNameOne"></el-table-column>
+                <el-table-column label="考试科目" prop="SubjectNameOne" width="110"></el-table-column>
+                <el-table-column label="考试日期"  width="110">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDateOne!=''&&scope.row.ExamDateOne!=null">{{changeDate(scope.row.ExamDateOne)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="考试结果" prop="ExamResultOne"></el-table-column>
+                <el-table-column label="岗位等级" prop="PostQuotaOne"></el-table-column>
+                <el-table-column label="岗位津贴" prop="ElectronicQuotaOne"></el-table-column>
+                <el-table-column label="技能津贴" prop="SkillsAllowanceOne"></el-table-column>
+                <el-table-column label="专业加给" prop="MajorQuotaOne"></el-table-column>
+                <el-table-column label="津贴总额" prop="TotalQuotaOne"></el-table-column>
+            </el-table-column>
             <el-table-column label="本次考核后增加总额" prop="AddData"></el-table-column>
-            <el-table-column label="生效日期">
+            <el-table-column label="生效日期"  width="110">
                 <template slot-scope="scope">
                     <span v-if="scope.row.TakeEffDate!=''&&scope.row.TakeEffDate!=null">{{changeTakkDate(scope.row.TakeEffDate)}}</span>
                 </template>

@@ -37,6 +37,7 @@ namespace advt.CMS.Models.ExamModel
             foreach (var item in ListExamUserDetailInfo)
             {
                 var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode =item.UserCode, IsStop =false, IsExam = "true" }).OrderByDescending(x=>x.ExamDate).Take(2);
+                
                 var TypeNameTwo = string.Empty;
                 var SubjectNameTwo = string.Empty;
                 DateTime? ExamDateTwo =null;
@@ -46,8 +47,33 @@ namespace advt.CMS.Models.ExamModel
                 int SkillsAllowanceTwo = 0;
                 int MajorQuotaTwo = 0;
                 int TotalQuotaTwo = 0;
-                if (seclst.LastOrDefault()!=null)
+                var TypeNameOne = string.Empty;
+                var SubjectNameOne = string.Empty;
+                DateTime? ExamDateOne = null;
+                var ExamResultOne = string.Empty;
+                int PostQuotaOne = 0;
+                int ElectronicQuotaOne = 0;
+                int SkillsAllowanceOne = 0;
+                int MajorQuotaOne = 0;
+                int TotalQuotaOne = 0;
+                //if (seclst.Count() == 1)
+                //{
+
+
+                //}
+                //本次
+                TypeNameOne = seclst.FirstOrDefault().TypeName;
+                SubjectNameOne = seclst.FirstOrDefault().SubjectName;
+                ExamDateOne = seclst.FirstOrDefault().ExamDate;
+                ExamResultOne = seclst.FirstOrDefault().IsExamPass ? "通过" : "未通过";
+                PostQuotaOne = seclst.FirstOrDefault().PostQuota;
+                ElectronicQuotaOne = seclst.FirstOrDefault().ElectronicQuota;
+                SkillsAllowanceOne = seclst.FirstOrDefault().SkillsAllowance;
+                MajorQuotaOne = seclst.FirstOrDefault().MajorQuota;
+                TotalQuotaOne = seclst.FirstOrDefault().TotalQuota;
+                if (seclst.Count()==2)
                 {
+                    //上次
                     TypeNameTwo = seclst.LastOrDefault().TypeName;
                     SubjectNameTwo = seclst.LastOrDefault().SubjectName;
                     ExamDateTwo = seclst.LastOrDefault().ExamDate;
@@ -57,7 +83,8 @@ namespace advt.CMS.Models.ExamModel
                     SkillsAllowanceTwo = seclst.LastOrDefault().SkillsAllowance;
                     MajorQuotaTwo = seclst.LastOrDefault().MajorQuota;
                     TotalQuotaTwo = seclst.LastOrDefault().TotalQuota;
-                }               
+                }            
+
                 ListPageInfo.Add(new PageInfo
                 {
                     UserCode = item.UserCode,
@@ -66,28 +93,30 @@ namespace advt.CMS.Models.ExamModel
                     RankName = item.RankName,
                     EntryDate = item.EntryDate,
 
-                    TypeNameOne = item.TypeName,
-                    SubjectNameOne = item.SubjectName,
-                    ExamDateOne = item.ExamDate,
-                    ExamResultOne = item.IsExamPass ? "通过" : "未通过",
-                    PostQuotaOne = item.PostQuota,
-                    ElectronicQuotaOne = item.ElectronicQuota,
-                    SkillsAllowanceOne = item.SkillsAllowance,
-                    MajorQuotaOne = item.MajorQuota,
-                    TotalQuotaOne = item.TotalQuota,
-
                     TypeNameTwo = TypeNameTwo,
                     SubjectNameTwo = SubjectNameTwo,
                     ExamDateTwo = ExamDateTwo,
                     ExamResultTwo = ExamResultTwo,
-                    PostQuotaTwo= PostQuotaTwo,
-                    ElectronicQuotaTwo= ElectronicQuotaTwo,
-                    SkillsAllowanceTwo= SkillsAllowanceTwo,
-                    MajorQuotaTwo= MajorQuotaTwo,
-                    TotalQuotaTwo= TotalQuotaTwo,
+                    PostQuotaTwo = PostQuotaTwo,
+                    ElectronicQuotaTwo = ElectronicQuotaTwo,
+                    SkillsAllowanceTwo = SkillsAllowanceTwo,
+                    MajorQuotaTwo = MajorQuotaTwo,
+                    TotalQuotaTwo = TotalQuotaTwo,
 
-                    AddData=TotalQuotaTwo- item.TotalQuota,
-                    TakeEffDate = item.ExamDate
+                    TypeNameOne = TypeNameOne,
+                    SubjectNameOne = SubjectNameOne,
+                    ExamDateOne = ExamDateOne,
+                    ExamResultOne = ExamResultOne,
+                    PostQuotaOne = PostQuotaOne,
+                    ElectronicQuotaOne = ElectronicQuotaOne,
+                    SkillsAllowanceOne = SkillsAllowanceOne,
+                    MajorQuotaOne = MajorQuotaOne,
+                    TotalQuotaOne = TotalQuotaOne,
+
+                   
+
+                    AddData= TotalQuotaOne - TotalQuotaTwo,
+                    TakeEffDate = ExamDateOne
                 });
             }
 
