@@ -551,7 +551,8 @@ namespace advt.CMS.Models
                                 var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;
 
                                 if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                {  //考生最后一笔通过记录
+                                {
+                                    //考生最后一笔通过记录
                                     var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsStop = false, IsExam = "true" }).OrderByDescending(x => x.ExamDate);
                                     if (examrecord != null && examrecord.Count() > 0)
                                     {
@@ -563,6 +564,7 @@ namespace advt.CMS.Models
                                         PostQuota = examrecord.FirstOrDefault().PostQuota;
                                     }
                                 }
+                               
                                 if (score >= PassScore)
                                 {
                                     detail.IsExamPass = true;
@@ -575,6 +577,23 @@ namespace advt.CMS.Models
                                         detail.GradePosition = issubjetc.FirstOrDefault().GradePosition - GradePosition;
                                         detail.PostQuota = issubjetc.FirstOrDefault().PostQuota - PostQuota;
                                         detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                    }
+                                    else
+                                    {
+                                        //判断同岗位
+                                        detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota;
+                                        detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance;
+                                        detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota;
+                                        detail.GradePosition = issubjetc.FirstOrDefault().GradePosition;
+                                        detail.PostQuota = issubjetc.FirstOrDefault().PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                        //if (detail.PostName == examrecord.FirstOrDefault().PostName)
+                                        //{ 
+                                        //}
+                                        //else
+                                        //{
+                                        //    //不同岗位,岗位对应科目,去捞上次的记录
+                                        //}
                                     }
 
                                     if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")

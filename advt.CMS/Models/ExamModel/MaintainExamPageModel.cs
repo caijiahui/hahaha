@@ -13,7 +13,8 @@ namespace advt.CMS.Models.ExamModel
         public PageInfo Model { get; set; }
         public List<PageInfo> ListPageInfo { get; set; }
         //public List<ExamUserDetailInfo> ListExamUserDetailInfo { get; set; }
-        public List<ExamType> LExamType { get; set; }
+        //public List<ExamType> LExamType { get; set; }
+        public List<string> LExamType { get; set; }
         public SerarchData Serarch { get; set; }
         public List<KeyValuePair<string, string>> LWorkPlace { get; set; }
         public MaintainExamPageModel() : base()
@@ -21,12 +22,13 @@ namespace advt.CMS.Models.ExamModel
             Model = new PageInfo();
             ListPageInfo = new List<PageInfo>();
             //ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
-            LExamType = new List<ExamType>();
+            LExamType = new List<string>();
             Serarch = new SerarchData();
         }
         public void GetPageInfo(SerarchData data)
         {
-            LExamType = Data.ExamType.Get_All_ExamType();           
+            LExamType = Data.ExamType.Get_All_ExamType().Select(x => x.TypeName).Distinct().ToList();
+              
             LWorkPlace = new List<KeyValuePair<string, string>>();
             LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.OrgName != null).GroupBy(x => x.OrgName))
