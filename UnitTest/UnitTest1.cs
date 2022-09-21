@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web;
 
 namespace UnitTest
 {
@@ -12,52 +14,43 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            const string ch = "。；，？！、“”‘’（）—";//中文字符
-            const string en = @".;,?!\""""''()-";//英文字符
-            var text = "Schottky Diode, BAT54,single, SOT23";
-            char[] c = text.ToCharArray();
-            for (int i = 0; i < c.Length; i++)
+            //HttpClient _httpClient = new HttpClient();
+            //var SerialId = "KAN522H216";
+            //var response = _httpClient.GetAsync("http://172.21.128.84:801/api/Automate/GetInfoToSN?SerialId="+ SerialId);
+            //var result = response.Result.Content.ReadAsStringAsync();
+            //if (result != null)
+            //{
+            //    if(!string.IsNullOrEmpty(result.Result))
+            //    {
+            //        var res = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(result.Result);
+            //        var needresult = res["orderId"].ToString();
+            //    }
+            //}
+
+
+
+
+
+            HttpClient _httpClient = new HttpClient();
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("passed", "1"); //结果（0/1）
+            parameters.Add("stationType", "T0"); //站别（T0 / T1）  先返回T0数据再抛T1数据
+            parameters.Add("userCode", "Q-19568");//人员工号
+            parameters.Add("finishDate", DateTime.Now.ToString());//结束时间
+            parameters.Add("serialNumber", "KAN522H216");//整机序号
+            parameters.Add("errorCode", "");//当结果返回0时返回错误代码
+            var response = _httpClient.PostAsync("http://172.21.128.84:801/api/Automate/AutoTempResult", new FormUrlEncodedContent(parameters));
+            var result = response.Result.Content.ReadAsStringAsync();
+            if (result != null)
             {
-                int n = ch.IndexOf(c[i]);
-                if (n != -1) c[i] = en[n];
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    var res = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(result.Result);
+                    var succeed = res["succeed"].ToString();
+                    var message = res["message"].ToString();
+                }
             }
-            var cc = new string(c);
-            //TBSopPath models = new TBSopPath();
-            //try
-            //{
-            //    HttpClient _httpClient = new HttpClient();
-            //    var parameters = new Dictionary<string, string>();
-            //    parameters.Add("token", "050b5cc7-0194-4b0b-9a12-9c7fcf458a3a_Q-19568");
-            //    var byteContent = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(parameters)));
-            //    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            //    var response = _httpClient.PostAsync(" http://job.advantech.com.cn/HRConsole/SSO/ValidateUserFromExam", byteContent);
-            //    var result = response.Result.Content.ReadAsStringAsync();
-            //   // var Data = Newtonsoft.Json.JsonConvert.DeserializeObject<QuerySerialNumberPartsResponse>(result.Result);
-            //    //if (Data != null)
-            //    //{
-            //    //    if (Data.Data.Where(x => x.SN == PartSN).Count() != 0)
-            //    //    {
-            //    //        PartName = Data.Data.Where(x => x.SN == PartSN).FirstOrDefault().PartNo;
-            //    //    }
-            //    //}
-            //}
-            //catch (Exception ex)
-            //{
 
-            //    throw;
-            //}
-
-
-        }
-
-        public class TBSopPath
-        {
-            public string Path { get; set; }
-            public string FileName { get; set; }
-            public string UserName { get; set; }
-            public string Password { get; set; }
-            public bool Flag { get; set; }
-            public string Message { get; set; }
 
         }
     }
