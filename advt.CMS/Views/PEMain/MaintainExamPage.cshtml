@@ -10,8 +10,8 @@
         width: 50px;
     }
 </style>
-<div id="app" style="margin-left:20px">
-    <template>
+<div id="app" style="margin-left: 20px; flex: 1;display:flex;flex-direction:column">
+    <div>
         <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
             <el-breadcrumb-item>考试管理</el-breadcrumb-item>
             <el-breadcrumb-item>考试报表</el-breadcrumb-item>
@@ -43,15 +43,18 @@
             </el-button>
 
         </a>
-    </template>
+    </div>
 
-    <div style="margin-top:20px">
+    <div style="margin-top:20px;flex:1" ref="tableContainer">
         <el-table :data="tableData" border
+                  ref="tableList"
+                  :height="tableHeight"
+                  :style="{'max-height':tableHeight + 'px'}"
                   style="width: 100% ">
             <el-table-column fixed label="部门代码" prop="DepartCode"></el-table-column>
             <el-table-column fixed label="工号" prop="UserCode" width="90"></el-table-column>
             <el-table-column fixed label="姓名" prop="UserName"></el-table-column>
-            <el-table-column  fixed label="入职日期"  width="110">
+            <el-table-column fixed label="入职日期" width="110">
                 <template slot-scope="scope">
                     <span v-if="scope.row.EntryDate!=''&&scope.row.EntryDate!=null">{{changeDate(scope.row.EntryDate)}}</span>
                 </template>
@@ -62,7 +65,7 @@
                 @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
                 <el-table-column label="考试类型" prop="TypeNameTwo"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectNameTwo" width="110"></el-table-column>
-                <el-table-column label="考试日期"  width="110">
+                <el-table-column label="考试日期" width="110">
                     <template slot-scope="scope">
                         <span v-if="scope.row.ExamDateTwo!=''&&scope.row.ExamDateTwo!=null">{{changeDate(scope.row.ExamDateTwo)}}</span>
                     </template>
@@ -78,7 +81,7 @@
                 @*//考试类型	考试科目	考试日期	考试结果	岗位等级	岗位津贴	技能津贴	专业加给	津贴总额*@
                 <el-table-column label="考试类型" prop="TypeNameOne"></el-table-column>
                 <el-table-column label="考试科目" prop="SubjectNameOne" width="110"></el-table-column>
-                <el-table-column label="考试日期"  width="110">
+                <el-table-column label="考试日期" width="110">
                     <template slot-scope="scope">
                         <span v-if="scope.row.ExamDateOne!=''&&scope.row.ExamDateOne!=null">{{changeDate(scope.row.ExamDateOne)}}</span>
                     </template>
@@ -91,7 +94,7 @@
                 <el-table-column label="津贴总额" prop="TotalQuotaOne"></el-table-column>
             </el-table-column>
             <el-table-column label="本次考核后增加总额" prop="AddData"></el-table-column>
-            <el-table-column label="生效日期"  width="110">
+            <el-table-column label="生效日期" width="110">
                 <template slot-scope="scope">
                     <span v-if="scope.row.TakeEffDate!=''&&scope.row.TakeEffDate!=null">{{changeTakkDate(scope.row.TakeEffDate)}}</span>
                 </template>
@@ -133,9 +136,11 @@
                 page_sizes: [10, 15, 20],
                 layout: 'total, sizes, prev, pager, next, jumper'
             },
+            tableHeight: null
         },
         mounted: function () {
             this.getdata();
+            this.calHeight()
         },
         watch: {
             'Search.OrgName': function (newval) {
@@ -159,6 +164,21 @@
             }
         },
         methods: {
+            // 根据父元素高度改变表格高度
+            calHeight: function () {
+                this.$nextTick(() => {
+                    // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置
+                    const rect = this.$refs.tableContainer.getBoundingClientRect()
+                    this.tableHeight = rect.height - 155  // 若有分页，减去分页高度
+                })
+            },
+            // 监听界面resize调calHeight更新表格高度
+            onResize: function () {
+                this.timer && clearTimeout(this.timer)
+                this.timer = setTimeout(() => {
+                    this.calHeight()
+                }, 100)
+            },
             getdata: function () {
                 var _this = this;
                 axios.post('/PEMain/GetMaintainExamPage', {
