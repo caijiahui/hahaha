@@ -29,6 +29,8 @@
             </el-tab-pane>
             <el-tab-pane label="主管审核通过人员" name="Two">
             </el-tab-pane>
+            <el-tab-pane label="主管取消人员" name="Three">
+            </el-tab-pane>
         </el-tabs>
         <div v-show="activeName=='first'">
             <div style="float:left;margin-bottom:20px">
@@ -93,7 +95,7 @@
                                          sortable>
 
                         </el-table-column>
-                        <el-table-column label="报名类型" 
+                        <el-table-column label="报名类型"
                                          sortable>
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" v-if="scope.row.SignType!=''&&scope.row.SignType!=null">{{scope.row.SignType}}</el-button>
@@ -163,6 +165,47 @@
                         <el-button size="mini"
                                    @@click="handleSearchDetail(scope.row.UserCode,scope.row.UserName)">历史</el-button>
 
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <div v-show="activeName=='Three'">
+            <el-table :data="LRecordupUser.filter(data => !search || data.UserCode.toLowerCase().includes(search.toLowerCase()))"
+                      height="550">
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
+                <el-table-column label="考试科目"
+                                 prop="SubjectName" sortable>
+                </el-table-column>
+                <el-table-column label="考试日期" width="110">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="汇总津贴"
+                                 prop="TotalQuota" sortable>
+                </el-table-column>
+                <el-table-column>
+                    <template slot="header" slot-scope="scope">
+                        <el-input v-model="search"
+                                  size="mini"
+                                  placeholder="输入工号搜索" />
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="CelarQuata(scope.row)">取消</el-button>
+                        <el-button size="mini"
+                                   @@click="CelarUpLevel(scope.row)">降级</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -258,12 +301,11 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer">                
                 <template>
                     <el-button @@click="dialogFormPractical = false">取 消</el-button>
                     <el-button type="primary" @@click="handlePracticalSave('save')">保存</el-button>
                 </template>
-
             </div>
         </el-dialog>
         <!-- #endregion -->
@@ -330,7 +372,7 @@
                 <el-table-column label="区域"
                                  prop="WorkPlace" sortable>
                 </el-table-column>
-                
+
                 <el-table-column fixed="right"
                                  label="操作">
                     <template slot-scope="scope">
@@ -468,6 +510,30 @@
 
         </el-dialog>
         <!-- #endregion -->
+        <!-- #region 降等级 -->
+        <el-dialog title="设置等级" :visible.sync="dialogFormLevel" :close-on-click-modal="false">
+            <el-form :model="VExamUser" ref="dialogForm" :inline="true">
+                <el-form-item label="工号" prop="UserCode">
+                    <el-input v-model="VExamUser.UserCode" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="原考过等级" prop="SubjectName">
+                    <el-input v-model="VExamUser.SubjectName" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="新等级" prop="NewSubjctName">
+                    <el-select v-model="VExamUser.NewSubjctName" placeholder="请选择考试科目" clearable filterable>
+                        <el-option v-for="item in LSubject" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    <el-button @@click="dialogFormLevel = false">取 消</el-button>
+                    <el-button type="primary" @@click="handleUpLevel">确 定</el-button>
+                </template>
+
+            </div>
+        </el-dialog>
+        <!-- #endregion -->
     </div>
 </div>
 <script src="~/Scripts/Vue/Vue.js"></script>
@@ -485,7 +551,9 @@
                 Usercode:""
             },
             LSuperExamType: [],
-            LSuperUsers:[],
+            LSuperUsers: [],
+            LRecordupUser: [],
+            LSubject:[],
             DetailId: 0,
             IsSuper:false,
 
@@ -494,9 +562,9 @@
             dialogFormPractical: false,
             dialogUpdateVisible: false,
             dialogSearchVisible: false,
-           
+            dialogFormLevel: false,
 
-
+            VExamUser: { SubjectName: '', UserCode: '', NewSubjctName:''},
 
 
             dialogSuperVisible:false,
@@ -620,7 +688,6 @@
             },
             //批量更新操作
             handleUpdate() {
-
                 var _this = this;
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
@@ -739,6 +806,60 @@
                 });
                 _this.dialogFormVisible = false
             },
+            CelarQuata(row) {
+                var _this = this;
+                _this.$confirm('此操作将清空人员最后一笔津贴,请确认是否执行', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/PEMain/CelarQuata', {
+                        model: row
+                    }).then(function (res) {
+                        _this.LRecordupUser = responese.data.LRecordupUser;
+                    });
+                }).catch(() => {
+                    _this.$message({
+                        type: 'info',
+                        message: '已取消操作'
+                    });
+                });
+            },
+            CelarUpLevel(row) {
+                var _this = this;
+                _this.VExamUser = row;
+                _this.VExamUser.SubjectName = row.SubjectName;
+                axios.post('/PEMain/CelarUpLevel', {
+                    model: row.TypeName
+                }).then(function (res) {
+                    console.log(res)
+                    _this.LSubject = res.data.LSubject;
+                });
+                _this.dialogFormLevel = true;
+            },
+            handleUpLevel: function () {
+                var _this = this;
+                console.log(_this.VExamUser)
+                //var objs = {};
+                //objs.VExamUser = _this.VExamUser;
+                axios.post('/PEMain/SaveUpLevel', {
+                    model: _this.VExamUser,
+                    newsubject: _this.VExamUser.NewSubjctName
+                }).then(function (res) {
+                    if (res.data.Result == '已超过员工入职初始等级') {
+                        _this.$message.error(res.data.Result);
+                    }
+                    else {
+                        _this.$message({
+                            message:'降级成功',
+                            type: 'success'
+                        });
+                        _this.LRecordupUser = res.data.LRecordupUser;
+                    }
+                });
+                _this.dialogFormLevel = false;
+
+            },
             handleStop(ID) {
                 var _this = this;
                 _this.$confirm('此操作将取消人员考试资格,请确认是否执行', '提示', {
@@ -794,6 +915,7 @@
                     _this.LRules = responese.data.LRules;
                     _this.LSignedupUser = responese.data.LSignedupUser;
                     _this.LExamType = responese.data.LExamType;
+                    _this.LRecordupUser = responese.data.LRecordupUser;
                 });
             },
             getdata: function () {
@@ -810,6 +932,7 @@
                     _this.LExamType = responese.data.LExamType;
                     _this.LSuperExamType = responese.data.LSuperExamType;
                     _this.IsSuper = responese.data.IsSuper;
+                    _this.LRecordupUser = responese.data.LRecordupUser;
                 });
 
             }

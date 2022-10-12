@@ -25,8 +25,8 @@
     <div style="margin-top:20px">
         <el-table :data="tableData"
                   style="width: 100% ">
-            <el-table-column label="考试类型" prop="TypeName" sortable></el-table-column>
-            <el-table-column label="考试科目" prop="SubjectName" sortable></el-table-column>
+            <el-table-column label="考试类型" prop="TypeName"></el-table-column>
+            <el-table-column label="考试科目" prop="SubjectName"></el-table-column>
             <el-table-column label="是否津贴累积"
                              prop="IsAddAllowance"
                              width="150"
@@ -36,12 +36,13 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column label="HC限制" prop="HCLimit" sortable></el-table-column>
-            <el-table-column label="岗位津贴" prop="ElectronicQuota" sortable></el-table-column>
-            <el-table-column label="专业加给" prop="MajorQuota" sortable></el-table-column>
-            <el-table-column label="技能津贴" prop="SkillsAllowance" sortable></el-table-column>
-            <el-table-column label="职等晋升" prop="GradePosition" sortable></el-table-column>
-            <el-table-column label="岗位等级" prop="PostQuota" sortable></el-table-column>
+            <el-table-column label="HC限制" prop="HCLimit" ></el-table-column>
+            <el-table-column label="岗位津贴" prop="ElectronicQuota" ></el-table-column>
+            <el-table-column label="专业加给" prop="MajorQuota" ></el-table-column>
+            <el-table-column label="技能津贴" prop="SkillsAllowance" ></el-table-column>
+            <el-table-column label="职等晋升" prop="GradePosition" ></el-table-column>
+            <el-table-column label="岗位等级" prop="PostQuota" ></el-table-column>
+            <el-table-column label="上岗证" prop="ShangGangName" ></el-table-column>
             <el-table-column label="是否系统串实践"
                              prop="IsSysPractice"
                              width="150"
@@ -90,7 +91,7 @@
                        :total="paginations.total">
         </el-pagination>
         <el-dialog title="考试科目编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="80%">
-            <el-form  :model="VexamSubject" ref="dialogForm">
+            <el-form :model="VexamSubject" ref="dialogForm">
                 <el-form-item label="考试类型" :label-width="formLabelWidth">
                     <el-select v-model="VexamSubject.TypeName" placeholder="请选择考试类型">
                         <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
@@ -122,6 +123,9 @@
                 </el-form-item>
                 <el-form-item label="岗位等级" :label-width="formLabelWidth">
                     <el-input v-model="VexamSubject.PostQuota" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="上岗证" :label-width="formLabelWidth">
+                    <el-input v-model="VexamSubject.ShangGangName" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="是否系统串实践" prop="IsSysPractice">
                     <el-switch v-model="VexamSubject.IsSysPractice"></el-switch>
@@ -283,6 +287,7 @@
                 _this.VexamSubject.GradePosition = row.GradePosition;
                 _this.VexamSubject.IsAddAllowance = row.IsAddAllowance;
                 _this.VexamSubject.PostQuota = row.PostQuota;
+                _this.VexamSubject.ShangGangName = row.ShangGangName;
                 axios.post('/PEMain/GetSubjectList').then(response => {
                     _this.ListTypeName = response.data.ListTypeName;
 

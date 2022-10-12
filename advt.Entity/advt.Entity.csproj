@@ -103,6 +103,7 @@
     <Compile Include="Global\Status.cs" />
     <Compile Include="Global\TicketData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserQuataRecord.cs" />
     <Compile Include="Validation\advt_Attachment_Validation.cs" />
     <Compile Include="Validation\advt_Category_Validation.cs" />
     <Compile Include="Validation\advt_log_Validation.cs" />

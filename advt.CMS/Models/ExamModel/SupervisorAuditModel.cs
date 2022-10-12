@@ -24,7 +24,9 @@ namespace advt.CMS.Models.ExamModel
 
         public List<advt_user_sheet> ListSuperUsers { get; set; }//主管额外报名人员
         public List<ExamType> LSuperExamType { get; set; }//考试类型
+        public List<ExamUserDetailInfo> LRecordupUser { get; set; }//主管下人员最后一次记录
         public string Result { get; set; }
+        public List<ExamSubject> LSubject { get; set; }
         public SupervisorAuditModel() : base()
         {
             ListDirectorUserInfos = new List<UserInfo>();
@@ -37,8 +39,14 @@ namespace advt.CMS.Models.ExamModel
             LExamType = new List<KeyValuePair<string, string>>();
             ListSuperUsers = new List<advt_user_sheet>();
             LSuperExamType = new List<ExamType>();
+            LRecordupUser = new List<ExamUserDetailInfo>();
+            LSubject = new List<ExamSubject>();
         }
-
+        public void TypeSubject(string TypeNames)
+        {
+            LSubject = Data.ExamSubject.Get_All_ExamGetSubject(TypeNames,null);
+        }
+       
         //超级管理员添加人员
         //添加完
         public List<ExamUserDetailInfo> InsertSuper(string usercode,  string SubjectName,  string typename, string username,string depart,string WorkPlace, string sData)
@@ -172,8 +180,8 @@ namespace advt.CMS.Models.ExamModel
             {
                 LSignedupUser = superLSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
             }
-
-
+            //呈现主管下所有通过考过的人员的最后一笔记录
+            LRecordupUser= Data.ExamUserDetailInfo.Get_All_UserCelarInfo("HrCheck", code, typename);
 
             LExamType.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamType.Get_All_ExamType())
@@ -182,6 +190,119 @@ namespace advt.CMS.Models.ExamModel
             }
         }
 
+        public void CelarQuata(ExamUserDetailInfo model,string username)
+        {
+            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck",IsStop=false}).FirstOrDefault();
+            if (userdata!= null)
+            {
+                userdata.ElectronicQuota = 0;userdata.MajorQuota = 0;
+                userdata.SkillsAllowance = 0;userdata.GradePosition = 0;userdata.PostQuota = 0;
+                userdata.TotalQuota = 0;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(userdata, null, new string[] { "ID" });
+
+                var rec = new UserQuataRecord();
+                rec.UserCode = model.UserCode;
+                rec.UserName = model.UserName;
+                rec.SubjectName = model.SubjectName;
+                rec.RuleName = model.RuleName;
+                rec.TypeName = model.TypeName;
+                rec.CreateName = username;
+                rec.CreateDate = DateTime.Now;
+                rec.ElectronicQuota = userdata.ElectronicQuota; rec.MajorQuota = userdata.MajorQuota;
+                rec.SkillsAllowance = userdata.SkillsAllowance; rec.GradePosition = userdata.GradePosition;
+                rec.PostQuota = userdata.PostQuota;
+                rec.TotalQuota = userdata.ElectronicQuota + userdata.MajorQuota + userdata.SkillsAllowance + userdata.GradePosition + userdata.PostQuota;
+                Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
+            }
+
+           
+            GetAllExamUserByType(model.TypeName, username);
+            //呈现主管下所有通过考过的人员的最后一笔记录
+        }
+        public string SaveUpLevel(ExamUserDetailInfo model, string newsubject,string username)
+        {
+            var result = string.Empty;
+            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.UserCode, SubjectName = model.SubjectName, IsExam = "true", ExamStatus = "HrCheck", IsStop = false }).FirstOrDefault();
+            var rule = Data.ExamRule.Get_All_ExamRule(new { SubjectName=newsubject });
+            var subejct= Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = newsubject }).FirstOrDefault();
+            if (userdata != null)
+            {
+                userdata.SubjectName = newsubject;
+                userdata.RuleName = rule.FirstOrDefault()?.RuleName;
+                var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode, TypeName = model.TypeName }).FirstOrDefault();
+                //更新主表
+                if (userdata.TypeName == "职等考试"|| userdata.TypeName == "Chassis技能等级考试"|| userdata.TypeName == "关键岗位技能等级")
+                {
+                    userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 2, newsubject.Length);
+                    Data.ExamUserInfo.Update_ExamUserInfo(userinfo, null, new string[] { "ID" });
+                }
+                #region
+                //if (userdata.TypeName == "关键岗位技能等级")
+                //{
+                //    //截取G后面的6,7
+                //    var old =Convert.ToInt32(model.SubjectName.Substring(model.SubjectName.Length-1, model.SubjectName.Length));
+                //    var news = Convert.ToInt32(newsubject.Substring(model.SubjectName.Length - 1, model.SubjectName.Length));
+                //    var jcdata = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode , TypeName = userdata.TypeName }).FirstOrDefault();
+                //    if (jcdata != null)
+                //    {
+                //        var re = Convert.ToInt32(jcdata.ReverseBuckle.Substring(jcdata.ReverseBuckle.Length - 1, jcdata.ReverseBuckle.Length));
+                //        if (news < re)
+                //        {
+                //            result = "已超过员工入职初始等级";
+                //        }
+                //        else
+                //        {
+                //            for (int i = news; i < old; i++)
+                //            {
+                //                //降到同初始等级一样
+                //                if (news == re)
+                //                {
+
+                //                }
+                //                else
+                //                { //大于初始等级
+
+                //                }
+                //            }
+
+                //        }
+                //    }
+
+                //}
+                //else
+                //{ 
+                //}
+                #endregion
+                //更新明细
+                userdata.ElectronicQuota = subejct.ElectronicQuota - model.ElectronicQuota;
+                userdata.MajorQuota = subejct.MajorQuota - model.MajorQuota;
+                userdata.SkillsAllowance = subejct.SkillsAllowance - model.SkillsAllowance;
+                userdata.GradePosition = subejct.GradePosition - model.GradePosition;
+                userdata.PostQuota = subejct.PostQuota - model.PostQuota;
+                userdata.TotalQuota = userdata.ElectronicQuota + userdata.MajorQuota + userdata.SkillsAllowance + userdata.GradePosition + userdata.PostQuota;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(userdata, null, new string[] { "ID" });
+                if (string.IsNullOrEmpty(result))
+                {  //插入记录
+                    var rec = new UserQuataRecord();
+                    rec.UserCode = model.UserCode;
+                    rec.UserName = model.UserName;
+                    rec.SubjectName = userdata.SubjectName;
+                    rec.RuleName = userdata.RuleName;
+                    rec.TypeName = userdata.TypeName;
+                    rec.CreateName = username;
+                    rec.CreateDate = DateTime.Now;
+                    rec.ElectronicQuota = userdata.ElectronicQuota; rec.MajorQuota = userdata.MajorQuota;
+                    rec.SkillsAllowance = userdata.SkillsAllowance; rec.GradePosition = userdata.GradePosition;
+                    rec.PostQuota = userdata.PostQuota;
+                    rec.TotalQuota = userdata.TotalQuota;
+                    Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
+                }
+               
+            }
+
+            GetAllExamUserByType(model.TypeName, username);
+            return result;
+        }
         //根据选择的报名人员筛选出可以选择的考试科目
         public void GetSignSubject(string depart)
         {

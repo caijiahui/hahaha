@@ -22,6 +22,7 @@ namespace advt.Entity
         public int GradePosition { get; set; }//职等晋升
         public bool IsAddAllowance { get; set; }//津贴累积计算/津贴增加计算
         public int PostQuota { get; set; }//岗位等级
+        public string ShangGangName { get; set; }//上岗证
 
     }
 }

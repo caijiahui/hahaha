@@ -90,6 +90,11 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode, typename);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
+        public static List<Entity.ExamUserDetailInfo> Get_All_UserCelarInfo(string ExamStatus, string UserCode, string typename)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_UserCelarInfo(ExamStatus, UserCode, typename);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
         //找到主管审核下超级管理员数据
         public static List<Entity.ExamUserDetailInfo> Get_Super_UserAduitInfo(string ExamStatus, string username, string typename)
         {

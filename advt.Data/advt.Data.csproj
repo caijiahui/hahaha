@@ -98,6 +98,7 @@
     <Compile Include="DataProvider\advt_user_group.cs" />
     <Compile Include="DataProvider\advt_user_group_mapping.cs" />
     <Compile Include="DataProvider\DatabaseProvider.cs" />
+    <Compile Include="DataProvider\UserQuataRecord.cs" />
     <Compile Include="DbProvider\DbFields.cs" />
     <Compile Include="DbProvider\DbHelper.cs" />
     <Compile Include="DbProvider\IDbProvider.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="IDataProvider\advt_users.cs" />
     <Compile Include="IDataProvider\advt_user_group.cs" />
     <Compile Include="IDataProvider\advt_user_group_mapping.cs" />
+    <Compile Include="IDataProvider\UserQuataRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

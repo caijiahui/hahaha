@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamSubject , (Ver:2.3.8) at: 2021/1/7 16:05:32
         #region Var: 
         private string[] ExamSubject_key_a = { "ID" };
-        private string ExamSubject_item_str = "[ID],[SubjectName],[CreateUser],[CreateDate],[TypeName],[ExamRuleName],HCLimit,IsSysPractice,IsProAssess,DepartCode,MajorQuota,ElectronicQuota,SkillsAllowance,GradePosition,IsAddAllowance,PostQuota";
+        private string ExamSubject_item_str = "[ID],[SubjectName],[CreateUser],[CreateDate],[TypeName],[ExamRuleName],HCLimit,IsSysPractice,IsProAssess,DepartCode,MajorQuota,ElectronicQuota,SkillsAllowance,GradePosition,IsAddAllowance,PostQuota,ShangGangName";
         private string[][] ExamSubject_item_prop_a =
         {
             new string[] {"ID", "Int", "4"},
@@ -34,8 +34,10 @@ namespace advt.Data.SqlServer
             new string[] { "MajorQuota", "Int", "4"},
             new string[] { "SkillsAllowance", "Int", "4"},
             new string[] { "GradePosition", "Int", "4"},
-             new string[] { "IsAddAllowance", "Bit", "4"},
-              new string[] { "PostQuota", "Int", "4"}
+            new string[] { "IsAddAllowance", "Bit", "4"},
+            new string[] { "PostQuota", "Int", "4"},
+            new string[] { "ShangGangName", "NVarChar", "50"}
+              
         };
         #endregion
 

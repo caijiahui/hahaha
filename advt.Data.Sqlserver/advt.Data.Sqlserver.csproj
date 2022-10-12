@@ -97,6 +97,7 @@
     <Compile Include="DataProvider\advt_users.cs" />
     <Compile Include="DataProvider\advt_user_group.cs" />
     <Compile Include="DataProvider\advt_user_group_mapping.cs" />
+    <Compile Include="DataProvider\UserQuataRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerProvider.cs" />
   </ItemGroup>

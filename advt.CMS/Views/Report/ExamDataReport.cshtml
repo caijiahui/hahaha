@@ -32,7 +32,7 @@
     <div id="hostChart" style="width:100%;height:350px"></div>
     <div v-if="ListElectronicUserView.length!=0"> 
         <template>
-            <el-table :data="ListElectronicUserView"
+            <el-table :data="ListElectronicUserView" height="550"
                       style="width: 100%;margin-top:20px ">
 
                 <el-table-column label="考试科目"
@@ -48,25 +48,25 @@
                                   sortable>
                     <template slot-scope="scope">
                         <span>{{scope.row.Ratio}}%</span>
-        </template>
-        </el-table-column>
-        <el-table-column label="缺额"
-                         prop="Vacancy" sortable>
-        </el-table-column>
-        <el-table-column label="对应津贴"
-                         prop="ElectronicQuota" sortable>
-        </el-table-column>
-        <el-table-column fixed="right"
-                         label="操作"
-                         width="240">
-            <template slot-scope="scope">
-                <el-button size="mini"
-                           @@click="handleDetail(scope.row.SubjectName,scope.row.CurrentNumber,scope.row.Vacancy)">查看明细</el-button>
-                <el-button size="mini"
-                           @@click="handleInsertOpen(scope.row.SubjectName,scope.row.Vacancy)">添加</el-button>
+                </template>
+                </el-table-column>
+                <el-table-column label="缺额"
+                                 prop="Vacancy" sortable>
+                </el-table-column>
+                <el-table-column label="对应津贴"
+                                 prop="ElectronicQuota" sortable>
+                </el-table-column>
+                <el-table-column fixed="right"
+                                 label="操作"
+                                 width="240">
+                    <template slot-scope="scope">
+                        <el-button size="mini"
+                                   @@click="handleDetail(scope.row.SubjectName,scope.row.CurrentNumber,scope.row.Vacancy)">查看明细</el-button>
+                        <el-button size="mini"
+                                   @@click="handleInsertOpen(scope.row.SubjectName,scope.row.Vacancy)">添加</el-button>
 
-            </template>
-        </el-table-column>
+                    </template>
+                </el-table-column>
         </el-table>
 
 

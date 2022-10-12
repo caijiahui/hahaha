@@ -1297,9 +1297,33 @@ namespace advt.Web.Controllers
             var name = this.UserNameContext;
             model.GetAllExamUserByType(subject,name);
             var IsSuper = model.LSuperExamType.Count() != 0 ? true : false;
-            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType,model.LSuperExamType, IsSuper });
+            return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType,model.LSuperExamType,model.LRecordupUser, IsSuper });
         }
         [MyAuthorize]
+        [HttpPost]
+        public ActionResult CelarQuata(ExamUserDetailInfo model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            var username = this.UserNameContext;
+            models.CelarQuata(model,username);
+            return Json(new { LRecordupUser = models.LRecordupUser });
+        }
+        [MyAuthorize]
+        public ActionResult CelarUpLevel(string model)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            models.TypeSubject(model);
+            return Json(new { LSubject = models.LSubject });
+        }
+        [MyAuthorize]
+        public ActionResult SaveUpLevel(ExamUserDetailInfo model,string newsubject)
+        {
+            SupervisorAuditModel models = new SupervisorAuditModel();
+            var username = this.UserNameContext;
+            var result=models.SaveUpLevel(model,newsubject, username);
+            return Json(new {Result= result, LRecordupUser = models.LRecordupUser });
+        }
+       [MyAuthorize]
         public ActionResult AduitSigupBySubject(string usercode)
         {
             SupervisorAuditModel model = new SupervisorAuditModel();
