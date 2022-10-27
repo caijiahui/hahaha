@@ -13,6 +13,9 @@ using FormsAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using advt.CMS.Models.ExamModel;
+using advt.Entity.Global;
+using System.Net;
+using System.IO;
 
 namespace advt.Web.Controllers
 {
@@ -25,12 +28,14 @@ namespace advt.Web.Controllers
         }
         //
         // GET: /Account/Login
-        public ActionResult Login(string returnUrl,string token,string userNo)
+        public ActionResult Login(string returnUrl,string token,string userNo, string sys, string param)
         {
             LoginModel model = new LoginModel();
                 string tokenstr = System.Web.HttpUtility.UrlEncode(token, Encoding.GetEncoding("GB2312"));
             model.token = tokenstr;
             model.userNo = userNo;
+            model.sys = sys;
+            model.param = param;
             Manager.Login.ClearSession();
             if (Manager.Login.ValidateUser)
             {
@@ -66,13 +71,15 @@ namespace advt.Web.Controllers
         //    return Json(new { IsLogin = "Fail" }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public ActionResult Login(Model.LoginModel model, string returnUrl, string userNo, string token)
+        public ActionResult Login(Model.LoginModel model, string returnUrl, string userNo, string token,string sys, string param)
         {
             var IsLogin = "";
             try
             {
+                sys = "智能考试平台";
+                param = "%2B5aScAuNL36xR3W3grHiNR62a%2BhviynjDoUJYbN%2BACTDJRVyr4peJhRGD%2F%2BrApcW1vIocH6BbHMAq%2FFVMDYh1g%3D%3D";
                 Entity.advt_users users = new advt_users();
-                if (!string.IsNullOrEmpty(token)&&!string.IsNullOrEmpty(userNo))
+                if (!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userNo))
                 {
                     var _httpClient = new HttpClient();
                     var URL = $"https://akmclearning.advantech.com.cn/SSO/ValidateUserAuth?token={token}&userNo={userNo}";
@@ -88,7 +95,7 @@ namespace advt.Web.Controllers
                     }
                     if (result != null)
                     {
-                        if (result =="true")
+                        if (result == "true")
                         {
                             var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = userNo });
                             if (uname != null)
@@ -120,6 +127,31 @@ namespace advt.Web.Controllers
                     if (!string.IsNullOrEmpty(result))
                     {
                         var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = result });
+                        if (uname != null)
+                        {
+                            Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                            users = service.Authenticate(uname.EamilUsername, "123");
+                        }
+                        else
+                        {
+                            IsLogin = "用户名不存在考试平台系统内";
+                        }
+                    }
+                }
+                else if (!string.IsNullOrEmpty(sys) && !string.IsNullOrEmpty(param))
+                {
+                    string postUrl = "http://172.21.203.23:8089/WebCenter/Api/WebApi/ValidateLoginEncode";//正式
+                    var postDataStr = new WebCenter()
+                    {
+                        System = sys,
+                        Param = param
+                    };
+
+                    string returnMsg = HttpPostString(postUrl, Newtonsoft.Json.JsonConvert.SerializeObject(postDataStr));
+                    var sdd = Newtonsoft.Json.JsonConvert.DeserializeObject<WebCenter>(returnMsg);
+                    if (sdd.Authorized)
+                    {
+                        var uname = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { UserCode = sdd.UserMsg.OPID });
                         if (uname != null)
                         {
                             Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
@@ -234,7 +266,23 @@ namespace advt.Web.Controllers
             return Json(new { IsLogin  }, JsonRequestBehavior.AllowGet);
           
         }
+        public static string HttpPostString(string url, string postDataStr)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            Stream myRequestStream = request.GetRequestStream();
+            StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("utf-8"));
+            myStreamWriter.Write(postDataStr);
+            myStreamWriter.Close();
 
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream myResponseStream = response.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+            string retString = myStreamReader.ReadToEnd();
+
+            return retString;
+        }
         [MyAuthorize]
         public ActionResult LogOff()
         {

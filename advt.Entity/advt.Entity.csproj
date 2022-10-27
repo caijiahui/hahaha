@@ -84,6 +84,7 @@
     <Compile Include="ExamType.cs" />
     <Compile Include="ExamUserDetailInfo.cs" />
     <Compile Include="ExamUserInfo.cs" />
+    <Compile Include="Global\WebCenter.cs" />
     <Compile Include="PracticeInfo.cs" />
     <Compile Include="RankInfo.cs" />
     <Compile Include="RegionalPost.cs" />

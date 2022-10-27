@@ -38,7 +38,7 @@ namespace advt.CMS.Models.ExamModel
             var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
             foreach (var item in ListExamUserDetailInfo.OrderByDescending(x=>x.ExamDate).Where(x=>x.State== "试用" || x.State == "正式"))
             {
-                var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode =item.UserCode, IsStop =false, IsExam = "true" }).OrderByDescending(x=>x.ExamDate).Take(2);
+                var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = item.UserCode, IsStop = false, IsExam = "true" }).OrderByDescending(x => x.ExamDate).Take(2);
                 
                 var TypeNameTwo = string.Empty;
                 var SubjectNameTwo = string.Empty;
@@ -67,10 +67,20 @@ namespace advt.CMS.Models.ExamModel
                 ExamResultOne = seclst.FirstOrDefault().IsExamPass ? "通过" : "未通过";
                 if (sub.Count() > 0)
                 {
-                    PostQuotaOne = sub.FirstOrDefault().PostQuota;
-                    ElectronicQuotaOne = sub.FirstOrDefault().ElectronicQuota;
-                    SkillsAllowanceOne = sub.FirstOrDefault().SkillsAllowance;
-                    MajorQuotaOne = sub.FirstOrDefault().MajorQuota;
+                    if (ExamResultOne == "通过")
+                    {
+                        PostQuotaOne = sub.FirstOrDefault().PostQuota;
+                        ElectronicQuotaOne = sub.FirstOrDefault().ElectronicQuota;
+                        SkillsAllowanceOne = sub.FirstOrDefault().SkillsAllowance;
+                        MajorQuotaOne = sub.FirstOrDefault().MajorQuota;
+                    }
+                    else
+                    {
+                        PostQuotaOne = seclst.FirstOrDefault().PostQuota;
+                        ElectronicQuotaOne = seclst.FirstOrDefault().ElectronicQuota;
+                        SkillsAllowanceOne = seclst.FirstOrDefault().SkillsAllowance;
+                        MajorQuotaOne = seclst.FirstOrDefault().MajorQuota;
+                    }
                     TotalQuotaOne = PostQuotaOne + ElectronicQuotaOne + SkillsAllowanceOne + MajorQuotaOne;
                 }
                 if (seclst.Count()==2)

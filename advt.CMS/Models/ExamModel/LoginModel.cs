@@ -16,7 +16,8 @@ namespace advt.CMS.Models.ExamModel
     {
        public string token { get; set; }
         public string userNo { get; set; }
-
+        public string sys { get; set; }
+        public string param { get; set; }
 
         public LoginModel() : base()
         {
