@@ -140,7 +140,7 @@ namespace advt.Web.Controllers
                 }
                 else if (!string.IsNullOrEmpty(sys) && !string.IsNullOrEmpty(param))
                 {
-                    string postUrl = "http://172.21.203.23:8089/WebCenter/Api/WebApi/ValidateLoginEncode";//正式
+                    string postUrl = "http://172.21.203.23/WebCenter/Api/WebApi/ValidateLoginEncode";//正式
                     var postDataStr = new WebCenter()
                     {
                         System = sys,
