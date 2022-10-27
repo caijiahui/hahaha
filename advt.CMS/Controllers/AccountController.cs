@@ -76,8 +76,8 @@ namespace advt.Web.Controllers
             var IsLogin = "";
             try
             {
-                sys = "智能考试平台";
-                param = "%2B5aScAuNL36xR3W3grHiNR62a%2BhviynjDoUJYbN%2BACTDJRVyr4peJhRGD%2F%2BrApcW1vIocH6BbHMAq%2FFVMDYh1g%3D%3D";
+                //sys = "智能考试平台";
+                //param = "%2B5aScAuNL36xR3W3grHiNR62a%2BhviynjDoUJYbN%2BACTDJRVyr4peJhRGD%2F%2BrApcW1vIocH6BbHMAq%2FFVMDYh1g%3D%3D";
                 Entity.advt_users users = new advt_users();
                 if (!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userNo))
                 {

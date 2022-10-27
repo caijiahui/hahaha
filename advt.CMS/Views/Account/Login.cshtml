@@ -33,6 +33,8 @@
 
 <body>
     <div id="app" v-cloak>
+        <input type="text" value="@Model.sys" ref="idsys" hidden="hidden" />
+        <input type="text" value="@Model.param" ref="idparam" hidden="hidden" />
         <input type="text" value="@Model.token" ref="idtoken" hidden="hidden" />
         <input type="text" value="@Model.userNo" ref="iduserNo" hidden="hidden" />
         <div class="boxWrap" id="container">
@@ -143,12 +145,14 @@
                 },
                 getdata: function () {
                     var _this = this;
-                    console.log("1");
-                    if (_this.$refs.idtoken.value != "") {
+
+                    if (_this.$refs.idtoken.value != "" || _this.$refs.idsys.value!="") {
                         axios.post('/Account/Login', {
                             model: _this.loginForm,
                             token: _this.$refs.idtoken.value,
-                            userNo: _this.$refs.iduserNo.value
+                            userNo: _this.$refs.iduserNo.value,
+                            sys: _this.$refs.idsys.value,
+                            param: _this.$refs.idparam.value
                         }).then(function (res) {
                             if (res.data.IsLogin != 'Pass') {
                                 _this.LoginMess = res.data.IsLogin;
