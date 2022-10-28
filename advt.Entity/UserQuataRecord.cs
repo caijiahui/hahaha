@@ -13,6 +13,7 @@ namespace advt.Entity
         public string UserName { get; set; }
         public string TypeName { get; set; }
         public string SubjectName { get; set; }
+        public string NewSubjectName { get; set; }
         public string RuleName { get; set; }
         public string CreateName { get; set; }
         public DateTime? CreateDate { get; set; }

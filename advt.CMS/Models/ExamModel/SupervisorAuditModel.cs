@@ -192,13 +192,36 @@ namespace advt.CMS.Models.ExamModel
 
         public void CelarQuata(ExamUserDetailInfo model,string username)
         {
-            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck",IsStop=false}).FirstOrDefault();
+            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck",IsStop=false}).OrderByDescending(x=>x.ExamDate).FirstOrDefault();
             if (userdata!= null)
             {
                 userdata.ElectronicQuota = 0;userdata.MajorQuota = 0;
                 userdata.SkillsAllowance = 0;userdata.GradePosition = 0;userdata.PostQuota = 0;
                 userdata.TotalQuota = 0;
-                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(userdata, null, new string[] { "ID" });
+
+                var userdatail = new ExamUserDetailInfo();
+                userdatail.UserCode = userdata.UserCode;
+                userdatail.UserName = userdata.UserName;
+                userdatail.TypeName = userdata.TypeName;
+                userdatail.SubjectName = userdata.SubjectName;
+                userdatail.RuleName = userdata.RuleName;
+                userdatail.DepartCode = userdata.DepartCode;
+                userdatail.PostName = userdata.PostName;
+                userdatail.PostID = userdata.PostID;
+                userdatail.RankName = userdata.RankName;
+                userdatail.EntryDate = userdata.EntryDate;
+                userdatail.ExamStatus = "HrCheck";
+                userdatail.IsExamPass = true;
+                userdatail.ExamDate = DateTime.Now;
+                userdatail.IsStop = false; userdatail.IsExam = "true"; userdatail.WorkPlace = userdata.WorkPlace;
+                userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
+                userdatail.ElectronicQuota =0;
+                userdatail.MajorQuota = 0;
+                userdatail.SkillsAllowance =0;
+                userdatail.GradePosition = 0;
+                userdatail.PostQuota = 0;
+                userdatail.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance + userdatail.GradePosition + userdatail.PostQuota;
+                Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(userdatail, null, new string[] { "ID" });
 
                 var rec = new UserQuataRecord();
                 rec.UserCode = model.UserCode;
@@ -208,10 +231,10 @@ namespace advt.CMS.Models.ExamModel
                 rec.TypeName = model.TypeName;
                 rec.CreateName = username;
                 rec.CreateDate = DateTime.Now;
-                rec.ElectronicQuota = userdata.ElectronicQuota; rec.MajorQuota = userdata.MajorQuota;
-                rec.SkillsAllowance = userdata.SkillsAllowance; rec.GradePosition = userdata.GradePosition;
-                rec.PostQuota = userdata.PostQuota;
-                rec.TotalQuota = userdata.ElectronicQuota + userdata.MajorQuota + userdata.SkillsAllowance + userdata.GradePosition + userdata.PostQuota;
+                rec.ElectronicQuota = 0; rec.MajorQuota = 0;
+                rec.SkillsAllowance = 0; rec.GradePosition = 0;
+                rec.PostQuota = 0;
+                rec.TotalQuota = rec.ElectronicQuota + rec.MajorQuota + rec.SkillsAllowance + rec.GradePosition + rec.PostQuota;
                 Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
             }
 
@@ -222,13 +245,11 @@ namespace advt.CMS.Models.ExamModel
         public string SaveUpLevel(ExamUserDetailInfo model, string newsubject,string username)
         {
             var result = string.Empty;
-            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.UserCode, SubjectName = model.SubjectName, IsExam = "true", ExamStatus = "HrCheck", IsStop = false }).FirstOrDefault();
+            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.UserCode, SubjectName = model.SubjectName, IsExam = "true", ExamStatus = "HrCheck", IsStop = false }).OrderByDescending(x=>x.ExamDate).FirstOrDefault();
             var rule = Data.ExamRule.Get_All_ExamRule(new { SubjectName=newsubject });
             var subejct= Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = newsubject }).FirstOrDefault();
             if (userdata != null)
             {
-                userdata.SubjectName = newsubject;
-                userdata.RuleName = rule.FirstOrDefault()?.RuleName;
                 var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode, TypeName = model.TypeName }).FirstOrDefault();
                 //更新主表
                 if (userdata.TypeName == "职等考试"|| userdata.TypeName == "Chassis技能等级考试"|| userdata.TypeName == "关键岗位技能等级")
@@ -273,28 +294,45 @@ namespace advt.CMS.Models.ExamModel
                 //{ 
                 //}
                 #endregion
-                //更新明细
-                userdata.ElectronicQuota = subejct.ElectronicQuota - model.ElectronicQuota;
-                userdata.MajorQuota = subejct.MajorQuota - model.MajorQuota;
-                userdata.SkillsAllowance = subejct.SkillsAllowance - model.SkillsAllowance;
-                userdata.GradePosition = subejct.GradePosition - model.GradePosition;
-                userdata.PostQuota = subejct.PostQuota - model.PostQuota;
-                userdata.TotalQuota = userdata.ElectronicQuota + userdata.MajorQuota + userdata.SkillsAllowance + userdata.GradePosition + userdata.PostQuota;
-                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(userdata, null, new string[] { "ID" });
+                //插入新记录明细
+                var userdatail = new ExamUserDetailInfo();
+                userdatail.UserCode = userdata.UserCode;
+                userdatail.UserName = userdata.UserName;
+                userdatail.TypeName = userdata.TypeName;
+                userdatail.SubjectName = newsubject;
+                userdatail.RuleName = rule.FirstOrDefault()?.RuleName;
+                userdatail.DepartCode = userdata.DepartCode;
+                userdatail.PostName = userdata.PostName;
+                userdatail.PostID = userdata.PostID;
+                userdatail.RankName = userdata.RankName;
+                userdatail.EntryDate = userdata.EntryDate;
+                userdatail.ExamStatus = "HrCheck";
+                userdatail.IsExamPass = true;
+                userdatail.ExamDate = DateTime.Now;
+                userdatail.IsStop = false; userdatail.IsExam = "true";userdatail.WorkPlace = userdata.WorkPlace;
+                userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
+                userdatail.ElectronicQuota = subejct.ElectronicQuota - model.ElectronicQuota;
+                userdatail.MajorQuota = subejct.MajorQuota - model.MajorQuota;
+                userdatail.SkillsAllowance = subejct.SkillsAllowance - model.SkillsAllowance;
+                userdatail.GradePosition = subejct.GradePosition - model.GradePosition;
+                userdatail.PostQuota = subejct.PostQuota - model.PostQuota;
+                userdatail.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance + userdatail.GradePosition + userdatail.PostQuota;
+                Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(userdatail, null, new string[] { "ID" });
                 if (string.IsNullOrEmpty(result))
                 {  //插入记录
                     var rec = new UserQuataRecord();
                     rec.UserCode = model.UserCode;
                     rec.UserName = model.UserName;
                     rec.SubjectName = userdata.SubjectName;
-                    rec.RuleName = userdata.RuleName;
+                    rec.NewSubjectName = newsubject;
+                    rec.RuleName = rule.FirstOrDefault()?.RuleName;
                     rec.TypeName = userdata.TypeName;
                     rec.CreateName = username;
                     rec.CreateDate = DateTime.Now;
-                    rec.ElectronicQuota = userdata.ElectronicQuota; rec.MajorQuota = userdata.MajorQuota;
-                    rec.SkillsAllowance = userdata.SkillsAllowance; rec.GradePosition = userdata.GradePosition;
-                    rec.PostQuota = userdata.PostQuota;
-                    rec.TotalQuota = userdata.TotalQuota;
+                    rec.ElectronicQuota = userdatail.ElectronicQuota; rec.MajorQuota = userdatail.MajorQuota;
+                    rec.SkillsAllowance = userdatail.SkillsAllowance; rec.GradePosition = userdatail.GradePosition;
+                    rec.PostQuota = userdatail.PostQuota;
+                    rec.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance+ userdatail.GradePosition + userdatail.PostQuota;
                     Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
                 }
                
