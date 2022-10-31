@@ -213,6 +213,7 @@ namespace advt.CMS.Models.ExamModel
                 userdatail.ExamStatus = "HrCheck";
                 userdatail.IsExamPass = true;
                 userdatail.ExamDate = DateTime.Now;
+                userdatail.Type = "取消";
                 userdatail.IsStop = false; userdatail.IsExam = "true"; userdatail.WorkPlace = userdata.WorkPlace;
                 userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
                 userdatail.ElectronicQuota =0;
@@ -231,6 +232,7 @@ namespace advt.CMS.Models.ExamModel
                 rec.TypeName = model.TypeName;
                 rec.CreateName = username;
                 rec.CreateDate = DateTime.Now;
+                rec.Type = "取消";
                 rec.ElectronicQuota = 0; rec.MajorQuota = 0;
                 rec.SkillsAllowance = 0; rec.GradePosition = 0;
                 rec.PostQuota = 0;
@@ -329,6 +331,7 @@ namespace advt.CMS.Models.ExamModel
                     rec.TypeName = userdata.TypeName;
                     rec.CreateName = username;
                     rec.CreateDate = DateTime.Now;
+                    rec.Type = "降级";
                     rec.ElectronicQuota = userdatail.ElectronicQuota; rec.MajorQuota = userdatail.MajorQuota;
                     rec.SkillsAllowance = userdatail.SkillsAllowance; rec.GradePosition = userdatail.GradePosition;
                     rec.PostQuota = userdatail.PostQuota;

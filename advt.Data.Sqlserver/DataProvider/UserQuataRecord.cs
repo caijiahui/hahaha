@@ -11,7 +11,7 @@ namespace advt.Data.SqlServer
     public partial class DataProvider : advt.Data.IDataProvider
     {
         private string[] UserQuataRecord_key_a = { "ID" };
-        private string UserQuataRecord_item_str = "[ID],[UserCode],[UserName],[RuleName],[SubjectName],[TypeName],ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,CreateName,CreateDate,NewSubjectName";
+        private string UserQuataRecord_item_str = "[ID],[UserCode],[UserName],[RuleName],[SubjectName],[TypeName],ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,CreateName,CreateDate,NewSubjectName,Type";
         private string[][] UserQuataRecord_item_prop_a =
         {
            new string[] {"ID", "Int", "4"},
@@ -28,8 +28,9 @@ namespace advt.Data.SqlServer
             new string[] { "GradePosition", "Int", "4"},
             new string[] { "PostQuota", "Int", "4"},
             new string[] { "TotalQuota", "Int", "4"},
-            new string[] { "NewSubjectName", "NVarChar", "500"}
-            
+            new string[] { "NewSubjectName", "NVarChar", "500"},
+            new string[] { "Type", "NVarChar", "50"}
+
         };
         public IDataReader Get_All_UserQuataRecord(object objparams)
         {

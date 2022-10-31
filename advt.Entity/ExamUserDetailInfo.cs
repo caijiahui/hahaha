@@ -78,5 +78,6 @@ namespace advt.Entity
         public int PostQuota { get; set; }//岗位等级
         public int TotalQuota { get; set; }//汇总津贴
         public string State { get; set; }
+        public string Type { get; set; }
     }
 }

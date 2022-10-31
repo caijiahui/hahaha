@@ -114,6 +114,12 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserALLDetailInfo(UserCode, SubjectName, TypeName,OrgName, DepartCode);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
+        public static List<Entity.ExamUserDetailInfo> Get_UserInfo(string UserCode, DateTime? ExamDate)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_UserInfo(UserCode, ExamDate);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+        
         //主管下判断是否有电子岗位报名信息
         public static Entity.ExamUserDetailInfo GetCanSignUpAudit(string usercode)
         {

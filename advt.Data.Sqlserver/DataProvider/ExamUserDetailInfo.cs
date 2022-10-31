@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type";
 
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
@@ -67,7 +67,9 @@ namespace advt.Data.SqlServer
             new string[] { "GradePosition", "Int", "4"},
             new string[] { "PostQuota", "Int", "4"},
             new string[] { "TotalQuota", "Int", "4"},
-            new string[] { "State", "NVarChar", "10"}
+            new string[] { "State", "NVarChar", "10"},
+            new string[] { "Type", "NVarChar", "50"}
+            
 
 
         };
@@ -89,7 +91,7 @@ namespace advt.Data.SqlServer
             var text = "";
             if (!string.IsNullOrEmpty(Typename))
             {
-                text += " and Typename like N'%"+ Typename + "%'";
+                text += " and Typename like N'%" + Typename + "%'";
             }
             if (!string.IsNullOrEmpty(UserCode))
             {
@@ -106,7 +108,7 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(text);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
-        
+
 
         public int Insert_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude)
         {
@@ -151,12 +153,12 @@ namespace advt.Data.SqlServer
         }
 
         //Get_Super_UserAduitInfo
-        public IDataReader Get_Super_UserAduitInfo(string ExamStatus,string username, string typename)
+        public IDataReader Get_Super_UserAduitInfo(string ExamStatus, string username, string typename)
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" select * from ExamType a inner join ExamUserDetailInfo b on a.TypeName = b.TypeName ");
-            commandText.AppendLine(" where SuperAdmin='"+ username + "' and ExamStatus='"+ ExamStatus + "' and IsStop=0   ");
-            commandText.AppendLine(" and b.WorkPlace in (select OrgName from ExamUsersFromehr where CommpanyEmail like '%"+username+"%' ) ");
+            commandText.AppendLine(" where SuperAdmin='" + username + "' and ExamStatus='" + ExamStatus + "' and IsStop=0   ");
+            commandText.AppendLine(" and b.WorkPlace in (select OrgName from ExamUsersFromehr where CommpanyEmail like '%" + username + "%' ) ");
             if (!string.IsNullOrEmpty(typename))
             {
                 commandText.AppendLine(" and a.TypeName=N'" + typename + "' ");
@@ -193,7 +195,7 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 
-        public IDataReader Get_ExamUserAuditInfo(string ExamStatus,  string UserCode,string typename)
+        public IDataReader Get_ExamUserAuditInfo(string ExamStatus, string UserCode, string typename)
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a  inner join (select * from [advt_user_sheet] where UserCode='" + UserCode + "'" +
@@ -202,14 +204,14 @@ namespace advt.Data.SqlServer
                 " and a.UserCostCenter = c.DepartCode ");
             if (!string.IsNullOrEmpty(typename))
             {
-                commandText.AppendLine( "and c.TypeName = N'"+ typename + "'");
+                commandText.AppendLine("and c.TypeName = N'" + typename + "'");
             }
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         public IDataReader Get_All_UserCelarInfo(string ExamStatus, string UserCode, string typename)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'"+
+            commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
                 " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true'  and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "' and IsStop = 0 and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
             if (!string.IsNullOrEmpty(typename))
             {
@@ -219,11 +221,11 @@ namespace advt.Data.SqlServer
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 
-        public IDataReader Get_All_PostCanSignUser( string UserCode)
+        public IDataReader Get_All_PostCanSignUser(string UserCode)
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" select distinct TypeName=N'电子端岗位技能津贴', UserCode=a.UserCode,UserName=a.UserName,DepartCode=a.Department,SubjectName=a.SubjectName from ElectronicUser a " +
-                " inner join (select * from [advt_user_sheet] where UserCode='"+UserCode+"'  and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b   " +
+                " inner join (select * from [advt_user_sheet] where UserCode='" + UserCode + "'  and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b   " +
               "   on a.Department = b.UserCostCenter where a.UserCode not in ( select a.UserCode from ElectronicUser a inner join ExamUserDetailInfo b on a.SubjectName = b.SubjectName and b.IsStop=0 ) ");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
@@ -232,17 +234,17 @@ namespace advt.Data.SqlServer
             string sql = string.Empty;
             StringBuilder commandText = new StringBuilder();
             List<DbParameter> l_parms = new List<DbParameter>();
-            if (string.IsNullOrEmpty(UserCode) && string.IsNullOrEmpty(TypeName) && string.IsNullOrEmpty(SubjectName)&& string.IsNullOrEmpty(OrgName) && string.IsNullOrEmpty(DepartCode))
+            if (string.IsNullOrEmpty(UserCode) && string.IsNullOrEmpty(TypeName) && string.IsNullOrEmpty(SubjectName) && string.IsNullOrEmpty(OrgName) && string.IsNullOrEmpty(DepartCode))
             {
                 commandText.AppendLine(" select  top 50 *  from ExamUserDetailInfo ");
             }
             else
             {
-                commandText.AppendLine(" select *  from ExamUserDetailInfo "); 
+                commandText.AppendLine(" select *  from ExamUserDetailInfo ");
             }
-            
+
             sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='true' ";
-            if (!string.IsNullOrEmpty(UserCode)&&UserCode!= "undefined")
+            if (!string.IsNullOrEmpty(UserCode) && UserCode != "undefined")
             {
                 sql += " and UserCode like N'%" + UserCode + "%' ";
             }
@@ -261,7 +263,35 @@ namespace advt.Data.SqlServer
             if (!string.IsNullOrEmpty(DepartCode) && DepartCode != "undefined")
             {
                 sql += " and DepartCode like N'%" + DepartCode + "%' ";
-            }            
+            }
+            sql += " order by ExamDate desc";
+            commandText.AppendLine(sql);
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+
+        public IDataReader Get_UserInfo(string UserCode, DateTime? ExamDate)
+        {
+            string sql = string.Empty;
+            StringBuilder commandText = new StringBuilder();
+            List<DbParameter> l_parms = new List<DbParameter>();
+            if (string.IsNullOrEmpty(UserCode))
+            {
+                commandText.AppendLine(" select  top 50 *  from ExamUserDetailInfo ");
+            }
+            else
+            {
+                commandText.AppendLine(" select *  from ExamUserDetailInfo ");
+            }
+
+            sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='true' ";
+            if (!string.IsNullOrEmpty(UserCode))
+            {
+                sql += " and UserCode like N'%" + UserCode + "%' ";
+            }
+            if (!string.IsNullOrEmpty(ExamDate.ToString()))
+            {
+                sql += " and ExamDate < '" + ExamDate + "' ";
+            }
             sql += " order by ExamDate desc";
             commandText.AppendLine(sql);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());

@@ -23,5 +23,6 @@ namespace advt.Entity
         public int GradePosition { get; set; }//职等晋升
         public int PostQuota { get; set; }//岗位等级
         public int TotalQuota { get; set; }//汇总津贴
+        public string Type { get; set; }
     }
 }
