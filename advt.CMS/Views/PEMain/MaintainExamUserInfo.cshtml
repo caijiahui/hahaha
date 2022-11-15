@@ -194,24 +194,20 @@
                         <span v-if="scope.row.LastExamTime!=''&&scope.row.LastExamTime!=null">{{changeMonth(scope.row.LastExamTime)}}</span>
                     </template>
                 </el-table-column>
-                @*<el-table-column label="最近一次理论考试成绩" prop="ExamScore" sortable></el-table-column>
-
-        <el-table-column label="最近一次实践成绩" prop="TheoreticalAchievement" sortable></el-table-column>
-
-        <el-table-column label="最近一次实践考核通过时间">
-            <template slot-scope="scope">
-                <span v-if="scope.row.PracticeTime!=''&&scope.row.PracticeTime!=null">{{changeDate(scope.row.PracticeTime)}}</span>
-            </template>
-        </el-table-column>*@
+                
                 <el-table-column label="最高可考等级" prop="HighestTestSkill" sortable></el-table-column>
 
                 <el-table-column label="下次可考等级" prop="ApplicationLevel" sortable></el-table-column>
                 <el-table-column label="科目" prop="SubjectName" sortable></el-table-column>
                 <el-table-column label="规则" prop="RuleName" sortable></el-table-column>
-                <el-table-column label="待考试时间" prop="ReadExamDate" sortable></el-table-column>
+                <el-table-column label="待考试时间" width="110">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ReadExamDate!=''&&scope.row.ReadExamDate!=null">{{changeMonthDay(scope.row.ReadExamDate)}}</span>
+                    </template>
+                </el-table-column>
+               
                 <el-table-column label="每年应复审时间段" width="100" prop="ExamineMonth" sortable></el-table-column>
                 <el-table-column label="考级绩效要求" prop="Achievement" sortable></el-table-column>
-                @*  <el-table-column label="级别" prop="LocalGrade" sortable></el-table-column>*@
 
                 <el-table-column label="绩效是否符合">
                     <template slot-scope="scope">
@@ -504,7 +500,7 @@
                     _this.LExamType = responese.data.LExamType;
                     _this.LWorkPlace = responese.data.LWorkPlace;
                     _this.setPaginations();
-                    console.log(responese.data.tableData);
+                   
                 })
             },
 
@@ -564,6 +560,7 @@
                 axios.post('/PEMain/GetUserInfo', {
                     data: _this.VSearch
                 }).then(function (res) {
+                    console.log(res.data.tableData);
                     _this.tableData = res.data.tableData;
                     _this.YListUserInfo = res.data.YListUserInfo;
                     _this.CPListUserInfo = res.data.CPListUserInfo;
@@ -729,6 +726,13 @@
                 var year = listDate.getFullYear();
                 var mon = listDate.getMonth() + 1;
                 var day = listDate.getDate();
+                return year + '-' + mon;
+            },
+            changeMonthDay: function (dates) {                
+                var listDate = new Date(dates);
+                console.log(listDate)
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth()+1;
                 return year + '-' + mon;
             },
             ChangeAch: function (ach) {

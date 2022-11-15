@@ -384,6 +384,7 @@ namespace advt.Web.Controllers
         public JsonResult Upload_TEL_MASTER(HttpPostedFileBase file)
         {
             string filepath = "";
+            var username = this.UserNameContext;
             var LBank = new List<ExamBank>();
             if (file != null)
             {
@@ -402,7 +403,7 @@ namespace advt.Web.Controllers
                 file.SaveAs(filepath);//上传路径
             }
             var model = new ExamBankModel();
-            model.UploadBank(filepath);
+            model.UploadBank(filepath, username);
 
             return Json(new {Result=model.Result, model.LExamBank }, JsonRequestBehavior.AllowGet);
         }
@@ -945,6 +946,7 @@ namespace advt.Web.Controllers
                 row1.CreateCell(12).SetCellValue("每年应复审时间段");
                 row1.CreateCell(13).SetCellValue("科目");
                 row1.CreateCell(14).SetCellValue("规则");
+                row1.CreateCell(15).SetCellValue("下次待考时间");
                 //将数据逐步写入sheet1各个行
                 for (int i = 0; i < tlst.Count; i++)
                 {
@@ -964,7 +966,8 @@ namespace advt.Web.Controllers
                     rowtemp.CreateCell(12).SetCellValue(tlst[i].ExamineMonth);
                     rowtemp.CreateCell(13).SetCellValue(tlst[i].SubjectName);
                     rowtemp.CreateCell(14).SetCellValue(tlst[i].RuleName);
-                      
+                    rowtemp.CreateCell(15).SetCellValue(tlst[i].ReadExamDate);
+
                 }
                 // 写入到客户端 
                 System.IO.MemoryStream ms = new System.IO.MemoryStream();

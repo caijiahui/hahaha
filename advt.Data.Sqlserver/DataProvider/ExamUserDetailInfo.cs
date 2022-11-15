@@ -69,9 +69,6 @@ namespace advt.Data.SqlServer
             new string[] { "TotalQuota", "Int", "4"},
             new string[] { "State", "NVarChar", "10"},
             new string[] { "Type", "NVarChar", "50"}
-            
-
-
         };
         #endregion
 

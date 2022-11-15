@@ -38,7 +38,7 @@ namespace advt.CMS.Models.ExamModel
             ListExamSubject = new List<ExamSubject>();
             ListTopicLevel = new List<ExamBank>();
         }
-        public void UploadBank(string filepath)
+        public void UploadBank(string filepath,string username)
         {
             DataTable dt = new DataTable();
             FileStream files = null;
@@ -118,7 +118,8 @@ namespace advt.CMS.Models.ExamModel
                                 OptionEPicNum = string.IsNullOrEmpty(dr[19].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[18].ToString().Trim(),
                                 OptionF = dr[20].ToString().Trim(),
                                 OptionFPicNum = string.IsNullOrEmpty(dr[21].ToString().Trim()) == true ? null : "~/Attachment/BankPic" + dr[20].ToString().Trim(),
-                                CreateDate = DateTime.Now
+                                CreateDate = DateTime.Now,
+                                CreateUser=username
                             };
                     LBank = q.ToList();
                 }
@@ -292,19 +293,22 @@ namespace advt.CMS.Models.ExamModel
         }
         public void SaveBankInfo(string username)
         {
-            VExamBank.CreateDate = DateTime.Now;
-            VExamBank.CreateUser = username;
-            //if (!string.IsNullOrEmpty(VExamBank.ExamSubject))
-            //{
-            //    VExamBank.ExamSubject= new Regex("(?<=;) +").Replace(VExamBank.ExamSubject, "");
-            //}
             if (VExamBank.ID == 0)
             {
+                VExamBank.CreateDate = DateTime.Now;
+                VExamBank.CreateUser = username;
                 Data.ExamBank.Insert_ExamBank(VExamBank, null, new string[] { "ID" });
-                //Data.ExamType.Insert_ExamType(VexamType);
             }
             else
             {
+                var ver = Data.ExamBank.Get_All_ExamBank(new { ID = VExamBank.ID });
+                if (ver.Count() > 0 && ver != null)
+                {
+                    VExamBank.CreateDate = ver.FirstOrDefault().CreateDate;
+                    VExamBank.CreateUser = ver.FirstOrDefault().CreateUser;
+                }
+                VExamBank.UpdateDate = DateTime.Now;
+                VExamBank.UpdateUser = username;
                 Data.ExamBank.Update_ExamBank(VExamBank, null, new string[] { "ID" });
             }
             LExamBank = Data.ExamBank.Get_All_ExamBank();
