@@ -105,6 +105,7 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("8", "360天"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
         }
 
         public void GetOrgType(string model) {
@@ -231,6 +232,7 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
         }
         public void GetExamTypeInfo(string model)
         { ListExamRuleTwo = Data.ExamRule.Get_All_ExamRule(new { TypeName = model }); }
