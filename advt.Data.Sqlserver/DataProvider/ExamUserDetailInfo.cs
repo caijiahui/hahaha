@@ -209,7 +209,7 @@ namespace advt.Data.SqlServer
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
-                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true'  and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "' and IsStop = 0 and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
+                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true' and IsStop=0   and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "' and IsStop = 0 and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
             if (!string.IsNullOrEmpty(typename))
             {
                 commandText.AppendLine("and c.TypeName = N'" + typename + "'");
