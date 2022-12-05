@@ -1259,7 +1259,7 @@ namespace advt.Web.Controllers
         {
             RegionalPostModel models = new RegionalPostModel();
             models.GetExamTypeInfo(model);
-            return Json(new { ListExamRuleTwo = models.ListExamRuleTwo }, JsonRequestBehavior.AllowGet);
+            return Json(new { ListExamRuleTwo = models.ListExamRuleTwo,LPostExamEntry=models.LPostExamEntry }, JsonRequestBehavior.AllowGet);
         }
 
         [MyAuthorize]

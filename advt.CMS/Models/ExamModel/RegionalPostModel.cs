@@ -221,21 +221,74 @@ namespace advt.CMS.Models.ExamModel
         public void GetRulePost(string model, string postname, string departcode)
         {
             ListExamPostRule = Data.ExamPostRule.Get_All_ExamPostRule(new { PostName = postname, DepartCode = departcode });
-          
-            //要求入职时间判断
-            LPostExamEntry.Add(new KeyValuePair<string, string>("0", "否"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("1", "每月10号前入职,下个月开始考"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("2", "每月10号后入职,下下个月开始考"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("3", "7天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("4", "14天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+            var type = Data.RegionalPost.Get_All_RegionalPost(new { PostName = postname, DepartCode = departcode }).FirstOrDefault().ExamType;
+            //chassis以及工控模组按照月
+            if (type == "Chassis技能等级考试" || type == "工控模组技能等级考试")
+            {
+                //要求入职时间判断
+                LPostExamEntry.Add(new KeyValuePair<string, string>("0", "1月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("1", "2月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("2", "3月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("3", "4月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("4", "5月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("5", "6月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("6", "7月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("7", "8月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "9月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "10月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("10", "11月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("11", "12月"));
+            }
+            else
+            {  //要求入职时间判断
+                LPostExamEntry.Add(new KeyValuePair<string, string>("0", "否"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("1", "每月10号前入职,下个月开始考"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("2", "每月10号后入职,下下个月开始考"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("3", "7天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("4", "14天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+            }
+
+           
         }
         public void GetExamTypeInfo(string model)
-        { ListExamRuleTwo = Data.ExamRule.Get_All_ExamRule(new { TypeName = model }); }
+        {
+            ListExamRuleTwo = Data.ExamRule.Get_All_ExamRule(new { TypeName = model });
+            if (model == "Chassis技能等级考试" || model == "工控模组技能等级考试")
+            {
+                //要求入职时间判断
+                LPostExamEntry.Add(new KeyValuePair<string, string>("0", "1月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("1", "2月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("2", "3月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("3", "4月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("4", "5月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("5", "6月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("6", "7月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("7", "8月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "9月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "10月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("10", "11月"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("11", "12月"));
+            }
+            else
+            {  //要求入职时间判断
+                LPostExamEntry.Add(new KeyValuePair<string, string>("0", "否"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("1", "每月10号前入职,下个月开始考"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("2", "每月10号后入职,下下个月开始考"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("3", "7天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("4", "14天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "1年"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+            }
+
+        }
     }
     public class RuleView
     { 
