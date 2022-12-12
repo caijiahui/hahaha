@@ -257,13 +257,18 @@ namespace advt.CMS.Models.ExamModel
                 if ( userdata.TypeName == "Chassis技能等级考试")
                 {
                     userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 2, 2);
-                    Data.ExamUserInfo.Update_ExamUserInfo(userinfo, null, new string[] { "ID" });
                 }
                 if (userdata.TypeName == "职等考试" || userdata.TypeName == "关键岗位技能等级")
                 {
                     userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 1, 1);
-                    Data.ExamUserInfo.Update_ExamUserInfo(userinfo, null, new string[] { "ID" });
                 }
+                if (userdata.TypeName == "电子端岗位技能津贴")
+                {
+                    userinfo.SubjectName = newsubject;
+                    //userinfo.IsEnable =false;
+                }
+                Data.ExamUserInfo.Update_ExamUserInfo(userinfo, null, new string[] { "ID" });
+
                 #region
                 //if (userdata.TypeName == "关键岗位技能等级")
                 //{
