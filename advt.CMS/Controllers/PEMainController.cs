@@ -1355,7 +1355,8 @@ namespace advt.Web.Controllers
             var resu = string.Empty;
             HrAuditModel models = new HrAuditModel();
             resu = models.WeiXinJob();
-            return Json(new { resu });
+
+            return null;
         }
     }
 }
