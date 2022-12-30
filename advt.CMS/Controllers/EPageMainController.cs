@@ -75,7 +75,7 @@ namespace advt.Web.Controllers
                             var ddate = DateTime.Now.ToString("d");
                             var examdetail =Convert.ToDateTime(detail.ExamDate).ToString("d");
                             var examendtime =string.Format("{0}/{1}/{2} {3}:{4}",Convert.ToDateTime(detail.ExamDate).Year, Convert.ToDateTime(detail.ExamDate).Month, Convert.ToDateTime(detail.ExamDate).Day,"20","00");
-                            if (ddate != examdetail)
+                            if (ddate != examdetai)
                             {
                                 model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
                             }
