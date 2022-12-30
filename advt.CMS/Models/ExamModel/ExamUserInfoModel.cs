@@ -660,6 +660,7 @@ namespace advt.CMS.Models.ExamModel
         public string WorkPlace { get; set; }
         public string ExamineMonth { get; set; }
         public string SignType { get; set; }
+        public string PostID { get; set; }
 
     }
     public class SearchUserData

@@ -1,0 +1,135 @@
+﻿@model advt.CMS.Models.ExamModel.ExamConfirmModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #app {
+        padding: 20px 30px
+    }
+</style>
+<div id="app" style="margin-left:20px">
+    <template>
+        <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
+            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>考试确认审核</el-breadcrumb-item>
+        </el-breadcrumb>
+
+    </template>
+    <div>
+        <template>
+            <el-button @@click="Confirm()">启动考试</el-button>
+            <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
+                      :data="tableData">
+                <el-table-column type="selection">
+                </el-table-column>
+                <el-table-column label="部门"
+                                 prop="DepartCode" sortable>
+                </el-table-column>
+                <el-table-column label="工号"
+                                 prop="UserCode" sortable
+                                 fixed>
+                </el-table-column>
+                <el-table-column label="姓名"
+                                 prop="UserName" sortable>
+                </el-table-column>
+                <el-table-column label="考试类型"
+                                 prop="TypeName" sortable>
+                </el-table-column>
+                <el-table-column label="科目"
+                                 prop="SubjectName" sortable>
+                </el-table-column>
+                <el-table-column label="考试规则"
+                                 prop="RuleName" sortable>
+                </el-table-column>
+                <el-table-column label="考试时间" width="110">
+                    <template slot-scope="scope">
+                        <span>{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+        </template>
+
+    </div>
+        
+    </div>
+    <script src="~/Scripts/Vue/Vue.js"></script>
+    <script src="~/Scripts/Vue/axios.js"></script>
+    <script src="~/Scripts/elementUI/lib/index.js"></script>
+    <script src="~/Scripts/Vue/polyfill.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                dialogFormVisible: false,
+                fullscreenLoading: false,
+                form: [], 
+                tableData: [],
+                isMobileTurn: false
+            },
+            mounted: function () {
+                this.getdata();
+                if (this.isMobile()) {
+                    this.isMobileTurn = true
+                } else {
+                    this.isMobileTurn = false
+                }
+            },
+            methods: {
+                isMobile: function () {
+                    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                    return flag
+                },
+                changeFun(val) {
+                    var _this = this;
+                    _this.checkBoxData = val;
+                },
+               
+                handleclose() {
+                    var _this = this;
+                    _this.dialogUpdateVisible = false;
+                },
+                Confirm() {
+                    var _this = this;
+                    _this.checkBoxData.forEach(function (item) {
+                        console.log(_this.checkBoxData)
+                    })
+                    axios.post('/PEMain/SaveConfirmUser', {
+                        model: _this.checkBoxData
+                    }).then(function (res) {
+
+                    });
+
+                },
+               
+                changeDate: function (dates) {
+                    var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                    Y = date.getFullYear() + '-';
+                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                    h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                    m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                    s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                    var NewDtime = Y + M + D + h + m + s;
+                    var listDate = new Date(date);
+                    var year = listDate.getFullYear();
+                    var mon = listDate.getMonth() + 1;
+                    var day = listDate.getDate();
+                    return year + '-' + mon + '-' + day;
+                },
+                
+                getdata: function () {
+                    var _this = this;                   
+                    axios.post('/PEMain/ExamConfirmInfo', {
+                    }).then(function (responese) {
+                        _this.tableData = responese.data.tableData;
+                    })
+                }
+            }
+
+        })
+
+
+    </script>
+

@@ -127,6 +127,16 @@ namespace advt.Data
             return SqlHelper.GetReaderToFirstOrDefault<Entity.ExamUserDetailInfo>(reader);
         }
        
+        public static List<Entity.ExamUserDetailInfo> Get_All_ExamInfo(DateTime ddate, DateTime examdetail)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamInfo(ddate, examdetail);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+        public static List<Entity.ExamUserDetailInfo> GetAuthority(string usercode)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().GetAuthority(usercode);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader); 
+        }
         #endregion
     }
 }

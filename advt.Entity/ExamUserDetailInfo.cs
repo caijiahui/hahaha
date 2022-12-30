@@ -79,5 +79,9 @@ namespace advt.Entity
         public int TotalQuota { get; set; }//汇总津贴
         public string State { get; set; }
         public string Type { get; set; }
+        //点名机制
+        public bool IsStartExam { get; set; }//是否启动考试
+        public string StartExamUser { get; set; }//点名人
+        public DateTime? StartExamDate { get; set; }//点名时间
     }
 }

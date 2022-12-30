@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type,IsStartExam,StartExamUser,StartExamDate";
 
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
@@ -68,7 +68,10 @@ namespace advt.Data.SqlServer
             new string[] { "PostQuota", "Int", "4"},
             new string[] { "TotalQuota", "Int", "4"},
             new string[] { "State", "NVarChar", "10"},
-            new string[] { "Type", "NVarChar", "50"}
+            new string[] { "Type", "NVarChar", "50"},
+            new string[] { "IsStartExam", "Bit", "1"},
+            new string[] { "StartExamUser", "NVarChar", "50"},
+            new string[] { "StartExamDate", "DateTime", "16"}
         };
         #endregion
 
@@ -293,6 +296,22 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(sql);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
+        public IDataReader Get_All_ExamInfo(DateTime ddate, DateTime examdetail)
+        {
+            string sql = string.Empty;
+            StringBuilder commandText = new StringBuilder();
+            List<DbParameter> l_parms = new List<DbParameter>();
+            commandText.AppendLine(" select *  from ExamUserDetailInfo ");
+            sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='true' ";
+           
+            if (!string.IsNullOrEmpty(ddate.ToString())&& !string.IsNullOrEmpty(examdetail.ToString()))
+            {
+                sql += " and ExamDate>='"+ddate + "' and ExamDate < '" + examdetail + "' ";
+            }
+            sql += " order by ExamDate desc";
+            commandText.AppendLine(sql);
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         public IDataReader GetCanSignUpAudit(string usercode)
         {
             StringBuilder commandText = new StringBuilder();
@@ -301,6 +320,13 @@ namespace advt.Data.SqlServer
                 " where TypeName=N'电子端岗位技能津贴' and IsStop=0 and IsExam='true' and IsExamPass=1 )a " +
                 " where a.UserCode='"+ usercode + "'"
                 );
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
+
+        public IDataReader GetAuthority(string usercode)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select * from [dbo].[advt_users_type] where username='"+ usercode + "' and [type]='Admin'");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         #endregion

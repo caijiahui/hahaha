@@ -7,6 +7,7 @@
     #app {
         padding: 20px 30px
     }
+
     .el-dialog {
         width: 80%;
     }
@@ -304,7 +305,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div slot="footer" class="dialog-footer">                
+            <div slot="footer" class="dialog-footer">
                 <template>
                     <el-button @@click="dialogFormPractical = false">取 消</el-button>
                     <el-button type="primary" @@click="handlePracticalSave('save')">保存</el-button>
@@ -551,14 +552,14 @@
             Super: {
                 TypeName: "",
                 SubjectName: "",
-                Usercode:""
+                Usercode: ""
             },
             LSuperExamType: [],
             LSuperUsers: [],
             LRecordupUser: [],
-            LSubject:[],
+            LSubject: [],
             DetailId: 0,
-            IsSuper:false,
+            IsSuper: false,
 
 
             dialogFormVisible: false,
@@ -567,10 +568,10 @@
             dialogSearchVisible: false,
             dialogFormLevel: false,
 
-            VExamUser: { SubjectName: '', UserCode: '', NewSubjctName:''},
+            VExamUser: { SubjectName: '', UserCode: '', NewSubjctName: '' },
 
 
-            dialogSuperVisible:false,
+            dialogSuperVisible: false,
             form: [],
             LCheckAudtiUser: [],
             LExamType: [],
@@ -714,7 +715,7 @@
                     message: Result.Result,
                     type: 'success'
                 });
-            },           
+            },
             handleSave() {
                 var _this = this;
                 axios.post('/PEMain/InsertUserDetail', {
@@ -752,7 +753,7 @@
                 //})
             },
             //上传实践操作
-            handlePractical(usercode, username, ApplyLevel, SubjectName, TypeName,id) {
+            handlePractical(usercode, username, ApplyLevel, SubjectName, TypeName, id) {
                 var _this = this;
                 _this.DetailId = id;
                 _this.VPracticeInfo.UserCode = usercode;
@@ -854,7 +855,7 @@
                     }
                     else {
                         _this.$message({
-                            message:'降级成功',
+                            message: '降级成功',
                             type: 'success'
                         });
                         _this.LRecordupUser = res.data.LRecordupUser;
