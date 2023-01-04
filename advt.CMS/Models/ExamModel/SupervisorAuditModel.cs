@@ -172,7 +172,7 @@ namespace advt.CMS.Models.ExamModel
                 LCheckAudtiUser = super.OrderByDescending(x => x.DepartCode).ToList();
             }
             //主管需要审核的人员
-            LSignedupUser = LSignedupUser.OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
+            LSignedupUser = LSignedupUser.Where(x=>x.State!="离职").OrderByDescending(x => x.TypeName).ThenBy(x => x.DepartCode).ToList();
             var superLSignedupUser = Data.ExamUserDetailInfo.Get_Super_UserAduitInfo("Signup", username, "");
             if (superLSignedupUser != null && superLSignedupUser.Count() != 0)
             {

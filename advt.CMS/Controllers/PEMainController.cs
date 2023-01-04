@@ -20,6 +20,7 @@ using System.Data;
 using advt.CMS.Models;
 using System.Text;
 using FormsAuth;
+using Microsoft.Ajax.Utilities;
 
 namespace advt.Web.Controllers
 {
@@ -966,7 +967,16 @@ namespace advt.Web.Controllers
                     rowtemp.CreateCell(12).SetCellValue(tlst[i].ExamineMonth);
                     rowtemp.CreateCell(13).SetCellValue(tlst[i].SubjectName);
                     rowtemp.CreateCell(14).SetCellValue(tlst[i].RuleName);
-                    rowtemp.CreateCell(15).SetCellValue(tlst[i].ReadExamDate);
+                    //rowtemp.CreateCell(15).SetCellValue(tlst[i].ReadExamDate);
+                    if (!string.IsNullOrEmpty(tlst[i].ReadExamDate))
+                    {
+                        var ss = tlst[i].ReadExamDate.ToString();
+                        var examendtime = string.Format("{0}/{1}/{2}", Convert.ToDateTime(ss).Year, Convert.ToDateTime(ss).Month, Convert.ToDateTime(ss).Day);
+                        rowtemp.CreateCell(15).SetCellValue(examendtime);
+                    }
+                    else {
+                        rowtemp.CreateCell(15).SetCellValue(tlst[i].ReadExamDate);
+                    }
 
                 }
                 // 写入到客户端 
