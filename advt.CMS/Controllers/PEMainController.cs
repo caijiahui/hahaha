@@ -971,7 +971,7 @@ namespace advt.Web.Controllers
                     if (!string.IsNullOrEmpty(tlst[i].ReadExamDate))
                     {
                         var ss = tlst[i].ReadExamDate.ToString();
-                        var examendtime = string.Format("{0}/{1}/{2}", Convert.ToDateTime(ss).Year, Convert.ToDateTime(ss).Month, Convert.ToDateTime(ss).Day);
+                        var examendtime = string.Format("{0}-{1}", Convert.ToDateTime(ss).Year, Convert.ToDateTime(ss).Month);
                         rowtemp.CreateCell(15).SetCellValue(examendtime);
                     }
                     else {

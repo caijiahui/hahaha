@@ -146,7 +146,7 @@ namespace advt.CMS.Models.ExamModel
                         }
                         if (data.TypeName == "53"|| data.TypeName == "65" || data.TypeName == "66")
                         {
-                            if (row["ReadyExamDate"].ToString() == "1900/1/1 0:00:00")
+                            if (row["ReadyExamDate"].ToString().Contains("1900"))
                             {
                                 ReadyExamDate = null;
                             }
