@@ -961,7 +961,13 @@ namespace advt.Web.Controllers
                     rowtemp.CreateCell(6).SetCellValue(tlst[i].PostName);//职位
                     rowtemp.CreateCell(7).SetCellValue(tlst[i].ReverseBuckle);
                     rowtemp.CreateCell(8).SetCellValue(tlst[i].CurrentSkillLevel);
-                    rowtemp.CreateCell(9).SetCellValue(tlst[i].LastExamTime.ToString());
+                    if (!string.IsNullOrEmpty(tlst[i].LastExamTime.ToString()))
+                    {
+                        var last = tlst[i].LastExamTime.ToString();
+                        var lasttime = string.Format("{0}-{1}", Convert.ToDateTime(last).Year, Convert.ToDateTime(last).Month);
+                        rowtemp.CreateCell(9).SetCellValue(lasttime);
+                    }
+                    //rowtemp.CreateCell(9).SetCellValue(tlst[i].LastExamTime.ToString());
                     rowtemp.CreateCell(10).SetCellValue(tlst[i].HighestTestSkill);
                     rowtemp.CreateCell(11).SetCellValue(tlst[i].ApplicationLevel);
                     rowtemp.CreateCell(12).SetCellValue(tlst[i].ExamineMonth);

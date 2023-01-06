@@ -144,7 +144,7 @@ namespace advt.CMS.Models.ExamModel
                         {
                             practicetime = Convert.ToDateTime(row["PariceDate"].ToString());
                         }
-                        if (data.TypeName == "53"|| data.TypeName == "65" || data.TypeName == "66")
+                        if (data.TypeName == "53"|| data.TypeName == "65" || data.TypeName == "66" || data.TypeName == "62")
                         {
                             if (row["ReadyExamDate"].ToString().Contains("1900"))
                             {

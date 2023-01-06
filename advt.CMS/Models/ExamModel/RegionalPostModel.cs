@@ -104,8 +104,9 @@ namespace advt.CMS.Models.ExamModel
             LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
             LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("8", "360天"));
-            LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("8", "150天"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("9", "360天"));
+            LPostExamEntry.Add(new KeyValuePair<string, string>("10", "730天"));
         }
 
         public void GetOrgType(string model) {
@@ -249,8 +250,9 @@ namespace advt.CMS.Models.ExamModel
                 LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
                 LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
                 LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
-                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "365天"));
-                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "150天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "365天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("10", "730天"));
             }
 
            
@@ -284,8 +286,9 @@ namespace advt.CMS.Models.ExamModel
                 LPostExamEntry.Add(new KeyValuePair<string, string>("5", "30天"));
                 LPostExamEntry.Add(new KeyValuePair<string, string>("6", "90天"));
                 LPostExamEntry.Add(new KeyValuePair<string, string>("7", "180天"));
-                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "365天"));
-                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "150天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("8", "150天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("9", "365天"));
+                LPostExamEntry.Add(new KeyValuePair<string, string>("10", "730天"));
             }
 
         }
