@@ -30,7 +30,7 @@
             </el-tab-pane>
             <el-tab-pane label="主管审核通过人员" name="Two">
             </el-tab-pane>
-            <el-tab-pane label="主管取消人员" name="Three">
+            <el-tab-pane label="主管取消津贴人员" name="Three">
             </el-tab-pane>
         </el-tabs>
         <div v-show="activeName=='first'">
@@ -820,7 +820,7 @@
                     axios.post('/PEMain/CelarQuata', {
                         model: row
                     }).then(function (res) {
-                        _this.LRecordupUser = responese.data.LRecordupUser;
+                        _this.LRecordupUser = res.data.LRecordupUser;
                     });
                 }).catch(() => {
                     _this.$message({
