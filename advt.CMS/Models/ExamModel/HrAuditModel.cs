@@ -64,8 +64,8 @@ namespace advt.CMS.Models.ExamModel
                     y.TypeName));
                 LExamType.AddRange(ex);
                 var user = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
-                ListWorkPlace = user.GroupBy(x => x.WorkPlace).Select(y=>y.Key).Distinct().ToList();
-                ListOrgName = user.GroupBy(x => x.OrgName).Select(y => y.Key).Distinct().ToList();
+                ListWorkPlace = user.GroupBy(x => x.OrgName).Select(y=>y.Key).Distinct().ToList();
+                ListOrgName = user.GroupBy(x => x.DepartCode).Select(y => y.Key).Distinct().ToList();
                 //foreach (var item in Data.ExamType.Get_All_ExamType())
                 //{
                 //    LExamType.Add(new KeyValuePair<string, string>(item.TypeName, item.TypeName));

@@ -228,9 +228,9 @@
                 <el-select v-model="VProData.WrokPlace" placeholder="请选择区域"  style="width:200px;margin-top:10px">
                     <el-option v-for="item in ListWorkPlace" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
-                <el-select v-model="VProData.OrgName" placeholder="请选择部门"  style="width:200px;margin-top:10px">
+                @*<el-select v-model="VProData.OrgName" placeholder="请选择部门"  style="width:200px;margin-top:10px">
                     <el-option v-for="item in ListOrgName" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
+                </el-select>*@
                 <el-input placeholder="部门代码" v-model="VProData.DepartCode" style="width:200px">
                 </el-input>
                 <el-input placeholder="工号" v-model="VProData.UserCode" style="width:200px">

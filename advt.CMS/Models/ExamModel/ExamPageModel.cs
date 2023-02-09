@@ -657,6 +657,7 @@ namespace advt.CMS.Models
             {
                 var CorrectScore = guid.FirstOrDefault().CorrectScore;
                 var PassScore = guid.FirstOrDefault().PassScore;
+                var subject = guid.FirstOrDefault().ExamSubject;
                 if (CorrectScore >= PassScore)
                 {
                     var userinfos = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName =VExamUserInfo.ExamType});
@@ -701,11 +702,29 @@ namespace advt.CMS.Models
                                 }
                                 else if (model.VExamUserInfo.ExamType == "Chassis技能等级考试")
                                 {
-                                    if (item.ApplicationLevel=="中级")
+                                    if (item.ApplicationLevel == "中级")
                                     {
                                         item.ApplicationLevel = "高级";
                                         item.Achievement = null;
                                     }
+                                    //var rankn = item.RankName;
+                                    //if (!string.IsNullOrEmpty(rankn))
+                                    //{
+                                    //    if (!string.IsNullOrEmpty(subject) && subject.Contains("高级"))
+                                    //    {
+                                    //        if (rankn.Contains("A-1") || rankn.Contains("A-2"))
+                                    //        {
+                                    //            item.RankName = "A-3";
+                                    //        }
+                                    //    }
+                                    //    if (!string.IsNullOrEmpty(subject) && subject.Contains("中级"))
+                                    //    {
+                                    //        if (rankn.Contains("A-1"))
+                                    //        {
+                                    //            item.RankName = "A-2";
+                                    //        }
+                                    //    }
+                                    //}
                                 }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }

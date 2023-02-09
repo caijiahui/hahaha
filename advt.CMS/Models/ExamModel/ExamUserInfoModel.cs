@@ -152,10 +152,38 @@ namespace advt.CMS.Models.ExamModel
                             }
                             else
                             {
-                                ReadyExamDate = row["ReadyExamDate"].ToString();
+                                var re = Data.RegionalPost.Get_All_RegionalPost(new {ExamType= row["TypeName"].ToString(), DepartCode = row["DepartCode"].ToString() });
+                                if (re.Count()>0&&re!=null)
+                                {
+                                    ReadyExamDate = row["ReadyExamDate"].ToString();
+                                }
+                                else ReadyExamDate = null;
                             }
                         }
+                        var na = Data.advt_user_sheet.Get_All_advt_user_sheet(new { UserCode = row["UserCode"].ToString(), UserCostCenter= row["DepartCode"].ToString() });
 
+                        var exammon = "";
+                        var sub = "";
+                        var rule = "";
+                        var app = "";
+                        if (na.Count() > 0&&na!=null)
+                        {
+                            //判断true,true为课长
+                            var nc= Data.ExamUsersFromehr.Get_All_ExamUsersFromehr(new { UserCode= na.FirstOrDefault().UserCode,UserDept= na.FirstOrDefault().UserCostCenter, JobCode = "课长" });
+                            if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle)||nc.Count()==1 || row["RankName"].ToString().Contains("D"))
+                            {
+                                exammon = null;
+                                ReadyExamDate = null;
+                            }
+                            else
+                            { 
+                                exammon = row["ExamineMonth"].ToString();
+                                sub = row["SubjectName"].ToString();
+                                rule = row["RuleName"].ToString();
+                                app = row["examapply"].ToString();
+                            } 
+                          
+                        }
                         ListUserInfo.Add(new UserInfo
                         {
                             Id = Convert.ToInt32(row["ID"].ToString()),
@@ -173,21 +201,21 @@ namespace advt.CMS.Models.ExamModel
                             TheoreticalAchievement = score,//实践成绩
                             PracticeTime = practicetime,//最后一次实践成绩
                             HighestTestSkill = row["HighestTestSkill"].ToString(),//最高可考技能
-                            ApplicationLevel = row["examapply"].ToString(),//本次申请等级      
+                            ApplicationLevel = app,//本次申请等级      
                             IsAchment = row["IsAchment"].ToString(),
                             Achievement = row["Achievement"].ToString(),
-                            SubjectName = row["SubjectName"].ToString(),
+                            SubjectName = sub,
                             ReverseBuckle = row["ReverseBuckle"].ToString(),//最初职等
-                            RuleName = row["RuleName"].ToString(),
+                            RuleName = rule,
                             WorkPlace = row["WorkPlace"].ToString(),
                             IsUserExam = row["IsUserExams"].ToString(),
                             //每年应复审时间段
-                            ExamineMonth = row["ExamineMonth"].ToString(),
+                            ExamineMonth = exammon,
                             ReadExamDate = ReadyExamDate
                         });
                     }
                     ListUserInfo11 = ListUserInfo.OrderByDescending(x=>x.ReadExamDate!=null).ToList();
-                    //YListUserInfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName)).ToList();
+                   
                     var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
                     if (listinfo.Count() > 0 && listinfo != null)
                     { 
@@ -661,6 +689,7 @@ namespace advt.CMS.Models.ExamModel
         public string ExamineMonth { get; set; }
         public string SignType { get; set; }
         public string PostID { get; set; }
+        public string OrgName { get; set; }
 
     }
     public class SearchUserData

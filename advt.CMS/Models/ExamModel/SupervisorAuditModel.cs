@@ -59,10 +59,13 @@ namespace advt.CMS.Models.ExamModel
             var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
             model.TypeName = typename;
             model.SubjectName = SubjectName;
+            model.RankName = user.RankName;
+            model.EntryDate = user.EntryDate;
             model.UserCode = usercode;
             model.UserName = user.UserName;
             model.PostID = user.PostID;
             model.PostName = user.PostName;
+            model.OrgName = user.OrgName;
             model.RuleName = rule != null ? rule.RuleName : "";
             model.DepartCode = depart;
             model.WorkPlace = WorkPlace;
