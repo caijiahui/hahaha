@@ -36,11 +36,14 @@ namespace advt.CMS.Models.ExamModel
                 LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
             }
             var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
-            foreach (var item in ListExamUserDetailInfo.OrderByDescending(x=>x.ExamDate).Where(x=>x.State== "试用" || x.State == "正式"))
+
+            int i = 0;
+            foreach (var item in ListExamUserDetailInfo.OrderByDescending(x=>x.ExamDate!=null).Where(x=>x.State== "试用" || x.State == "正式"))
             {
                 //先找出最后一笔
+                
                 var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = item.UserCode, IsStop = false, IsExam = "true",ExamDate=item.ExamDate}).OrderByDescending(x => x.ExamDate);
-                var seclsts = Data.ExamUserDetailInfo.Get_UserInfo(item.UserCode, item.ExamDate );
+                var seclsts = Data.ExamUserDetailInfo.Get_UserInfo(item.UserCode, item.ExamDate ).OrderByDescending(x=>x.ExamDate);
 
                 var TypeNameTwo = string.Empty;
                 var SubjectNameTwo = string.Empty;
@@ -61,10 +64,15 @@ namespace advt.CMS.Models.ExamModel
                 int MajorQuotaOne = 0;
                 int TotalQuotaOne = 0;
                 int total = 0;
+                int AddQua = 0;
 
                 var sub = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = seclst.FirstOrDefault().SubjectName });
-                //本次
-                TypeNameOne = seclst.FirstOrDefault().TypeName;
+                if (seclst.FirstOrDefault().Type != "取消")
+                {                    //本次
+                    TypeNameOne = seclst.FirstOrDefault().TypeName;
+                }
+                else
+                { TypeNameOne = "取消"; }
                 SubjectNameOne = seclst.FirstOrDefault().SubjectName;
                 ExamDateOne = seclst.FirstOrDefault().ExamDate;
                 ExamResultOne = seclst.FirstOrDefault().IsExamPass ? "通过" : "未通过";
@@ -84,36 +92,48 @@ namespace advt.CMS.Models.ExamModel
                         SkillsAllowanceOne = seclst.FirstOrDefault().SkillsAllowance;
                         MajorQuotaOne = seclst.FirstOrDefault().MajorQuota;
                     }
-                    //对应取消的人
-                    var user = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = item.UserCode, SubjectName = seclst.FirstOrDefault().SubjectName,Type= "取消" ,ExamDate=item.ExamDate});
-                    var subs = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = seclst.FirstOrDefault().SubjectName });
-                    if (user.Count() > 0)
-                    {
-                        TypeNameOne = "取消";
-                        SubjectNameOne = null;
-                        ExamDateOne = null;
-                        ExamResultOne = null;
-                        PostQuotaOne = user.FirstOrDefault().PostQuota;
-                        ElectronicQuotaOne = user.FirstOrDefault().ElectronicQuota;
-                        SkillsAllowanceOne = user.FirstOrDefault().SkillsAllowance;
-                        MajorQuotaOne = user.FirstOrDefault().MajorQuota;
-                        total= subs.FirstOrDefault().PostQuota+ subs.FirstOrDefault().ElectronicQuota + subs.FirstOrDefault().SkillsAllowance + subs.FirstOrDefault().MajorQuota;
-                    }
+                  
                     TotalQuotaOne = PostQuotaOne + ElectronicQuotaOne + SkillsAllowanceOne + MajorQuotaOne;
                 }
                 if (seclsts !=null&& seclsts.Count()>0)
                 {
-                    //上次
-                    TypeNameTwo = seclsts.LastOrDefault().TypeName;
-                    SubjectNameTwo = seclsts.LastOrDefault().SubjectName;
-                    ExamDateTwo = seclsts.LastOrDefault().ExamDate;
-                    ExamResultTwo = seclsts.LastOrDefault().IsExamPass ? "通过" : "未通过";
-                    PostQuotaTwo = seclsts.LastOrDefault().PostQuota;
-                    ElectronicQuotaTwo = seclsts.LastOrDefault().ElectronicQuota;
-                    SkillsAllowanceTwo = seclsts.LastOrDefault().SkillsAllowance;
-                    MajorQuotaTwo = seclsts.LastOrDefault().MajorQuota;
-                    TotalQuotaTwo = seclsts.LastOrDefault().TotalQuota;
+                    if (seclsts.FirstOrDefault().Type == "取消")
+                    { //上次
+                        TypeNameTwo = seclsts.FirstOrDefault().Type;
+                        SubjectNameTwo = seclsts.FirstOrDefault().SubjectName;
+                        ExamDateTwo = seclsts.FirstOrDefault().ExamDate;
+                        ExamResultTwo = seclsts.FirstOrDefault().IsExamPass ? "通过" : "未通过";
+                        PostQuotaTwo = seclsts.FirstOrDefault().PostQuota;
+                        ElectronicQuotaTwo = seclsts.FirstOrDefault().ElectronicQuota;
+                        SkillsAllowanceTwo = seclsts.FirstOrDefault().SkillsAllowance;
+                        MajorQuotaTwo = seclsts.FirstOrDefault().MajorQuota;
+                        TotalQuotaTwo = seclsts.FirstOrDefault().TotalQuota;
+                        total = TotalQuotaTwo;
+                    }
+                    else {
+
+                        //上次
+                        TypeNameTwo = seclsts.FirstOrDefault().TypeName;
+                        SubjectNameTwo = seclsts.FirstOrDefault().SubjectName;
+                        ExamDateTwo = seclsts.FirstOrDefault().ExamDate;
+                        ExamResultTwo = seclsts.FirstOrDefault().IsExamPass ? "通过" : "未通过";
+                        PostQuotaTwo = seclsts.FirstOrDefault().PostQuota;
+                        ElectronicQuotaTwo = seclsts.FirstOrDefault().ElectronicQuota;
+                        SkillsAllowanceTwo = seclsts.FirstOrDefault().SkillsAllowance;
+                        MajorQuotaTwo = seclsts.FirstOrDefault().MajorQuota;
+                        TotalQuotaTwo = seclsts.FirstOrDefault().TotalQuota;
+                    }
                 }
+                if (TypeNameOne != "取消")
+                {
+                    AddQua = TotalQuotaOne - TotalQuotaTwo;
+                }
+                else AddQua = TotalQuotaOne;
+                if (TypeNameTwo != "取消")
+                {
+                    AddQua = TotalQuotaOne - TotalQuotaTwo;
+                }
+                else AddQua = TotalQuotaOne - (0 - TotalQuotaTwo);
                 ListPageInfo.Add(new PageInfo
                 {
                     UserCode = item.UserCode,
@@ -141,7 +161,7 @@ namespace advt.CMS.Models.ExamModel
                     SkillsAllowanceOne = SkillsAllowanceOne,
                     MajorQuotaOne = MajorQuotaOne,
                     TotalQuotaOne = TotalQuotaOne, 
-                    AddData= TypeNameOne!="取消"?(TotalQuotaOne - TotalQuotaTwo): (TotalQuotaOne-total),
+                    AddData= AddQua,
                     TakeEffDate = ExamDateOne
                 });
             }

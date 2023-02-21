@@ -170,7 +170,8 @@ namespace advt.CMS.Models.ExamModel
                         {
                             //判断true,true为课长
                             var nc= Data.ExamUsersFromehr.Get_All_ExamUsersFromehr(new { UserCode= na.FirstOrDefault().UserCode,UserDept= na.FirstOrDefault().UserCostCenter, JobCode = "课长" });
-                            if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle)||nc.Count()==1 || row["RankName"].ToString().Contains("D"))
+
+                            if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle)||nc.Count()>0 || row["RankName"].ToString().Contains("D"))
                             {
                                 exammon = null;
                                 ReadyExamDate = null;
@@ -183,6 +184,7 @@ namespace advt.CMS.Models.ExamModel
                                 app = row["examapply"].ToString();
                             } 
                           
+
                         }
                         ListUserInfo.Add(new UserInfo
                         {
