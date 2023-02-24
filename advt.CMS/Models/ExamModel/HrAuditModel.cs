@@ -401,10 +401,10 @@ namespace advt.CMS.Models.ExamModel
 
         public void GetProcessUser(SearchHrData data)
         {
-            var model = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop =false, IsExam=false});
+            var model = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop =false});
             if (!string.IsNullOrEmpty(data.WrokPlace))
             {
-                model = model.Where(x => x.WorkPlace == data.WrokPlace).ToList();
+                model = model.Where(x => x.OrgName == data.WrokPlace).ToList();
             }
             if (!string.IsNullOrEmpty(data.DepartCode))
             {
@@ -417,10 +417,6 @@ namespace advt.CMS.Models.ExamModel
             if (!string.IsNullOrEmpty(data.PostID))
             {
                 model = model.Where(x => x.PostID == data.PostID).ToList();
-            }
-            if (!string.IsNullOrEmpty(data.OrgName))
-            {
-                model = model.Where(x => x.OrgName == data.OrgName).ToList();
             }
             if (!string.IsNullOrEmpty(data.ExamDate))
             {
@@ -451,8 +447,7 @@ namespace advt.CMS.Models.ExamModel
             }
             else if (data.ExamProcess == "考试完成")
             {
-                var mm = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop = false });
-                model = mm.Where(x =>  x.IsExam == "true").ToList();
+                model = model.Where(x =>  x.IsExam == "true").ToList();
             }
             ListProcessUser = model.Select(y => new SearchHrData
             {
@@ -461,7 +456,7 @@ namespace advt.CMS.Models.ExamModel
                 DepartCode = y.DepartCode,
                 UserCode = y.UserCode,
                 ExamDate = y.ExamDate.ToString(),
-                ExamProcess = GetProcess(y.ExamStatus),
+                ExamProcess = data.ExamProcess,
                 SubjectName = y.SubjectName,
                 UserName= y.UserName,
                 PostID=y.PostID,

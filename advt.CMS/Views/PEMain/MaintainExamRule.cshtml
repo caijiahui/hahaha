@@ -69,12 +69,12 @@
         <el-dialog title="考试规则编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
             <el-form :model="VExamRule" ref="dialogForm" :rules="ruleform" :label-position="labelPosition">
                 <el-form-item label="考试类型" prop="TypeName">
-                    <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型">
+                    <el-select v-model="VExamRule.TypeName" placeholder="请选择考试类型" @@change ="ChangeType">
                         <el-option v-for="item in ListTypeName" :key="item.TypeName" :label="item.TypeName" :value="item.TypeName"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="考试科目"  prop="SubjectName">
-                    <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目" clearable filterable>
+                    <el-select v-model="VExamRule.SubjectName" placeholder="请选择考试科目" clearable filterable @@change="ChangeSubject">
                         <el-option v-for="item in ListSubjectName" :key="item.SubjectName" :label="item.SubjectName" :value="item.SubjectName"></el-option>
                     </el-select>
                 </el-form-item>
@@ -245,25 +245,26 @@
             allTableData: []
         },
         watch: {
-            'VExamRule.TypeName': function (newval) {
-                var _this = this;
-                //axios.post('/PEMain/GetSubjectName', {
-                axios.post('/PEMain/GetRuleTypeName', {
-                    model: newval
-                }).then(response => {
-                    _this.ListSubjectName = response.data.ListSubjectName;
-                    _this.ListTopicInfo = response.data.ListTopic;
-                });
-            },
-            'VExamRule.SubjectName': function (newval) {
-                var _this = this;
-                _this.ListTopicInfo = [];
-                axios.post('/PEMain/GetRuleSubjectName', {
-                    model: newval
-                }).then(response => {
-                    _this.ListTopicInfo = response.data.ListTopic;
-                });
-            },
+            //'VExamRule.TypeName': function (newval) {
+            //    var _this = this;
+            //    _this.ListTopicInfo = [];
+            //    console.log(_this.VExamRule.SubjectName,251)
+            //    axios.post('/PEMain/GetRuleTypeName', {
+            //        model: newval
+            //    }).then(response => {
+            //        _this.ListSubjectName = response.data.ListSubjectName;
+            //       /* _this.ListTopicInfo = response.data.ListTopic;*/
+            //    });
+            //},
+            //'VExamRule.SubjectName': function (newval) {
+            //    var _this = this;
+            //    _this.ListTopicInfo = [];
+            //    axios.post('/PEMain/GetRuleSubjectName', {
+            //        model: newval
+            //    }).then(response => {
+            //        _this.ListTopicInfo = response.data.ListTopic;
+            //    });
+            //},
             'VExamRule.RegionalPlace': function (newval) {
                 var _this = this;
                 axios.post('/PEMain/GetRegionalDeapart', {
@@ -337,7 +338,29 @@
                     }
                     _this.tableData = tablist;
                 })
+            },
+            ChangeType: function (val) {
+                var _this = this;
+                _this.ListTopicInfo = [];
+                _this.topicratioPropsVal = [];
+                axios.post('/PEMain/GetRuleTypeName', {
+                    model: val
+                }).then(response => {
+                    _this.ListSubjectName = response.data.ListSubjectName;
+                     //_this.ListTopicInfo = response.data.ListTopic;*/
+                });
 
+            },
+            ChangeSubject: function (val) {
+                 var _this = this;
+                _this.ListTopicInfo = [];
+                _this.topicratioPropsVal = [];
+
+                axios.post('/PEMain/GetRuleSubjectName', {
+                    model: val
+                }).then(response => {
+                    _this.ListTopicInfo = response.data.ListTopic;
+                 });
             },
             topicratioPropsFn: function (val) {
                 var _this = this;
@@ -370,13 +393,17 @@
                         //题数配比
                         _this.ListTopicInfo.forEach(item => {
                             _this.RuleGrList.forEach(o => {
-                                if ((item.TopicMajor == o.TopicMajor) && (item.TopicLevel == o.TopicLevel) && (item.TopicType == o.TopicType)) {
-                                    if (parseFloat(item.Bcount)<parseFloat(o.TopicNum)) {
+                                if ((item.TopicMajor == o.TopicMajor)  && (item.TopicType == o.TopicType)) {
+                                    if (parseFloat(item.Bcount) < parseFloat(o.TopicNum)) {
                                         _this.iscount = true;
                                         _this.$alert('题目类型设置的题数不可大于题库对应下的题数!')
                                     }
 
                                 }
+                                //else {
+                                //    _this.iscount = true;
+                                //    _this.$alert('题目类型、等级、题数匹配不一样,请排查')
+                                //}
                             })
                         })
 
@@ -427,6 +454,7 @@
             },
             handleEdit(index, RuleName, TypeName, SubjectName, row) {
                 var _this = this;
+                var obj = {}
                 _this.VExamRule.RuleName = row.RuleName;
                 _this.VExamRule.TypeName = row.TypeName;
                 _this.VExamRule.SubjectName = row.SubjectName;
@@ -451,6 +479,8 @@
                     model: index,
                     subjectname: _this.VExamRule.SubjectName
                 }).then(response => {
+                    console.log(response.data.RuleGrList, 453)
+                    console.log(response.data.ListTopic, 454)
                     _this.ListTypeName = response.data.ListTypeName;
                     _this.RuleGrList = response.data.RuleGrList;                  
                     _this.ListTopicInfo = response.data.ListTopic;                    
@@ -466,8 +496,6 @@
                         })
                     })
                     _this.ListTopicInfo = _this.ListTopicInfo
-                    console.log(_this.ListTopicInfo, 469)
-                    console.log(_this.topicratioPropsVal,470)
 
                 });               
                 _this.dialogFormVisible = true;
@@ -504,6 +532,7 @@
                     SubjectName: _this.ExamSubject,
                     RuleName: _this.Rule
                 }).then(function (res) {
+                    console.log(res.data.tableData,506)
                     _this.tableData = res.data.tableData;
                     _this.setPaginations();
                 });

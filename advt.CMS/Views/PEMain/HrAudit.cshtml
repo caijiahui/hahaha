@@ -238,6 +238,7 @@
                 <el-input placeholder="岗位" v-model="VProData.PostID" style="width:200px;margin-top:10px">
                 </el-input>
                 <el-date-picker v-model="VProData.ExamDate"
+                                value-format="yyyy-MM"
                                 type="month"
                                 placeholder="选择月"  style="width:200px;margin-top:10px">
                 </el-date-picker>
@@ -263,9 +264,7 @@
                     <el-table-column label="区域"
                                      prop="WrokPlace" sortable>
                     </el-table-column>
-                    <el-table-column label="部门"
-                                     prop="OrgName" sortable>
-                    </el-table-column>
+                    
                     <el-table-column label="部门代码"
                                      prop="DepartCode" sortable>
                     </el-table-column>
@@ -554,6 +553,7 @@
                 SearchProdata() {
                     var _this = this;
                     _this.fullscreenLoading = true;
+                    console.log(_this.VProData,556)
                     axios.post('/PEMain/GetProcessUser', {
                         data: _this.VProData
                     }).then(function (res) {
