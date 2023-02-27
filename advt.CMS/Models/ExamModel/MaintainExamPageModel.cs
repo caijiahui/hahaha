@@ -136,9 +136,20 @@ namespace advt.CMS.Models.ExamModel
                 }
                 else AddQua = TotalQuotaOne - TotalQuotaTwo;
                 if (sub.Count() > 0 && sub != null)
-                { 
-                  if (!sub.FirstOrDefault().IsAddAllowance)
+                {
+                    
+                    if (!sub.FirstOrDefault().IsAddAllowance)
                     {
+                        if (seclst.FirstOrDefault().TypeName == "关键岗位技能等级")
+                        {
+                            var rank = Data.RankInfo.Get_All_RankInfo(new { RankName = seclst.FirstOrDefault().RankName });
+                            if (rank.FirstOrDefault().SkillName == seclst.FirstOrDefault().ApplyLevel)
+                            {
+                                AddQua = 0;
+                            }
+                            else AddQua = TotalQuotaOne;
+                        }
+                        else
                         AddQua = TotalQuotaOne;
                     }
                 }
