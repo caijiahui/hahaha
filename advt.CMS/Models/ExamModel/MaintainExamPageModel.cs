@@ -124,6 +124,7 @@ namespace advt.CMS.Models.ExamModel
                         TotalQuotaTwo = seclsts.FirstOrDefault().TotalQuota;
                     }
                 }
+                
                 if (TypeNameOne != "取消")
                 {
                     AddQua = TotalQuotaOne - TotalQuotaTwo;
@@ -133,7 +134,14 @@ namespace advt.CMS.Models.ExamModel
                 {
                     AddQua = TotalQuotaOne - TotalQuotaTwo;
                 }
-                else AddQua = TotalQuotaOne - (0 - TotalQuotaTwo);
+                else AddQua = TotalQuotaOne - TotalQuotaTwo;
+                if (sub.Count() > 0 && sub != null)
+                { 
+                  if (!sub.FirstOrDefault().IsAddAllowance)
+                    {
+                        AddQua = TotalQuotaOne;
+                    }
+                }
                 ListPageInfo.Add(new PageInfo
                 {
                     UserCode = item.UserCode,

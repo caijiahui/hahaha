@@ -193,7 +193,28 @@ namespace advt.CMS.Models.ExamModel
 
         public void CelarQuata(ExamUserDetailInfo model,string username)
         {
-            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck",IsStop=false}).OrderByDescending(x=>x.ExamDate).FirstOrDefault();
+            ////电子岗页面取消人员考试操作
+            //if (model.TypeName == "电子端岗位技能津贴")
+            //{
+            //    var item = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = model.UserCode, TypeName = "电子端岗位技能津贴", IsEnable = 0 });
+            //    item.IsEnable = true;
+            //    item.StopUser = username;
+            //    item.StopDate = DateTime.Now;
+            //    var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+            //    if (su > 0)
+            //    {
+            //        var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = model.TypeName, SubjectName = model.SubjectName, IsStop = 0 });
+            //        if (c != null)
+            //        {
+            //            c.IsStop = true;
+            //            c.StopCreateDate = DateTime.Now;
+            //            c.StopCreateUser = username;
+            //            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+            //        }
+            //    }
+
+            //}
+            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck", IsStop = 0 }).OrderByDescending(x=>x.ExamDate!=null).FirstOrDefault();
             if (userdata!= null)
             {
                 userdata.ElectronicQuota = 0;userdata.MajorQuota = 0;
@@ -240,8 +261,9 @@ namespace advt.CMS.Models.ExamModel
                 rec.TotalQuota = rec.ElectronicQuota + rec.MajorQuota + rec.SkillsAllowance + rec.GradePosition + rec.PostQuota;
                 Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
             }
+            
 
-           
+
             GetAllExamUserByType(model.TypeName, username);
             //呈现主管下所有通过考过的人员的最后一笔记录
         }
@@ -266,47 +288,8 @@ namespace advt.CMS.Models.ExamModel
                 if (userdata.TypeName == "电子端岗位技能津贴")
                 {
                     userinfo.SubjectName = newsubject;
-                    //userinfo.IsEnable =false;
                 }
                 Data.ExamUserInfo.Update_ExamUserInfo(userinfo, null, new string[] { "ID" });
-
-                #region
-                //if (userdata.TypeName == "关键岗位技能等级")
-                //{
-                //    //截取G后面的6,7
-                //    var old =Convert.ToInt32(model.SubjectName.Substring(model.SubjectName.Length-1, model.SubjectName.Length));
-                //    var news = Convert.ToInt32(newsubject.Substring(model.SubjectName.Length - 1, model.SubjectName.Length));
-                //    var jcdata = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode , TypeName = userdata.TypeName }).FirstOrDefault();
-                //    if (jcdata != null)
-                //    {
-                //        var re = Convert.ToInt32(jcdata.ReverseBuckle.Substring(jcdata.ReverseBuckle.Length - 1, jcdata.ReverseBuckle.Length));
-                //        if (news < re)
-                //        {
-                //            result = "已超过员工入职初始等级";
-                //        }
-                //        else
-                //        {
-                //            for (int i = news; i < old; i++)
-                //            {
-                //                //降到同初始等级一样
-                //                if (news == re)
-                //                {
-
-                //                }
-                //                else
-                //                { //大于初始等级
-
-                //                }
-                //            }
-
-                //        }
-                //    }
-
-                //}
-                //else
-                //{ 
-                //}
-                #endregion
                 //插入新记录明细
                 var userdatail = new ExamUserDetailInfo();
                 userdatail.UserCode = userdata.UserCode;
@@ -324,12 +307,13 @@ namespace advt.CMS.Models.ExamModel
                 userdatail.ExamDate = DateTime.Now.AddMonths(-1);
                 userdatail.IsStop = false; userdatail.IsExam = "true";userdatail.WorkPlace = userdata.WorkPlace;
                 userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
-                userdatail.ElectronicQuota = subejct.ElectronicQuota - model.ElectronicQuota;
-                userdatail.MajorQuota = subejct.MajorQuota - model.MajorQuota;
-                userdatail.SkillsAllowance = subejct.SkillsAllowance - model.SkillsAllowance;
-                userdatail.GradePosition = subejct.GradePosition - model.GradePosition;
-                userdatail.PostQuota = subejct.PostQuota - model.PostQuota;
-                userdatail.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance + userdatail.GradePosition + userdatail.PostQuota;
+                userdatail.ElectronicQuota = subejct.ElectronicQuota;
+                userdatail.MajorQuota = subejct.MajorQuota;
+                userdatail.SkillsAllowance = subejct.SkillsAllowance;
+                userdatail.GradePosition = subejct.GradePosition;
+                userdatail.PostQuota = subejct.PostQuota;
+                userdatail.TotalQuota = subejct.ElectronicQuota + subejct.MajorQuota + subejct.SkillsAllowance + subejct.GradePosition + subejct.PostQuota;
+                userdatail.Type = "降级";
                 Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(userdatail, null, new string[] { "ID" });
           
                 if (string.IsNullOrEmpty(result))
@@ -344,10 +328,10 @@ namespace advt.CMS.Models.ExamModel
                     rec.CreateName = username;
                     rec.CreateDate = DateTime.Now;
                     rec.Type = "降级";
-                    rec.ElectronicQuota = userdatail.ElectronicQuota; rec.MajorQuota = userdatail.MajorQuota;
-                    rec.SkillsAllowance = userdatail.SkillsAllowance; rec.GradePosition = userdatail.GradePosition;
-                    rec.PostQuota = userdatail.PostQuota;
-                    rec.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance+ userdatail.GradePosition + userdatail.PostQuota;
+                    rec.ElectronicQuota = subejct.ElectronicQuota; rec.MajorQuota = subejct.MajorQuota;
+                    rec.SkillsAllowance = subejct.SkillsAllowance; rec.GradePosition = subejct.GradePosition;
+                    rec.PostQuota = subejct.PostQuota;
+                    rec.TotalQuota = subejct.ElectronicQuota + subejct.MajorQuota + subejct.SkillsAllowance+ subejct.GradePosition + subejct.PostQuota;
                     Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
                 }
                

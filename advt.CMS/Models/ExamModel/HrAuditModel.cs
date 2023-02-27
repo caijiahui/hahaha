@@ -452,14 +452,14 @@ namespace advt.CMS.Models.ExamModel
             ListProcessUser = model.Select(y => new SearchHrData
             {
                 TypeName = y.TypeName,
-                WrokPlace = y.WorkPlace,
+                WrokPlace = y.OrgName,
                 DepartCode = y.DepartCode,
                 UserCode = y.UserCode,
                 ExamDate = y.ExamDate.ToString(),
                 ExamProcess = data.ExamProcess,
                 SubjectName = y.SubjectName,
                 UserName= y.UserName,
-                PostID=y.PostID,
+                PostID=y.PostName,
                 HrCheckDate = y.HrCheckCreateDate.ToString(),
                 ID = y.ID,
                 OrgName=y.OrgName
