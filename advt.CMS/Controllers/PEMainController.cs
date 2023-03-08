@@ -1365,14 +1365,13 @@ namespace advt.Web.Controllers
             models.StopProUser(model, username, data);
             return Json(new { models.ListProcessUser });
         }
-        [HttpGet]
-        public ActionResult SendWeiXin()
+        //[HttpGet]
+        public string SendWeiXin()
         {
             var resu = string.Empty;
             HrAuditModel models = new HrAuditModel();
             resu = models.WeiXinJob();
-
-            return null;
+            return resu;
         }
 
     }
