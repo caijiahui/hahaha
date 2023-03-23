@@ -98,7 +98,6 @@
             } else {
                 this.isMobileTurn = false
             }
-            console.log(this.isMobile(), 33333);
         },
         methods: {
             isMobile: function () {
@@ -110,16 +109,13 @@
                 _this.dialogFormTitle = data;
                 _this.RuleName = RuleName;
                 _this.ExamDate = EDate;
-                console.log(_this.ExamDate, 122);
                 _this.dialogFormVisible = true;
             },
             handleExam: function (data) {
                 var _this = this;
 
                 var datd = '';
-                console.log(_this.ExamDate, 111);
                 if (_this.ExamDate != null) {
-                    console.log(23111);
                     datd = _this.changeDate(_this.ExamDate);
                 }
                 window.location.href = "/EPageMain/ExamPage?IsTest=" + data + "&RuleName=" + _this.RuleName;

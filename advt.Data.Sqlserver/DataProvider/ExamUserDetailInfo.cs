@@ -302,8 +302,7 @@ namespace advt.Data.SqlServer
             StringBuilder commandText = new StringBuilder();
             List<DbParameter> l_parms = new List<DbParameter>();
             commandText.AppendLine(" select *  from ExamUserDetailInfo ");
-            sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='true' ";
-           
+            sql = " where IsStop=0 and ExamStatus='HrCheck' and IsExam='false'";           
             if (!string.IsNullOrEmpty(ddate.ToString())&& !string.IsNullOrEmpty(examdetail.ToString()))
             {
                 sql += " and ExamDate>='"+ddate + "' and ExamDate < '" + examdetail + "' ";

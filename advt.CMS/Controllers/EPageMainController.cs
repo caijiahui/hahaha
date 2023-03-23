@@ -200,13 +200,14 @@ namespace advt.Web.Controllers
             return Json(new { VExamScore = model.VExamScore, examList = model.examList }, JsonRequestBehavior.AllowGet);
         }
 
-        //点名页面
+        //签到点名页面
         [MyAuthorize]
         public ActionResult ExamConfirm()
         {
             ExamConfirmModel model = new ExamConfirmModel();
             return View(model);
         }
+
         [MyAuthorize]
         public ActionResult ExamConfirmInfo()
         {
@@ -215,12 +216,23 @@ namespace advt.Web.Controllers
             model.ExamInfo(name);
             return Json(new { tableData = model.LstUserInfos }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult SaveConfirmUser(ExamConfirmModel model)
+        [MyAuthorize]
+        public ActionResult SaveConfirmUser(int model)
         {
             ExamConfirmModel models = new ExamConfirmModel();
             var username = this.UserNameContext;
             models.SaveConfirmUser(model, username);
-            return Json(new { tableData = model.LstUserInfos }, JsonRequestBehavior.AllowGet);
+            models.ExamInfo(username);
+            return Json(new { tableData = models.LstUserInfos }, JsonRequestBehavior.AllowGet);
         }
+        [MyAuthorize]
+        public ActionResult GetAdminType()
+        {
+            ExamConfirmModel model = new ExamConfirmModel();
+            var name = this.UserNameContext;
+            bool isadmin=model.GetAdminType(name);
+            return Json(new { tableData = isadmin }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

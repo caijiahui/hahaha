@@ -225,14 +225,17 @@
     </div>
         <div v-show="activeName=='three'">
             <template>
-                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域"  style="width:200px;margin-top:10px">
+                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域" style="width:200px;margin-top:10px">
                     <el-option v-for="item in ListWorkPlace" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
                 @*<el-select v-model="VProData.OrgName" placeholder="请选择部门"  style="width:200px;margin-top:10px">
-                    <el-option v-for="item in ListOrgName" :key="item" :label="item" :value="item"></el-option>
-                </el-select>*@
-                <el-input placeholder="部门代码" v-model="VProData.DepartCode" style="width:200px">
-                </el-input>
+            <el-option v-for="item in ListOrgName" :key="item" :label="item" :value="item"></el-option>
+        </el-select>*@
+                @*<el-input placeholder="部门代码" v-model="VProData.DepartCode" style="width:200px">
+                </el-input>*@
+                <el-select v-model="VProData.DepartCode" placeholder="请选择部门">
+                    <el-option v-for="item in ListDepartCode" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
                 <el-input placeholder="工号" v-model="VProData.UserCode" style="width:200px">
                 </el-input>
                 <el-input placeholder="岗位" v-model="VProData.PostID" style="width:200px;margin-top:10px">
@@ -240,9 +243,9 @@
                 <el-date-picker v-model="VProData.ExamDate"
                                 value-format="yyyy-MM"
                                 type="month"
-                                placeholder="选择月"  style="width:200px;margin-top:10px">
+                                placeholder="选择月" style="width:200px;margin-top:10px">
                 </el-date-picker>
-                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型"  style="width:200px;margin-top:10px">
+                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型" style="width:200px;margin-top:10px">
                     <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
                 </el-select>
                 <el-select v-model="VProData.ExamProcess" clearable placeholder="考试进度" style="width:200px;margin-top:10px">
@@ -264,7 +267,7 @@
                     <el-table-column label="区域"
                                      prop="WrokPlace" sortable>
                     </el-table-column>
-                    
+
                     <el-table-column label="部门代码"
                                      prop="DepartCode" sortable>
                     </el-table-column>
@@ -515,6 +518,7 @@
                 checkBoxData: [],
                 ListProcessUser: [],
                 ListOrgName: [],
+                ListDepartCode:[],
                 ListWorkPlace:[],
                 activeName: 'first',
                 paginations: {
@@ -531,6 +535,16 @@
             },
             created() {
                 this.initData({});
+            },
+            watch: {
+                'VProData.WrokPlace': function (newval) {
+                    var _this = this;
+                    axios.post('/PEMain/GetOrgRuleName', {
+                        model: newval
+                    }).then(response => {
+                        _this.ListDepartCode = response.data.ListDepartCode;
+                    });
+                }
             },
             methods: {
                 changeFun(val) {
@@ -553,7 +567,6 @@
                 SearchProdata() {
                     var _this = this;
                     _this.fullscreenLoading = true;
-                    console.log(_this.VProData,556)
                     axios.post('/PEMain/GetProcessUser', {
                         data: _this.VProData
                     }).then(function (res) {

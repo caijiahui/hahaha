@@ -477,7 +477,7 @@
     <Content Include="Views\PEMain\MaintainExamRole.cshtml" />
     <Content Include="Views\PEMain\MaintainRegionalPost.cshtml" />
     <Content Include="Views\Report\ExamDataReport.cshtml" />
-    <Content Include="Views\PEMain\ExamConfirm.cshtml" />
+    <Content Include="Views\EPageMain\ExamConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

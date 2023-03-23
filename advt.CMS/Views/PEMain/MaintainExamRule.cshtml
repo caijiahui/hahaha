@@ -398,12 +398,11 @@
                                         _this.iscount = true;
                                         _this.$alert('题目类型设置的题数不可大于题库对应下的题数!')
                                     }
-
                                 }
-                                //else {
-                                //    _this.iscount = true;
-                                //    _this.$alert('题目类型、等级、题数匹配不一样,请排查')
-                                //}
+                                else {
+                                    _this.iscount = true;
+                                    _this.$alert('题目类型、题数匹配不一样,请排查')
+                                }
                             })
                         })
 

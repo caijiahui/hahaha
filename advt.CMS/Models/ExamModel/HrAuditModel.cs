@@ -422,9 +422,6 @@ namespace advt.CMS.Models.ExamModel
             {
                 var year = Convert.ToDateTime(data.ExamDate).Year;
                 var month = Convert.ToDateTime(data.ExamDate).Month;
-                //2022-04-30T16:00:00.000Z
-                
-                var dt = year + "-" + month;
                 
                 model = model.Where(x => x.ExamDate!=null).ToList();
                 model = model.Where(x => x.ExamDate.Value.Year == year && x.ExamDate.Value.Month == month).ToList();

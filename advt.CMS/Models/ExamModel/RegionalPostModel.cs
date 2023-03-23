@@ -110,8 +110,12 @@ namespace advt.CMS.Models.ExamModel
         }
 
         public void GetOrgType(string model) {
-            LExamTypess = Data.RegionalPost.Get_All_RegionalPost(new { RegionalPlace = model }).Select(x => x.ExamType).Distinct().ToList();
-            ListDepartCode = Data.RegionalPost.Get_All_RegionalPost(new { RegionalPlace = model }).Select(x => x.DepartCode).Distinct().ToList(); 
+            LExamTypess = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { OrgName = model }).Select(x => x.TypeName).Distinct().ToList();
+            ListDepartCode = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { OrgName = model }).Select(x => x.DepartCode).Distinct().ToList(); 
+        }
+        public void GetDepartRuleName(string model)
+        {
+            LExamTypess = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { DepartCode = model }).Select(x => x.TypeName).Distinct().ToList();
         }
         public string SavePostInfo(string username)
         {
@@ -131,7 +135,7 @@ namespace advt.CMS.Models.ExamModel
                 {
                     if (!string.IsNullOrEmpty(item.RuleName))
                     {
-                        var rule = Data.ExamPostRule.Get_All_ExamPostRule(new { PostName = VregionalPost.PostName, DepartCode = VregionalPost.DepartCode, RuleName = item.RuleName });
+                        var rule = Data.ExamPostRule.Get_All_ExamPostRule(new { PostName = VregionalPost.PostName, DepartCode = VregionalPost.DepartCode, ID = item.ID });
                         if (rule.Count() > 0)
                         {
                             rule.FirstOrDefault().RuleName = item.RuleName;
@@ -300,5 +304,6 @@ namespace advt.CMS.Models.ExamModel
         public bool IsRuleAch { get; set; }
         public bool IsRuleQuality { get; set; }
         public bool IsRuleShangGang { get; set; }
+        public int ID { get; set; }
     }
 }

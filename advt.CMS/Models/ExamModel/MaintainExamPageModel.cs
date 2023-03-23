@@ -37,7 +37,6 @@ namespace advt.CMS.Models.ExamModel
             }
             var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
 
-            int i = 0;
             foreach (var item in ListExamUserDetailInfo.OrderByDescending(x=>x.ExamDate!=null).Where(x=>x.State== "试用" || x.State == "正式"))
             {
                 //先找出最后一笔

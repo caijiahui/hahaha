@@ -853,7 +853,13 @@ namespace advt.Web.Controllers
             models.GetOrgType(model);
             return Json(new { LExamTypess = models.LExamTypess, ListDepartCode=models.ListDepartCode }, JsonRequestBehavior.AllowGet);
         }
-        
+
+        public ActionResult GetDepartRuleName(string model)
+        {
+            RegionalPostModel models = new RegionalPostModel();
+            models.GetDepartRuleName(model);
+            return Json(new { LExamTypess = models.LExamTypess}, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult GetRuleSubjectName(string model)
         {
             ExamRuleModel models = new ExamRuleModel();

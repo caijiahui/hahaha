@@ -123,6 +123,7 @@
                 <div>
                     <template>
                         <el-table :data="PostRuleList">
+                            <el-table-column prop="ID" label="#"></el-table-column>
                             <el-table-column prop="RuleName" label="规则"></el-table-column>
                             <el-table-column prop="PostExamEntry" label="入职天数"></el-table-column>
                             <el-table-column label="串联绩效"
@@ -265,6 +266,7 @@
             nowindex:null,
             PostRuleList: [],
             RuleView: {
+                ID:0,
                 IsRuleAch: false,
                 IsRuleQuality: false,
                 IsRuleShangGang: false,
@@ -485,6 +487,8 @@
                             item.IsRuleQuality = _this.RuleView.IsRuleQuality;
                             item.IsRuleShangGang = _this.RuleView.IsRuleShangGang;
                             item.PostExamEntry = _this.RuleView.PostExamEntry;
+                            item.RuleName = _this.RuleView.RuleName;
+
                         }
                     })
                 }

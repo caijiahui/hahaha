@@ -72,6 +72,7 @@
                     </template>
                     <div @@click="ShowSubject('exam')" style="height:30px;font-size:16px;margin-left:10px;margin-top:10px;cursor:pointer;"> <i class="el-icon-thumb"></i> 考试科目列表</div>
                     <div @@click="ShowSubject('score')" style="height:30px;font-size:16px;margin-left:10px;margin-top:10px;cursor:pointer;"><i class="el-icon-thumb"></i> 考试成绩查询</div>
+                    <div @@click="AdminOpen" style="height:30px;font-size:16px;margin-left:10px;margin-top:10px;cursor:pointer;" v-if="isAdmin==true"><i class="el-icon-thumb"></i> 考试签到</div>
                 </el-collapse-item>
                 <el-collapse-item name="2">
                     <template slot="title">
@@ -87,7 +88,8 @@
                     <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"> <i class="el-icon-thumb;cursor:pointer;"></i> Test1</div>
                     <div style="height:30px;font-size:16px;margin-left:10px;margin-top:10px"><i class="el-icon-thumb;cursor:pointer;"></i> Test2</div>
                 </el-collapse-item>
-        </template>
+</template>
+       
     </div>
 
 </div>
@@ -101,7 +103,8 @@
         el: '#app',
         data: {
             activeNames: ['1', '2', '3'],
-            isMobileTurn: false
+            isMobileTurn: false,
+            isAdmin: false
         },
 
         mounted: function () {
@@ -110,6 +113,7 @@
             } else {
                 this.isMobileTurn = false
             }
+            this.getdata();
         },
         methods: {
             isMobile: function () {
@@ -125,7 +129,16 @@
             },
             asideHandleClose(key, keyPath) {
 
-            }
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/EPageMain/GetAdminType').then(function (responese) {
+                    _this.isAdmin = responese.data.tableData;
+                })
+            },
+            AdminOpen: function () {
+                window.location.href = "/EPageMain/ExamConfirm";               
+            },
         }
 
 

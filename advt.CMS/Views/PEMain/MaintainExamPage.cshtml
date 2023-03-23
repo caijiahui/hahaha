@@ -152,6 +152,14 @@
                     _this.ListDepartCode = response.data.ListDepartCode;
                 });
             },
+            'Search.DepartCode': function (newval) {
+                var _this = this;
+                axios.post('/PEMain/GetDepartRuleName', {
+                    model: newval
+                }).then(response => {
+                    _this.LExamType = response.data.LExamTypess;
+                });
+            },
             'Search.TypeName': function (newval) {
                 var _this = this;
                 axios.post('/PEMain/GetRuleTypeName', {
