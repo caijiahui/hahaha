@@ -5,39 +5,60 @@
 
 <head>
     <meta charset="UTF-8">
-    @*<meta name="viewport" content="width=device-width, initial-scale=1.0">*@
-    <meta name="viewport" content="width=375,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-        <title>考试签到</title>
-        <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
-        <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
-        <link href="~/Scripts/css/exam.css" rel="stylesheet" />
-        <style>
-            @@media screen and (max-width:500px) {
-             /*   .el-table td {
+    <meta name="viewport" content="user-scalable=no" />
+    <title>考试签到</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+    <style>
+        @@media screen and (max-width:500px) {
+            /*   .el-table td {
                     padding: 0px 0px;
                     font-size: 2px;
                 }*/
-            }
-        </style>
+        }
+    </style>
 </head>
 <div id="app" style="margin-left:20px">
+    <div style="margin-top:20px">
+        <el-page-header @@back="goBack" content="考试签到">
+    </div>
     <div v-if="isMobileTurn=='true'">
-        @{            Layout = null;        }
+        @{ Layout = null; }
     </div>
     <div>
         <template>
-            @*<el-select v-model="TypeNames" placeholder="请选择考试类型">
-                <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-            </el-select>
-            <el-select v-model="DepartCodes" placeholder="请选择部门">
-                <el-option v-for="item in LDepartCode" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
-            </el-select>
-            <el-button slot="append" @@click="SearchinByName">Search</el-button>*@
+            <div>
+                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域" style="width:200px;margin-top:10px">
+                    <el-option v-for="item in ListWorkPlace" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-select v-model="VProData.DepartCode" placeholder="请选择部门" style="width:200px;">
+                    <el-option v-for="item in LDepartCode" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-date-picker v-model="VProData.ExamDate"
+                                type="date"
+                                placeholder="选择日期" style="width:200px;">
+                </el-date-picker>
+                <el-input placeholder="工号" v-model="VProData.UserCode"  clearable style="width:200px;">
+                </el-input>
+            </div>
+            
+            <div style="margin-top: 1px">
+                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型" style="width:200px;">
+                    <el-option v-for="item in LExamType" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-select v-model="VProData.SubjectName" placeholder="请选择考试科目" style="width:200px;">
+                    <el-option v-for="item in LExamSubject" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+                <el-input placeholder="姓名" v-model="VProData.UserName" style="width:200px;" clearable>
+                </el-input>
+
+                <el-button slot="append" size="medium" @@click="SearchinByName">Search</el-button>
+            </div>
+            
 
             <div style="width:100%;">
-                <div style="margin-top:20px">
-                    <el-page-header @@back="goBack" content="考试签到">
-                </div>
+
                 <div>
                     <el-table style="width: 100%;margin-top:20px " border :data="tableData">
                         <el-table-column type="index">
@@ -64,11 +85,11 @@
                                          prop="SubjectName">
                         </el-table-column>
                         @*<el-table-column label="是否签到" width="110">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.IsStartExam == false">未签到</span>
-                        <span v-if="scope.row.IsStartExam == true">已签到</span>
-                    </template>
-                    </el-table-column>*@
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.IsStartExam == false">未签到</span>
+                                <span v-if="scope.row.IsStartExam == true">已签到</span>
+                            </template>
+                            </el-table-column>*@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <el-button size="mini" :disabled="scope.row.IsStartExam == true" @@click="Confirm(scope.row.ID)">签到</el-button>
@@ -81,8 +102,8 @@
         </template>
 
     </div>
-        
-    </div>
+
+</div>
     <script src="~/Scripts/Vue/Vue.js"></script>
     <script src="~/Scripts/Vue/axios.js"></script>
     <script src="~/Scripts/elementUI/lib/index.js"></script>
@@ -96,7 +117,16 @@
                 form: [], 
                 tableData: [],
                 isMobileTurn: false,
-                IsStartExam:false
+                IsStartExam:false,
+                LExamType: [],
+                VProData: {},
+                LDepartCode: [],
+                ListWorkPlace: [],
+                ExamDate: '',
+                LExamSubject: [],
+                UserCode: '',
+                UserName:''
+
 
             },
             mounted: function () {
@@ -107,6 +137,25 @@
                 }
                 this.getdata();
                 this.aFun();
+            },
+            watch: {
+                'VProData.WrokPlace': function (newval) {
+                    var _this = this;
+                    axios.post('/EPageMain/GetOrgDepartName', {
+                        model: newval
+                    }).then(response => {
+                        _this.LDepartCode = response.data.LDepartCode;
+                    });
+                },
+                'VProData.TypeName': function (newval) {
+                    console.log(newval,146)
+                    var _this = this;
+                    axios.post('/EPageMain/GetTypeSubjectName', {
+                        model: newval
+                    }).then(response => {
+                        _this.LExamSubject = response.data.LSubject;
+                    });
+                }
             },
             methods: {
                 aFun() {
@@ -131,6 +180,7 @@
                     var _this = this;
                     axios.post('/EPageMain/SaveConfirmUser', {
                         model: ID,
+                        data: _this.VProData
                     }).then(function (res) {
                         _this.tableData = res.data.tableData;
                     });
@@ -152,11 +202,25 @@
                 },
                 
                 getdata: function () {
-                    var _this = this;                   
+                    var _this = this;         
                     axios.post('/EPageMain/ExamConfirmInfo', {
+                        data: _this.VProData
                     }).then(function (responese) {
                         _this.tableData = responese.data.tableData;
+                        _this.ListWorkPlace = responese.data.ListWorkPlace;
+                        _this.LExamType = responese.data.LExamType;
                     })
+                },
+                SearchinByName() {
+                    var _this = this;
+                    console.log(_this.VProData)
+                    axios.post('/EPageMain/ExamConfirmInfo', {
+                        data: _this.VProData
+                    }).then(function (responese) {
+                        _this.tableData = responese.data.tableData;
+                        _this.ListWorkPlace = responese.data.ListWorkPlace;
+                        _this.LExamType = responese.data.LExamType;
+                    })    
                 },
                 goBack: function () {
                 var _this = this;

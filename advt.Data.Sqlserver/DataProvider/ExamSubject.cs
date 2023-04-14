@@ -22,10 +22,10 @@ namespace advt.Data.SqlServer
         {
             new string[] {"ID", "Int", "4"},
             new string[] {"SubjectName", "NVarChar", "2147483646"},
-            new string[] {"CreateUser", "NText", "2147483646"},
+            new string[] {"CreateUser", "NVarChar", "2147483646"},
             new string[] {"CreateDate", "DateTime", "16"},
-            new string[] { "TypeName", "NText", "2147483646"},
-            new string[] { "ExamRuleName", "NText", "2147483646"},
+            new string[] { "TypeName", "NVarChar", "2147483646"},
+            new string[] { "ExamRuleName", "NVarChar", "2147483646"},
             new string[] { "HCLimit", "Int", "4"},
             new string[] { "IsSysPractice", "Bit", "1"},
             new string[] { "IsProAssess", "Bit", "1"},

@@ -437,6 +437,7 @@ namespace advt.CMS.Models.ExamModel
                         v.UserName = item.UserName;
                         v.DepartCode = item.DepartCode;
                         v.PostName = item.PostName;
+                        v.PostID = item.PostName;
                         v.RankName = item.RankName;
                         v.SkillName = item.ApplicationLevel; //本职等技能G1
                         v.EntryDate = item.EntryDate; //入职日期

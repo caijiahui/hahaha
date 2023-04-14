@@ -72,25 +72,30 @@ namespace advt.Web.Controllers
                         }
                         else
                         {
-                            var ddate = DateTime.Now.ToString("d");
-                            var examdetail =Convert.ToDateTime(detail.ExamDate).ToString("d");
-                            var examendtime =string.Format("{0}/{1}/{2} {3}:{4}",Convert.ToDateTime(detail.ExamDate).Year, Convert.ToDateTime(detail.ExamDate).Month, Convert.ToDateTime(detail.ExamDate).Day,"20","00");
-                            if (ddate != examdetail)
+                            if (detail.IsStartExam)
                             {
-                                model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
-                            }
-                            else
-                            {
-                                if (DateTime.Now < detail.ExamDate || DateTime.Now > Convert.ToDateTime(examendtime))
+                                var ddate = DateTime.Now.ToString("d");
+                                var examdetail = Convert.ToDateTime(detail.ExamDate).ToString("d");
+                                var examendtime = string.Format("{0}/{1}/{2} {3}:{4}", Convert.ToDateTime(detail.ExamDate).Year, Convert.ToDateTime(detail.ExamDate).Month, Convert.ToDateTime(detail.ExamDate).Day, "20", "00");
+                                if (ddate != examdetail)
                                 {
                                     model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
                                 }
+                                else
+                                {
+                                    if (DateTime.Now < detail.ExamDate || DateTime.Now > Convert.ToDateTime(examendtime))
+                                    {
+                                        model.ExamFailResult += "不符合考试时间:" + detail.ExamDate + ",不可考试";
+                                    }
+                                }
                             }
+                            else
+                            { model.ExamFailResult += "未点名签到"; }
+                           
 
                         }
 
-                    }
-                    
+                    }                    
                 }
                 else
                 {
@@ -209,20 +214,21 @@ namespace advt.Web.Controllers
         }
 
         [MyAuthorize]
-        public ActionResult ExamConfirmInfo()
+        public ActionResult ExamConfirmInfo(SearchHrData data)
         {
             ExamConfirmModel model = new ExamConfirmModel();
             var name = this.UserNameContext;
-            model.ExamInfo(name);
-            return Json(new { tableData = model.LstUserInfos }, JsonRequestBehavior.AllowGet);
+            model.GetExamInfo(data);
+            return Json(new { tableData = model.LstUserInfos, model.ListWorkPlace,model.LExamType }, JsonRequestBehavior.AllowGet);
         }
+      
         [MyAuthorize]
-        public ActionResult SaveConfirmUser(int model)
+        public ActionResult SaveConfirmUser(int model, SearchHrData data)
         {
             ExamConfirmModel models = new ExamConfirmModel();
             var username = this.UserNameContext;
             models.SaveConfirmUser(model, username);
-            models.ExamInfo(username);
+            models.GetExamInfo(data);
             return Json(new { tableData = models.LstUserInfos }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
@@ -232,6 +238,20 @@ namespace advt.Web.Controllers
             var name = this.UserNameContext;
             bool isadmin=model.GetAdminType(name);
             return Json(new { tableData = isadmin }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetOrgDepartName(string model)
+        {
+            ExamConfirmModel models = new ExamConfirmModel();
+            models.GetDepartcode(model);
+            return Json(new {  models.LDepartCode }, JsonRequestBehavior.AllowGet);
+        }
+        [MyAuthorize]
+        public ActionResult GetTypeSubjectName(string model)
+        {
+            ExamConfirmModel models = new ExamConfirmModel();
+            models.GetTypeSubject(model);
+            return Json(new { models.LSubject }, JsonRequestBehavior.AllowGet);
         }
 
     }
