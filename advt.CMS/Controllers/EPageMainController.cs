@@ -12,6 +12,7 @@ using System.IO;
 using advt.CMS;
 using advt.CMS.Models.ExamModel;
 using advt.CMS.Models;
+using System.ServiceModel.Syndication;
 
 namespace advt.Web.Controllers
 {
@@ -252,6 +253,122 @@ namespace advt.Web.Controllers
             ExamConfirmModel models = new ExamConfirmModel();
             models.GetTypeSubject(model);
             return Json(new { models.LSubject }, JsonRequestBehavior.AllowGet);
+        }
+
+        public FileResult HrExportUser(string WrokPlace,string DepartCode,string UserCode,string ExamDate, string PostID ,string TypeName ,string  ExamProcess )
+        {
+            SearchHrData data = new SearchHrData();
+            data.WrokPlace = WrokPlace== "undefined"?null: WrokPlace;
+            data.DepartCode = DepartCode == "undefined" ? null: DepartCode;
+            data.UserCode = UserCode == "undefined" ? null : UserCode;
+            data.PostID = PostID == "undefined" ? null : PostID;
+            data.TypeName = TypeName == "undefined" ? null : TypeName;
+            data.ExamProcess = ExamProcess == "undefined" ? null : ExamProcess;
+            data.ExamDate = ExamDate == "undefined" ? null : ExamDate;
+
+            try
+            {
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                HrAuditModel models = new HrAuditModel();
+                models.GetProcessUser(data);
+                //获取list数据
+                var tlst = models.ListProcessUser;
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("考试类型");
+                row1.CreateCell(1).SetCellValue("区域");
+                row1.CreateCell(2).SetCellValue("部门代码");
+                row1.CreateCell(3).SetCellValue("工号");
+                row1.CreateCell(4).SetCellValue("姓名");
+                row1.CreateCell(5).SetCellValue("岗位");
+                row1.CreateCell(6).SetCellValue("考试进度");
+                row1.CreateCell(7).SetCellValue("考试科目");
+                row1.CreateCell(8).SetCellValue("Hr确认时间");
+                row1.CreateCell(9).SetCellValue("考试日期");
+                //将数据逐步写入sheet1各个行
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].TypeName);
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].WrokPlace);
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].DepartCode);
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].UserCode);
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].UserName);
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].PostID);
+                    rowtemp.CreateCell(6).SetCellValue(tlst[i].ExamProcess);
+                    rowtemp.CreateCell(7).SetCellValue(tlst[i].SubjectName);
+                    rowtemp.CreateCell(8).SetCellValue(tlst[i].HrCheckDate);
+                    rowtemp.CreateCell(9).SetCellValue(tlst[i].ExamDate);
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", "HR审核考试进度明细" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public FileResult ExportConfirmUser(string WrokPlace, string DepartCode, string UserCode, string ExamDate, string UserName, string TypeName, string SubjectName)
+        {
+            SearchHrData data = new SearchHrData();
+            data.WrokPlace = WrokPlace == "undefined" ? null : WrokPlace;
+            data.DepartCode = DepartCode == "undefined" ? null : DepartCode;
+            data.UserCode = UserCode == "undefined" ? null : UserCode;
+            data.UserName = UserName == "undefined" ? null : UserName;
+            data.TypeName = TypeName == "undefined" ? null : TypeName;
+            data.SubjectName = SubjectName == "undefined" ? null : SubjectName;
+            data.ExamDate = ExamDate == "undefined" ? null :ExamDate;
+
+            try
+            {
+                //创建Excel文件的对象
+                NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                //添加一个sheet
+                NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+                ExamConfirmModel models = new ExamConfirmModel();
+                models.GetExamInfo(data);
+                //获取list数据
+                var tlst = models.LstUserInfos;
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+                row1.CreateCell(0).SetCellValue("区域");
+                row1.CreateCell(1).SetCellValue("部门");
+                row1.CreateCell(2).SetCellValue("工号");
+                row1.CreateCell(3).SetCellValue("姓名");
+                row1.CreateCell(4).SetCellValue("考试类型");
+                row1.CreateCell(5).SetCellValue("科目");
+               
+                //将数据逐步写入sheet1各个行
+                for (int i = 0; i < tlst.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(tlst[i].OrgName);
+                    rowtemp.CreateCell(1).SetCellValue(tlst[i].DepartCode);
+                    rowtemp.CreateCell(2).SetCellValue(tlst[i].UserCode);
+                    rowtemp.CreateCell(3).SetCellValue(tlst[i].UserName);
+                    rowtemp.CreateCell(4).SetCellValue(tlst[i].TypeName);
+                    rowtemp.CreateCell(5).SetCellValue(tlst[i].SubjectName);
+                }
+                // 写入到客户端 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                book.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", "签到明细" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
     }

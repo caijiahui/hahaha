@@ -36,7 +36,7 @@
                     <el-option v-for="item in LDepartCode" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
                 <el-date-picker v-model="VProData.ExamDate"
-                                type="date"
+                                type="date"  value-format="yyyy-MM-dd"
                                 placeholder="选择日期" style="width:200px;">
                 </el-date-picker>
                 <el-input placeholder="工号" v-model="VProData.UserCode"  clearable style="width:200px;">
@@ -54,6 +54,11 @@
                 </el-input>
 
                 <el-button slot="append" size="medium" @@click="SearchinByName">Search</el-button>
+                <a style="color:white" :href="'/ePageMain/ExportConfirmUser?WrokPlace='+VProData.WrokPlace+'&DepartCode='+VProData.DepartCode+'&UserCode='+VProData.UserCode+'&ExamDate='+VProData.ExamDate+'&SubjectName='+VProData.SubjectName+'&TypeName='+VProData.TypeName+'&UserName='+VProData.UserName">
+                    <el-button slot="append" size="medium" style="margin-top:1px" v-if="!isMobileTurn">
+                        导出
+                    </el-button>
+                </a>
             </div>
             
 

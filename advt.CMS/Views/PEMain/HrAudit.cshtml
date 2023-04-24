@@ -232,7 +232,7 @@
             <el-option v-for="item in ListOrgName" :key="item" :label="item" :value="item"></el-option>
         </el-select>*@
                 @*<el-input placeholder="部门代码" v-model="VProData.DepartCode" style="width:200px">
-                </el-input>*@
+        </el-input>*@
                 <el-select v-model="VProData.DepartCode" placeholder="请选择部门">
                     <el-option v-for="item in ListDepartCode" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -256,6 +256,12 @@
                     <el-option label="考试完成" value="考试完成"></el-option>
                 </el-select>
                 <el-button slot="append" @@click="SearchProdata" v-loading.fullscreen.lock="fullscreenLoading">Search</el-button>
+               
+                <a style="color:white" :href="'/ePageMain/HrExportUser?WrokPlace='+VProData.WrokPlace+'&DepartCode='+VProData.DepartCode+'&UserCode='+VProData.UserCode+'&ExamDate='+VProData.ExamDate+'&PostID='+VProData.PostID+'&TypeName='+VProData.TypeName+'&ExamProcess='+VProData.ExamProcess">
+                    <el-button size="small" type="primary" style="margin-top:1px;margin-left:20px">
+                        导出
+                    </el-button>
+                </a>
                 <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
                           :data="ListProcessUser">
                     <el-table-column type="index"

@@ -27,7 +27,7 @@ namespace advt.CMS.Models.ExamModel
         {
             var ddate = Convert.ToDateTime(data.ExamDate);
             var examdetail = ddate.AddDays(1);
-            var lst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop =0, IsExam = "false" });
+            var lst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { IsStop =0, IsExam = "false", IsStartExam=false });
             if (!string.IsNullOrEmpty(data.WrokPlace))
             { lst = lst.Where(x => x.OrgName == data.WrokPlace).ToList(); }
             if (!string.IsNullOrEmpty(data.TypeName))
