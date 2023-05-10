@@ -1224,9 +1224,66 @@ namespace advt.Web.Controllers
         public FileResult ExportPageExcel(string UserCode, string SubjectName, string TypeName, string OrgName, string DepartCode)
         {
             var model = new MaintainExamPageModel();
-            var ms = model.GetPageExcelInfo(UserCode,  SubjectName,  TypeName,  OrgName,  DepartCode);
-            return File(ms, "application/vnd.ms-excel",  "考试报表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
 
+
+            SerarchData data = new SerarchData();
+            data.UserCode = UserCode == "undefined" ? null : UserCode;
+            data.SubjectName = SubjectName == "undefined" ? null : SubjectName;
+            data.OrgName = OrgName == "undefined" ? null : OrgName;
+            data.TypeName = TypeName == "undefined" ? null : TypeName;
+            data.DepartCode = DepartCode == "undefined" ? null : DepartCode;
+            model.GetPageInfo(data);
+            //获取list数据
+            var tlst = model.ListPageInfo;
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("部门代码");
+            row1.CreateCell(1).SetCellValue("工号");
+            row1.CreateCell(2).SetCellValue("姓名");
+            row1.CreateCell(3).SetCellValue("入职日期");
+            row1.CreateCell(4).SetCellValue("职级");
+            
+            row1.CreateCell(5).SetCellValue("考试类型");
+            row1.CreateCell(6).SetCellValue("考试科目");
+            row1.CreateCell(7).SetCellValue("考试日期");
+            row1.CreateCell(8).SetCellValue("考试结果");
+            row1.CreateCell(9).SetCellValue("岗位等级");
+            row1.CreateCell(10).SetCellValue("岗位津贴");
+            row1.CreateCell(11).SetCellValue("技能津贴");
+            row1.CreateCell(12).SetCellValue("专业加给");
+            row1.CreateCell(13).SetCellValue("津贴总额");
+            row1.CreateCell(14).SetCellValue("本次考核后增加总额");
+
+            //将数据逐步写入sheet1各个行
+            for (int i = 0; i < tlst.Count; i++)
+            {
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                rowtemp.CreateCell(0).SetCellValue(tlst[i].DepartCode);
+                rowtemp.CreateCell(1).SetCellValue(tlst[i].UserCode);
+                rowtemp.CreateCell(2).SetCellValue(tlst[i].UserName);
+                rowtemp.CreateCell(3).SetCellValue(tlst[i].EntryDate.ToString());
+                rowtemp.CreateCell(4).SetCellValue(tlst[i].RankName);
+               
+                rowtemp.CreateCell(5).SetCellValue(tlst[i].TypeNameOne);
+                rowtemp.CreateCell(6).SetCellValue(tlst[i].SubjectNameOne);
+                rowtemp.CreateCell(7).SetCellValue(Convert.ToDateTime(tlst[i].ExamDateOne));
+                rowtemp.CreateCell(8).SetCellValue(tlst[i].ExamResultOne);
+                rowtemp.CreateCell(9).SetCellValue(tlst[i].PostQuotaOne);
+                rowtemp.CreateCell(10).SetCellValue(tlst[i].ElectronicQuotaOne);
+                rowtemp.CreateCell(11).SetCellValue(tlst[i].SkillsAllowanceOne);
+                rowtemp.CreateCell(12).SetCellValue(tlst[i].MajorQuotaOne);
+                rowtemp.CreateCell(13).SetCellValue(tlst[i].TotalQuotaOne);
+                rowtemp.CreateCell(14).SetCellValue(tlst[i].AddData);
+
+            }
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "报表" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls");
         }
 
         //岗位

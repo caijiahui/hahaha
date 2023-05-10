@@ -1,10 +1,14 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
 using advt.Entity;
+using NPOI.SS.Formula.Functions;
+using static advt.Entity.Status;
 
 namespace advt.CMS.Models.ExamModel
 {
@@ -24,165 +28,223 @@ namespace advt.CMS.Models.ExamModel
             //ListExamUserDetailInfo = new List<ExamUserDetailInfo>();
             LExamType = new List<string>();
             Serarch = new SerarchData();
-        }
-        public void GetPageInfo(SerarchData data)
-        {
             LExamType = Data.ExamType.Get_All_ExamType().Select(x => x.TypeName).Distinct().ToList();
-              
+
             LWorkPlace = new List<KeyValuePair<string, string>>();
             LWorkPlace.Add(new KeyValuePair<string, string>("", "-全部-"));
             foreach (var item in Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo().Where(x => x.OrgName != null).GroupBy(x => x.OrgName))
             {
                 LWorkPlace.Add(new KeyValuePair<string, string>(item.Key.ToString(), item.Key.ToString()));
             }
-            var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode);
-
-            foreach (var item in ListExamUserDetailInfo.OrderByDescending(x=>x.ExamDate!=null).Where(x=>x.State== "试用" || x.State == "正式"))
+        }
+        public void GetPageInfo(SerarchData data)
+        {
+            var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
+            DataSet result = new DataSet();
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                //先找出最后一笔
-                
-                var seclst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = item.UserCode, IsStop = false, IsExam = "true",ExamDate=item.ExamDate}).OrderByDescending(x => x.ExamDate);
-                var seclsts = Data.ExamUserDetailInfo.Get_UserInfo(item.UserCode, item.ExamDate ).OrderByDescending(x=>x.ExamDate);
-
-                var TypeNameTwo = string.Empty;
-                var SubjectNameTwo = string.Empty;
-                DateTime? ExamDateTwo =null;
-                var ExamResultTwo= string.Empty;
-                int PostQuotaTwo = 0;
-                int ElectronicQuotaTwo = 0;
-                int SkillsAllowanceTwo = 0;
-                int MajorQuotaTwo = 0;
-                int TotalQuotaTwo = 0;
-                var TypeNameOne = string.Empty;
-                var SubjectNameOne = string.Empty;
-                DateTime? ExamDateOne = null;
-                var ExamResultOne = string.Empty;
-                int PostQuotaOne = 0;
-                int ElectronicQuotaOne = 0;
-                int SkillsAllowanceOne = 0;
-                int MajorQuotaOne = 0;
-                int TotalQuotaOne = 0;
-                int total = 0;
-                int AddQua = 0;
-
-                var sub = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = seclst.FirstOrDefault().SubjectName });
-                if (seclst.FirstOrDefault().Type != "取消")
-                {                    //本次
-                    TypeNameOne = seclst.FirstOrDefault().TypeName;
-                }
-                else
-                { TypeNameOne = "取消"; }
-                SubjectNameOne = seclst.FirstOrDefault().SubjectName;
-                ExamDateOne = seclst.FirstOrDefault().ExamDate;
-                ExamResultOne = seclst.FirstOrDefault().IsExamPass ? "通过" : "未通过";
-                if (sub.Count() > 0)
+                using (SqlCommand cmd = new SqlCommand("Proc_Exam_Page_Info", conn))
                 {
-                    if (ExamResultOne == "通过")
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@TypeName", SqlDbType.NVarChar, 50);
+                    cmd.Parameters.Add("@UserCode", SqlDbType.NVarChar, 50);
+                    cmd.Parameters.Add("@DepartCode", SqlDbType.NVarChar, 50);
+                    cmd.Parameters.Add("@SubjectName", SqlDbType.NVarChar, 50);
+                    cmd.Parameters.Add("@OrgName", SqlDbType.NVarChar, 50);
+                    if (data.UserCode != null)
+                        cmd.Parameters["@UserCode"].SqlValue = data.UserCode;
+                    else
                     {
-                        PostQuotaOne = sub.FirstOrDefault().PostQuota;
-                        ElectronicQuotaOne = sub.FirstOrDefault().ElectronicQuota;
-                        SkillsAllowanceOne = sub.FirstOrDefault().SkillsAllowance;
-                        MajorQuotaOne = sub.FirstOrDefault().MajorQuota;
+                        cmd.Parameters["@UserCode"].SqlValue = DBNull.Value;
                     }
-                    else if (ExamResultOne == "未通过")
+                    if (data.DepartCode != null)
+                        cmd.Parameters["@DepartCode"].SqlValue = data.DepartCode;
+                    else
                     {
-                        PostQuotaOne = seclst.FirstOrDefault().PostQuota;
-                        ElectronicQuotaOne = seclst.FirstOrDefault().ElectronicQuota;
-                        SkillsAllowanceOne = seclst.FirstOrDefault().SkillsAllowance;
-                        MajorQuotaOne = seclst.FirstOrDefault().MajorQuota;
+                        cmd.Parameters["@DepartCode"].SqlValue = DBNull.Value;
                     }
-                  
-                    TotalQuotaOne = PostQuotaOne + ElectronicQuotaOne + SkillsAllowanceOne + MajorQuotaOne;
-                }
-                if (seclsts !=null&& seclsts.Count()>0)
-                {
-                    if (seclsts.FirstOrDefault().Type == "取消")
-                    { //上次
-                        TypeNameTwo = seclsts.FirstOrDefault().Type;
-                        SubjectNameTwo = seclsts.FirstOrDefault().SubjectName;
-                        ExamDateTwo = seclsts.FirstOrDefault().ExamDate;
-                        ExamResultTwo = seclsts.FirstOrDefault().IsExamPass ? "通过" : "未通过";
-                        PostQuotaTwo = seclsts.FirstOrDefault().PostQuota;
-                        ElectronicQuotaTwo = seclsts.FirstOrDefault().ElectronicQuota;
-                        SkillsAllowanceTwo = seclsts.FirstOrDefault().SkillsAllowance;
-                        MajorQuotaTwo = seclsts.FirstOrDefault().MajorQuota;
-                        TotalQuotaTwo = seclsts.FirstOrDefault().TotalQuota;
-                        total = TotalQuotaTwo;
-                    }
-                    else {
-
-                        //上次
-                        TypeNameTwo = seclsts.FirstOrDefault().TypeName;
-                        SubjectNameTwo = seclsts.FirstOrDefault().SubjectName;
-                        ExamDateTwo = seclsts.FirstOrDefault().ExamDate;
-                        ExamResultTwo = seclsts.FirstOrDefault().IsExamPass ? "通过" : "未通过";
-                        PostQuotaTwo = seclsts.FirstOrDefault().PostQuota;
-                        ElectronicQuotaTwo = seclsts.FirstOrDefault().ElectronicQuota;
-                        SkillsAllowanceTwo = seclsts.FirstOrDefault().SkillsAllowance;
-                        MajorQuotaTwo = seclsts.FirstOrDefault().MajorQuota;
-                        TotalQuotaTwo = seclsts.FirstOrDefault().TotalQuota;
-                    }
-                }
-                
-                if (TypeNameOne != "取消")
-                {
-                    AddQua = TotalQuotaOne - TotalQuotaTwo;
-                }
-                else AddQua = TotalQuotaOne;
-                if (TypeNameTwo != "取消")
-                {
-                    AddQua = TotalQuotaOne - TotalQuotaTwo;
-                }
-                else AddQua = TotalQuotaOne - TotalQuotaTwo;
-                if (sub.Count() > 0 && sub != null)
-                {
-                    
-                    if (!sub.FirstOrDefault().IsAddAllowance)
+                    if (data.OrgName != null)
+                        cmd.Parameters["@OrgName"].SqlValue = data.OrgName;
+                    else
                     {
-                        if (seclst.FirstOrDefault().TypeName == "关键岗位技能等级")
-                        {
-                            var rank = Data.RankInfo.Get_All_RankInfo(new { RankName = seclst.FirstOrDefault().RankName });
-                            if (rank.FirstOrDefault().SkillName == seclst.FirstOrDefault().ApplyLevel)
-                            {
-                                AddQua = 0;
-                            }
-                            else AddQua = TotalQuotaOne;
-                        }
-                        else
-                        AddQua = TotalQuotaOne;
+                        cmd.Parameters["@OrgName"].SqlValue = DBNull.Value;
                     }
+                    if (data.TypeName != null)
+                        cmd.Parameters["@TypeName"].SqlValue = data.TypeName;
+                    else
+                    {
+                        cmd.Parameters["@TypeName"].SqlValue = DBNull.Value;
+                    }
+                    if (data.SubjectName != null)
+                        cmd.Parameters["@SubjectName"].SqlValue = data.SubjectName;
+                    else
+                    {
+                        cmd.Parameters["@SubjectName"].SqlValue = DBNull.Value;
+                    }
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(result);
                 }
-                ListPageInfo.Add(new PageInfo
-                {
-                    UserCode = item.UserCode,
-                    UserName = item.UserName,
-                    DepartCode = item.DepartCode,
-                    RankName = item.RankName,
-                    EntryDate = item.EntryDate,
-
-                    TypeNameTwo = TypeNameTwo,
-                    SubjectNameTwo = SubjectNameTwo,
-                    ExamDateTwo = ExamDateTwo,
-                    ExamResultTwo = ExamResultTwo,
-                    PostQuotaTwo = PostQuotaTwo,
-                    ElectronicQuotaTwo = ElectronicQuotaTwo,
-                    SkillsAllowanceTwo = SkillsAllowanceTwo,
-                    MajorQuotaTwo = MajorQuotaTwo,
-                    TotalQuotaTwo = TotalQuotaTwo,
-
-                    TypeNameOne = TypeNameOne,
-                    SubjectNameOne = SubjectNameOne,
-                    ExamDateOne = ExamDateOne,
-                    ExamResultOne = ExamResultOne,
-                    PostQuotaOne = PostQuotaOne,
-                    ElectronicQuotaOne = ElectronicQuotaOne,
-                    SkillsAllowanceOne = SkillsAllowanceOne,
-                    MajorQuotaOne = MajorQuotaOne,
-                    TotalQuotaOne = TotalQuotaOne, 
-                    AddData= AddQua,
-                    TakeEffDate = ExamDateOne
-                });
             }
+            if (result.Tables.Count != 0)
+            {
+                foreach (DataRow row in result.Tables[0].Rows)
+                {
+                    DateTime? oneexam = null;
+                    if (row["LExamDate"].ToString() != "")
+                    {
+                        oneexam = Convert.ToDateTime(row["LExamDate"].ToString());
+                    }
+                    DateTime? twoexam = null;
+                    if (row["ExamDate"].ToString() != "")
+                    {
+                        twoexam = Convert.ToDateTime(row["ExamDate"].ToString());
+                    }
+                    DateTime? enterydate = null;
+                    if (row["入职日"].ToString() != "")
+                    {
+                        enterydate = Convert.ToDateTime(row["入职日"].ToString());
+                    }
+                    ListPageInfo.Add(new PageInfo
+                    {
+                        UserCode = row["UserCode"].ToString(),
+                        UserName = row["UserName"].ToString(),
+                        DepartCode = row["DepartCode"].ToString(),
+                        RankName = row["RankName"].ToString(),
+                        EntryDate = enterydate,
+                        TypeNameTwo = row["LTypeName"].ToString(),
+                        SubjectNameTwo = row["LSubjectName"].ToString(),
+                        ExamDateTwo = oneexam,
+                        ExamResultTwo = row["LIsExamPass"].ToString(),
+                        PostQuotaTwo = Convert.ToInt32(row["LPostQuota"].ToString()),
+                        ElectronicQuotaTwo = Convert.ToInt32(row["LElectronicQuota"].ToString()),
+                        SkillsAllowanceTwo = Convert.ToInt32(row["LSkillsAllowance"].ToString()),
+                        MajorQuotaTwo = Convert.ToInt32(row["LMajorQuota"].ToString()),
+                        TotalQuotaTwo = Convert.ToInt32(row["上次津贴"].ToString()),
+
+                        TypeNameOne = row["TypeName2"].ToString(),
+                        SubjectNameOne = row["SubjectName"].ToString(),
+                        ExamDateOne = twoexam,
+                        ExamResultOne = row["考试结果"].ToString(),
+                        PostQuotaOne = Convert.ToInt32(row["岗位等级"].ToString()),
+                        ElectronicQuotaOne = Convert.ToInt32(row["岗位津贴"].ToString()),
+                        SkillsAllowanceOne = Convert.ToInt32(row["技能津贴"].ToString()),
+                        MajorQuotaOne = Convert.ToInt32(row["专业加给"].ToString()),
+                        TotalQuotaOne = Convert.ToInt32(row["累计津贴"].ToString()),
+                        AddData = Convert.ToInt32(row["总金额"].ToString()),
+                        TakeEffDate = twoexam
+                    });
+                }
+            }
+
+
+
+            #region
+            //var ListExamUserDetailInfo = Data.ExamUserDetailInfo.Get_All_ExamUserALLDetailInfo(data.UserCode, data.SubjectName, data.TypeName, data.OrgName, data.DepartCode).OrderByDescending(x => x.ExamDate != null&&!x.IsStop&& x.IsExam == "true"&&x.ExamStatus == "HrCheck").Where(x => x.State == "试用" || x.State == "正式");
+            //var user = ListExamUserDetailInfo.Select(x => x.UserCode).Distinct();
+
+
+            //foreach (var item in user)
+            //{
+
+            //    var ss = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = item, IsStop = false, IsExam = "true", ExamStatus="HrCheck" }).OrderByDescending(x => x.ExamDate).Take(2);
+            //    var seclst = ss?.Take(1).FirstOrDefault();               
+            //    var seclsts = ss.Count()>1? ss.Take(2).LastOrDefault():null;
+            //    var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = item })?.FirstOrDefault();
+
+            //    int TotalQuotaTwo = 0;
+            //    var ExamResultOne = string.Empty;
+            //    int PostQuotaOne = 0;
+            //    int ElectronicQuotaOne = 0;
+            //    int SkillsAllowanceOne = 0;
+            //    int MajorQuotaOne = 0;
+            //    int TotalQuotaOne = 0;
+            //    int AddQua = 0;
+            //    string TypeNameTwo = string.Empty;
+            //    string SubjectNameTwo = string.Empty;
+            //    DateTime? ExamDateTwo = null;
+            //    string ExamResultTwo = string.Empty;
+            //    int PostQuotaTwo = 0;
+            //    int ElectronicQuotaTwo = 0;
+            //    int SkillsAllowanceTwo = 0;
+            //    int MajorQuotaTwo = 0;
+            //    var sub = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = seclst.SubjectName })?.FirstOrDefault();
+            //    ExamResultOne = seclst.IsExamPass ? "通过" : "未通过";
+            //    if (seclsts != null)
+            //    {
+            //        TypeNameTwo = seclsts?.Type == "取消" ? "取消" : seclsts.TypeName;
+            //        SubjectNameTwo = seclsts?.SubjectName;
+            //        ExamDateTwo = seclsts?.ExamDate;
+            //        ExamResultTwo = seclsts.IsExamPass == true ? "通过" : "未通过";
+            //        PostQuotaTwo = seclsts.PostQuota;
+            //        ElectronicQuotaTwo = seclsts.ElectronicQuota;
+            //        SkillsAllowanceTwo = seclsts.SkillsAllowance;
+            //        MajorQuotaTwo = seclsts.MajorQuota;
+            //        TotalQuotaTwo = seclsts.TotalQuota;
+            //    }
+            //    if (sub != null)
+            //    {
+            //        if (ExamResultOne == "通过")
+            //        {
+            //            PostQuotaOne = sub.PostQuota;
+            //            ElectronicQuotaOne = sub.ElectronicQuota;
+            //            SkillsAllowanceOne = sub.SkillsAllowance;
+            //            MajorQuotaOne = sub.MajorQuota;
+            //        }
+            //        else if (ExamResultOne == "未通过")
+            //        {
+            //            PostQuotaOne = seclst.PostQuota;
+            //            ElectronicQuotaOne = seclst.ElectronicQuota;
+            //            SkillsAllowanceOne = seclst.SkillsAllowance;
+            //            MajorQuotaOne = seclst.MajorQuota;
+            //        }
+
+            //        TotalQuotaOne = PostQuotaOne + ElectronicQuotaOne + SkillsAllowanceOne + MajorQuotaOne;
+            //    }
+
+            //    if (!sub.IsAddAllowance)
+            //    {
+            //        var rank = Data.RankInfo.Get_All_RankInfo(new { RankName = seclst.RankName })?.FirstOrDefault();
+            //        if (seclst.TypeName == "关键岗位技能等级" && rank?.SkillName == seclst.ApplyLevel)
+            //            AddQua = 0;
+            //        else
+            //            AddQua = TotalQuotaOne;
+            //    }
+            //    else
+            //    {
+            //        AddQua = TotalQuotaOne - TotalQuotaTwo;
+            //    }
+            //    ListPageInfo.Add(new PageInfo
+            //    {
+            //        UserCode = userinfo.UserCode,
+            //        UserName = userinfo.UserName,
+            //        DepartCode = userinfo.DepartCode,
+            //        RankName = userinfo.RankName,
+            //        EntryDate = userinfo.EntryDate,
+
+            //        TypeNameTwo = TypeNameTwo,
+            //        SubjectNameTwo = SubjectNameTwo,
+            //        ExamDateTwo = ExamDateTwo,
+            //        ExamResultTwo = ExamResultTwo,
+            //        PostQuotaTwo = PostQuotaTwo,
+            //        ElectronicQuotaTwo = ElectronicQuotaTwo,
+            //        SkillsAllowanceTwo = SkillsAllowanceTwo,
+            //        MajorQuotaTwo = MajorQuotaTwo,
+            //        TotalQuotaTwo = TotalQuotaTwo,
+
+            //        TypeNameOne = seclst.Type != "取消" ? seclst.TypeName : "取消",
+            //        SubjectNameOne = seclst?.SubjectName,
+            //        ExamDateOne = seclst?.ExamDate,
+            //        ExamResultOne = ExamResultOne,
+            //        PostQuotaOne = PostQuotaOne,
+            //        ElectronicQuotaOne = ElectronicQuotaOne,
+            //        SkillsAllowanceOne = SkillsAllowanceOne,
+            //        MajorQuotaOne = MajorQuotaOne,
+            //        TotalQuotaOne = TotalQuotaOne, 
+            //        AddData= AddQua,
+            //        TakeEffDate = seclst?.ExamDate
+            //    });
+            //}
+            #endregion
 
         }
 
