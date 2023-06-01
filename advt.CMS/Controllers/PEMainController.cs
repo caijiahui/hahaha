@@ -557,10 +557,10 @@ namespace advt.Web.Controllers
         {
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
-            models.GetUserInfo(data);
-            var startdate = DateTime.Now.AddMonths(-6).ToShortDateString();
-            var enddate = DateTime.Now.AddDays(1).ToShortDateString();
-            var result=models.GetChassisAchieveUser(startdate, enddate, username);
+            var startdate = string.Format("{0:yyyy/MM/01}", DateTime.Now.AddMonths(-6));
+            var enddate = string.Format("{0:yyyy/MM/28}", DateTime.Now.AddMonths(0));
+            var sd = string.Format("{0:yyyy/MM/01}", DateTime.Now.AddMonths(0));
+            var result=models.GetChassisAchieveUser(startdate, enddate, username, sd);
             models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
@@ -1378,7 +1378,7 @@ namespace advt.Web.Controllers
             SupervisorAuditModel model = new SupervisorAuditModel();
             var name = this.UserNameContext;
             model.GetAllExamUserByType(subject,name);
-            var IsSuper = model.LSuperExamType.Count() != 0 ? true : false;
+            var IsSuper = model.LSuperExamType.Count() != 0 ||model.Ladvtuserstype .Count()!=0? true : false;
             return Json(new { LCheckAudtiUser = model.LCheckAudtiUser, LRules = model.LRules, LSignedupUser = model.LSignedupUser, LExamType = model.LExamType,model.LSuperExamType,model.LRecordupUser, IsSuper });
         }
         [MyAuthorize]

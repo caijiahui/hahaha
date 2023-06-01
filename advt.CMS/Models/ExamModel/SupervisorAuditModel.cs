@@ -24,6 +24,7 @@ namespace advt.CMS.Models.ExamModel
 
         public List<advt_user_sheet> ListSuperUsers { get; set; }//主管额外报名人员
         public List<ExamType> LSuperExamType { get; set; }//考试类型
+        public List<advt_users_type> Ladvtuserstype { get; set; }
         public List<ExamUserDetailInfo> LRecordupUser { get; set; }//主管下人员最后一次记录
         public string Result { get; set; }
         public List<ExamSubject> LSubject { get; set; }
@@ -41,6 +42,7 @@ namespace advt.CMS.Models.ExamModel
             LSuperExamType = new List<ExamType>();
             LRecordupUser = new List<ExamUserDetailInfo>();
             LSubject = new List<ExamSubject>();
+            Ladvtuserstype = new List<advt_users_type>();
         }
         public void TypeSubject(string TypeNames)
         {
@@ -161,7 +163,15 @@ namespace advt.CMS.Models.ExamModel
                 code = user.UserCode;
             }
             //超级管理员考试类型
-            LSuperExamType = Data.ExamType.Get_All_ExamType(new { SuperAdmin= username });
+            Ladvtuserstype = Data.advt_users_type.Get_All_advt_users_type(new { username = username, type = "Admin" });
+            if (Ladvtuserstype.Count() != 0)
+            {
+                LSuperExamType = Data.ExamType.Get_All_ExamType();
+            }
+            else
+            {
+                LSuperExamType = Data.ExamType.Get_All_ExamType(new { SuperAdmin = username });
+            }
               //Hr报名 HrSignUp   主管审核Signup  hr审核 HrCheck
               var audata = Data.ExamUserDetailInfo.Get_All_UserAduitInfo("HrSignUp", code, typename);
             LCheckAudtiUser.AddRange(audata);

@@ -61,10 +61,26 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_SuperUser(string typename, string subject, string sData, string UserName)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select * from ExamUsersFromehr a inner join advt_user_sheet b on a.UserCode = b.UserCode and b.UserCostCenter = a.UserDept where a.OrgName in ( select OrgName from ExamUsersFromehr where CommpanyEmail like '%" + UserName + "%' ) ");
-            commandText.AppendLine("   and  (a.UserCode='"+ sData + "' or a.UserDept='"+sData+"' or a.UserName='"+sData+ "') and a.UserCode not in ( ");
-            commandText.AppendLine("   select b.UserCode from ExamUserDetailInfo b where b.TypeName=N'"+ typename + "' and b.SubjectName=N'"+ subject + "' ");
-            commandText.AppendLine("   and  IsExam='false' and IsStop='false' ) and a.[State]!='¿Î÷∞'");
+            var list = Data.ExamType.Get_All_ExamType(new { SuperAdmin = UserName });
+            if (list.Count() > 0)
+            {
+                commandText.AppendLine(" select * from ExamUsersFromehr a inner join advt_user_sheet b on a.UserCode = b.UserCode and b.UserCostCenter = a.UserDept where a.OrgName in ( select OrgName from ExamUsersFromehr where CommpanyEmail like '%" + UserName + "%' ) ");
+                commandText.AppendLine("   and  (a.UserCode='" + sData + "' or a.UserDept='" + sData + "' or a.UserName='" + sData + "') and a.UserCode not in ( ");
+                commandText.AppendLine("   select b.UserCode from ExamUserDetailInfo b where b.TypeName=N'" + typename + "' and b.SubjectName=N'" + subject + "' ");
+                commandText.AppendLine("   and  IsExam='false' and IsStop='false' ) and a.[State]!=N'¿Î÷∞'");
+            }
+            else
+            {
+                var dd = Data.advt_users_type.Get_All_advt_users_type(new { username = UserName, type = "Admin" });
+                if (dd.Count() > 0)
+                {
+                    commandText.AppendLine(" select * from ExamUsersFromehr a inner join advt_user_sheet b on a.UserCode = b.UserCode and b.UserCostCenter = a.UserDept ");
+                    commandText.AppendLine("   and  (a.UserCode='" + sData + "' or a.UserDept='" + sData + "' or a.UserName='" + sData + "') and a.UserCode not in ( ");
+                    commandText.AppendLine("   select b.UserCode from ExamUserDetailInfo b where b.TypeName=N'" + typename + "' and b.SubjectName=N'" + subject + "' ");
+                    commandText.AppendLine("   and  IsExam='false' and IsStop='false' ) and a.[State]!=N'¿Î÷∞'");
+                }
+            }
+            
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
         public int Insert_ExamUsersFromehr(Entity.ExamUsersFromehr info, string[] Include, string[] Exclude)

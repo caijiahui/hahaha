@@ -600,6 +600,41 @@ namespace advt.CMS.Models
                                     {
                                         UpdateElectronicUser(model.VExamUserInfo.UserName, model.VExamUserInfo.ExamSubject);
                                     }
+
+                                    //判断津贴总和运行为负数
+                                    if (detail.TotalQuota < 0&& model.VExamUserInfo.ExamType == "Chassis技能等级考试")
+                                    {
+                                        var ssub = detail.SubjectName.Substring(0, detail.SubjectName.Length - 2);
+
+                                        //找出当前科目对应的高级
+                                        var subhigh = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName= ssub+"高级" });
+                                        if (subhigh.Count() > 0&& subhigh!=null)
+                                        {
+                                            var uptotal = ElectronicQuota + SkillsAllowance + MajorQuota + GradePosition + PostQuota;
+                                            var highsub = subhigh.FirstOrDefault().ElectronicQuota + subhigh.FirstOrDefault().SkillsAllowance + subhigh.FirstOrDefault().MajorQuota + subhigh.FirstOrDefault().GradePosition + subhigh.FirstOrDefault().PostQuota;
+                                            if (highsub > uptotal)
+                                            {
+                                                detail.ElectronicQuota = ElectronicQuota;
+                                                detail.SkillsAllowance = SkillsAllowance;
+                                                detail.MajorQuota = MajorQuota;
+                                                detail.GradePosition = GradePosition;
+                                                detail.PostQuota = PostQuota;
+                                                detail.TotalQuota = 0;
+
+                                            }
+                                            else if (highsub < uptotal)
+                                            {
+                                                detail.ElectronicQuota = subhigh.FirstOrDefault().ElectronicQuota;
+                                                detail.SkillsAllowance = subhigh.FirstOrDefault().SkillsAllowance;
+                                                detail.MajorQuota = subhigh.FirstOrDefault().MajorQuota;
+                                                detail.GradePosition = subhigh.FirstOrDefault().GradePosition;
+                                                detail.PostQuota = subhigh.FirstOrDefault().PostQuota;
+                                                detail.TotalQuota = uptotal - highsub;
+
+                                            }
+                                        }
+                                    
+                                    }
                                 }
                                 else
                                 {

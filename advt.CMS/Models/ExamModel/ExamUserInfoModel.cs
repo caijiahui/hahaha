@@ -577,10 +577,11 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
-        public string GetChassisAchieveUser(string startdate, string endate,string username)
+        public string GetChassisAchieveUser(string startdate, string endate,string username,string sd)
         {
             var result = string.Empty;
-            ListAchieveRecord = Data.AchieveRecord.Get_All_Record(startdate,endate);
+          
+            ListAchieveRecord = Data.AchieveRecord.Get_All_Record(sd, endate);
             if (ListAchieveRecord != null && ListAchieveRecord.Count() > 0)
             {
                 var userlist = string.Join(",", ListAchieveRecord.Select(x => x.UserCode));
@@ -617,9 +618,7 @@ namespace advt.CMS.Models.ExamModel
                 for (int i = 0; i < USER_NO.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(USER_NO[i].InnerText))
-                    {
-                        //model.Add(new MesUserInfo { YEAR = YEAR[i].InnerText, MONTH = MONTH[i].InnerText, UserCode = USER_NO[i].InnerText, userName = USER_NAME[i].InnerText, POINT_SCORE = POINT_SCORE[i].InnerText });
-                        
+                    {                        
                         var Scoreinfo= Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = YEAR[i].InnerText, Month = MONTH[i].InnerText });
                         if (Scoreinfo.Count() == 0)
                         {
