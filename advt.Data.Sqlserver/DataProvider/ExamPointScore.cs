@@ -19,7 +19,7 @@ namespace advt.Data.SqlServer
             new string[] {"ID", "Int", "4"},
             new string[] { "UserCode", "NVarChar", "50"},
             new string[] { "UserName", "NVarChar", "50"},
-            new string[] { "PointScore", "NVarChar", "50"},
+            new string[] { "PointScore", "Int", "4"},
             new string[] { "Year", "NVarChar", "50"},
             new string[] { "Month", "NVarChar", "50"},
             new string[] { "CreateUser", "NVarChar", "50"},

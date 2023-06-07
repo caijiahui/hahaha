@@ -616,33 +616,33 @@ namespace advt.CMS.Models.ExamModel
                 var USER_NAME = xmlDoc.GetElementsByTagName("USER_NAME");
                 var POINT_SCORE = xmlDoc.GetElementsByTagName("POINT_SCORE");
                 for (int i = 0; i < USER_NO.Count; i++)
-                {
-                    if (!string.IsNullOrEmpty(USER_NO[i].InnerText))
-                    {                        
-                        var Scoreinfo= Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = YEAR[i].InnerText, Month = MONTH[i].InnerText });
-                        if (Scoreinfo.Count() == 0)
-                        {
-                            ExamPointScore score = new ExamPointScore();
-                            score.UserCode = USER_NO[i].InnerText;
-                            score.UserName = USER_NAME[i].InnerText;
-                            score.Year = YEAR[i].InnerText;
-                            score.Month = MONTH[i].InnerText;
-                            score.PointScore = POINT_SCORE[i].InnerText;
-                            score.CreateUser = username;
-                            score.CreateDate = DateTime.Now;
-                            Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
-                        }
-                        else
-                        {
-                            var existscore = Scoreinfo.FirstOrDefault();
-                            existscore.PointScore= POINT_SCORE[i].InnerText;
-                            existscore.UpdateUser = username;
-                            existscore.UpdateDate = DateTime.Now;
-                            Data.ExamPointScore.Update_ExamPointScore(existscore, null, new string[] { "ID" });
-                        }
-                        result = "同步完成";
+                {                   
+                    var Scoreinfo = Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = YEAR[i].InnerText, Month = MONTH[i].InnerText });
+                    if (Scoreinfo.Count()>0&& Scoreinfo!=null)
+                    {
+                        var existscore = Scoreinfo.FirstOrDefault();
+                        existscore.PointScore = Convert.ToInt32(Math.Round(Convert.ToDouble(POINT_SCORE[i].InnerText)));
+                        existscore.UpdateUser = username;
+                        existscore.UpdateDate = DateTime.Now;
+                        Data.ExamPointScore.Update_ExamPointScore(existscore, null, new string[] { "ID" });
+                       
                     }
+                    else
+                    {
+                        ExamPointScore score = new ExamPointScore();
+                        score.UserCode = USER_NO[i].InnerText;
+                        score.UserName = USER_NAME[i].InnerText;
+                        score.Year = YEAR[i].InnerText;
+                        score.Month = MONTH[i].InnerText;
+                        score.PointScore = Convert.ToInt32(Math.Round(Convert.ToDouble(POINT_SCORE[i].InnerText)));
+                        score.CreateUser = username;
+                        score.CreateDate = DateTime.Now;
+                        Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
+
+                    }
+                    result = "同步完成";
                 }
+               
             }
             catch (Exception ex)
             {
