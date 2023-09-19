@@ -558,10 +558,14 @@ namespace advt.Web.Controllers
             var username = this.UserNameContext;
             ExamUserInfoModel models = new ExamUserInfoModel();
             var startdate = string.Format("{0:yyyy/MM/01}", DateTime.Now.AddMonths(-6));
-            var enddate = string.Format("{0:yyyy/MM/28}", DateTime.Now.AddMonths(0));
             var sd = string.Format("{0:yyyy/MM/01}", DateTime.Now.AddMonths(0));
-            var result=models.GetChassisAchieveUser(startdate, enddate, username, sd);
+            var enddate = string.Format("{0:yyyy/MM/28}", DateTime.Now.AddMonths(0));
             models.GetUserInfo(data);
+            var userinfo = models.ListUserInfo11.Where(x => !string.IsNullOrEmpty(x.ReadExamDate) && Convert.ToDateTime(x.ReadExamDate).CompareTo(Convert.ToDateTime(sd)) >= 0 && Convert.ToDateTime(x.ReadExamDate).CompareTo(Convert.ToDateTime(enddate)) < 0).Select(x => x.UserCode);
+            var userlist = string.Join(",", userinfo);
+
+            var result = models.GetChassisAchieveUser(startdate, enddate, username, sd, userlist);
+            //models.GetUserInfo(data);
             models.GetUserComInfo();
             return Json(new { tableData = models.ListUserInfo, YListUserInfo = models.YListUserInfo, CPListUserInfo = models.ListDetailInfo, Results = result });
         }

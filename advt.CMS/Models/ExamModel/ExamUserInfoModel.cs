@@ -183,8 +183,6 @@ namespace advt.CMS.Models.ExamModel
                                 rule = row["RuleName"].ToString();
                                 app = row["examapply"].ToString();
                             } 
-                          
-
                         }
                         ListUserInfo.Add(new UserInfo
                         {
@@ -457,6 +455,7 @@ namespace advt.CMS.Models.ExamModel
                         v.HrCreateDate = DateTime.Now;
                         v.SubjectName = item.SubjectName;
                         v.WorkPlace = item.WorkPlace;
+                        v.OrgName = item.WorkPlace;
                         v.SignType = item.SignType;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                         result = "已报名成功!";
@@ -577,21 +576,12 @@ namespace advt.CMS.Models.ExamModel
                 files.Close();//关闭当前流并释放资源
             }
         }
-        public string GetChassisAchieveUser(string startdate, string endate,string username,string sd)
+        public string GetChassisAchieveUser(string startdate, string endate,string username,string sd,string userlist)
         {
             var result = string.Empty;
-          
-            ListAchieveRecord = Data.AchieveRecord.Get_All_Record(sd, endate);
-            if (ListAchieveRecord != null && ListAchieveRecord.Count() > 0)
-            {
-                var userlist = string.Join(",", ListAchieveRecord.Select(x => x.UserCode));
-                SyncQuantityPoint(startdate, endate, userlist, username);
-                result = "同步完成";
-            }
-            else
-            {
-                result = "没有数据";
-            }
+
+            SyncQuantityPoint(startdate, endate, userlist, username);
+            result = "同步完成";
             return result;
         }
         public string SyncQuantityPoint(string startdate, string endate, string userlist,string username)
@@ -615,6 +605,30 @@ namespace advt.CMS.Models.ExamModel
                 var USER_NO = xmlDoc.GetElementsByTagName("USER_NO");
                 var USER_NAME = xmlDoc.GetElementsByTagName("USER_NAME");
                 var POINT_SCORE = xmlDoc.GetElementsByTagName("POINT_SCORE");
+                var Listuserl = userlist.Split(new char[] { ',', ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var user = USER_NO.Cast<XmlNode>().Select(node => node.InnerText);
+                var notlist = Listuserl.Where(x => !user.Any(o=>o==x)).ToList();
+                foreach (var item in notlist)
+                {
+                    var year = string.Format("{0:yyyy}", Convert.ToDateTime(endate).AddMonths(-1));
+                    var mom = string.Format("{0:MM}", Convert.ToDateTime(endate).AddMonths(-1));
+                    var Scoreinfos = Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = item, Year = year, Month = mom });
+                    if (Scoreinfos.Count()==0)
+                    {
+                        ExamPointScore score = new ExamPointScore();
+                        score.UserCode = item;
+                        var name = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = item });
+                        score.UserName = name.FirstOrDefault()?.UserName;
+                        score.Year = year;
+                        score.Month = mom;
+                        score.PointScore = 0;
+                        score.CreateUser = username;
+                        score.CreateDate = DateTime.Now;
+                        Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
+                    }
+                   
+
+                }
                 for (int i = 0; i < USER_NO.Count; i++)
                 {                   
                     var Scoreinfo = Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = YEAR[i].InnerText, Month = MONTH[i].InnerText });
@@ -629,6 +643,7 @@ namespace advt.CMS.Models.ExamModel
                     }
                     else
                     {
+
                         ExamPointScore score = new ExamPointScore();
                         score.UserCode = USER_NO[i].InnerText;
                         score.UserName = USER_NAME[i].InnerText;
