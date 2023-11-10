@@ -211,7 +211,7 @@ namespace advt.CMS.Models.ExamModel
                             IsUserExam = row["IsUserExams"].ToString(),
                             //每年应复审时间段
                             ExamineMonth = exammon,
-                            ReadExamDate = ReadyExamDate
+                            ReadExamDate = rule== "" ? "" : ReadyExamDate
                         });
                     }
                     ListUserInfo11 = ListUserInfo.OrderByDescending(x=>x.ReadExamDate!=null).ToList();
@@ -252,8 +252,8 @@ namespace advt.CMS.Models.ExamModel
                                     WorkPlace = item.WorkPlace,
                                     IsUserExam = item.IsUserExam,
                                     ExamineMonth = item.ExamineMonth,
-                                    ReadExamDate = item.ReadExamDate                                    
-                                });
+                                    ReadExamDate =item.ReadExamDate
+                                }); ;
                             }
                         }
                     }
