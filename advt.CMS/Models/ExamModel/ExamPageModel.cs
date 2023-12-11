@@ -741,25 +741,11 @@ namespace advt.CMS.Models
                                     {
                                         item.ApplicationLevel = "高级";
                                         item.Achievement = null;
-                                    }
-                                    //var rankn = item.RankName;
-                                    //if (!string.IsNullOrEmpty(rankn))
-                                    //{
-                                    //    if (!string.IsNullOrEmpty(subject) && subject.Contains("高级"))
-                                    //    {
-                                    //        if (rankn.Contains("A-1") || rankn.Contains("A-2"))
-                                    //        {
-                                    //            item.RankName = "A-3";
-                                    //        }
-                                    //    }
-                                    //    if (!string.IsNullOrEmpty(subject) && subject.Contains("中级"))
-                                    //    {
-                                    //        if (rankn.Contains("A-1"))
-                                    //        {
-                                    //            item.RankName = "A-2";
-                                    //        }
-                                    //    }
-                                    //}
+                                    }                                   
+                                }
+                                if (item.TypeName == model.VExamUserInfo.ExamType&& model.VExamUserInfo.ExamType!= "电子端岗位技能津贴")
+                                {
+                                    item.SubjectName = model.VExamUserInfo.ExamSubject;
                                 }
                                 Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
                             }

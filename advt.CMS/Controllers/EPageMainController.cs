@@ -155,8 +155,6 @@ namespace advt.Web.Controllers
                             var name = this.UserNameContext;
                             model.UpdateLevel(model, name, examguid);
                         }
-
-
                     }
                 }
                 else

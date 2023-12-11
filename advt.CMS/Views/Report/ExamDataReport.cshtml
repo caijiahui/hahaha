@@ -280,9 +280,12 @@
                 _this.VSearchInfo.CurrentNumber = CurrentNumber;
                 _this.VSearchInfo.Vacancy = Vacancy;
                 axios.post('/Report/GetExamByTypeName', {
-                    typename: typename
+                    typename: typename,
+                    searchdata: _this.TypeNames
                 }).then(function (res) {
                     _this.ListElectronicUser = res.data.ListElectronicUser;
+
+
                 });
                 _this.dialogSearchVisible = true;
             },

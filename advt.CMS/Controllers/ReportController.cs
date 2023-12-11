@@ -29,10 +29,10 @@ namespace advt.Web.Controllers
             model.GetExamInfo(typename);
             return Json(new { ListElectronicUserView =model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetExamByTypeName(string typename)
+        public ActionResult GetExamByTypeName(string typename,string searchdata)
         {
             ExamDataModel model = new ExamDataModel();
-            model.GetExamByTypeName(typename);
+            model.GetExamByTypeName(typename, searchdata);
             return Json(new { ListElectronicUser = model.ListElectronicUser }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetExamUserBySubjectName(string SearchData,string subject)
