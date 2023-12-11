@@ -35,7 +35,7 @@ namespace advt.CMS.Models
                 
             }
         }
-        public void GetExamByTypeName(string typename)
+        public void GetExamByTypeName(string typename,string searchdata)
         {
             var data = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0 }).ToList();
             ListElectronicUser = data.Where(x => x.WorkState != "离职").ToList();
