@@ -422,7 +422,7 @@ namespace advt.CMS.Models.ExamModel
                     //判断是否再继续报名
 
                     var listuserdatail = new List<ExamUserDetailInfo>();
-                    listuserdatail = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode=item.UserCode,SubjectName=item.SubjectName,IsStop=false,ExamStatus= "HrSignUp", IsUserExam="true" });
+                    listuserdatail = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode=item.UserCode,SubjectName=item.SubjectName,IsStop=false,ExamStatus= "HrSignUp" });
                     if (listuserdatail != null && listuserdatail.Count() > 0)
                     {
                         result = "此工号已报名,不可重复报名";
@@ -435,7 +435,7 @@ namespace advt.CMS.Models.ExamModel
                         v.UserName = item.UserName;
                         v.DepartCode = item.DepartCode;
                         v.PostName = item.PostName;
-                        v.PostID = item.PostName;
+                        v.PostID = item.PostID;
                         v.RankName = item.RankName;
                         v.SkillName = item.ApplicationLevel; //本职等技能G1
                         v.EntryDate = item.EntryDate; //入职日期
@@ -457,6 +457,7 @@ namespace advt.CMS.Models.ExamModel
                         v.WorkPlace = item.WorkPlace;
                         v.OrgName = item.WorkPlace;
                         v.SignType = item.SignType;
+                        v.State = item.State;
                         Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(v, null, new string[] { "ID" });
                         result = "已报名成功!";
                        
@@ -707,6 +708,7 @@ namespace advt.CMS.Models.ExamModel
         public string SignType { get; set; }
         public string PostID { get; set; }
         public string OrgName { get; set; }
+        public string State { get; set; }
 
     }
     public class SearchUserData

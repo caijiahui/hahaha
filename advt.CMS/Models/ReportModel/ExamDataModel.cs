@@ -59,8 +59,23 @@ namespace advt.CMS.Models
         //添加完
         public bool GetSigupElectronicUser(string usercode, string UserCostCenter, string SubjectName,string sdata,string typename,string username)
         {
+            List<UserInfo> Listusers = new List<UserInfo>();
+            var user = Data.ExamUserInfo.Get_ExamUserInfo(new {  UserCode = usercode, TypeName=typename });
+            UserInfo model = new UserInfo();
+            var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
+            model.TypeName = typename;
+            model.SubjectName = SubjectName;
+            model.UserCode = usercode;
+            model.UserName = user.UserName;
+            model.PostName = user.PostName;
+            model.RuleName = rule != null ? rule.RuleName : "";
+            model.DepartCode = UserCostCenter;
+            model.State = user.WorkState;
+            model.PostID = user.PostID;
 
-            var su=Data.ExamUserInfo.Insert_ElectronicUser_usercode(usercode, UserCostCenter,SubjectName, username);
+            Listusers.Add(model);
+            ExamUserInfoModel models = new ExamUserInfoModel();
+            models.InsertUserDetail(Listusers, username);
             var subjecs = Data.ExamSubject.Get_ExamSubject(new { SubjectName = SubjectName });
             if (subjecs.IsProAssess)
             {
@@ -68,53 +83,14 @@ namespace advt.CMS.Models
             }
             else
             {
-                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata,null);
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata, SubjectName);
             }
             GetExamInfo(typename);
-            var user = Data.ExamUserInfo.Get_ExamUserInfo(new { SubjectName = SubjectName, UserCode = usercode, IsEnable = 0 });
-            UserInfo model = new UserInfo();
-            List<UserInfo> Listusers = new List<UserInfo>();
-            var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
-            if (su > 0)
-            {
-                model.TypeName = typename;
-                model.SubjectName = SubjectName;
-                model.UserCode = usercode;
-                model.UserName = user.UserName;
-                model.PostName = user.PostID;
-                model.RuleName = rule!=null?rule.RuleName:"";
-                model.DepartCode = UserCostCenter;
-             
-                Listusers.Add(model);
-                ExamUserInfoModel models = new ExamUserInfoModel();
-                models.InsertUserDetail(Listusers, username);
-                return true;
-            }
-            return false;
+            return true;
         }
         public bool DeleteElectronicUser(string UserCode, string SubjectNames,string typename,string username)
         {
-        //    var ids = Convert.ToInt32(ID);
-        //    var item = Data.ExamUserInfo.Get_ExamUserInfo(new { ID = ID });
-            //item.IsEnable = true;
-            //item.StopUser = username;
-            //item.StopDate = DateTime.Now;
-            //var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-            //ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = SubjectNames, IsEnable = 0 });
-            //GetExamInfo(typename);
-            //if (su > 0)
-            //{
-            //    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = typename, SubjectName= SubjectNames, IsStop=0 });
-            //    if (c != null)
-            //    {
-            //        c.IsStop = true;
-            //        c.StopCreateDate = DateTime.Now;
-            //        c.StopCreateUser = username;
-            //        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-            //    }
-
-            //    return true;
-            //}
+        
             var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = UserCode, TypeName = typename, SubjectName = SubjectNames, IsStop = 0 });
             if (c != null)
             {
@@ -123,9 +99,9 @@ namespace advt.CMS.Models
                 c.StopCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
             }
-
+            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(typename, SubjectNames);
+            ListElectronicUser = data.Where(x => x.State != "离职").ToList();
             return true;
-            return false;
         }
         
     }
