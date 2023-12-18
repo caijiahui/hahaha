@@ -328,6 +328,13 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" select * from [dbo].[advt_users_type] where username='"+ usercode + "' and [type]='Admin'");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
+        public IDataReader Get_All_ExamUserDetailInfoDianzi(string typename, string searchdata)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" select* from(select b.UserCode,b.UserName,b.DepartCode,b.ExamDate,b.SubjectName,c.PostID,b.State,rowid=ROW_NUMBER()over(partition by b.usercode order by examdate desc )from ExamSubject a inner join ExamUserDetailInfo b on a.SubjectName = b.SubjectName left join ExamUserInfo c on b.UserCode=c.UserCode and b.TypeName =c.TypeName where  b.IsStop=0  and b.State!=N'离职' and b.TypeName =N'电子端岗位技能津贴' and stuff(b.SubjectName, 3, 1, '')=N'测试等级' UNION ALL select b.UserCode,b.UserName,b.DepartCode,b.ExamDate,b.SubjectName,c.PostID,b.State,rowid=ROW_NUMBER()over(partition by b.usercode order by examdate desc )from ExamSubject a inner join ExamUserDetailInfo b on a.SubjectName = b.SubjectName\r\nleft join ExamUserInfo c on b.UserCode=c.UserCode and b.TypeName =c.TypeName\r\nwhere  b.IsStop=0  and b.State!=N'离职' and b.TypeName =N'电子端岗位技能津贴' and stuff(b.SubjectName, 3, 1, '')<>N'测试等级')a  where a.rowid=1  and SubjectName=N'" + typename + "'");
+            //commandText.AppendLine(" select* from(select HC = isnull(a.HCLimit, ''), b.UserCode, b.UserName, b.DepartCode, b.ExamDate, b.SubjectName,c.PostID, b.State,rowid = ROW_NUMBER()over(partition by b.usercode order by UserExamDate desc)from ExamSubject a inner  join ExamUserDetailInfo b on a.SubjectName = b.SubjectName left join ExamUserInfo c on b.UserCode=c.UserCode and b.TypeName =c.TypeName  where b.IsStop = 0 and b.IsExam = 'true' and IsExamPass = 1 and b.State != N'离职' and b.TypeName = N'电子端岗位技能津贴'  )a where a.rowid = 1  and SubjectName=N'" + typename +"'");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         #endregion
     }
 }

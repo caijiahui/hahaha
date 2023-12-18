@@ -90,6 +90,8 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_ExamUserAuditInfo(ExamStatus, UserCode, typename);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
+
+
         public static List<Entity.ExamUserDetailInfo> Get_All_UserCelarInfo(string ExamStatus, string UserCode, string typename)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_UserCelarInfo(ExamStatus, UserCode, typename);
@@ -137,6 +139,13 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().GetAuthority(usercode);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader); 
         }
+        public static List<Entity.ExamUserDetailInfo> Get_All_ExamUserDetailInfoDianzi(string typename, string searchdata)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserDetailInfoDianzi(typename,searchdata);
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
+
+        
         #endregion
     }
 }

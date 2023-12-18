@@ -34,6 +34,7 @@ namespace advt.Data
         IDataReader Get_Super_UserAduitInfo(string  ExamStatus,string username, string typename);
 
         IDataReader GetAuthority(string usercode);
+        IDataReader Get_All_ExamUserDetailInfoDianzi(string typename, string searchdata);
         #endregion
     }
 }

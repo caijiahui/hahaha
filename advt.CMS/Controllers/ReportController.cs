@@ -48,11 +48,11 @@ namespace advt.Web.Controllers
             var success=model.GetSigupElectronicUser(usercode, UserCostCenter, SubjectName, sdata, typename, username);
             return Json(new { ListUsers = model.ListUsers, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult DeleteElectronicUser(string ID,string SubjectNames,string typename)
+        public ActionResult DeleteElectronicUser(string UserCode, string SubjectNames,string typename)
         {
             ExamDataModel model = new ExamDataModel();
             var username = this.UserNameContext;
-            var success = model.DeleteElectronicUser(ID, SubjectNames, typename, username);
+            var success = model.DeleteElectronicUser(UserCode, SubjectNames, typename, username);
             return Json(new { ListElectronicUser = model.ListElectronicUser, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
         

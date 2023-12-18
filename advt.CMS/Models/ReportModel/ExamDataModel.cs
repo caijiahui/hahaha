@@ -15,13 +15,13 @@ namespace advt.CMS.Models
 {
     public class ExamDataModel
     {
-        public List<Entity.ExamUserInfo> ListElectronicUser { get; set; }
+        public List<Entity.ExamUserDetailInfo> ListElectronicUser { get; set; }
         public List<ElectronicUserView> ListElectronicUserView { get; set; }
         public List<advt_user_sheet> ListUsers { get; set; }
 
         public ExamDataModel() : base()
         {
-            ListElectronicUser = new List<Entity.ExamUserInfo>();
+            ListElectronicUser = new List<Entity.ExamUserDetailInfo>();
             ListElectronicUserView = new List<ElectronicUserView>();
             ListUsers = new List<advt_user_sheet>();
 
@@ -37,8 +37,10 @@ namespace advt.CMS.Models
         }
         public void GetExamByTypeName(string typename,string searchdata)
         {
-            var data = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0, TypeName = searchdata }).ToList();
-            ListElectronicUser = data.Where(x => x.WorkState != "离职").ToList();
+            //var data = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0, TypeName = searchdata }).ToList();
+            //var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = typename, IsStop=0, TypeName= searchdata, IsExam= "true", IsExamPass=1 }).ToList();
+            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(typename, searchdata);
+            ListElectronicUser = data.Where(x => x.State != "离职").ToList();
         }
         public void GetExamUserBySubjectName(string SearchData,string subject)
         {
@@ -49,7 +51,7 @@ namespace advt.CMS.Models
             }
             else
             {
-                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData);
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData, subject);
             }
             
             
@@ -66,7 +68,7 @@ namespace advt.CMS.Models
             }
             else
             {
-                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata);
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata,null);
             }
             GetExamInfo(typename);
             var user = Data.ExamUserInfo.Get_ExamUserInfo(new { SubjectName = SubjectName, UserCode = usercode, IsEnable = 0 });
@@ -90,29 +92,39 @@ namespace advt.CMS.Models
             }
             return false;
         }
-        public bool DeleteElectronicUser(string ID,string SubjectNames,string typename,string username)
+        public bool DeleteElectronicUser(string UserCode, string SubjectNames,string typename,string username)
         {
-            var ids = Convert.ToInt32(ID);
-            var item = Data.ExamUserInfo.Get_ExamUserInfo(new { ID = ID });
-            item.IsEnable = true;
-            item.StopUser = username;
-            item.StopDate = DateTime.Now;
-            var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-            ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = SubjectNames, IsEnable = 0 });
-            GetExamInfo(typename);
-            if (su > 0)
+        //    var ids = Convert.ToInt32(ID);
+        //    var item = Data.ExamUserInfo.Get_ExamUserInfo(new { ID = ID });
+            //item.IsEnable = true;
+            //item.StopUser = username;
+            //item.StopDate = DateTime.Now;
+            //var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
+            //ListElectronicUser = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = SubjectNames, IsEnable = 0 });
+            //GetExamInfo(typename);
+            //if (su > 0)
+            //{
+            //    var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = typename, SubjectName= SubjectNames, IsStop=0 });
+            //    if (c != null)
+            //    {
+            //        c.IsStop = true;
+            //        c.StopCreateDate = DateTime.Now;
+            //        c.StopCreateUser = username;
+            //        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+            //    }
+
+            //    return true;
+            //}
+            var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = UserCode, TypeName = typename, SubjectName = SubjectNames, IsStop = 0 });
+            if (c != null)
             {
-                var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = typename, SubjectName= SubjectNames, IsStop=0 });
-                if (c != null)
-                {
-                    c.IsStop = true;
-                    c.StopCreateDate = DateTime.Now;
-                    c.StopCreateUser = username;
-                    Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-                }
-               
-                return true;
+                c.IsStop = true;
+                c.StopCreateDate = DateTime.Now;
+                c.StopCreateUser = username;
+                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
             }
+
+            return true;
             return false;
         }
         

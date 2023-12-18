@@ -253,7 +253,10 @@ namespace advt.CMS.Models.ExamModel
                 userdatail.SkillsAllowance = userdata.SkillsAllowance;
                 userdatail.GradePosition = userdata.GradePosition;
                 userdatail.PostQuota = userdata.PostQuota;
+                userdatail.DirectorCreateDate = DateTime.Now;
+                userdatail.DirectorCreateUser = username;
                 userdatail.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance + userdatail.GradePosition + userdatail.PostQuota;
+                
                 Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(userdatail, null, new string[] { "ID" });
 
                 var rec = new UserQuataRecord();
