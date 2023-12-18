@@ -108,12 +108,15 @@
                             </template>
 
                         </el-table-column>*@
-                        <el-table-column label="取得津贴时间"
-                                         sortable>
-                            <template slot-scope="scope">
-                                <span>{{changeDate(scope.row.ExamDate)}}</span>
-                            </template>
-                        </el-table-column>
+                <el-table-column label="取得津贴时间"
+                                 sortable>
+                    @*<template slot-scope="scope">
+                        <span>{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>*@
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.ExamDate!=''&&scope.row.ExamDate!=null">{{changeDate(scope.row.ExamDate)}}</span>
+                    </template>
+                </el-table-column>
                         @*<el-table-column label="对应津贴额度"
                                          prop="ElectronicQuota">
                         </el-table-column>*@
