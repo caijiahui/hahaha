@@ -99,8 +99,8 @@ namespace advt.CMS.Models
                 c.StopCreateUser = username;
                 Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
             }
-            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(typename, SubjectNames);
-            ListElectronicUser = data.Where(x => x.State != "离职").ToList();
+            ListElectronicUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(SubjectNames,typename).ToList();
+            GetExamInfo(typename);
             return true;
         }
         
