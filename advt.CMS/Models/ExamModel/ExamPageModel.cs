@@ -679,6 +679,17 @@ namespace advt.CMS.Models
                         Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(detail, null, new string[] { "ID" });
 
                     }
+                    if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
+                    { 
+                        //根据电子岗取消报名人员，考完更新主表的考试时间
+                        var cancel = Data.U_Cancel_UserInfo.Get_All_U_Cancel_UserInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject });
+                        if (cancel != null&&cancel.Count()>0) {
+                            var candata = cancel.Where(x=>x.ExamDate == null).FirstOrDefault();                   
+                            candata.ExamDate = DateTime.Now;
+                            Data.U_Cancel_UserInfo.Update_U_Cancel_UserInfo(candata, null, new string[] { "ID" });
+                        }
+                    }
+                   
 
                 }
 

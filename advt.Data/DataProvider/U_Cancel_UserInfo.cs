@@ -45,6 +45,20 @@ namespace advt.Data
         {
             return DatabaseProvider.GetInstance().Insert_U_Cancel_UserInfo(info, Include, Exclude);
         }
+        public static int Update_U_Cancel_UserInfo(Entity.U_Cancel_UserInfo info)
+        {
+            return Update_U_Cancel_UserInfo(info, null, null);
+        }
+
+        public static int Update_U_Cancel_UserInfo(Entity.U_Cancel_UserInfo info, string[] Include)
+        {
+            return Update_U_Cancel_UserInfo(info, Include, null);
+        }
+
+        public static int Update_U_Cancel_UserInfo(Entity.U_Cancel_UserInfo info, string[] Include, string[] Exclude)
+        {
+            return DatabaseProvider.GetInstance().Update_U_Cancel_UserInfo(info, Include, Exclude);
+        }
         public static List<Entity.U_Cancel_UserInfo> GetAllCancelUserInfo(string SubjectName, string searchdata)
         {
             IDataReader reader = DatabaseProvider.GetInstance().GetAllCancelUserInfo(SubjectName, searchdata);
