@@ -67,9 +67,9 @@ namespace advt.Data.SqlServer
         public int Insert_ElectronicUser_usercode(string usercode, string UserCostCenter, string SubjectName, string username)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine("insert ExamUserInfo(UserCode,PostID,CreateDate,Quota,IsEnable,UserName,DepartCode,SubjectName,CreateUser,EStatus,TypeName)  ");
+            commandText.AppendLine("insert ExamUserInfo(UserCode,PostID,CreateDate,Quota,IsEnable,UserName,DepartCode,SubjectName,TypeName)  ");
             commandText.AppendLine(" select distinct a.UserCode,a.UserJobType ,GETDATE(),b.ElectronicQuota ");
-            commandText.AppendLine(" ,CONVERT(bit,0),a.UserDspName,a.UserCostCenter,b.SubjectName, '" + username + "','false',N'电子端岗位技能津贴' from advt_user_sheet a ");
+            commandText.AppendLine(" ,CONVERT(bit,0),a.UserDspName,a.UserCostCenter,b.SubjectName,N'电子端岗位技能津贴' from advt_user_sheet a ");
             commandText.AppendLine(" inner join ExamSubject b on b.SubjectName=N'" + SubjectName + "' ");
             commandText.AppendLine(" where a.UserCode='" + usercode + "'  and a.UserCostCenter='" + UserCostCenter + "' ");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString());

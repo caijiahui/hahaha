@@ -87,6 +87,8 @@
     <Compile Include="DataProvider\AchieveRecord.cs" />
     <Compile Include="DataProvider\PracticeInfo.cs" />
     <Compile Include="DataProvider\RegionalPost.cs" />
+    <Compile Include="DataProvider\U_Cancel_UserInfo_History.cs" />
+    <Compile Include="DataProvider\U_Cancel_UserInfo.cs" />
     <Compile Include="DataProvider\SkillInfo.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
     <Compile Include="DataProvider\ExamUserDetailInfo.cs" />

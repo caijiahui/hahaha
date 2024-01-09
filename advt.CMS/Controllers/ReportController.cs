@@ -29,10 +29,10 @@ namespace advt.Web.Controllers
             model.GetExamInfo(typename);
             return Json(new { ListElectronicUserView =model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetExamByTypeName(string typename,string searchdata)
+        public ActionResult GetExamByTypeName(string SubjectName, string searchdata)
         {
             ExamDataModel model = new ExamDataModel();
-            model.GetExamByTypeName(typename, searchdata);
+            model.GetExamByTypeName(SubjectName, searchdata);
             return Json(new { ListElectronicUser = model.ListElectronicUser }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetExamUserBySubjectName(string SearchData,string subject)
@@ -48,11 +48,11 @@ namespace advt.Web.Controllers
             var success=model.GetSigupElectronicUser(usercode, UserCostCenter, SubjectName, sdata, typename, username);
             return Json(new { ListUsers = model.ListUsers, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult DeleteElectronicUser(string UserCode, string SubjectNames,string typename)
+        public ActionResult DeleteElectronicUser(string UserCode, string SubjectNames,string typename,int ID)
         {
             ExamDataModel model = new ExamDataModel();
             var username = this.UserNameContext;
-            var success = model.DeleteElectronicUser(UserCode, SubjectNames, typename, username);
+            var success = model.DeleteElectronicUser(UserCode, SubjectNames, typename, username, ID);
             return Json(new { ListElectronicUser = model.ListElectronicUser, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
         

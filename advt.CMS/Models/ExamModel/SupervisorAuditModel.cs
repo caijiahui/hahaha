@@ -8,6 +8,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace advt.CMS.Models.ExamModel
 {
@@ -203,81 +204,49 @@ namespace advt.CMS.Models.ExamModel
 
         public void CelarQuata(ExamUserDetailInfo model,string username)
         {
-            ////电子岗页面取消人员考试操作
-            //if (model.TypeName == "电子端岗位技能津贴")
-            //{
-            //    var item = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = model.UserCode, TypeName = "电子端岗位技能津贴", IsEnable = 0 });
-            //    item.IsEnable = true;
-            //    item.StopUser = username;
-            //    item.StopDate = DateTime.Now;
-            //    var su = Data.ExamUserInfo.Update_ExamUserInfo(item, null, new string[] { "ID" });
-            //    if (su > 0)
-            //    {
-            //        var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = item.UserCode, TypeName = model.TypeName, SubjectName = model.SubjectName, IsStop = 0 });
-            //        if (c != null)
-            //        {
-            //            c.IsStop = true;
-            //            c.StopCreateDate = DateTime.Now;
-            //            c.StopCreateUser = username;
-            //            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
-            //        }
-            //    }
-
-            //}
-            var userdata = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new {UserCode=model.UserCode, SubjectName = model.SubjectName,IsExam ="true",ExamStatus="HrCheck", IsStop = 0 }).OrderByDescending(x=>x.ExamDate!=null).FirstOrDefault();
-            if (userdata!= null)
+            if (model.TypeName == "电子端岗位技能津贴")
             {
-                userdata.ElectronicQuota = 0;userdata.MajorQuota = 0;
-                userdata.SkillsAllowance = 0;userdata.GradePosition = 0;userdata.PostQuota = 0;
-                userdata.TotalQuota = 0;
+                var cancel = Data.U_Cancel_UserInfo.Get_U_Cancel_UserInfo(new { UserCode = model.UserCode, SubjectName=model.SubjectName });
+                if (cancel != null)
+                {
+                    Data.U_Cancel_UserInfo.Delete_U_Cancel_UserInfo(cancel.ID);
+                    //插历史
+                    var user = new U_Cancel_UserInfo_History();
+                    user.UserCode = cancel.UserCode;
+                    user.UserName = cancel.UserName;
+                    user.DepartCode = cancel.DepartCode;
+                    user.ExamDate = cancel.ExamDate;
+                    user.SubjectName = cancel.SubjectName;
+                    user.PostID = cancel.PostID;
+                    user.STATE = cancel.STATE;
+                    user.Pre_InsertDate = cancel.InsertDate;
+                    user.Operate_date = DateTime.Now;
+                    user.Operate_User = username;
 
-                var userdatail = new ExamUserDetailInfo();
-                userdatail.UserCode = userdata.UserCode;
-                userdatail.UserName = userdata.UserName;
-                userdatail.TypeName = userdata.TypeName;
-                userdatail.SubjectName = userdata.SubjectName;
-                userdatail.RuleName = userdata.RuleName;
-                userdatail.DepartCode = userdata.DepartCode;
-                userdatail.PostName = userdata.PostName;
-                userdatail.PostID = userdata.PostID;
-                userdatail.RankName = userdata.RankName;
-                userdatail.EntryDate = userdata.EntryDate;
-                userdatail.ExamStatus = "HrCheck";
-                userdatail.IsExamPass = true;
-                userdatail.ExamDate = DateTime.Now.AddMonths(-1);
-                userdatail.Type = "取消";
-                userdatail.IsStop = false; userdatail.IsExam = "true"; userdatail.WorkPlace = userdata.WorkPlace;
-                userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
-                userdatail.ElectronicQuota = userdata.ElectronicQuota;
-                userdatail.MajorQuota = userdata.MajorQuota;
-                userdatail.SkillsAllowance = userdata.SkillsAllowance;
-                userdatail.GradePosition = userdata.GradePosition;
-                userdatail.PostQuota = userdata.PostQuota;
-                userdatail.DirectorCreateDate = DateTime.Now;
-                userdatail.DirectorCreateUser = username;
-                userdatail.TotalQuota = userdatail.ElectronicQuota + userdatail.MajorQuota + userdatail.SkillsAllowance + userdatail.GradePosition + userdatail.PostQuota;
-                
-                Data.ExamUserDetailInfo.Insert_ExamUserDetailInfo(userdatail, null, new string[] { "ID" });
-
-                var rec = new UserQuataRecord();
-                rec.UserCode = model.UserCode;
-                rec.UserName = model.UserName;
-                rec.SubjectName = model.SubjectName;
-                rec.RuleName = model.RuleName;
-                rec.TypeName = model.TypeName;
-                rec.CreateName = username;
-                rec.CreateDate = DateTime.Now;
-                rec.Type = "取消";
-                rec.ElectronicQuota = userdata.ElectronicQuota; rec.MajorQuota = userdata.MajorQuota;
-                rec.SkillsAllowance = userdata.SkillsAllowance; rec.GradePosition = userdata.GradePosition;
-                rec.PostQuota = userdata.PostQuota;
-                rec.TotalQuota = rec.ElectronicQuota + rec.MajorQuota + rec.SkillsAllowance + rec.GradePosition + rec.PostQuota;
-                Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
+                    Data.U_Cancel_UserInfo_History.Insert_U_Cancel_UserInfo_History(user, null, new string[] { "ID" });
+                }
             }
-            
+            if (model.TypeName == "Chassis技能等级考试")
+            {
+                //插历史
+                var user = new U_Cancel_UserInfo_History();
+          
+                user.UserCode = model.UserCode;
+                user.UserName = model.UserName;
+                user.DepartCode = model.DepartCode;
+                user.ExamDate = model.ExamDate;
+                user.SubjectName = model.SubjectName;
+                user.PostID = model.PostID;
+                user.STATE = model.State;
+                user.Pre_InsertDate = DateTime.Now;
+                user.Operate_date = DateTime.Now;
+                user.Operate_User = username;
 
+                Data.U_Cancel_UserInfo_History.Insert_U_Cancel_UserInfo_History(user, null, new string[] { "ID" });
+            }
+             
 
-            GetAllExamUserByType(model.TypeName, username);
+                GetAllExamUserByType(model.TypeName, username);
             //呈现主管下所有通过考过的人员的最后一笔记录
         }
         public string SaveUpLevel(ExamUserDetailInfo model, string newsubject,string username)

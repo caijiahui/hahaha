@@ -13,7 +13,8 @@ namespace advt.Data
 
         IDataReader Get_All_advt_user_sheet(object objparams);
         IDataReader Get_All_advt_user_sheet_ElectronicUser(string sdata,string subject);
-        
+        IDataReader Get_All_advt_user_sheet_ProElectronicUser(string sdata, string subject);
+
         IDataReader Get_advt_user_sheet_UserJobTitle(string username);
 
         int Insert_advt_user_sheet(Entity.advt_user_sheet info, string[] Include, string[] Exclude);

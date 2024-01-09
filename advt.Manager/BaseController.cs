@@ -115,7 +115,7 @@ namespace advt.Manager
 
                 advt_log.createdt = DateTime.Now;
 
-                Data.advt_log.Insert_advt_log(advt_log);
+                //Data.advt_log.Insert_advt_log(advt_log);
             }
             catch
             {

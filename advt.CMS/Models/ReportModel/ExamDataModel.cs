@@ -2,6 +2,7 @@
 using advt.Entity;
 using advt.Model.ExamModel;
 using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -10,18 +11,20 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.DynamicData;
+using System.Web.UI.WebControls;
 
 namespace advt.CMS.Models
 {
     public class ExamDataModel
     {
-        public List<Entity.ExamUserDetailInfo> ListElectronicUser { get; set; }
+        public List<Entity.U_Cancel_UserInfo> ListElectronicUser { get; set; }
         public List<ElectronicUserView> ListElectronicUserView { get; set; }
         public List<advt_user_sheet> ListUsers { get; set; }
 
         public ExamDataModel() : base()
         {
-            ListElectronicUser = new List<Entity.ExamUserDetailInfo>();
+            ListElectronicUser = new List<Entity.U_Cancel_UserInfo>();
             ListElectronicUserView = new List<ElectronicUserView>();
             ListUsers = new List<advt_user_sheet>();
 
@@ -35,19 +38,17 @@ namespace advt.CMS.Models
                 
             }
         }
-        public void GetExamByTypeName(string typename,string searchdata)
+        public void GetExamByTypeName(string SubjectName, string searchdata)
         {
-            //var data = Data.ExamUserInfo.Get_All_ExamUserInfo(new { SubjectName = typename, IsEnable = 0, TypeName = searchdata }).ToList();
-            //var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { SubjectName = typename, IsStop=0, TypeName= searchdata, IsExam= "true", IsExamPass=1 }).ToList();
-            var data = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(typename, searchdata);
-            ListElectronicUser = data.Where(x => x.State != "离职").ToList();
+            var data = Data.U_Cancel_UserInfo.GetAllCancelUserInfo(SubjectName, searchdata);
+            ListElectronicUser = data.Where(x => x.STATE != "离职").ToList();
         }
         public void GetExamUserBySubjectName(string SearchData,string subject)
         {
             var subjecs = Data.ExamSubject.Get_ExamSubject(new { SubjectName = subject });
             if (subjecs.IsProAssess)
             {
-                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(SearchData,subject);
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ProElectronicUser(SearchData, subject);
             }
             else
             {
@@ -59,8 +60,24 @@ namespace advt.CMS.Models
         //添加完
         public bool GetSigupElectronicUser(string usercode, string UserCostCenter, string SubjectName,string sdata,string typename,string username)
         {
+            //插入detail
             List<UserInfo> Listusers = new List<UserInfo>();
-            var user = Data.ExamUserInfo.Get_ExamUserInfo(new {  UserCode = usercode, TypeName=typename });
+            var user = new Entity.ExamUserInfo();
+
+            var userss = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = usercode, TypeName = typename });
+            if (userss.Count()==0)
+            {
+                var su = Data.ExamUserInfo.Insert_ElectronicUser_usercode(usercode, UserCostCenter, SubjectName, username);
+                if (su > 0)
+                {  user = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode, TypeName = typename }); }
+            }
+            else
+            {
+                user = Data.ExamUserInfo.Get_ExamUserInfo(new { UserCode = usercode, TypeName = typename });
+
+            }
+           
+
             UserInfo model = new UserInfo();
             var rule = Data.ExamRule.Get_ExamRule(new { SubjectName = SubjectName, TypeName = typename });
             model.TypeName = typename;
@@ -76,10 +93,25 @@ namespace advt.CMS.Models
             Listusers.Add(model);
             ExamUserInfoModel models = new ExamUserInfoModel();
             models.InsertUserDetail(Listusers, username);
+
+            // 插入视图主表
+            var cancel = new U_Cancel_UserInfo();
+            cancel.UserCode = usercode;
+            cancel.UserName = user.UserName;
+            cancel.DepartCode = UserCostCenter;
+            cancel.ExamDate = null;
+            cancel.SubjectName = SubjectName;
+            cancel.PostID = user.PostID;
+            cancel.STATE = user.WorkState;
+            cancel.InsertDate = DateTime.Now;
+            Data.U_Cancel_UserInfo.Insert_U_Cancel_UserInfo(cancel, null, new string[] { "ID" });
+
+
+
             var subjecs = Data.ExamSubject.Get_ExamSubject(new { SubjectName = SubjectName });
             if (subjecs.IsProAssess)
             {
-                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ElectronicUser(sdata, SubjectName);
+                ListUsers = Data.advt_user_sheet.Get_All_advt_user_sheet_ProElectronicUser(sdata, SubjectName);
             }
             else
             {
@@ -88,18 +120,30 @@ namespace advt.CMS.Models
             GetExamInfo(typename);
             return true;
         }
-        public bool DeleteElectronicUser(string UserCode, string SubjectNames,string typename,string username)
+        public bool DeleteElectronicUser(string UserCode, string SubjectNames,string typename,string username,int ID)
         {
-        
-            var c = Data.ExamUserDetailInfo.Get_ExamUserDetailInfo(new { UserCode = UserCode, TypeName = typename, SubjectName = SubjectNames, IsStop = 0 });
-            if (c != null)
+            //在主表删除数据取消操作
+            var cancel = Data.U_Cancel_UserInfo.Get_U_Cancel_UserInfo(new { ID=ID});
+            if(cancel != null)
             {
-                c.IsStop = true;
-                c.StopCreateDate = DateTime.Now;
-                c.StopCreateUser = username;
-                Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(c, null, new string[] { "ID" });
+                Data.U_Cancel_UserInfo.Delete_U_Cancel_UserInfo(ID);
             }
-            ListElectronicUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfoDianzi(SubjectNames,typename).ToList();
+            //插历史
+            var user = new U_Cancel_UserInfo_History();
+            user.UserCode = cancel.UserCode;
+            user.UserName = cancel.UserName;
+            user.DepartCode = cancel.DepartCode;
+            user.ExamDate = cancel.ExamDate;
+            user.SubjectName = cancel.SubjectName;
+            user.PostID = cancel.PostID;
+            user.STATE = cancel.STATE;
+            user.Pre_InsertDate = cancel.InsertDate;
+            user.Operate_date = DateTime.Now;
+            user.Operate_User = username;
+
+            Data.U_Cancel_UserInfo_History.Insert_U_Cancel_UserInfo_History(user, null, new string[] { "ID" });
+
+            ListElectronicUser = Data.U_Cancel_UserInfo.GetAllCancelUserInfo(SubjectNames, typename); 
             GetExamInfo(typename);
             return true;
         }

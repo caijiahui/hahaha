@@ -88,15 +88,44 @@ namespace advt.CMS.Models
                 {
                     ListPract = Data.PracticeInfo.Get_All_PracticeInfo(new { TypeName = Rule.TypeName, UserCode = usercode });
                 }
-                var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
-                if (Pract == null)
+                if (!string.IsNullOrEmpty(Rule.SubjectName))
                 {
-                    Result += "未找到对应实践分数,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore;
+                    if (Rule.TypeName == "Chassis技能等级考试")
+                    {
+                        //全员复考不需要考实践
+                        var detail = new List<ExamUserDetailInfo>();
+                        detail = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = usercode, SubjectName = Rule.SubjectName, ExamStatus = "HrCheck", IsStop = false, TypeName = Rule.TypeName });
+                        var details = detail.Where(x => x.UserExamDate == null).OrderByDescending(x => x.ExamDate).FirstOrDefault();
+                        if (details.ExamKind != "全员复考")
+                        {
+                            var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                            if (Pract == null)
+                            {
+                                Result += "未找到对应实践分数,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore;
+                            }
+                            else if (Pract.PracticeScore < Rule.PassPracticeScore)
+                            {
+                                Result += "实践分数未达标,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                        if (Pract == null)
+                        {
+                            Result += "未找到对应实践分数,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore;
+                        }
+                        else if (Pract.PracticeScore < Rule.PassPracticeScore)
+                        {
+                            Result += "实践分数未达标,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
+                        }
+                    }
                 }
-                else if (Pract.PracticeScore < Rule.PassPracticeScore)
-                {
-                    Result += "实践分数未达标,不可报名。考试规则要求实践分数" + Rule.PassPracticeScore + "目前实践分数" + Pract.PracticeScore;
-                }
+                
+
+
+                
             }
 
             return Result;
@@ -553,7 +582,7 @@ namespace advt.CMS.Models
                                 if (issubjetc.FirstOrDefault().IsAddAllowance)
                                 {
                                     //考生最后一笔通过记录
-                                    var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsStop = false, IsExam = "true" }).OrderByDescending(x => x.ExamDate);
+                                    var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsExam = "true", IsExamPass=true, TypeName = model.VExamUserInfo.ExamType }).OrderByDescending(x => x.ExamDate);
                                     if (examrecord != null && examrecord.Count() > 0)
                                     {
                                         //考生上次通过加给
@@ -586,14 +615,7 @@ namespace advt.CMS.Models
                                         detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota;
                                         detail.GradePosition = issubjetc.FirstOrDefault().GradePosition;
                                         detail.PostQuota = issubjetc.FirstOrDefault().PostQuota;
-                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
-                                        //if (detail.PostName == examrecord.FirstOrDefault().PostName)
-                                        //{ 
-                                        //}
-                                        //else
-                                        //{
-                                        //    //不同岗位,岗位对应科目,去捞上次的记录
-                                        //}
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;                                      
                                     }
 
                                     if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")

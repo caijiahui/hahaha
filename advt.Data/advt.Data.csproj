@@ -82,6 +82,7 @@
     <Compile Include="DataProvider\ExamSubject.cs" />
     <Compile Include="DataProvider\PracticeInfo.cs" />
     <Compile Include="DataProvider\RegionalPost.cs" />
+    <Compile Include="DataProvider\U_Cancel_UserInfo_History.cs" />
     <Compile Include="DataProvider\SkillInfo.cs" />
     <Compile Include="DataProvider\ExamType.cs" />
     <Compile Include="DataProvider\ExamUserDetailInfo.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="DataProvider\advt_user_group.cs" />
     <Compile Include="DataProvider\advt_user_group_mapping.cs" />
     <Compile Include="DataProvider\DatabaseProvider.cs" />
+    <Compile Include="DataProvider\U_Cancel_UserInfo.cs" />
     <Compile Include="DataProvider\UserQuataRecord.cs" />
     <Compile Include="DbProvider\DbFields.cs" />
     <Compile Include="DbProvider\DbHelper.cs" />
@@ -127,6 +129,8 @@
     <Compile Include="IDataProvider\ExamSubject.cs" />
     <Compile Include="IDataProvider\PracticeInfo.cs" />
     <Compile Include="IDataProvider\RegionalPost.cs" />
+    <Compile Include="IDataProvider\U_Cancel_UserInfo_History.cs" />
+    <Compile Include="IDataProvider\U_Cancel_UserInfo.cs" />
     <Compile Include="IDataProvider\SkillInfo.cs" />
     <Compile Include="IDataProvider\ExamType.cs" />
     <Compile Include="IDataProvider\ExamUserDetailInfo.cs" />

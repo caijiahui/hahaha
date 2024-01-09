@@ -22,6 +22,11 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_user_sheet_ElectronicUser(sdata, subject);
             return SqlHelper.GetReaderToList<Entity.advt_user_sheet>(reader);
         }
+        public static List<Entity.advt_user_sheet> Get_All_advt_user_sheet_ProElectronicUser(string sdata, string subject)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_advt_user_sheet_ProElectronicUser(sdata, subject);
+            return SqlHelper.GetReaderToList<Entity.advt_user_sheet>(reader);
+        }
 
         public static List<Entity.advt_user_sheet> Get_All_advt_user_sheet()
         {

@@ -83,5 +83,7 @@ namespace advt.Entity
         public bool IsStartExam { get; set; }//是否启动考试
         public string StartExamUser { get; set; }//点名人
         public DateTime? StartExamDate { get; set; }//点名时间
+
+        public string ExamKind { get; set; }//考试类别：区别chassis人员考试，恢复考，全员复考，降级考
     }
 }

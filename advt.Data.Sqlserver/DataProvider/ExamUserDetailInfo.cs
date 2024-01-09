@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type,IsStartExam,StartExamUser,StartExamDate";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type,IsStartExam,StartExamUser,StartExamDate,ExamKind";
 
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
@@ -71,7 +71,8 @@ namespace advt.Data.SqlServer
             new string[] { "Type", "NVarChar", "50"},
             new string[] { "IsStartExam", "Bit", "1"},
             new string[] { "StartExamUser", "NVarChar", "50"},
-            new string[] { "StartExamDate", "DateTime", "16"}
+            new string[] { "StartExamDate", "DateTime", "16"},
+            new string[] { "ExamKind", "NVarChar", "50"}
         };
         #endregion
 
@@ -211,13 +212,25 @@ namespace advt.Data.SqlServer
         public IDataReader Get_All_UserCelarInfo(string ExamStatus, string UserCode, string typename)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
-                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true' and IsStop=0   and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "' and IsStop = 0 and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
-            if (!string.IsNullOrEmpty(typename))
+            if (typename != "电子端岗位技能津贴")
             {
-                commandText.AppendLine("and c.TypeName = N'" + typename + "'");
+                commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
+                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true'   and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "'  and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
+                if (!string.IsNullOrEmpty(typename))
+                {
+                    commandText.AppendLine("and c.TypeName = N'" + typename + "'");
+                }
+                commandText.AppendLine(" order by ExamDate desc");
             }
-            commandText.AppendLine(" order by ExamDate desc");
+            else
+            {
+                commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "' and(UserJobTitle like N'%课长%' or " +
+                    "UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b  on a.UserCostCenter" +
+                    " = b.UserCostCenter inner join( select * from [U_Cancel_UserInfo]) c " +
+                    "on c.UserCode = a.UserCode where  a.UserCostCenter = c.DepartCode" +
+                    " order by ExamDate desc");
+            }
+           
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 
