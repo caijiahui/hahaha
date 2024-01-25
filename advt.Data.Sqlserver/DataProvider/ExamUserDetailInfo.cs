@@ -214,8 +214,9 @@ namespace advt.Data.SqlServer
             StringBuilder commandText = new StringBuilder();
             if (typename != "电子端岗位技能津贴")
             {
-                commandText.AppendLine(" select distinct c.* from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
-                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true'   and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "'  and State in (N'试用',N'正式')  and a.UserCostCenter = c.DepartCode  and ssd = 1 ");
+                commandText.AppendLine(" select distinct  c.[ID], c.[UserCode], c.[UserName], d.[DepartCode], c.[PostName], c.[RankName], c.[SkillName], c.[EntryDate], c.[Achievement], c.[ExamDate], c.[ExamScore], c.[PracticeScore], c.[PlanExamDate], c.[ExamPlace], c.[ExamStatus], c.[IsReview],\r\nc.[RuleName], c.[SubjectName], c.[TypeName], c.[ApplyLevel], c.[HighestLevel], c.[IsAchievement], c.[IsStop],  c.[IsExam],\r\n c.[UserExamDate], c.[IsUserExam], c.[ExamStatue], c.[IsExamPass], c.[WorkPlace], c.[PostID], c.[OrgName], c.[ElectronicQuota], c.[MajorQuota], c.[SkillsAllowance], c.[GradePosition], c.[PostQuota], c.[TotalQuota]  from [advt_user_sheet] a   inner join(select * from[advt_user_sheet] where UserCode ='" + UserCode + "'" +
+                " and(UserJobTitle like N'%课长%' or UserJobTitle like N'%副课长%' or UserJobTitle like N'%部级主管%')) b on a.UserCostCenter = b.UserCostCenter inner join ExamUserInfo d on b.UserCostCenter=d.DepartCode " +
+                "inner join(select ROW_NUMBER() over(partition by usercode order by examdate desc) ssd, * from ExamUserDetailInfo where  IsExam = 'true'   and TypeName!=N'Board技能等级考试' and SubjectName is not null) c on c.UserCode = a.UserCode where   ExamStatus = '" + ExamStatus + "'  and State in (N'试用',N'正式')  and c.TypeName=d.TypeName  and ssd = 1 ");
                 if (!string.IsNullOrEmpty(typename))
                 {
                     commandText.AppendLine("and c.TypeName = N'" + typename + "'");

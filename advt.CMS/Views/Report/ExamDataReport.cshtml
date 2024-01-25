@@ -84,9 +84,9 @@
                 </el-form>
                 <el-table :data="ListElectronicUser"
                           style="width: 100%;margin-top:20px " border>
-                    <el-table-column type="index">
+                    <el-table-column type="index" label="序号" >
                     </el-table-column>
-                    <el-table-column label="部门"
+                    <el-table-column v-if="false" label="ID"
                                      prop="ID" sortable>
                     </el-table-column>
                     <el-table-column label="部门"
@@ -252,6 +252,7 @@
                         _this.ListElectronicUserView = res.data.ListElectronicUserView;
                         if (res.data.success == true) {
                             _this.VSearchInfo.Vacancy = _this.VSearchInfo.Vacancy - 1;
+                            _this.ListUsers = _this.ListUsers.filter(item => item.UserCode != usercode);
                             _this.getchats();
                         }
                     });
