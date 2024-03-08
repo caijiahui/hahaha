@@ -77,7 +77,7 @@ namespace advt.Data.SqlServer
         public IDataReader GetAllCancelUserInfo(string SubjectName, string searchdata)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select * from U_Cancel_UserInfo where  SubjectName=N'" + SubjectName + "'");           
+            commandText.AppendLine(" select * from U_Cancel_UserInfo where State!=N'¿Î÷∞' and  SubjectName=N'" + SubjectName + "'");           
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
 

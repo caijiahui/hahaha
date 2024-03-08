@@ -656,6 +656,22 @@ namespace advt.CMS.Models.ExamModel
                         Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
 
                     }
+                    var year = string.Format("{0:yyyy}", Convert.ToDateTime(endate).AddMonths(-1));
+                    var mom = string.Format("{0:MM}", Convert.ToDateTime(endate).AddMonths(-1));
+                    var Scoreinfos = Data.ExamPointScore.Get_All_ExamPointScore(new { UserCode = USER_NO[i].InnerText, Year = year, Month = mom });
+                    if (Scoreinfos.Count() == 0)
+                    {
+                        ExamPointScore score = new ExamPointScore();
+                        score.UserCode = USER_NO[i].InnerText;
+                        var name = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = USER_NO[i].InnerText });
+                        score.UserName = name.FirstOrDefault()?.UserName;
+                        score.Year = year;
+                        score.Month = mom;
+                        score.PointScore = 0;
+                        score.CreateUser = username;
+                        score.CreateDate = DateTime.Now;
+                        Data.ExamPointScore.Insert_ExamPointScore(score, null, new string[] { "ID" });
+                    }
                     result = "同步完成";
                 }
                

@@ -262,6 +262,7 @@ namespace advt.CMS.Models.ExamModel
                 if ( userdata.TypeName == "Chassis技能等级考试")
                 {
                     userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 2, 2);
+                    userinfo.SubjectName = newsubject;
                 }
                 if (userdata.TypeName == "职等考试" || userdata.TypeName == "关键岗位技能等级")
                 {
@@ -316,7 +317,12 @@ namespace advt.CMS.Models.ExamModel
                     rec.TotalQuota = subejct.ElectronicQuota + subejct.MajorQuota + subejct.SkillsAllowance+ subejct.GradePosition + subejct.PostQuota;
                     Data.UserQuataRecord.Insert_UserQuataRecord(rec, null, new string[] { "ID" });
                 }
-               
+                if (userdata.TypeName == "电子端岗位技能津贴") { 
+
+                
+                }
+
+
             }
 
             GetAllExamUserByType(model.TypeName, username);

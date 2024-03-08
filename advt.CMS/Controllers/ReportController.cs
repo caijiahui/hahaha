@@ -55,7 +55,14 @@ namespace advt.Web.Controllers
             var success = model.DeleteElectronicUser(UserCode, SubjectNames, typename, username, ID);
             return Json(new { ListElectronicUser = model.ListElectronicUser, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
         }
-        
+        public ActionResult HandleDescUser(string UserCode, string SubjectNames, string typename, int ID)
+        {
+            ExamDataModel model = new ExamDataModel();
+            var username = this.UserNameContext;
+            var success = model.HandleDescUser(UserCode, SubjectNames, typename, username, ID);
+            return Json(new { ListElectronicUser = model.ListElectronicUser, success, ListElectronicUserView = model.ListElectronicUserView }, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }

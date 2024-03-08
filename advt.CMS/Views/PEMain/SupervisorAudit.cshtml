@@ -143,10 +143,10 @@
                 </el-table-column>
 
                 <el-table-column label="最高可考技能"
-                                 prop="HighestLevel" sortable>
+                                 prop="HighestLevel" >
                 </el-table-column>
                 <el-table-column label="本次申请等级"
-                                 prop="ApplyLevel" sortable>
+                                 prop="ApplyLevel" >
                 </el-table-column>
                 <el-table-column label="考试时间"
                                  sortable>
@@ -204,8 +204,8 @@
                                   placeholder="输入工号搜索" />
                     </template>
                     <template slot-scope="scope">
-                        <el-button size="mini"
-                                   @@click="CelarQuata(scope.row)">取消</el-button>
+                        @*<el-button size="mini"
+                                   @@click="CelarQuata(scope.row)">取消</el-button>*@
                         <el-button size="mini"
                                    @@click="CelarUpLevel(scope.row)">降级</el-button>
                     </template>
@@ -247,7 +247,8 @@
                                ref="upload"
                                :multiple="false"
                                :on-success="handleAannexSuccess"
-                               action="/PEMain/Upload_Supervisor">
+                               :file-list="fileList"
+                               action="/PEMain/Upload_Supervisor"  :limit="1">
                         <template>
                             <el-button size="small" type="primary">上传</el-button>
                         </template>
@@ -558,7 +559,7 @@
             LSubject: [],
             DetailId: 0,
             IsSuper: false,
-
+            fileList:[],
 
             dialogFormVisible: false,
             dialogFormPractical: false,
@@ -759,6 +760,8 @@
                 _this.VPracticeInfo.SkillName = ApplyLevel;
                 _this.VPracticeInfo.SubjectName = SubjectName;
                 _this.VPracticeInfo.TypeName = TypeName;
+
+                _this.fileList = [];
                 axios.post('/PEMain/SearchPracticeByCode', {
                     model: usercode
                 }).then(function (res) {
@@ -783,7 +786,7 @@
             },
             handleAannexSuccess(Result) {
                 var _this = this;
-                _this.VPracticeInfo.Enclosure = Result.fileName;
+                _this.VPracticeInfo.Enclosure=Result.fileName;
             },
             //查询明细
             handleSearchDetail(usercode) {
@@ -841,9 +844,9 @@
             },
             handleUpLevel: function () {
                 var _this = this;
-                console.log(_this.VExamUser)
                 //var objs = {};
-                //objs.VExamUser = _this.VExamUser;
+                /* objs.VExamUser = _this.VExamUser;*/
+                _this.VExamUser.TypeName = _this.TypeNames;
                 axios.post('/PEMain/SaveUpLevel', {
                     model: _this.VExamUser,
                     newsubject: _this.VExamUser.NewSubjctName

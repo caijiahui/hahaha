@@ -395,7 +395,8 @@
                         console.log(_this.RuleGrList, 395)
                         _this.ListTopicInfo.forEach(item => {
                             _this.RuleGrList.forEach(o => {
-                                if (item.TopicMajor == o.TopicMajor) {
+                                if (item.TopicMajor == o.TopicMajor && item.TopicType == o.TopicType) {
+                                    console.log(item.TopicMajor, o.TopicMajor,399);
                                     if (item.TopicType == o.TopicType) {
                                         if (parseFloat(item.Bcount) < parseFloat(o.TopicNum))
                                         {
