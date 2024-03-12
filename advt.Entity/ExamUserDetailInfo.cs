@@ -78,12 +78,12 @@ namespace advt.Entity
         public int PostQuota { get; set; }//岗位等级
         public int TotalQuota { get; set; }//汇总津贴
         public string State { get; set; }
-        public string Type { get; set; }
+        public string Type { get; set; }//考试类别：区别chassis人员考试，恢复考，全员复考，降级考
         //点名机制
         public bool IsStartExam { get; set; }//是否启动考试
         public string StartExamUser { get; set; }//点名人
         public DateTime? StartExamDate { get; set; }//点名时间
 
-        public string ExamKind { get; set; }//考试类别：区别chassis人员考试，恢复考，全员复考，降级考
+        public string ExamKind { get; set; }
     }
 }

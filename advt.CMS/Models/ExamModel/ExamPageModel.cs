@@ -96,7 +96,7 @@ namespace advt.CMS.Models
                         var detail = new List<ExamUserDetailInfo>();
                         detail = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = usercode, SubjectName = Rule.SubjectName, ExamStatus = "HrCheck", IsStop = false, TypeName = Rule.TypeName });
                         var details = detail.Where(x => x.UserExamDate == null).OrderByDescending(x => x.ExamDate).FirstOrDefault();
-                        if (details.ExamKind != "全员复考")
+                        if (details.Type != "保级")
                         {
                             var Pract = ListPract.OrderByDescending(x => x.CreateDate).FirstOrDefault();
                             if (Pract == null)
