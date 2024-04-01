@@ -1,5 +1,7 @@
 ﻿using advt.Entity;
 using NPOI.POIFS.Crypt.Dsig;
+using NPOI.SS.Formula.Functions;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +102,7 @@ namespace advt.CMS.Models.ExamModel
         public void GetDepartcode(string code)
         {
             var lst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
-            LDepartCode = lst.Where(x=>x.OrgName==code).GroupBy(x => x.DepartCode).Select(y => y.Key).Distinct().ToList();
+            LDepartCode = lst.Where(x=>x.OrgName==code).OrderBy(x => x.DepartCode).GroupBy(x => x.DepartCode).Select(y => y.Key).Distinct().ToList();
         }
         public void GetTypeSubject(string code)
         {

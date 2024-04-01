@@ -127,8 +127,9 @@
 
             <div style="margin-top:20px;clear:both">
                 <template>
-                    <el-input placeholder="搜查考试类型" v-model="VSCheckData.TypeName" style="width:200px">
-                    </el-input>
+                    <el-select v-model="VSCheckData.TypeName" placeholder="搜查考试类型">
+                        <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
+                    </el-select>
                     <el-input placeholder="搜查工号" v-model="VSCheckData.UserCode" style="width:200px">
                     </el-input>
                     <el-input placeholder="搜查科目" v-model="VSCheckData.SubjectName" style="width:200px">
@@ -136,6 +137,7 @@
                     <el-input placeholder="搜查部门" v-model="VSCheckData.DepartCode" style="width:200px">
                     </el-input>
                     <el-button slot="append" @@click="SearchCheckdata">Search</el-button>
+                    <el-button @@click="HRhandleUpdate()">维护考试时间、地点</el-button>
                 </template>
 
 
@@ -143,8 +145,8 @@
             <div style="margin-top:20px;clear:both">
                 <template>
 
-                    <el-table :data="ListHrAuditSuccessUser.filter(data => !search )"
-                              style="width: 100%;margin-top:20px;clear:both " border @@selection-change="changeFun">
+                    <el-table :data="ListHrAuditSuccessUser"
+                              style="width: 100%;margin-top:20px;clear:both " border @@selection-change="changeHRFun">
                         <el-table-column type="selection">
                         </el-table-column>
                         <el-table-column label="状态">
@@ -169,12 +171,6 @@
                         <el-table-column label="部门"
                                          prop="DepartCode" sortable>
                         </el-table-column>
-                        <el-table-column label="等级"
-                                         prop="ApplyLevel" sortable>
-                        </el-table-column>
-                        <el-table-column label="考试规则"
-                                         prop="RuleName" sortable>
-                        </el-table-column>
                         <el-table-column label="考试时间"
                                          sortable>
                             <template slot-scope="scope">
@@ -184,13 +180,11 @@
                         <el-table-column label="考试地点"
                                          prop="ExamPlace" sortable>
                         </el-table-column>
-                        <el-table-column label="审核人"
-                                         prop="HRUpdateUser" sortable>
-                        </el-table-column>
-                        <el-table-column label="审核时间"
-                                         prop="HRUpdateDate" sortable>
+                        
+                        <el-table-column label="考试类型"
+                                         sortable>
                             <template slot-scope="scope">
-                                <span v-if="scope.row.HRUpdateDate!=''&&scope.row.HRUpdateDate!=null">{{changeDate(scope.row.HRUpdateDate)}}</span>
+                                <el-button type="primary" size="mini" v-if="scope.row.Type!=''&&scope.row.Type!=null">{{scope.row.Type}}</el-button>
                             </template>
                         </el-table-column>
                         <el-table-column label="报名类型"
@@ -210,14 +204,14 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination @@size-change="handleSizeChange"
+                    @*<el-pagination @@size-change="handleSizeChange"
                                    @@current-change="handleCurrentChange"
                                    :current-page="paginations.page_index"
                                    :page-sizes="paginations.page_sizes"
                                    :page-size="paginations.page_size"
                                    :layout="paginations.layout"
                                    :total="paginations.total">
-                    </el-pagination>
+                    </el-pagination>*@
                 </template>
             </div>
 
@@ -340,6 +334,29 @@
                 <template>
                     <el-button @@click="handleclose">取 消</el-button>
                     <el-button type="primary" @@click="handleSave()">确 定</el-button>
+                </template>
+
+            </div>
+
+        </el-dialog>
+        @*HR重新维护时间地点*@
+        <el-dialog title="信息编辑" :visible.sync="dialogUpdateVisibles" :close-on-click-modal="false">
+            <el-form :model="VAuditCheck">
+                <el-form-item label="人员" :label-width="formLabelWidth">
+                    <el-input v-model="VAuditCheck.Users" autocomplete="off" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="考试日期" :label-width="formLabelWidth">
+                    <el-date-picker v-model="VAuditCheck.ValidityDate" type="datetime"
+                                    placeholder="选择日" @@change="dataSearch"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="考试地点" :label-width="formLabelWidth">
+                    <el-input v-model="VAuditCheck.ExamPlace" autocomplete="off"></el-input>
+                </el-form-item>               
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <template>
+                    @*<el-button @@click="dialogUpdateVisibles==false">取 消</el-button>*@
+                    <el-button type="primary" @@click="handleHRSave()">确 定</el-button>
                 </template>
 
             </div>
@@ -527,6 +544,8 @@
                 ListDepartCode:[],
                 ListWorkPlace:[],
                 activeName: 'first',
+                dialogUpdateVisibles: false,
+                checkHRBoxData:[],
                 paginations: {
                     page_index: 1,
                     total: 0,
@@ -557,6 +576,11 @@
                     var _this = this;
                     _this.checkBoxData = val;
                 },
+                changeHRFun(val) {
+                    var _this = this;
+                    _this.checkHRBoxData = val;
+                    console.log(_this.checkHRBoxData,582)
+                },
                 dataSearch() {
                     this.getListByDataTime();
                 },
@@ -567,7 +591,7 @@
                     }).then(function (res) {
                         _this.ListHrAuditUser = res.data.ListHrAuditUser;
                         _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
-                        _this.setPaginations();
+                        //_this.setPaginations();
                     })
                 },
                 SearchProdata() {
@@ -618,6 +642,18 @@
 
                     })
                 },
+                HRhandleUpdate() {
+                    var _this = this;
+                    _this.dialogUpdateVisibles = true;
+                    _this.VAuditCheck.Users = '';
+                    _this.checkHRBoxData.forEach(function (item) {
+                        var c = item['UserName'];
+                        if (c != '' && c != 'undefined') {
+                            _this.VAuditCheck.Users += c + "和";
+                        }
+
+                    })
+                },
                 handleclose() {
                     var _this = this;
                     _this.dialogUpdateVisible = false;
@@ -640,6 +676,21 @@
                     });
 
                 },
+                handleHRSave() {
+                    var _this = this;
+                    _this.checkHRBoxData.forEach(function (item) {
+                        item['ExamDate'] = _this.VAuditCheck.ValidityDate;
+                        item['ExamStatus'] = 'HrCheck';
+                        item['ExamPlace'] = _this.VAuditCheck.ExamPlace;
+                    })
+                    axios.post('/PEMain/UpdateHrAduitUser', {
+                        model: _this.checkHRBoxData
+                    }).then(function (res) {
+                        _this.ListHrAuditSuccessUser = res.data.ListHrAuditSuccessUser;
+                        _this.dialogUpdateVisibles = false;
+
+                    });
+},
                 handleExcelSuccess(Result, ListHrAuditUser, ListHrAuditSuccessUser) {
                     this.$alert(Result.Result, '结果', {
                         dangerouslyUseHTMLString: true
