@@ -459,7 +459,8 @@ namespace advt.CMS.Models.ExamModel
                 PostID=y.PostName,
                 HrCheckDate = y.HrCheckCreateDate.ToString(),
                 ID = y.ID,
-                OrgName=y.OrgName
+                OrgName=y.OrgName,
+                Type=y.Type
             }).OrderByDescending(t=>t.ExamDate).ToList();
         }
         public string GetProcess(string data)
@@ -494,6 +495,7 @@ namespace advt.CMS.Models.ExamModel
         public string UserName { get; set; }
         public string HrCheckDate { get; set; }
         public int ID { get; set; }
+        public string Type { get; set; }
     }
 
   
