@@ -1,11 +1,9 @@
-﻿using advt.Data;
-using advt.Entity;
+﻿using advt.Entity;
 using NPOI.POIFS.Crypt.Dsig;
 using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -26,11 +24,7 @@ namespace advt.CMS.Models.ExamModel
             LDepartCode = new List<string>();
             LSubject = new List<string>();
         }
-        /// <summary>
-        /// 签到点名页面的数据（区域，部门...）
-        /// </summary>
-        /// <param name="data"></param>
-
+     
         public void GetExamInfo(SearchHrData data)
         {
             var ddate = Convert.ToDateTime(data.ExamDate);
@@ -54,9 +48,6 @@ namespace advt.CMS.Models.ExamModel
                 lst = lst.Where(x => x.UserCode.Contains(data.UserCode)).ToList(); }
             if (!string.IsNullOrEmpty(data.UserName))
             { lst = lst.Where(x => x.UserName.Contains(data.UserName)).ToList(); }
-            if (!string.IsNullOrEmpty(data.DutyType))
-            { lst = lst.Where(x => x.DutyType.Contains(data.DutyType)).ToList(); }
-
             LstUserInfos = lst.Select(y => new UserInfos
             {
                 DepartCode = y.DepartCode,
@@ -67,16 +58,11 @@ namespace advt.CMS.Models.ExamModel
                 OrgName = y.OrgName,
                 IsStartExam = y.IsStartExam,
                 ExamDate=y.ExamDate,
-                ID = y.ID,
-                DutyType = y.DutyType
-
+                ID = y.ID
             }).OrderByDescending(t => t.ExamDate).ToList();
 
-            //var user = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
-            //ListWorkPlace = user.GroupBy(x => x.OrgName).Select(y => y.Key).Distinct().ToList();//获取区域
-
-            IDataReader reader = DatabaseProvider.GetInstance().Get_OAArea();//从OA数据库获取区域
-            ListWorkPlace= SqlHelper.ConvertDataReaderToList(reader);
+            var user = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
+            ListWorkPlace = user.GroupBy(x => x.OrgName).Select(y => y.Key).Distinct().ToList();
             LExamType.Add("全部");
             foreach (var item in Data.ExamType.Get_All_ExamType().GroupBy(x => x.TypeName).Select(y => y.Key))
             {
@@ -115,11 +101,8 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetDepartcode(string code)
         {
-            //var lst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
-            //LDepartCode = lst.Where(x=>x.OrgName==code).OrderBy(x => x.DepartCode).GroupBy(x => x.DepartCode).Select(y => y.Key).Distinct().ToList();
-            IDataReader reader = DatabaseProvider.GetInstance().Get_OADept(code);//从OA数据库获取部门
-            LDepartCode = SqlHelper.ConvertDataReaderToList(reader);
-
+            var lst = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo();
+            LDepartCode = lst.Where(x=>x.OrgName==code).OrderBy(x => x.DepartCode).GroupBy(x => x.DepartCode).Select(y => y.Key).Distinct().ToList();
         }
         public void GetTypeSubject(string code)
         {
@@ -139,9 +122,7 @@ namespace advt.CMS.Models.ExamModel
         public string OrgName { get; set; }
         public bool IsStartExam { get; set; }//是否签到
         public int ID { get; set; }
-        public string DutyType { get; set; } //班别
-
 
     }
-
+   
 }

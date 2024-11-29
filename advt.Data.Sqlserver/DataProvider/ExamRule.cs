@@ -106,7 +106,8 @@ namespace advt.Data.SqlServer
         public IDataReader GetTRuleSubjectInfo(string model)
         {
             StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" select  [TopicMajor],[TopicLevel],[TopicType],Bcount= count(*) from[dbo].[ExamBank] where ExamSubject like N'%" + @model+"%' group by [TopicMajor],[TopicLevel],[TopicType]");
+            //commandText.AppendLine(" select  [TopicMajor],[TopicLevel],[TopicType],Bcount= count(*) from[dbo].[ExamBank] where ExamSubject like N'%" + @model+"%' group by [TopicMajor],[TopicLevel],[TopicType]");
+            commandText.AppendLine(" select  [TopicMajor],[TopicLevel], Bcount= count(*) from[dbo].[ExamBank] where ExamSubject like N'%" + @model + "%' group by [TopicMajor],[TopicLevel] ");
             List<DbParameter> l_parms = new List<DbParameter>();
             l_parms.Add(SqlHelper.MakeInParam("@model", (DbType)SqlDbType.NVarChar, 150, model));
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString(), l_parms.ToArray());

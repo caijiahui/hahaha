@@ -17,7 +17,7 @@ namespace advt.Data.SqlServer
         #region ExamUserDetailInfo , (Ver:2.3.8) at: 2021/3/4 9:31:04
         #region Var: 
         private string[] ExamUserDetailInfo_key_a = { "ID" };
-        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type,IsStartExam,StartExamUser,StartExamDate,ExamKind,DutyType";
+        private string ExamUserDetailInfo_item_str = "[ID],[UserCode],[UserName],[DepartCode],[PostName],[RankName],[SkillName],[EntryDate],[Achievement],[ExamDate],[ExamScore],[PracticeScore],[PlanExamDate],[ExamPlace],[ExamStatus],[IsReview],[RuleName],[SubjectName],[TypeName],[ApplyLevel],[HighestLevel],[IsAchievement],[IsStop],[IsExam],[HrCreateUser],[HrCreateDate],[DirectorCreateUser],[DirectorCreateDate],[HrCheckCreateUser],[HrCheckCreateDate],[StopCreateUser],[StopCreateDate],UserExamDate,IsUserExam,ExamStatue,IsExamPass,WorkPlace,PostID,OrgName,SignType,ElectronicQuota,MajorQuota,SkillsAllowance,GradePosition,PostQuota,TotalQuota,State,Type,IsStartExam,StartExamUser,StartExamDate,ExamKind";
 
         private string[][] ExamUserDetailInfo_item_prop_a =
         {
@@ -374,19 +374,6 @@ namespace advt.Data.SqlServer
             //commandText.AppendLine(" select* from(select HC = isnull(a.HCLimit, ''), b.UserCode, b.UserName, b.DepartCode, b.ExamDate, b.SubjectName,c.PostID, b.State,rowid = ROW_NUMBER()over(partition by b.usercode order by UserExamDate desc)from ExamSubject a inner  join ExamUserDetailInfo b on a.SubjectName = b.SubjectName left join ExamUserInfo c on b.UserCode=c.UserCode and b.TypeName =c.TypeName  where b.IsStop = 0 and b.IsExam = 'true' and IsExamPass = 1 and b.State != N'离职' and b.TypeName = N'电子端岗位技能津贴'  )a where a.rowid = 1  and SubjectName=N'" + typename +"'");
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
-        public IDataReader Get_OAArea()
-        {
-            StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" SELECT  distinct    [Var_KQ_Area]  FROM [recdb].[dbo].[Maintain_Area_Depts] where  Var_KQ_Area<>'AKTC' order by [Var_KQ_Area] "); 
-            return DbHelper.PE.ExecuteOAReader(CommandType.Text, commandText.ToString());
-        }
-        public IDataReader Get_OADept(string Area)
-        {
-            StringBuilder commandText = new StringBuilder();
-            commandText.AppendLine(" SELECT  distinct    [Var_Dept]  FROM [recdb].[dbo].[Maintain_Area_Depts] where  Var_KQ_Area='"+ Area + "' order by [Var_Dept] ");
-            return DbHelper.PE.ExecuteOAReader(CommandType.Text, commandText.ToString());
-        }
-
         #endregion
     }
 }

@@ -692,16 +692,22 @@
             //批量更新操作
             handleUpdate() {
                 var _this = this;
+                var TempUsers = '';
                 _this.dialogUpdateVisible = true;
                 _this.VAuditCheck.Users = '';
                 _this.VAuditCheck.IsExam = true;
                 _this.checkBoxData.forEach(function (item) {
                     var c = item['UserName'];
                     if (c != '' && c != 'undefined') {
-                        _this.VAuditCheck.Users += c + "和";
+                        TempUsers += c + ",";
                     }
 
                 })
+                if (TempUsers.length > 0) {
+                    TempUsers = TempUsers.substring(0, TempUsers.length - 1);
+                }
+                _this.VAuditCheck.Users = TempUsers;
+
             },
             //批量上传实践
             handleImportPrac() {

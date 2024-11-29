@@ -85,5 +85,7 @@ namespace advt.Entity
         public DateTime? StartExamDate { get; set; }//点名时间
 
         public string ExamKind { get; set; }
+        public string DutyType { get; set; }//班别
+
     }
 }

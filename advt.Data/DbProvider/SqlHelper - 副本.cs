@@ -1400,79 +1400,6 @@ namespace advt.Data
             }
         }
 
-        /// <summary>
-        /// 执行指定OA数据库连接对象的数据阅读器.
-        /// </summary>
-        /// <remarks>
-        /// 如果是BaseDbHelper打开连接,当连接关闭DataReader也将关闭.
-        /// 如果是调用都打开连接,DataReader由调用都管理.
-        /// </remarks>
-        /// <param name="connection">一个有效的数据库连接对象</param>
-        /// <param name="transaction">一个有效的事务,或者为 'null'</param>
-        /// <param name="commandType">命令类型 (存储过程,命令文本或其它)</param>
-        /// <param name="commandText">存储过程名或SQL语句</param>
-        /// <param name="commandParameters">DbParameters参数数组,如果没有参数则为'null'</param>
-        /// <param name="connectionOwnership">标识数据库连接对象是由调用者提供还是由BaseDbHelper提供</param>
-        /// <returns>返回包含结果集的DbDataReader</returns>
-        private DbDataReader ExecuteOAReader(DbConnection connection, DbTransaction transaction, CommandType commandType, string commandText, DbParameter[] commandParameters, DbConnectionOwnership connectionOwnership)
-        {
-            if (connection == null) throw new ArgumentNullException("connection");
-
-            //connection.Close();
-           // connection.ConnectionString = GetRealConnectionString(commandText);
-            connection.Open();
-
-            bool mustCloseConnection = false;
-            // 创建命令
-            DbCommand cmd = Factory.CreateCommand();
-            try
-            {
-                PrepareCommand(cmd, connection, transaction, commandType, commandText, commandParameters, out mustCloseConnection);
-
-                // 创建数据阅读器
-                DbDataReader dataReader;
-
-#if DEBUG
-                DateTime dt1 = DateTime.Now;
-#endif
-                if (connectionOwnership == DbConnectionOwnership.External)
-                {
-                    dataReader = cmd.ExecuteReader();
-                }
-                else
-                {
-                    dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                }
-#if DEBUG
-                DateTime dt2 = DateTime.Now;
-
-                SetQueryDetail(cmd.CommandText, dt1, dt2, commandParameters);
-#endif
-                m_querycount++;
-                // 清除参数,以便再次使用..
-                bool canClear = true;
-                foreach (DbParameter commandParameter in cmd.Parameters)
-                {
-                    if (commandParameter.Direction != ParameterDirection.Input)
-                        canClear = false;
-                }
-
-                if (canClear)
-                {
-                    //cmd.Dispose();
-                    cmd.Parameters.Clear();
-                }
-
-                return dataReader;
-            }
-            catch
-            {
-                if (mustCloseConnection)
-                    connection.Close();
-                throw;
-            }
-        }
-
 
 
         /// <summary>
@@ -1490,17 +1417,7 @@ namespace advt.Data
         {
             return ExecuteReader(commandType, commandText, (DbParameter[])null);
         }
-        /// <summary>
-        /// 执行获取OA数据
-        /// </summary>
-        /// <param name="commandType"></param>
-        /// <param name="commandText"></param>
-        /// <returns></returns>
-       
-        public DbDataReader ExecuteOAReader(CommandType commandType, string commandText)
-        {
-            return ExecuteOAReader(commandType, commandText, (DbParameter[])null);
-        }
+
         public DbDataReader ExecuteReader(CommandType commandType, string commandText, List<DbParameter> lcommandParameters)
         {
             return ExecuteReader(commandType, commandText, lcommandParameters.ToArray());
@@ -1529,33 +1446,6 @@ namespace advt.Data
                 //connection.Open();
 
                 return ExecuteReader(connection, null, commandType, commandText, commandParameters, DbConnectionOwnership.Internal);
-            }
-            catch
-            {
-                // If we fail to return the SqlDatReader, we need to close the connection ourselves
-                if (connection != null) connection.Close();
-                throw;
-            }
-        }
-        /// <summary>
-        /// 执行OA数据库
-        /// </summary>
-        /// <remarks>
-        /// 示例:  
-        ///  DbDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders", new DbParameter("@prodid", 24));
-        /// </remarks>
-        /// <param name="commandType">命令类型 (存储过程,命令文本或其它)</param>
-        /// <param name="commandText">存储过程名或SQL语句</param>
-        /// <param name="commandParameters">SqlParamter参数数组(new DbParameter("@prodid", 24))</param>
-        /// <returns>返回包含结果集的DbDataReader</returns>
-        public DbDataReader ExecuteOAReader(CommandType commandType, string commandText, params DbParameter[] commandParameters)
-        {
-             DbConnection connection = null;
-            try
-            {
-                connection = Factory.CreateConnection();
-                connection.ConnectionString = "server=ACNSTNR4;database=recdb;pwd=iO@1mAp2p;uid=eOAnApp";
-                return ExecuteOAReader(connection, null, commandType, commandText, commandParameters, DbConnectionOwnership.Internal);
             }
             catch
             {
@@ -3131,26 +3021,16 @@ namespace advt.Data
         {
             return GetReaderToIEnumerable<T>(reader).ToList();
         }
- 
- 
-        public static List<string> ConvertDataReaderToList(IDataReader reader)
-            {
-                var list = new List<string>();
-                while (reader.Read())
-                {
-                    list.Add(reader[0].ToString());
-                }
-                return list;
-            }
-    #endregion
 
-    #region Utils
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="objparams">new {id=1}</param>
-    /// <returns></returns>
-    public static string Get_Where_Obj(object objparams, string asName = "")
+        #endregion
+
+        #region Utils
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objparams">new {id=1}</param>
+        /// <returns></returns>
+        public static string Get_Where_Obj(object objparams, string asName = "")
         {
             if (objparams == null) return string.Empty;
 

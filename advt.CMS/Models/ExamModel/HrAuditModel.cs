@@ -45,7 +45,7 @@ namespace advt.CMS.Models.ExamModel
                     {
 
                         ListHrAuditSuccessUser = Data.ExamUserDetailInfo.Get_All_ExamUserCheckDetail(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x=>x.SignType).ThenBy(x => x.TypeName).ToList();
-                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { ExamStatus = "Signup", TypeName = model.TypeName, IsExam = "false", IsStop = false }).OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
+                        ListHrAuditUser = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(model.TypeName, model.UserCode, model.SubjectName, model.DepartCode).OrderByDescending(x => x.SignType).ThenBy(x => x.TypeName).ToList();
                     }
                     else
                     {
@@ -496,7 +496,9 @@ namespace advt.CMS.Models.ExamModel
         public string HrCheckDate { get; set; }
         public int ID { get; set; }
         public string Type { get; set; }
+        public string DutyType { get; set; }//班别
+
     }
 
-  
+
 }

@@ -66,7 +66,8 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = new List<DbParameter>();
             commandText.AppendLine(" SELECT " + ExamBank_item_str + "");
             commandText.AppendLine("   FROM [ExamBank]");
-            var texts = "where TopicType=@TopicType";
+            // var texts = "where TopicType=@TopicType";
+            var texts = "where 1=1 ";
             if (!string.IsNullOrEmpty(TopicLevel))
             {
                 texts += " and TopicLevel=@TopicLevel";

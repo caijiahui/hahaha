@@ -11,7 +11,7 @@
 <div id="app" style="margin-left:20px">
     <template>
         <el-breadcrumb separator="/" style="margin-top:20px;margin-bottom:20px">
-            <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+            <el-breadcrumb-item>考试资格</el-breadcrumb-item>
             <el-breadcrumb-item>HR审核</el-breadcrumb-item>
         </el-breadcrumb>
 
@@ -35,11 +35,18 @@
                 <el-select v-model="VSCheckData.TypeName" placeholder="请选择考试类型">
                     <el-option v-for="item in LExamType" :key="item.Key" :label="item.Value" :value="item.Key"></el-option>
                 </el-select>
+                <el-input placeholder="搜查部门" v-model="VSCheckData.DepartCode" style="width:200px">
+                </el-input>
+                <el-input placeholder="搜查工号" v-model="VSCheckData.UserCode" style="width:200px">
+                </el-input>          
                 <el-button slot="append" @@click="SearchinByTypeName">Search</el-button>
                 <el-button @@click="handleUpdate()">维护考试时间、地点</el-button>
                 <el-table style="width: 100%;margin-top:20px " border @@selection-change="changeFun"
                           :data="ListHrAuditUser">
                     <el-table-column type="selection">
+                    </el-table-column>
+                    <el-table-column label="序号"
+                                     type="index" sortable>
                     </el-table-column>
                     <el-table-column label="考试类型"
                                      prop="TypeName" sortable>
@@ -49,7 +56,7 @@
                     </el-table-column>
                     <el-table-column label="工号"
                                      prop="UserCode" sortable
-                                     fixed>
+                                      >
                     </el-table-column>
                     <el-table-column label="姓名"
                                      prop="UserName" sortable>
@@ -633,26 +640,35 @@
                     var _this = this;
                     _this.dialogUpdateVisible = true;
                     _this.VAuditCheck.Users = '';
+                    var TempUsers = '';
                     //_this.VAuditCheck.IsExam = true;
                     _this.checkBoxData.forEach(function (item) {
                         var c = item['UserName'];
                         if (c != '' && c != 'undefined') {
-                            _this.VAuditCheck.Users += c + "和";
+                            TempUsers += c + ",";
                         }
 
                     })
+                    if (TempUsers.length > 0) {
+                        TempUsers = TempUsers.substring(0, TempUsers.length - 1);
+                    }
+                    _this.VAuditCheck.Users = TempUsers;
                 },
                 HRhandleUpdate() {
                     var _this = this;
+                    var TempUsers = '';
                     _this.dialogUpdateVisibles = true;
                     _this.VAuditCheck.Users = '';
                     _this.checkHRBoxData.forEach(function (item) {
                         var c = item['UserName'];
                         if (c != '' && c != 'undefined') {
-                            _this.VAuditCheck.Users += c + "和";
+                            TempUsers += c + ",";
                         }
-
                     })
+                    if (TempUsers.length > 0) {
+                        TempUsers = TempUsers.substring(0, TempUsers.length - 1);
+                    }
+                    _this.VAuditCheck.Users = TempUsers;
                 },
                 handleclose() {
                     var _this = this;

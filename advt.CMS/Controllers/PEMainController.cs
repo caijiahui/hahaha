@@ -312,10 +312,10 @@ namespace advt.Web.Controllers
             return Json(new { tableData = models.ListExamRule }, JsonRequestBehavior.AllowGet);
         }
         [MyAuthorize]
-        public ActionResult DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType, string RuleName,string SubjectName)
+        public ActionResult DeleteRuleTopicInfo(string TopicMajor, string TopicLevel,   string RuleName,string SubjectName) //string TopicType,
         {
             ExamRuleModel models = new ExamRuleModel();
-            var Result = models.DeleteRuleTopicInfo(TopicMajor, TopicLevel, TopicType, RuleName, SubjectName);
+            var Result = models.DeleteRuleTopicInfo(TopicMajor, TopicLevel,   RuleName, SubjectName);//TopicType,
             return Json(new { Result, RuleGrList = models.RuleTopicList }, JsonRequestBehavior.AllowGet);
         }
 

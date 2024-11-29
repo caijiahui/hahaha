@@ -343,369 +343,359 @@ namespace advt.CMS.Models
 
         }
 
-        public string InsertScoreDatas(ExamPageModel model,out string Status)
+        public string InsertScoreDatas(ExamPageModel model)
         {
-            string ExamStatus = "";
             var guid = Guid.NewGuid().ToString();
-            try { 
-                if (model.VExamUserInfo.LExamViews.Count() > 0)
-                {
-                    ExamScore sc = new ExamScore();
-                    sc.ExamType = model.VExamUserInfo.ExamType;
-                    sc.CreateDate = DateTime.Now;
-                    sc.CreateUser = model.VExamUserInfo.UserName;
-                    sc.IsTest = model.VExamUserInfo.IsTest;
-                    sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
-                    sc.PassScore = model.VExamUserInfo.PassScore;
-                    //+科目
-                    sc.ExamSubject = model.VExamUserInfo.ExamSubject;
-                    sc.IsQuestion = model.VExamUserInfo.IsQuestion;
+            if (model.VExamUserInfo.LExamViews.Count() > 0)
+            {
+                ExamScore sc = new ExamScore();
+                sc.ExamType = model.VExamUserInfo.ExamType;
+                sc.CreateDate = DateTime.Now;
+                sc.CreateUser = model.VExamUserInfo.UserName;
+                sc.IsTest = model.VExamUserInfo.IsTest;
+                sc.TatalTopicNum = model.VExamUserInfo.LExamViews.Count();
+                sc.PassScore = model.VExamUserInfo.PassScore;
+                //+科目
+                sc.ExamSubject = model.VExamUserInfo.ExamSubject;
+                sc.IsQuestion = model.VExamUserInfo.IsQuestion;
 
-                    int sd = 0;
-                    int score = 0;
+                int sd = 0;
+                int score = 0;
              
-                    if (sc.IsQuestion == true)
-                    {
-                        sc.CorrectScore = 0;
+                if (sc.IsQuestion == true)
+                {
+                    sc.CorrectScore = 0;
 
-                    }
-                    else
+                }
+                else
+                {
+                    sc.TotalScore = model.VExamUserInfo.TotalScore;
+                    foreach (var item in model.VExamUserInfo.LExamViews)
                     {
-                        sc.TotalScore = model.VExamUserInfo.TotalScore;
-                        foreach (var item in model.VExamUserInfo.LExamViews)
+                        string Remarks = string.Empty;
+                        ExamRecord record = new ExamRecord();
+                        //正确答案ABCD
+                        var ss = item.RightKey.OrderBy(x => x).ToArray();
+                        var test = string.Empty;
+                        var ltest = string.Empty;
+                        for (int i = 0; i < item.selectItem.Length; i++)
                         {
-                            string Remarks = string.Empty;
-                            ExamRecord record = new ExamRecord();
-                            //正确答案ABCD
-                            var ss = item.RightKey.OrderBy(x => x).ToArray();
-                            var test = string.Empty;
-                            var ltest = string.Empty;
-                            for (int i = 0; i < item.selectItem.Length; i++)
+                            var ids = Convert.ToInt32(item.selectItem[i]);
+                            test += item.ansowerList[ids].ansowerflag+";";
+                            if (item.selectItem[i].Equals("0"))
                             {
-                                var ids = Convert.ToInt32(item.selectItem[i]);
-                                test += item.ansowerList[ids].ansowerflag+";";
-                                if (item.selectItem[i].Equals("0"))
-                                {
-                                    ltest += "A;";
-                                }
-                                else if (item.selectItem[i].Equals("1"))
-                                {
-                                    ltest += "B;";
-                                }
-                                else if (item.selectItem[i].Equals("2"))
-                                {
-                                    ltest += "C;";
-                                }
-
-                                else if (item.selectItem[i].Equals("3"))
-                                {
-                                    ltest += "D;";
-                                }
-
-                                else if (item.selectItem[i].Equals("4"))
-                                {
-                                    ltest += "E;";
-                                }
-
+                                ltest += "A;";
                             }
-                            item.LselectItem = test.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            var sl = item.LselectItem.OrderBy(x => x).ToArray();
-                            record.WriteAnsower = ltest;
-                            var altest = ltest.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            //我选择的答案abcd
-                            if (item.LselectItem != null)
+                            else if (item.selectItem[i].Equals("1"))
                             {
-                                //答对题数CorrectNum
-                                if (Enumerable.SequenceEqual(ss, sl))
-                                {
-                                    sd++;
-                                    sc.CorrectNum = sd;
-                                    //答对分数CorrectScore
-                                    score += item.TopicScore;
-                                }
-                                else
-                                {
-                                    //错误之后找出正确答案
-                                    foreach (var ii in item.RightKey)
-                                    {
-                                        if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
-                                        {
-                                            Remarks += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower+";";
-                                        }
-                                    }
-
-                                }
-                                if (string.IsNullOrEmpty(Remarks))
-                                {
-                                    record.IsRight = true;
-                                }
+                                ltest += "B;";
                             }
-                            //题目列表ansowerList B
-                            //我选择的答案item.selectItem 0,1
-                            //LTEST 我选择的答案页面呈现对应的abcd
-                            //test 我选择的题目背后答案abcd
-                            //LselectItem我选择的题目背后答案abcd
-                            //rightkey正确答案ABCD
-                            #region
-                            record.ExamGuid = guid;
-                            record.TopicTitle = item.proName;
-                            if (item.TopicTitlePic != null)
+                            else if (item.selectItem[i].Equals("2"))
                             {
-                                record.TopicTitlePicNum = item.TopicTitlePic;
-
+                                ltest += "C;";
                             }
-                            record.TopicNum = Convert.ToInt32(item.TopicScore);
-                            record.Type = item.type;
-                            record.Remark = item.Remark;
-                            if (item.RightKey.Count() > 0)
+
+                            else if (item.selectItem[i].Equals("3"))
                             {
-                                foreach (var sr in item.RightKey)
-                                {
-                                    //正确的答案转成a;b;c;d
-                                    record.CorrectAnsower += sr + ';';
-                                }
+                                ltest += "D;";
                             }
-                            //把题目集合往选项ABC里面插入
-                            if (item.ansowerList != null && item.ansowerList.Count() > 0)
+
+                            else if (item.selectItem[i].Equals("4"))
                             {
-                                for (int i = 0; i < item.ansowerList.Count();)
-                                {
-                                    if (item.ansowerList[0] != null)
-                                    {
-                                        record.OptionA = item.ansowerList[0].ansower;
-                                        record.OptionAPicNum = item.ansowerList[0].ansowerpic;
-                                    }
-
-                                    if (item.ansowerList[1] != null)
-                                    {
-                                        record.OptionB = item.ansowerList[1].ansower;
-                                        record.OptionBPicNum = item.ansowerList[1].ansowerpic;
-
-                                    }
-                                    if (item.ansowerList.Count() >= 3)
-                                    {
-                                        if (item.ansowerList[2] != null)
-                                        {
-                                            record.OptionC = item.ansowerList[2].ansower;
-                                            record.OptionCPicNum = item.ansowerList[2].ansowerpic;
-
-                                        }
-                                    }
-                                    if (item.ansowerList.Count() >= 4)
-                                    {
-                                        if (item.ansowerList[3] != null)
-                                        {
-                                            record.OptionD = item.ansowerList[3].ansower;
-                                            record.OptionDPicNum = item.ansowerList[3].ansowerpic;
-
-                                        }
-                                    }
-                                    if (item.ansowerList.Count() >= 5)
-                                    {
-                                        if (item.ansowerList[4] != null)
-                                        {
-                                            record.OptionE = item.ansowerList[4].ansower;//题目
-                                            record.OptionEPicNum = item.ansowerList[4].ansowerpic;//图片
-                                        }
-                                    }
-
-                                    i++;
-                                }
-
+                                ltest += "E;";
                             }
-                            record.DaRemark = Remarks;
-                            record.CreateUser = model.VExamUserInfo.UserName;
-                            record.CreateDate = DateTime.Now;
-                            //插入试题
-                            Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
-                            #endregion
 
-                            #region 呈现试题
-                       
-                            Listexam.Add(new ExamScoreInfo
-                            {
-                                ExamID =guid,
-                                TopicTitle = record.TopicTitle,
-                                TopicNum = record.TopicNum,
-                                ansowerList = item.ansowerList,
-                                isright = record.IsRight,
-                                Type = record.Type,
-                                selectItem = item.selectItem,
-                                CorrectAnsower = record.CorrectAnsower,
-                                WriteItem = record.WriteAnsower,
-                                TopicTitlePicNum = record.TopicTitlePicNum,
-                                Remark = record.Remark,
-                                TopicTitlePic = record.TopicTitlePicNum,
-                                DeRemark = Remarks
-                            });
-
-
-
-
-
-
-                            #endregion
                         }
-                    }
-                    //插入分数记录
-                    if (sc.CorrectNum == null)
-                    { sc.CorrectNum = 0; }
-                    sc.CorrectScore = score;
-                    sc.ExamGuid = guid;
-                    Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
-                    VExamScore = sc;
-
-
-                    if (model.VExamUserInfo.IsTest == false)
-                    {
-                        //根据人员,科目,ExamStatus更新分数,时间，isexam
-                        var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false, TypeName = model.VExamUserInfo.ExamType });
-                      
-                        if (details.Count()>0&&details!=null)
-                        { 
-                            var detail = details.Where( x=>x.UserExamDate == null).OrderByDescending(x => x.ExamDate).FirstOrDefault();
-                            detail.ExamScore = score;
-                            detail.UserExamDate = DateTime.Now;
-                            if (model.VExamUserInfo.IsTest == true)
+                        item.LselectItem = test.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        var sl = item.LselectItem.OrderBy(x => x).ToArray();
+                        record.WriteAnsower = ltest;
+                        var altest = ltest.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        //我选择的答案abcd
+                        if (item.LselectItem != null)
+                        {
+                            //答对题数CorrectNum
+                            if (Enumerable.SequenceEqual(ss, sl))
                             {
-                                detail.IsExam = "false";
+                                sd++;
+                                sc.CorrectNum = sd;
+                                //答对分数CorrectScore
+                                score += item.TopicScore;
                             }
                             else
                             {
-                                var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName=model.VExamUserInfo.ExamSubject });
-                                if (ruleinfo.Count() > 0 && ruleinfo != null)
+                                //错误之后找出正确答案
+                                foreach (var ii in item.RightKey)
                                 {
-                                    var PassScore = ruleinfo.FirstOrDefault().PassScore;
-                                    //判断津贴是否加给
-                                    var issubjetc = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = model.VExamUserInfo.ExamSubject });
-                                    if (issubjetc.Count() > 0 && issubjetc != null)
-                                    {                                 
+                                    if (item.ansowerList.Where(x => x.ansowerflag == ii).Count() != 0)
+                                    {
+                                        Remarks += item.ansowerList.Where(x => x.ansowerflag == ii).FirstOrDefault().ansower+";";
+                                    }
+                                }
 
-                                        var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;
+                            }
+                            if (string.IsNullOrEmpty(Remarks))
+                            {
+                                record.IsRight = true;
+                            }
+                        }
+                        //题目列表ansowerList B
+                        //我选择的答案item.selectItem 0,1
+                        //LTEST 我选择的答案页面呈现对应的abcd
+                        //test 我选择的题目背后答案abcd
+                        //LselectItem我选择的题目背后答案abcd
+                        //rightkey正确答案ABCD
+                        #region
+                        record.ExamGuid = guid;
+                        record.TopicTitle = item.proName;
+                        if (item.TopicTitlePic != null)
+                        {
+                            record.TopicTitlePicNum = item.TopicTitlePic;
 
-                                        if (issubjetc.FirstOrDefault().IsAddAllowance)
+                        }
+                        record.TopicNum = Convert.ToInt32(item.TopicScore);
+                        record.Type = item.type;
+                        record.Remark = item.Remark;
+                        if (item.RightKey.Count() > 0)
+                        {
+                            foreach (var sr in item.RightKey)
+                            {
+                                //正确的答案转成a;b;c;d
+                                record.CorrectAnsower += sr + ';';
+                            }
+                        }
+                        //把题目集合往选项ABC里面插入
+                        if (item.ansowerList != null && item.ansowerList.Count() > 0)
+                        {
+                            for (int i = 0; i < item.ansowerList.Count();)
+                            {
+                                if (item.ansowerList[0] != null)
+                                {
+                                    record.OptionA = item.ansowerList[0].ansower;
+                                    record.OptionAPicNum = item.ansowerList[0].ansowerpic;
+                                }
+
+                                if (item.ansowerList[1] != null)
+                                {
+                                    record.OptionB = item.ansowerList[1].ansower;
+                                    record.OptionBPicNum = item.ansowerList[1].ansowerpic;
+
+                                }
+                                if (item.ansowerList.Count() >= 3)
+                                {
+                                    if (item.ansowerList[2] != null)
+                                    {
+                                        record.OptionC = item.ansowerList[2].ansower;
+                                        record.OptionCPicNum = item.ansowerList[2].ansowerpic;
+
+                                    }
+                                }
+                                if (item.ansowerList.Count() >= 4)
+                                {
+                                    if (item.ansowerList[3] != null)
+                                    {
+                                        record.OptionD = item.ansowerList[3].ansower;
+                                        record.OptionDPicNum = item.ansowerList[3].ansowerpic;
+
+                                    }
+                                }
+                                if (item.ansowerList.Count() >= 5)
+                                {
+                                    if (item.ansowerList[4] != null)
+                                    {
+                                        record.OptionE = item.ansowerList[4].ansower;//题目
+                                        record.OptionEPicNum = item.ansowerList[4].ansowerpic;//图片
+                                    }
+                                }
+
+                                i++;
+                            }
+
+                        }
+                        record.DaRemark = Remarks;
+                        record.CreateUser = model.VExamUserInfo.UserName;
+                        record.CreateDate = DateTime.Now;
+                        //插入试题
+                        Data.ExamRecord.Insert_ExamRecord(record, null, new string[] { "ID" });
+                        #endregion
+
+                        #region 呈现试题
+                       
+                        Listexam.Add(new ExamScoreInfo
+                        {
+                            ExamID =guid,
+                            TopicTitle = record.TopicTitle,
+                            TopicNum = record.TopicNum,
+                            ansowerList = item.ansowerList,
+                            isright = record.IsRight,
+                            Type = record.Type,
+                            selectItem = item.selectItem,
+                            CorrectAnsower = record.CorrectAnsower,
+                            WriteItem = record.WriteAnsower,
+                            TopicTitlePicNum = record.TopicTitlePicNum,
+                            Remark = record.Remark,
+                            TopicTitlePic = record.TopicTitlePicNum,
+                            DeRemark = Remarks
+                        });
+
+
+
+
+
+
+                        #endregion
+                    }
+                }
+                //插入分数记录
+                if (sc.CorrectNum == null)
+                { sc.CorrectNum = 0; }
+                sc.CorrectScore = score;
+                sc.ExamGuid = guid;
+                Data.ExamScore.Insert_ExamScore(sc, null, new string[] { "ExamID" });
+                VExamScore = sc;
+
+
+                if (model.VExamUserInfo.IsTest == false)
+                {
+                    //根据人员,科目,ExamStatus更新分数,时间，isexam
+                    var details = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject, ExamStatus = "HrCheck", IsStop = false, TypeName = model.VExamUserInfo.ExamType });
+                      
+                    if (details.Count()>0&&details!=null)
+                    { 
+                        var detail = details.Where( x=>x.UserExamDate == null).OrderByDescending(x => x.ExamDate).FirstOrDefault();
+                        detail.ExamScore = score;
+                        detail.UserExamDate = DateTime.Now;
+                        if (model.VExamUserInfo.IsTest == true)
+                        {
+                            detail.IsExam = "false";
+                        }
+                        else
+                        {
+                            var ruleinfo = Data.ExamRule.Get_All_ExamRule(new { SubjectName=model.VExamUserInfo.ExamSubject });
+                            if (ruleinfo.Count() > 0 && ruleinfo != null)
+                            {
+                                var PassScore = ruleinfo.FirstOrDefault().PassScore;
+                                //判断津贴是否加给
+                                var issubjetc = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = model.VExamUserInfo.ExamSubject });
+
+                                var ElectronicQuota = 0; var SkillsAllowance = 0; var MajorQuota = 0; var GradePosition = 0; var PostQuota = 0;
+
+                                if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                {
+                                    //考生最后一笔通过记录
+                                    var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsExam = "true", IsExamPass=true, TypeName = model.VExamUserInfo.ExamType }).OrderByDescending(x => x.ExamDate);
+                                    if (examrecord != null && examrecord.Count() > 0)
+                                    {
+                                        //考生上次通过加给
+                                        ElectronicQuota = examrecord.FirstOrDefault().ElectronicQuota;
+                                        SkillsAllowance = examrecord.FirstOrDefault().SkillsAllowance;
+                                        MajorQuota = examrecord.FirstOrDefault().MajorQuota;
+                                        GradePosition = examrecord.FirstOrDefault().GradePosition;
+                                        PostQuota = examrecord.FirstOrDefault().PostQuota;
+                                    }
+                                }
+                               
+                                if (score >= PassScore)
+                                {
+                                    detail.IsExamPass = true;
+
+                                    if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                    {
+                                        detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota - ElectronicQuota;
+                                        detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance - SkillsAllowance;
+                                        detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota - MajorQuota;
+                                        detail.GradePosition = issubjetc.FirstOrDefault().GradePosition - GradePosition;
+                                        detail.PostQuota = issubjetc.FirstOrDefault().PostQuota - PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                    }
+                                    else
+                                    {
+                                        //判断同岗位
+                                        detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota;
+                                        detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance;
+                                        detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota;
+                                        detail.GradePosition = issubjetc.FirstOrDefault().GradePosition;
+                                        detail.PostQuota = issubjetc.FirstOrDefault().PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;                                      
+                                    }
+
+                                    if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
+                                    {
+                                        UpdateElectronicUser(model.VExamUserInfo.UserName, model.VExamUserInfo.ExamSubject);
+                                    }
+
+                                    //判断津贴总和运行为负数
+                                    if (detail.TotalQuota < 0&& model.VExamUserInfo.ExamType == "Chassis技能等级考试")
+                                    {
+                                        var ssub = detail.SubjectName.Substring(0, detail.SubjectName.Length - 2);
+
+                                        //找出当前科目对应的高级
+                                        var subhigh = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName= ssub+"高级" });
+                                        if (subhigh.Count() > 0&& subhigh!=null)
                                         {
-                                            //考生最后一笔通过记录
-                                            var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsExam = "true", IsExamPass = true, TypeName = model.VExamUserInfo.ExamType }).OrderByDescending(x => x.ExamDate);
-                                            if (examrecord != null && examrecord.Count() > 0)
+                                            var uptotal = ElectronicQuota + SkillsAllowance + MajorQuota + GradePosition + PostQuota;
+                                            var highsub = subhigh.FirstOrDefault().ElectronicQuota + subhigh.FirstOrDefault().SkillsAllowance + subhigh.FirstOrDefault().MajorQuota + subhigh.FirstOrDefault().GradePosition + subhigh.FirstOrDefault().PostQuota;
+                                            if (highsub > uptotal)
                                             {
-                                                //考生上次通过加给
-                                                ElectronicQuota = examrecord.FirstOrDefault().ElectronicQuota;
-                                                SkillsAllowance = examrecord.FirstOrDefault().SkillsAllowance;
-                                                MajorQuota = examrecord.FirstOrDefault().MajorQuota;
-                                                GradePosition = examrecord.FirstOrDefault().GradePosition;
-                                                PostQuota = examrecord.FirstOrDefault().PostQuota;
-                                            }
-                                        }
-
-                                        if (score >= PassScore)
-                                        {
-                                            detail.IsExamPass = true;
-
-                                            if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                            {
-                                                detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota - ElectronicQuota;
-                                                detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance - SkillsAllowance;
-                                                detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota - MajorQuota;
-                                                detail.GradePosition = issubjetc.FirstOrDefault().GradePosition - GradePosition;
-                                                detail.PostQuota = issubjetc.FirstOrDefault().PostQuota - PostQuota;
-                                                detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
-                                            }
-                                            else
-                                            {
-                                                //判断同岗位
-                                                detail.ElectronicQuota = issubjetc.FirstOrDefault().ElectronicQuota;
-                                                detail.SkillsAllowance = issubjetc.FirstOrDefault().SkillsAllowance;
-                                                detail.MajorQuota = issubjetc.FirstOrDefault().MajorQuota;
-                                                detail.GradePosition = issubjetc.FirstOrDefault().GradePosition;
-                                                detail.PostQuota = issubjetc.FirstOrDefault().PostQuota;
-                                                detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
-                                            }
-
-                                            if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
-                                            {
-                                                UpdateElectronicUser(model.VExamUserInfo.UserName, model.VExamUserInfo.ExamSubject);
-                                            }
-
-                                            //判断津贴总和运行为负数
-                                            if (detail.TotalQuota < 0 && model.VExamUserInfo.ExamType == "Chassis技能等级考试")
-                                            {
-                                                var ssub = detail.SubjectName.Substring(0, detail.SubjectName.Length - 2);
-
-                                                //找出当前科目对应的高级
-                                                var subhigh = Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = ssub + "高级" });
-                                                if (subhigh.Count() > 0 && subhigh != null)
-                                                {
-                                                    var uptotal = ElectronicQuota + SkillsAllowance + MajorQuota + GradePosition + PostQuota;
-                                                    var highsub = subhigh.FirstOrDefault().ElectronicQuota + subhigh.FirstOrDefault().SkillsAllowance + subhigh.FirstOrDefault().MajorQuota + subhigh.FirstOrDefault().GradePosition + subhigh.FirstOrDefault().PostQuota;
-                                                    if (highsub > uptotal)
-                                                    {
-                                                        detail.ElectronicQuota = ElectronicQuota;
-                                                        detail.SkillsAllowance = SkillsAllowance;
-                                                        detail.MajorQuota = MajorQuota;
-                                                        detail.GradePosition = GradePosition;
-                                                        detail.PostQuota = PostQuota;
-                                                        detail.TotalQuota = 0;
-
-                                                    }
-                                                    else if (highsub < uptotal)
-                                                    {
-                                                        detail.ElectronicQuota = subhigh.FirstOrDefault().ElectronicQuota;
-                                                        detail.SkillsAllowance = subhigh.FirstOrDefault().SkillsAllowance;
-                                                        detail.MajorQuota = subhigh.FirstOrDefault().MajorQuota;
-                                                        detail.GradePosition = subhigh.FirstOrDefault().GradePosition;
-                                                        detail.PostQuota = subhigh.FirstOrDefault().PostQuota;
-                                                        detail.TotalQuota = uptotal - highsub;
-
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (issubjetc.FirstOrDefault().IsAddAllowance)
-                                            { //考生没通过加给
                                                 detail.ElectronicQuota = ElectronicQuota;
                                                 detail.SkillsAllowance = SkillsAllowance;
                                                 detail.MajorQuota = MajorQuota;
                                                 detail.GradePosition = GradePosition;
                                                 detail.PostQuota = PostQuota;
-                                                detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
-                                            }
-                                            detail.IsExamPass = false;
+                                                detail.TotalQuota = 0;
 
+                                            }
+                                            else if (highsub < uptotal)
+                                            {
+                                                detail.ElectronicQuota = subhigh.FirstOrDefault().ElectronicQuota;
+                                                detail.SkillsAllowance = subhigh.FirstOrDefault().SkillsAllowance;
+                                                detail.MajorQuota = subhigh.FirstOrDefault().MajorQuota;
+                                                detail.GradePosition = subhigh.FirstOrDefault().GradePosition;
+                                                detail.PostQuota = subhigh.FirstOrDefault().PostQuota;
+                                                detail.TotalQuota = uptotal - highsub;
+
+                                            }
                                         }
+                                    
                                     }
                                 }
-
-                                detail.IsExam = "true";
+                                else
+                                {
+                                    if (issubjetc.FirstOrDefault().IsAddAllowance)
+                                    { //考生没通过加给
+                                        detail.ElectronicQuota = ElectronicQuota;
+                                        detail.SkillsAllowance = SkillsAllowance;
+                                        detail.MajorQuota = MajorQuota;
+                                        detail.GradePosition = GradePosition;
+                                        detail.PostQuota = PostQuota;
+                                        detail.TotalQuota = detail.ElectronicQuota + detail.SkillsAllowance + detail.MajorQuota + detail.GradePosition + detail.PostQuota;
+                                    }
+                                    detail.IsExamPass = false;
+                                    
+                                }
                             }
-                            Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(detail, null, new string[] { "ID" });
 
+                            detail.IsExam = "true";
                         }
-                        if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
-                        { 
-                            //根据电子岗取消报名人员，考完更新主表的考试时间
-                            var cancel = Data.U_Cancel_UserInfo.Get_All_U_Cancel_UserInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject });
-                            if (cancel != null&&cancel.Count()>0) {
-                                var candata = cancel.Where(x=>x.ExamDate == null).FirstOrDefault();                   
-                                candata.ExamDate = DateTime.Now;
-                                Data.U_Cancel_UserInfo.Update_U_Cancel_UserInfo(candata, null, new string[] { "ID" });
-                            }
-                        }
-                   
+                        Data.ExamUserDetailInfo.Update_ExamUserDetailInfo(detail, null, new string[] { "ID" });
 
                     }
-
+                    if (model.VExamUserInfo.ExamType == "电子端岗位技能津贴")
+                    { 
+                        //根据电子岗取消报名人员，考完更新主表的考试时间
+                        var cancel = Data.U_Cancel_UserInfo.Get_All_U_Cancel_UserInfo(new { UserCode = model.VExamUserInfo.UserName, SubjectName = model.VExamUserInfo.ExamSubject });
+                        if (cancel != null&&cancel.Count()>0) {
+                            var candata = cancel.Where(x=>x.ExamDate == null).FirstOrDefault();                   
+                            candata.ExamDate = DateTime.Now;
+                            Data.U_Cancel_UserInfo.Update_U_Cancel_UserInfo(candata, null, new string[] { "ID" });
+                        }
+                    }
+                   
 
                 }
-                }
-            catch (Exception e)
-            {
-                ExamStatus = "请截图错误信息给主管或HR：" + e.Message.ToString();
+
+
             }
-            Status = ExamStatus;
+
             return guid;
         }
 

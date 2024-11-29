@@ -44,6 +44,22 @@ namespace advt.Web.Controllers
 
             return View(model) ;
         }
+        public ActionResult Loginadmin(string returnUrl, string token, string userNo, string sys, string param)
+        {
+            LoginModel model = new LoginModel();
+            string tokenstr = System.Web.HttpUtility.UrlEncode(token, Encoding.GetEncoding("GB2312"));
+            model.token = tokenstr;
+            model.userNo = userNo;
+            model.sys = sys;
+            model.param = param;
+            Manager.Login.ClearSession();
+            if (Manager.Login.ValidateUser)
+            {
+                alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
+            }
+
+            return View(model);
+        }
 
         //[HttpPost]
         ////[ValidateAntiForgeryToken]
@@ -266,6 +282,105 @@ namespace advt.Web.Controllers
             return Json(new { IsLogin  }, JsonRequestBehavior.AllowGet);
           
         }
+
+        [HttpPost]
+        public ActionResult Loginadmin(Model.LoginModel model, string returnUrl, string userNo, string token, string sys, string param)
+        {
+            var IsLogin = "";
+            try
+            {
+                //sys = "智能考试平台";
+                //param = "%2B5aScAuNL36xR3W3grHiNR62a%2BhviynjDoUJYbN%2BACTDJRVyr4peJhRGD%2F%2BrApcW1vIocH6BbHMAq%2FFVMDYh1g%3D%3D";
+                Entity.advt_users users = new advt_users();              
+                
+                    string[] SplitAccount = new string[] { };
+                    var username = "";
+
+                    Regex RegEmail = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");//w 英文字母或数字的字符串，和 [a-zA-Z0-9] 语法一样 
+                    Match m = RegEmail.Match(model.UserName);
+                    //工号
+                    var cuser = Data.ExamUsersFromehr.Get_ExamUsersFromehr(new { EamilUsername = model.UserName });
+                  
+                    
+
+                        if (cuser != null)
+                        {
+                            var acc = "acn\\" + cuser.EamilUsername.Trim();
+                            SplitAccount = acc.Split('\\');
+                            username = cuser.EamilUsername;
+                        }
+                        if (cuser != null)
+                        {
+                            if (SplitAccount.Length > 1)
+                            {
+                                String adPath = ""; //Fully-qualified Domain Name
+                                switch (SplitAccount[0].ToLower().Trim())
+                                {
+                                    case "acn":
+                                        adPath = "LDAP://acn.advantech.corp"; //acn
+                                        break;
+                                    case "aeu":
+                                        adPath = "LDAP://aeu.advantech.corp"; //advantech
+                                        break;
+                                    case "aus":
+                                        adPath = "LDAP://aus.advantech.corp"; //advantech
+                                        break;
+                                    case "advantech":
+                                        adPath = "LDAP://advantech.corp";//advantech
+                                        break;
+                                    default:
+                                        adPath = "LDAP://acn.advantech.corp"; //acn
+                                        break;
+                                }
+                                LdapAuthentication adAuth = new LdapAuthentication(adPath);
+                                string password = model.Password.Trim();
+
+                                if (true == adAuth.IsAuthenticated(SplitAccount[0], "knight.chen", model.Password))
+                                {
+                                    Service.IProvider.IAuthorizationServices service = new Service.Provider.AuthorizationServices();
+                                    users = service.Authenticate(username, model.Password);
+
+                                }
+                                else
+                                {
+                                    IsLogin = "用户名/账号不正确";
+                                }
+
+                            }
+                        }
+                    
+
+                    if ( cuser == null)
+                    {
+                        IsLogin = "用户名/工号不存在";
+                    }
+                
+                if (string.IsNullOrEmpty(IsLogin) && !string.IsNullOrEmpty(users.username))
+                {
+                    SetUserAuthIn(users.username.ToString(), users.password, string.Empty, false);
+                    //写入Cookie，无需登入。
+
+                    var LF = Guid.NewGuid().ToString();
+                    //写内存
+                    Manager.Login.Lock_Flag = LF;
+                    //写本地
+                    Utils.WriteCookie("ALock", LF);
+                    users.msn = LF;
+                    advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
+                    XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
+                    IsLogin = "Pass";
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsLogin = ex.Message }, JsonRequestBehavior.AllowGet);
+                throw;
+            }
+            //ModelState.AddModelError("", "用户名或者密码错误!");
+            return Json(new { IsLogin }, JsonRequestBehavior.AllowGet);
+
+        }
+
         public static string HttpPostString(string url, string postDataStr)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

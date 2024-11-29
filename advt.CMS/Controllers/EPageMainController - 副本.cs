@@ -133,15 +133,14 @@ namespace advt.Web.Controllers
         {
             try
             {
-                var examguid = "";
-                string examstatus = "";//提交后返回状态
+                var examguid = ""; 
                 model.GetExam();
                 if (model.VExamUserInfo.IsTest == false)
                 {
                     var set = Data.ExamScore.Get_All_ExamScore(new { CreateUser = model.VExamUserInfo.UserName, IsTest = false, ExamSubject = model.VExamUserInfo.ExamSubject, ExamType = model.VExamUserInfo.ExamType });
                     if (set.Count() == 0)
                     {                       
-                        examguid = model.InsertScoreDatas(model,out examstatus);
+                        examguid = model.InsertScoreDatas(model);
                         var name = this.UserNameContext;
                         model.UpdateLevel(model, name, examguid);
                     }
@@ -152,7 +151,7 @@ namespace advt.Web.Controllers
                         TimeSpan ts = da.Subtract(Convert.ToDateTime(date)).Duration();
                         if (ts.TotalMinutes > 10)
                         {
-                            examguid = model.InsertScoreDatas(model, out examstatus);
+                            examguid = model.InsertScoreDatas(model);
                             var name = this.UserNameContext;
                             model.UpdateLevel(model, name, examguid);
                         }
@@ -160,9 +159,10 @@ namespace advt.Web.Controllers
                 }
                 else
                 {
-                    examguid = model.InsertScoreDatas(model, out examstatus);
+                    examguid = model.InsertScoreDatas(model);
                 }
-                return Json(new { examList = model.Listexam, examid = examguid, VExamScore = model.VExamScore , examstatus= examstatus }, JsonRequestBehavior.AllowGet);
+               
+                return Json(new { examList = model.Listexam, examid = examguid, VExamScore = model.VExamScore }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -211,11 +211,7 @@ namespace advt.Web.Controllers
             ExamConfirmModel model = new ExamConfirmModel();
             return View(model);
         }
-        /// <summary>
-        /// 签到点名页面的数据（区域，部门...）
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+
         [MyAuthorize]
         public ActionResult ExamConfirmInfo(SearchHrData data)
         {

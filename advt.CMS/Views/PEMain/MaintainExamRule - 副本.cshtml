@@ -99,16 +99,16 @@
                     <el-select v-model="topicratioPropsVal" multiple @@change="topicratioPropsFn" placeholder="请选择">
                         <el-option v-for="item in ListTopicInfo"
                                    :key="item.ID"
-                                   :label="item.TopicMajor+item.TopicLevel+'-'+item.Bcount" 
+                                   :label="item.TopicMajor+item.TopicLevel+item.TopicType+'-'+item.Bcount"
                                    :value="item.ID">
-                        </el-option>                        
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <template>
                     <el-table :data="RuleGrList" style="width:100%">
                         <el-table-column prop="TopicMajor" label="类型" width="80"></el-table-column>
                         <el-table-column prop="TopicLevel" label="等级" width="80"></el-table-column>
-                        @*<el-table-column prop="TopicType" label="题型" width="80"></el-table-column>*@
+                        <el-table-column prop="TopicType" label="题型" width="80"></el-table-column>
 
 
                         <el-table-column prop="TopicNum" label="题数" width="80">
@@ -124,7 +124,7 @@
 
                         <el-table-column label="操作" width="120">
                             <template slot-scope="scope">
-                                <el-button @@click.native.prevent="deleteRow(scope.$index,scope.row.TopicMajor,scope.row.TopicLevel,VExamRule.RuleName,VExamRule.ID,VExamRule.SubjectName,RuleGrList)"
+                                <el-button @@click.native.prevent="deleteRow(scope.$index,scope.row.TopicMajor,scope.row.TopicLevel,scope.row.TopicType,VExamRule.RuleName,VExamRule.ID,VExamRule.SubjectName,RuleGrList)"
                                            type="text"
                                            size="small">
                                     移除
@@ -395,20 +395,20 @@
                         console.log(_this.RuleGrList, 395)
                         _this.ListTopicInfo.forEach(item => {
                             _this.RuleGrList.forEach(o => {
-                                if (item.TopicMajor == o.TopicMajor) {//&& item.TopicType == o.TopicType
+                                if (item.TopicMajor == o.TopicMajor && item.TopicType == o.TopicType) {
                                     console.log(item.TopicMajor, o.TopicMajor,399);
-                                  //  if (item.TopicType == o.TopicType) {
+                                    if (item.TopicType == o.TopicType) {
                                         if (parseFloat(item.Bcount) < parseFloat(o.TopicNum))
                                         {
                                         _this.iscount = true;
                                         _this.$alert('题目类型设置的题数不可大于题库对应下的题数!')
                                         }
-                                   // }
-                                   // else {
+                                    }
+                                    else {
 
-                                   //     _this.iscount = true;
-                                  //      _this.$alert('题目类型、题数匹配不一样,请排查')
-                                  //  }
+                                        _this.iscount = true;
+                                        _this.$alert('题目类型、题数匹配不一样,请排查')
+                                    }
                                    
                                 }
                                
@@ -496,8 +496,8 @@
                     _this.ListTopicInfo.forEach(function (item,index) {
                         _this.RuleGrList.forEach(function (list, num) {
                             var aaa = list.TopicLevel ? list.TopicLevel : '';
-                            var string = list.TopicMajor + aaa ;
-                            var Grstring = item.TopicMajor + item.TopicLevel  ;
+                            var string = list.TopicMajor + aaa + list.TopicType;
+                            var Grstring = item.TopicMajor + item.TopicLevel + item.TopicType;
                             if (string == Grstring) {
                                 _this.topicratioPropsVal.push(index+1)
                             }
@@ -546,7 +546,7 @@
                 });
                 _this.dialogFormVisible = false
             },
-            deleteRow(index, TopicMajor, TopicLevel,  RuleName, SubjectName, ID, rows) {
+            deleteRow(index, TopicMajor, TopicLevel, TopicType, RuleName, SubjectName, ID, rows) {
                 this.$confirm('此题目类型将被删除, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -555,7 +555,8 @@
                     var _this = this;
                     axios.post('/PEMain/DeleteRuleTopicInfo', {
                         TopicMajor: TopicMajor,
-                        TopicLevel: TopicLevel,                     
+                        TopicLevel: TopicLevel,
+                        TopicType: TopicType,
                         RuleName: RuleName,
                         SubjectName: SubjectName
                     }).then(function (res) {

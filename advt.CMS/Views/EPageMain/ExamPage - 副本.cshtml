@@ -377,14 +377,8 @@
                                                     }
                                                     _this.isQuestion = responese.data.VExamScore.IsQuestion;
                                                     _this.examLists = responese.data.examList;
+
                                                     _this.dialogFormVisible = true;
-                                                    if (responese.data.examstatus != "") {
-                                                        alert(responese.data.examstatus);
-                                                    }
-                                                }).catch(function (error) {
-                                                    _this.submitLoading = false;//让员工尝试再次提交
-                                                    alert("请截图错误信息给主管或HR。\n" + error.toString());
-                                                    console.log(error);
                                                 });
 
                                             }
@@ -481,9 +475,6 @@
                                                         _this.isQuestion = responese.data.VExamScore.IsQuestion;
                                                         _this.examLists = responese.data.examList;
                                                         _this.dialogFormVisible = true;
-                                                        if (responese.data.examstatus != "") {
-                                                            alert(responese.data.examstatus);
-                                                        }
                                                     }).catch(function (error) {
                                                         _this.submitLoading = false;//让员工尝试再次提交
                                                         alert("请截图错误信息给主管或HR。\n"+error.toString());
@@ -548,14 +539,6 @@
                                                     _this.isQuestion = responese.data.VExamScore.IsQuestion;
                                                     _this.examLists = responese.data.examList;
                                                     _this.dialogFormVisible = true;
-                                                    if (responese.data.examstatus != "") {
-                                                        alert(responese.data.examstatus);
-                                                    }
-
-                                                }).catch(function (error) {
-                                                    _this.submitLoading = false;//让员工尝试再次提交
-                                                    alert("请截图错误信息给主管或HR。\n" + error.toString());
-                                                    console.log(error);
                                                 });
 
 
@@ -608,14 +591,6 @@
                                             _this.isQuestion = responese.data.VExamScore.IsQuestion;
                                             _this.examLists = responese.data.examList;
                                             _this.dialogFormVisible = true;
-                                            if (responese.data.examstatus != "") {
-                                                alert(responese.data.examstatus);
-                                            }
-
-                                        }).catch(function (error) {
-                                            _this.submitLoading = false;//让员工尝试再次提交
-                                            alert("请截图错误信息给主管或HR。\n" + error.toString());
-                                            console.log(error);
                                         });
 
 

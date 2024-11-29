@@ -159,22 +159,22 @@ namespace advt.CMS.Models.ExamModel
             ListExamRule = Data.ExamRule.Get_All_ExamRule();
 
         }
-        public string DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string TopicType,string RuleName,string SubjectName)
+        public string DeleteRuleTopicInfo(string TopicMajor, string TopicLevel, string RuleName,string SubjectName)//string TopicType,
         {
             var result = "";
-            var type = "";
-            if (TopicType == "单选")
-            {
-                type = "0";
-            }
-            else if (TopicType == "问答")
-            {
-                type = "2";
-            }
-            else if (TopicType == "多选")
-            {
-                type = "1";
-            }
+            var type = "0";
+            //if (TopicType == "单选")
+            //{
+            //    type = "0";
+            //}
+            //else if (TopicType == "问答")
+            //{
+            //    type = "2";
+            //}
+            //else if (TopicType == "多选")
+            //{
+            //    type = "1";
+            //}
             int rule = 0;
             var ruled= Data.ExamRule.Get_All_ExamRuleInfo(RuleName);
             if (ruled != null)
@@ -257,18 +257,18 @@ namespace advt.CMS.Models.ExamModel
             foreach (var item in ListTopicInfo)
             {
                 var type = "";
-                if (item.TopicType == "0")
-                {
-                    type = "单选";
-                }
-                else if (item.TopicType == "2")
-                {
-                    type = "问答";
-                }
-                else if (item.TopicType == "1")
-                {
-                    type = "多选";
-                }   
+                //if (item.TopicType == "0")
+                //{
+                //    type = "单选";
+                //}
+                //else if (item.TopicType == "2")
+                //{
+                //    type = "问答";
+                //}
+                //else if (item.TopicType == "1")
+                //{
+                //    type = "多选";
+                //}   
                   
                 ss++;
                 ListTopic.Add(new TopicInfo

@@ -37,10 +37,6 @@ namespace advt.Data
 
         IDataReader GetAuthority(string usercode);
         IDataReader Get_All_ExamUserDetailInfoDianzi(string typename, string searchdata);
-
-        IDataReader Get_OAArea();
-        IDataReader Get_OADept(string Area);
-
         #endregion
     }
 }

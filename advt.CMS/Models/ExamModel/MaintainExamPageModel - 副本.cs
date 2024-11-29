@@ -9,7 +9,6 @@ using System.Web;
 using advt.Entity;
 using NPOI.SS.Formula.Functions;
 using static advt.Entity.Status;
-using static NPOI.SS.Formula.PTG.ArrayPtg;
 
 namespace advt.CMS.Models.ExamModel
 {
@@ -40,8 +39,8 @@ namespace advt.CMS.Models.ExamModel
         }
         public void GetPageInfo(SerarchData data)
         {
-            var connectionString = "server=ACNSTNR4;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
-            DataSet result = new DataSet();  
+            var connectionString = "server=172.21.214.28;database=ExamDB;uid=ExamSa;pwd=1Ex@m2021";
+            DataSet result = new DataSet();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand("Proc_Exam_Page_Info", conn))
