@@ -13,7 +13,7 @@ namespace advt.Data
 
         IDataReader Get_All_ExamUserDetailInfo(object objparams);
         IDataReader Get_All_ExamUserDetailInfo(string Typename, string UserCode, string SubjectName, string DepartCode);
-
+        IDataReader Get_All_ExamUserDetailInfo(string UserCode, string Typename );
         IDataReader Get_All_ExamUserCheckDetail(string Typename, string UserCode, string SubjectName, string DepartCode);
         
         int Insert_ExamUserDetailInfo(Entity.ExamUserDetailInfo info, string[] Include, string[] Exclude);

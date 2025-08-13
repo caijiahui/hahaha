@@ -5,18 +5,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no" />
+    @*<meta name="viewport" content="user-scalable=no" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />   @*--移动端上即可出现字体自适应*@
     <title>考试签到</title>
     <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
     <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
     <link href="~/Scripts/css/exam.css" rel="stylesheet" />
     <style>
-        @@media screen and (max-width:500px) {
-            /*   .el-table td {
-                    padding: 0px 0px;
-                    font-size: 2px;
-                }*/
-        }
+       
     </style>
 </head>
 <div id="app" style="margin-left:20px">
@@ -29,13 +25,13 @@
     <div>
         <template>
             <div>
-                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域" style="width:200px;margin-top:10px">
+                <el-select v-model="VProData.WrokPlace" placeholder="请选择区域" style="width:100px;margin-top:10px">
                     <el-option v-for="item in ListWorkPlace" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
-                <el-select v-model="VProData.DepartCode" placeholder="请选择部门" style="width:200px;">
+                <el-select v-model="VProData.DepartCode" placeholder="请选择部门" style="width:100px;">
                     <el-option v-for="item in LDepartCode" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
-                <el-select v-model="VProData.DutyType" placeholder="请选择班别" style="width:200px;">
+                <el-select v-model="VProData.DutyType" placeholder="请选择班别" style="width:100px;">
                     <el-option label="请选择班别" value=""></el-option>
                     <el-option label="白班" value="白班"></el-option>
                     <el-option label="夜班" value="夜班"></el-option>
@@ -43,20 +39,20 @@
 
                 <el-date-picker v-model="VProData.ExamDate"
                                 type="date" value-format="yyyy-MM-dd"
-                                placeholder="选择日期" style="width:200px;">
+                                placeholder="选择日期" style="width:100px;">
                 </el-date-picker>
-                <el-input placeholder="工号" v-model="VProData.UserCode" clearable style="width:200px;">
+                <el-input placeholder="工号" v-model="VProData.UserCode" clearable style="width:100px;">
                 </el-input>
             </div>
             
             <div style="margin-top: 1px">
-                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型" style="width:200px;">
+                <el-select v-model="VProData.TypeName" placeholder="请选择考试类型" style="width:100px;">
                     <el-option v-for="item in LExamType" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
-                <el-select v-model="VProData.SubjectName" placeholder="请选择考试科目" style="width:200px;">
+                <el-select v-model="VProData.SubjectName" placeholder="请选择考试科目" style="width:100px;">
                     <el-option v-for="item in LExamSubject" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
-                <el-input placeholder="姓名" v-model="VProData.UserName" style="width:200px;" clearable>
+                <el-input placeholder="姓名" v-model="VProData.UserName" style="width:100px;" clearable>
                 </el-input>
 
                 <el-button slot="append" size="medium" @@click="SearchinByName">Search</el-button>
@@ -74,21 +70,29 @@
                     <el-table style="width: 100%;margin-top:20px " border :data="tableData">
                         <el-table-column type="index">
                         </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button size="mini" :disabled="scope.row.IsStartExam == true" @@click="Confirm(scope.row.ID)">签到</el-button>
+                            </template>
+                        </el-table-column>
+
                         <el-table-column label="#" v-if="false"
                                          prop="ID">
-                        </el-table-column>
-                        <el-table-column label="区域"
-                                         prop="OrgName">
-                        </el-table-column>
-                        <el-table-column label="部门"
-                                         prop="DepartCode">
-                        </el-table-column>
-                        <el-table-column label="工号"
-                                         prop="UserCode">
                         </el-table-column>
                         <el-table-column label="姓名"
                                          prop="UserName">
                         </el-table-column>
+                        <el-table-column label="工号"
+                                         prop="UserCode">
+                        </el-table-column>
+                        <el-table-column label="部门"
+                                         prop="DepartCode">
+                        </el-table-column>
+
+                        <el-table-column label="区域"
+                                         prop="OrgName">
+                        </el-table-column>
+
                         <el-table-column label="班别"
                                          prop="DutyType">
                         </el-table-column>
@@ -98,17 +102,6 @@
                         </el-table-column>
                         <el-table-column label="科目"
                                          prop="SubjectName">
-                        </el-table-column>
-                        @*<el-table-column label="是否签到" width="110">
-        <template slot-scope="scope">
-            <span v-if="scope.row.IsStartExam == false">未签到</span>
-            <span v-if="scope.row.IsStartExam == true">已签到</span>
-        </template>
-        </el-table-column>*@
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button size="mini" :disabled="scope.row.IsStartExam == true" @@click="Confirm(scope.row.ID)">签到</el-button>
-                            </template>
                         </el-table-column>
                     </el-table>
                 </div>

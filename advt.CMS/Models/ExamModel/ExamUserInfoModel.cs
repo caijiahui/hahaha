@@ -1,5 +1,6 @@
 ﻿using advt.Entity;
 using NPOI.HSSF.UserModel;
+using NPOI.POIFS.Properties;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -169,10 +170,33 @@ namespace advt.CMS.Models.ExamModel
                         if (na.Count() > 0&&na!=null)
                         {
                             //判断true,true为课长
-                            var nc= Data.ExamUsersFromehr.Get_All_ExamUsersFromehr(new { UserCode= na.FirstOrDefault().UserCode,UserDept= na.FirstOrDefault().UserCostCenter, JobCode = "课长" });
+                            //  var nc= Data.ExamUsersFromehr.Get_All_ExamUsersFromehr(new { UserCode= na.FirstOrDefault().UserCode,UserDept= na.FirstOrDefault().UserCostCenter, JobCode = "课长" });
+                            //if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle) || nc.Count() > 0 || row["RankName"].ToString().Contains("D"))
+                            if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle) ||
+                                //1.	排除如下职位
+                                row["PostName"].ToString().ToLower().Contains("leader") ||
+                                row["PostName"].ToString().ToLower().Contains("manager") ||
+                                row["PostName"].ToString().ToLower().Contains("director") ||
+                                row["PostName"].ToString().ToLower()== "supervisor" ||
+                                row["PostName"].ToString().ToLower()== "avp" ||
+                                row["PostName"].ToString().ToLower()== "chief operations officer" ||
+                                //2.排除Project Supervisor几位同仁
+                                row["UserCode"].ToString().ToLower() == "500000044" ||
+                                row["UserCode"].ToString().ToLower() == "500000069" ||
+                                row["UserCode"].ToString().ToLower() == "500000299" ||
+                                row["UserCode"].ToString().ToLower() == "500000401" ||
+                                row["UserCode"].ToString().ToLower() == "500000110" ||
+                                row["UserCode"].ToString().ToLower() == "500000043" ||
+                                row["UserCode"].ToString().ToLower() == "500000060" ||
+                                row["UserCode"].ToString().ToLower() == "500000356" ||
+                                row["UserCode"].ToString().ToLower() == "500000089" ||
+                                row["UserCode"].ToString().ToLower() == "500000575" ||
+                                row["UserCode"].ToString().ToLower() == "500000227" 
+                                )
 
-                            if (!string.IsNullOrEmpty(na.FirstOrDefault().UserJobTitle)||nc.Count()>0 || row["RankName"].ToString().Contains("D"))
+
                             {
+                                rule = null;
                                 exammon = null;
                                 ReadyExamDate = null;
                             }
@@ -192,6 +216,7 @@ namespace advt.CMS.Models.ExamModel
                             UserName = row["UserName"].ToString(),
                             EntryDate = Convert.ToDateTime(row["EntryDate"]),
                             RankName = row["RankName"].ToString(),
+                            PostID= row["PostID"].ToString(),
                             PostName = row["PostName"].ToString(),
                             DepartCode = row["DepartCode"].ToString(),
                             SkillLevel = row["SkillLevel"].ToString(),//本职等
@@ -214,8 +239,10 @@ namespace advt.CMS.Models.ExamModel
                             ReadExamDate = rule== "" ? "" : ReadyExamDate
                         });
                     }
-                    ListUserInfo11 = ListUserInfo.OrderByDescending(x=>x.ReadExamDate!=null).ToList();
-                   
+                  //  ListUserInfo11 = ListUserInfo.OrderByDescending(  x=>x.ReadExamDate!=null).ToList();
+                  //排除主管角色
+                    ListUserInfo11 = ListUserInfo.Where(x => x.ReadExamDate != null ).OrderByDescending(  x=>x.ReadExamDate!=null ).ToList();
+
                     var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
                     if (listinfo.Count() > 0 && listinfo != null)
                     { 
@@ -234,6 +261,7 @@ namespace advt.CMS.Models.ExamModel
                                     UserName = item.UserName,
                                     EntryDate = item.EntryDate,
                                     RankName = item.RankName,
+                                    PostID = item.PostID,
                                     PostName = item.PostName,
                                     DepartCode = item.DepartCode,
                                     SkillLevel = item.SkillLevel,

@@ -110,6 +110,24 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(text);
             return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
         }
+        public IDataReader Get_All_ExamUserDetailInfo(string UserCode, string Typename  )
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" SELECT " + ExamUserDetailInfo_item_str + "");
+            commandText.AppendLine("  from ExamUserDetailInfo where ((ISNULL(Type,'')<>N'保级' and IsExamPass=1) or (Type=N'保级' and IsExamPass=0)) and   IsExam='true' ");
+            var text = "";
+            if (!string.IsNullOrEmpty(Typename))
+            {
+                text += " and Typename = N'" + Typename + "'";
+            }
+            if (!string.IsNullOrEmpty(UserCode))
+            {
+                text += " and UserCode = N'" + UserCode + "'";
+            }
+         
+             commandText.AppendLine(text);
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString());
+        }
         public IDataReader Get_All_ExamUserCheckDetail(string Typename, string UserCode, string SubjectName, string DepartCode)
         {
             StringBuilder commandText = new StringBuilder();

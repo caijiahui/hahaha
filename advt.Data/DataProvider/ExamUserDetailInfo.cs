@@ -21,6 +21,11 @@ namespace advt.Data
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserDetailInfo(Typename, UserCode, SubjectName, DepartCode);
             return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
         }
+        public static List<Entity.ExamUserDetailInfo> Get_All_ExamUserDetailInfo(string UserCode, string Typename )
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserDetailInfo(UserCode,Typename  );
+            return SqlHelper.GetReaderToList<Entity.ExamUserDetailInfo>(reader);
+        }
         public static List<Entity.ExamUserDetailInfo> Get_All_ExamUserCheckDetail(string Typename,string UserCode,string SubjectName,string DepartCode)
         {
             IDataReader reader = DatabaseProvider.GetInstance().Get_All_ExamUserCheckDetail(Typename,UserCode,SubjectName,DepartCode);

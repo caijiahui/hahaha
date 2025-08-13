@@ -128,7 +128,7 @@ namespace advt.Data.SqlServer
             List<DbParameter> l_parms = new List<DbParameter>();
             StringBuilder commandText = new StringBuilder();
             string set_str = string.Empty;
-            commandText.AppendLine(" update ExamUserInfo set Achievement=@Achievement where UserCode=@UserCode");
+            commandText.AppendLine(" update ExamUserInfo set AchievementDate=getdate(), Achievement=@Achievement where UserCode=@UserCode");
             l_parms.Add(SqlHelper.MakeInParam("@Achievement", (DbType)SqlDbType.NVarChar, 150, Achievement));
             l_parms.Add(SqlHelper.MakeInParam("@UserCode", (DbType)SqlDbType.NVarChar, 150, UserCode));
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());

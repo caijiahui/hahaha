@@ -121,7 +121,7 @@ namespace advt.Web.Controllers
                             }
                             else
                             {
-                                IsLogin = "用户名不存在考试平台系统内";
+                                IsLogin = "用户名或密码错误";
                             }
                         }
                     }
@@ -150,7 +150,7 @@ namespace advt.Web.Controllers
                         }
                         else
                         {
-                            IsLogin = "用户名不存在考试平台系统内";
+                            IsLogin = "用户名或密码错误";
                         }
                     }
                 }
@@ -175,7 +175,7 @@ namespace advt.Web.Controllers
                         }
                         else
                         {
-                            IsLogin = "用户名不存在考试平台系统内";
+                            IsLogin = "用户名或密码错误";
                         }
                     }
                 }
@@ -199,7 +199,7 @@ namespace advt.Web.Controllers
                         }
                         else
                         {
-                            IsLogin = "EZ账号登陆不成功";
+                            IsLogin = "用户名或密码错误";
                         }
                     }
                     else
@@ -245,7 +245,7 @@ namespace advt.Web.Controllers
                                 }
                                 else
                                 {
-                                    IsLogin = "用户名/账号不正确";
+                                    IsLogin = "用户名或密码错误";
                                 }
 
                             }
@@ -254,7 +254,7 @@ namespace advt.Web.Controllers
 
                     if (wuser == null && cuser == null)
                     {
-                        IsLogin = "用户名/工号不存在";
+                        IsLogin = "用户名或密码错误";
                     }
                 }
                 if (string.IsNullOrEmpty(IsLogin) && !string.IsNullOrEmpty(users.username))
@@ -275,7 +275,7 @@ namespace advt.Web.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { IsLogin= ex.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { IsLogin= "用户名或密码错误" }, JsonRequestBehavior.AllowGet);
                 throw;
             }
             //ModelState.AddModelError("", "用户名或者密码错误!");

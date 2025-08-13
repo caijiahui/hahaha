@@ -90,7 +90,7 @@ namespace advt.CMS.Models
                 }
                 if (!string.IsNullOrEmpty(Rule.SubjectName))
                 {
-                    if (Rule.TypeName == "Chassis技能等级考试")
+                    if (Rule.TypeName == "Chassis技能等级考试"|| Rule.TypeName == "工控模组技能等级考试")
                     {
                         //全员复考不需要考实践
                         var detail = new List<ExamUserDetailInfo>();
@@ -585,8 +585,11 @@ namespace advt.CMS.Models
 
                                         if (issubjetc.FirstOrDefault().IsAddAllowance)
                                         {
-                                            //考生最后一笔通过记录
-                                            var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsExam = "true", IsExamPass = true, TypeName = model.VExamUserInfo.ExamType }).OrderByDescending(x => x.ExamDate);
+
+                                            // var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { UserCode = model.VExamUserInfo.UserName, IsExam = "true", IsExamPass = true, TypeName = model.VExamUserInfo.ExamType }).OrderByDescending(x => x.ExamDate);
+                                            //考生最后一笔通过记录,转从SQL来查询获取结果 ((ISNULL(Type,'')<>N'保级' and IsExamPass=1) or (Type=N'保级' and IsExamPass=0))
+                                            var examrecord = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(model.VExamUserInfo.UserName,model.VExamUserInfo.ExamType).OrderByDescending(x => x.ExamDate).ToList();
+
                                             if (examrecord != null && examrecord.Count() > 0)
                                             {
                                                 //考生上次通过加给
@@ -628,7 +631,7 @@ namespace advt.CMS.Models
                                             }
 
                                             //判断津贴总和运行为负数
-                                            if (detail.TotalQuota < 0 && model.VExamUserInfo.ExamType == "Chassis技能等级考试")
+                                            if (detail.TotalQuota < 0 && (model.VExamUserInfo.ExamType == "Chassis技能等级考试"|| model.VExamUserInfo.ExamType == "工控模组技能等级考试"))
                                             {
                                                 var ssub = detail.SubjectName.Substring(0, detail.SubjectName.Length - 2);
 
@@ -778,7 +781,7 @@ namespace advt.CMS.Models
                                         item.Achievement = null;
                                     }
                                 }
-                                else if (model.VExamUserInfo.ExamType == "Chassis技能等级考试")
+                                else if (model.VExamUserInfo.ExamType == "Chassis技能等级考试"|| model.VExamUserInfo.ExamType == "工控模组技能等级考试") 
                                 {
                                     if (item.ApplicationLevel == "中级")
                                     {

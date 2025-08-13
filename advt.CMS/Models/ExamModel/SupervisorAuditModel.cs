@@ -226,7 +226,7 @@ namespace advt.CMS.Models.ExamModel
                     Data.U_Cancel_UserInfo_History.Insert_U_Cancel_UserInfo_History(user, null, new string[] { "ID" });
                 }
             }
-            if (model.TypeName == "Chassis技能等级考试")
+            if (model.TypeName == "Chassis技能等级考试"|| model.TypeName == "工控模组技能等级考试")
             {
                 //插历史
                 var user = new U_Cancel_UserInfo_History();
@@ -257,7 +257,7 @@ namespace advt.CMS.Models.ExamModel
             var subejct= Data.ExamSubject.Get_All_ExamSubject(new { SubjectName = newsubject }).FirstOrDefault();
             if (userdata != null)
             {
-                var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode, TypeName = model.TypeName }).FirstOrDefault();
+                var userinfo = Data.ExamUserInfo.Get_All_ExamUserInfo(new { UserCode = model.UserCode }).FirstOrDefault();//不需要 TypeName = model.TypeName
                 //更新主表
                 if ( userdata.TypeName == "Chassis技能等级考试")
                 {
@@ -266,7 +266,9 @@ namespace advt.CMS.Models.ExamModel
                 }
                 if (userdata.TypeName == "职等考试" || userdata.TypeName == "关键岗位技能等级")
                 {
-                    userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 1, 1);
+                    userinfo.ApplicationLevel = newsubject.Substring(newsubject.Length - 2, 2);
+                    userinfo.SubjectName = newsubject;
+
                 }
                 if (userdata.TypeName == "电子端岗位技能津贴")
                 {
@@ -287,7 +289,7 @@ namespace advt.CMS.Models.ExamModel
                 userdatail.EntryDate = userdata.EntryDate;
                 userdatail.ExamStatus = "HrCheck";
                 userdatail.IsExamPass = true;
-                userdatail.ExamDate = DateTime.Now.AddMonths(-1);
+                userdatail.ExamDate = DateTime.Now;//.AddMonths(-1)
                 userdatail.IsStop = false; userdatail.IsExam = "true";userdatail.WorkPlace = userdata.WorkPlace;
                 userdatail.OrgName = userdata.OrgName; userdatail.State = userdata.State;
                 userdatail.ElectronicQuota = subejct.ElectronicQuota;
