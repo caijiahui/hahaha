@@ -40,6 +40,7 @@ namespace advt.Data
 
         IDataReader Get_OAArea();
         IDataReader Get_OADept(string Area);
+        IDataReader Get_EmployePhoto(string UserNo); 
 
         #endregion
     }

@@ -404,6 +404,12 @@ namespace advt.Data.SqlServer
             commandText.AppendLine(" SELECT  distinct    [Var_Dept]  FROM [recdb].[dbo].[Maintain_Area_Depts] where  Var_KQ_Area='"+ Area + "' order by [Var_Dept] ");
             return DbHelper.PE.ExecuteOAReader(CommandType.Text, commandText.ToString());
         }
+        public IDataReader Get_EmployePhoto(string UserNo)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" SELECT       [EmployePhoto]  FROM TrainingPlatform.[dbo].[UserPhoto] where  UserNo='" + UserNo + "'   ");
+            return DbHelper.PE.ExecuteOAReader(CommandType.Text, commandText.ToString());
+        }
 
         #endregion
     }

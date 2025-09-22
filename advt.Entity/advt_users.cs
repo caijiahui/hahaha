@@ -47,4 +47,17 @@ namespace advt.Entity
         public byte status { get; set; }
         #endregion
     }
+    public partial class sys_log
+    {
+ 
+ 
+        public string username { get; set; }
+        public DateTime login_time { get; set; }
+        public string newguid { get; set; }
+        public string clientname { get; set; }
+        public string clientip { get; set; }
+        public string token { get; set; }
+
+    }
+
 }

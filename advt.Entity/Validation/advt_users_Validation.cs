@@ -74,5 +74,33 @@ namespace advt.Entity
 
         [Display(Name = "status")]
         public object status;
+
+    }
+
+    [MetadataType(typeof(sys_logValidation))]
+    public partial class sys_log
+    {
+    }
+
+    public partial class sys_logValidation
+    {
+
+        [Display(Name = "id")]
+        public object id;
+        [Display(Name = "username")]
+        public object username;
+        [Display(Name = "login_time")]
+        public object login_time;
+        [Display(Name = "newguid")]
+        public object newguid;
+        [Display(Name = "clientname")]
+        public object clientname;
+        [Display(Name = "clientip")]
+        public object clientip;
+        [Display(Name = "token")]
+        public object token;
+     
+
+
     }
 }

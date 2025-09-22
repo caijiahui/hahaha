@@ -78,4 +78,18 @@ namespace advt.Data
         }
         #endregion
     }
-}
+    public partial class sys_log
+    {
+        public static int Insert_sys_log(Entity.sys_log info, string[] Include, string[] Exclude)
+        {
+            return DatabaseProvider.GetInstance().Insert_sys_log(info, Include, Exclude);
+        }
+     
+        public static Entity.sys_log Get_sys_log(string  UserName)
+        {
+            IDataReader reader = DatabaseProvider.GetInstance().Get_sys_log(UserName);
+            return SqlHelper.GetReaderToFirstOrDefault<Entity.sys_log>(reader);
+        }
+        
+    }
+    }

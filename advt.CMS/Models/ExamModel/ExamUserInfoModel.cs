@@ -240,9 +240,9 @@ namespace advt.CMS.Models.ExamModel
                         });
                     }
                   //  ListUserInfo11 = ListUserInfo.OrderByDescending(  x=>x.ReadExamDate!=null).ToList();
-                  //排除主管角色
+                  //   排除主管角色
                     ListUserInfo11 = ListUserInfo.Where(x => x.ReadExamDate != null ).OrderByDescending(  x=>x.ReadExamDate!=null ).ToList();
-
+                    //  ListUserInfo11 显示在“上传绩效成绩是否符合要求”页面，数据来自上面“Proc_Exam_User_Info”存储过程
                     var listinfo = ListUserInfo.Where(x => x.IsUserExam == "true" && !string.IsNullOrEmpty(x.RuleName));
                     if (listinfo.Count() > 0 && listinfo != null)
                     { 
@@ -252,6 +252,7 @@ namespace advt.CMS.Models.ExamModel
                             var dff = Data.ExamUserDetailInfo.Get_All_ExamUserDetailInfo(new { TypeName = item.TypeName, ApplyLevel = item.ApplicationLevel, UserCode = item.UserCode, UserName = item.UserName, SubjectName = item.SubjectName, RuleName = item.RuleName,  IsStop = false, IsExam = "false" });
                             if (dff.Count() == 0)
                             {
+                                //系统运算待考试人员名单
                                 i++;
                                 YListUserInfo.Add(new UserInfo
                                 {
@@ -285,6 +286,7 @@ namespace advt.CMS.Models.ExamModel
                             }
                         }
                     }
+                    //HR确认考试人员名单
                     var tyname = Data.ExamType.Get_All_ExamType(new { ID= data.TypeName });
                     if (!string.IsNullOrEmpty(data.DepartCode))
                     {

@@ -9,6 +9,7 @@ using advt.Common;
 using System.Collections.Generic;
 using advt.Data;
 using advt.Entity;
+using Newtonsoft.Json.Linq;
 
 namespace advt.Data.SqlServer
 {
@@ -54,6 +55,18 @@ namespace advt.Data.SqlServer
             new string[] {"extcredits1", "Decimal", "20"},
             new string[] {"status", "TinyInt", "1"}
         };
+        private string[][] sys_log_item_prop_a =
+{
+            new string[] {"id", "Int", "4"},
+            new string[] {"username", "NVarChar", "50"},     
+            new string[] { "login_time", "DateTime", "20"},
+            new string[] { "newguid", "NVarChar", "50"},
+            new string[] { "clientname", "NVarChar", "500"},
+            new string[] { "clientip", "NVarChar", "100"},
+            new string[] { "token", "NVarChar", "100"}
+          
+        };
+
         #endregion
 
         public IDataReader Get_All_advt_users(object objparams)
@@ -75,6 +88,23 @@ namespace advt.Data.SqlServer
             SqlHelper.Get_Inserte_Set(advt_users_item_prop_a, Include, Exclude, info, ref item_name, ref item_value, ref l_parms);
             commandText.AppendLine("INSERT INTO [advt_users] (" + item_name + ") VALUES (" + item_value + ");SELECT @@IDENTITY AS ID;");
             return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+        public int Insert_sys_log(Entity.sys_log info, string[] Include, string[] Exclude)
+        {
+            List<DbParameter> l_parms = new List<DbParameter>();
+            StringBuilder commandText = new StringBuilder();
+            string item_name = string.Empty;
+            string item_value = string.Empty;
+            SqlHelper.Get_Inserte_Set(sys_log_item_prop_a, Include, Exclude, info, ref item_name, ref item_value, ref l_parms);
+            commandText.AppendLine("INSERT INTO [sys_log] (" + item_name + ") VALUES (" + item_value + ");SELECT @@IDENTITY AS ID;");
+            return DbHelper.PE.ExecuteNonQuery(CommandType.Text, commandText.ToString(), l_parms.ToArray());
+        }
+
+        public IDataReader Get_sys_log(string  userName)
+        {
+            StringBuilder commandText = new StringBuilder();
+            commandText.AppendLine(" SELECT top 1 newguid   FROM [sys_log] where username='"+ userName + "'  order by id desc");
+            return DbHelper.PE.ExecuteReader(CommandType.Text, commandText.ToString() );
         }
 
         public int Update_advt_users(Entity.advt_users info, string[] Include, string[] Exclude)

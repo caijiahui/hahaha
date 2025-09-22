@@ -16,6 +16,8 @@ using advt.CMS.Models.ExamModel;
 using advt.Entity.Global;
 using System.Net;
 using System.IO;
+using System.ServiceModel;
+using advt.Manager.Services;
 
 namespace advt.Web.Controllers
 {
@@ -31,7 +33,7 @@ namespace advt.Web.Controllers
         public ActionResult Login(string returnUrl,string token,string userNo, string sys, string param)
         {
             LoginModel model = new LoginModel();
-                string tokenstr = System.Web.HttpUtility.UrlEncode(token, Encoding.GetEncoding("GB2312"));
+            string tokenstr = System.Web.HttpUtility.UrlEncode(token, Encoding.GetEncoding("GB2312"));
             model.token = tokenstr;
             model.userNo = userNo;
             model.sys = sys;
@@ -41,7 +43,23 @@ namespace advt.Web.Controllers
             {
                 alert("您已经登录，请勿重复登录!", Url.Action(string.Empty, "Home", new { Area = "" }));
             }
+             HttpCookie cookie = Request.Cookies["Exam"];
+            if (cookie != null)
+            {
+               
+                if (cookie["ClientIP"] == System.Web.HttpContext.Current.Request.UserHostAddress.ToString())
+                {                  
+                    System.Web.HttpContext.Current.Response.Write("<script>alert('您已经登录，请勿重复登录!');</script>");
+                }
+                else
+                {
+                   
+                    System.Web.HttpContext.Current.Response.Write("<script>alert('短时间内，请勿不同设备登录!');</script>");
+                  // return Content("");
 
+                }
+
+            }
             return View(model) ;
         }
         public ActionResult Loginadmin(string returnUrl, string token, string userNo, string sys, string param)
@@ -271,6 +289,9 @@ namespace advt.Web.Controllers
                     advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
                     XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
                     IsLogin = "Pass";
+
+                    //增加保存登录日志到数据库
+                    SetCookie_New(LF, token, users.username.ToString());             
                 }
             }
             catch (Exception ex)
@@ -281,6 +302,30 @@ namespace advt.Web.Controllers
             //ModelState.AddModelError("", "用户名或者密码错误!");
             return Json(new { IsLogin  }, JsonRequestBehavior.AllowGet);
           
+        }
+        /// <summary>
+        /// 增加保存登录日志到数据库
+        /// </summary>
+        /// <param name="newguid">随机数</param>
+        /// <param name="token"></param>
+        /// <param name="username"></param>
+        private void SetCookie_New(string newguid, string token, string username )
+        {
+            //增加保存登录日志到数据库
+            Entity.sys_log Log = new sys_log();
+            Log.newguid = newguid;
+            Log.token = token;//A家人才传过来的token，自行登录的，没有。
+            Log.username = username;
+            Log.clientname = System.Web.HttpContext.Current.Request.UserAgent.ToString();
+            Log.clientip = System.Web.HttpContext.Current.Request.UserHostAddress.ToString();
+            Log.login_time = DateTime.Now;
+            advt.Data.sys_log.Insert_sys_log(Log, null, new string[] { "id" });
+            Response.Cookies["Exam"]["UserName"] = username;
+            Response.Cookies["Exam"]["Token"] = token;
+            Response.Cookies["Exam"]["NewGuid"] = newguid;
+            Response.Cookies["Exam"]["ClientIP"] = Log.clientip;
+            Response.Cookies["Exam"].Expires = DateTime.Now.AddHours(4);
+
         }
 
         [HttpPost]
@@ -369,6 +414,9 @@ namespace advt.Web.Controllers
                     advt.Data.advt_users.Update_advt_users(users, null, new string[] { "id" });
                     XUtils.WriteUserCookie(users, model.CookieTime ?? 0, Config.BaseConfigs.Passwordkey, 1);
                     IsLogin = "Pass";
+                    //增加保存登录日志到数据库
+                    SetCookie_New(LF, token, users.username.ToString());
+
                 }
             }
             catch (Exception ex)
@@ -409,6 +457,13 @@ namespace advt.Web.Controllers
             //Data.advt_users.Update_advt_users(this.UserContext, null, new string[] { "id" });
             XUtils.ClearCookie();
             Manager.Login.ClearSession();
+            HttpCookie cookie = Request.Cookies["Exam"];
+            if (cookie != null)
+            {
+                cookie.Expires = DateTime.Now.AddDays(-2);
+                Response.Cookies.Set(cookie);
+            }
+
             return RedirectToAction("Login", "Account");
         }
 

@@ -1,0 +1,235 @@
+﻿@model advt.CMS.Models.ExamModel.ExamUserSubject
+@{
+
+    Layout = null;
+
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题页</title>
+    <link href="~/Scripts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Scripts/elementUI/lib/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Scripts/css/exam.css" rel="stylesheet" />
+    <style>
+
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 100%;
+        }
+
+        .el-card__header {
+            background-color: #337ab7 !important;
+            height: 48px !important;
+            padding: 10px 10px !important;
+        }
+
+        .el-card__body {
+            border-radius: 2px
+        }
+    </style>
+
+</head>
+<div id="app">
+    <template>
+        <div style="width:90%;margin:30px auto">
+            <el-page-header @@back="goBack">
+            </el-page-header>
+            <el-tag style="margin-top:20px;"><i class="el-icon-user-solid"></i> {{usercode}} {{username}}</el-tag>
+
+            <el-card class="box-card" v-for="item in ListUsersubject" style="margin-top:20px">
+                <div slot="header" class="clearfix">
+                    <span style="font-size:18px;color:white"><i class="el-icon-position"></i> {{item.ExamType}}</span>
+
+                </div>
+                <div class="text item" style="font-size:16px;cursor:pointer;" v-for="items in item.LExamSubject" @@click="OpenExam(items.ExamSubject,items.RuleName,items.ExamDate)"><i class="el-icon-thumb"></i> {{items.ExamSubject}}</div>
+            </el-card>
+        </div>
+
+        <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" :width="isMobileTurn?'90%':'50%'" :close-on-click-modal="false">
+            <span>
+                <el-button @@click="handleExam('formal')">正式</el-button>
+                <el-button @@click="handleExam('test')">模拟</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog :visible.sync="dialogPhotoVisible" :width="isMobileTurn?'90%':'50%'" :close-on-click-modal="false">
+            <video ref="video" autoplay></video>
+            <button @@click="capturePhoto">拍照</button>
+        </el-dialog>
+     
+
+    </template>
+
+
+</div>
+<script src="~/Scripts/Vue/Vue.js"></script>
+<script src="~/Scripts/Vue/axios.js"></script>
+<script src="~/Scripts/elementUI/lib/index.js"></script>
+<script src="~/Scripts/Vue/polyfill.min.js"></script>
+<script type="text/javascript">
+ //import { v4 as uuidv4 } from "uuid";
+    new Vue({
+        el: '#app',
+        data: {
+            ListUsersubject: [],
+            dialogFormVisible: false,
+            dialogPhotoVisible: false,
+            dialogFormTitle: '',
+            RuleName: '',
+            username: '',
+            usercode: '',
+            ExamDate: '',
+            activeNames: [],
+            isMobileTurn: false
+        },
+
+        mounted: function () {
+            var _this = this;
+            this.getdata();
+            this.opened();
+            if (this.isMobile()) {
+                this.isMobileTurn = true
+            } else {
+                this.isMobileTurn = false
+            };
+            _this.startCamera();
+        },
+        methods: {
+            isMobile: function () {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            },
+            OpenExam: function (data, RuleName, EDate) {
+                var _this = this;
+                _this.dialogFormTitle = data;
+                _this.RuleName = RuleName;
+                _this.ExamDate = EDate;
+                _this.dialogFormVisible = true;
+            },
+            handleExam: function (data) {
+                var _this = this;
+                var datd = '';
+                if (_this.ExamDate != null) {
+                    datd = _this.changeDate(_this.ExamDate);
+                }
+                if (data == "formal") {
+                    _this.dialogPhotoVisible = true;
+                }
+                else {
+                    window.location.href = "/EPageMain/ExamPage?IsTest=" + data + "&RuleName=" + _this.RuleName;
+                }
+                //_this.ExamDate = '';
+            },
+            goBack: function () {
+                var _this = this;
+                if (_this.isMobileTurn == true) {
+                    window.location.href = "/EPageMain/MaintainExam"
+                } else {
+                    window.location.href = "/EPageMain/MaintainExamPC"
+                }
+
+            },
+            changeDate: function (dates) {
+                var date = new Date(parseInt(dates.replace("/Date(", "").replace(")/", ""), 10));
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+                m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+                s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+                var NewDtime = Y + M + D + h + m + s;
+                var listDate = new Date(date);
+                var year = listDate.getFullYear();
+                var mon = listDate.getMonth() + 1;
+                var day = listDate.getDate();
+                return year + '-' + mon + '-' + day;
+            },
+            getdata: function () {
+                var _this = this;
+                axios.post('/EPageMain/GetUserSubject').then(function (responese) {
+                    _this.ListUsersubject = responese.data.ListUsersubject;
+                    _this.username = responese.data.username;
+                    _this.usercode = responese.data.usercode;
+                })
+            },
+            opened: function () {
+                var _this = this;
+                return _this.ListUsersubject.map((i) => {
+                    activeNames = i.ExamType;
+                });
+            },
+            startCamera: function() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = navigator.mediaDevices.getUserMedia({ video: true });
+                    this.$refs.video.srcObject = stream;
+                } else {
+                    alert('浏览器不支持摄像头访问');
+                }
+            },
+            capturePhoto: function () {
+                var _this = this;
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = this.$refs.video.videoWidth;
+                canvas.height = this.$refs.video.videoHeight;
+                context.drawImage(this.$refs.video, 0, 0, canvas.width, canvas.height);
+               // this.imageUrl = canvas.toDataURL('image/png'); // 显示图片或处理图片数据
+                const base64Image = canvas.toDataURL('image/png'); 
+                const file = this.base64ToFile(base64Image, _this.usercode + '.jpg', 'image/jpeg');
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // 发送图像数据到后端的API接口
+                axios.post("/EPageMain/UploadPhoto?usercode=" + _this.usercode,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    )
+                    .then((response) => {                       
+                        window.location.href = "/EPageMain/ExamPage?IsTest=formal&RuleName=" + _this.RuleName;
+
+                    })
+                    .catch((error) => {
+                        this.rec_text = error;
+                        console.error("Error sending data to backend:", error);
+                        // 处理请求错误
+                    });
+            },
+             base64ToFile: function (base64Str, fileName, fileType) {
+                const byteString = window.atob(base64Str.split(',')[1]);
+                const ia = new Uint8Array(byteString.length);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new File([new Blob([ia], { type: fileType })], fileName, { type: fileType });
+            },
+            //generateImageName: function () {
+            //    const uuid = uuidv4();
+            //    return uuid + '.jpg';
+            //},
+
+        }
+
+
+    })
+
+</script>
+

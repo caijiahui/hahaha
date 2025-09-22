@@ -13,6 +13,15 @@ using advt.CMS;
 using advt.CMS.Models.ExamModel;
 using advt.CMS.Models;
 using System.ServiceModel.Syndication;
+using Newtonsoft.Json;
+using System.Data;
+using System.Net;
+using System.Text;
+using advt.Data;
+using NPOI.SS.Formula.Functions;
+using System.Drawing;
+using System.Web.Helpers;
+using System.Web.Script.Serialization;
 
 namespace advt.Web.Controllers
 {
@@ -39,9 +48,38 @@ namespace advt.Web.Controllers
         [MyAuthorize]
         public ActionResult MaintainSubset()
         {
+            HttpCookie cookie = Request.Cookies["Exam"];
+            if (cookie != null)              
+            {
+                ExamConfirmModel firmModel = new ExamConfirmModel();
+
+                if (cookie["NewGuid"] != null& !firmModel.CheckLogStauts(cookie["NewGuid"].ToString(), this.UserNameContext)) //考试前检验是否最新登录状态
+                {
+                    alert("检验到不是最新登录状态!" );
+                    return RedirectToAction("LogOff", "Account");
+                }
+            }
             var model = new ExamUserSubject();
             return View(model);
         }
+        [MyAuthorize]
+        public ActionResult MaintainSubsetV2()
+        {
+            HttpCookie cookie = Request.Cookies["Exam"];
+            if (cookie != null)
+            {
+                ExamConfirmModel firmModel = new ExamConfirmModel();
+                if (cookie["NewGuid"] != null & !firmModel.CheckLogStauts(cookie["NewGuid"].ToString(), this.UserNameContext)) //考试前检验是否最新登录状态
+                {
+                    alert("检验到不是最新登录状态!");
+                    return RedirectToAction("LogOff", "Account");
+                }
+            }
+            var model = new ExamUserSubject();
+            return View(model);
+        }
+
+
         //个人考试科目
         [MyAuthorize]
         public JsonResult GetUserSubject()
@@ -67,7 +105,7 @@ namespace advt.Web.Controllers
                     model.ExamFailResult += model.GetExamBankNum(RuleName, usercode.UserCode);
                     if (IsTest == "formal")
                     {
-                        if(detail.ExamDate == null)
+                        if (detail.ExamDate == null)
                         {
                             model.ExamFailResult += "未维护考试时间:" + detail.ExamDate + ",不可考试";
                         }
@@ -92,11 +130,18 @@ namespace advt.Web.Controllers
                             }
                             else
                             { model.ExamFailResult += "未点名签到"; }
-                           
+
 
                         }
 
-                    }                    
+                    }
+                    else// 如果正式考试时，不允许再模拟考试。
+                    {
+                        if (detail.IsStartExam)
+                        {
+                            model.ExamFailResult += "已经开始正式考试，不能再模拟考试哦！";
+                        }
+                    }
                 }
                 else
                 {
@@ -166,7 +211,7 @@ namespace advt.Web.Controllers
             }
             catch (Exception ex)
             {
-                var TestModel = new advt_Attachment();
+                var TestModel = new Entity.advt_Attachment();
                 TestModel.name = ex.Message;
                 Data.advt_Attachment.Insert_advt_Attachment(TestModel, null, new string[] { "id" });
                 throw;
@@ -373,5 +418,22 @@ namespace advt.Web.Controllers
 
         }
 
+        public ActionResult UploadPhoto(string usercode)
+        {
+            HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
+            Image img = Image.FromStream(files[0].InputStream);
+            MemoryStream ms = new MemoryStream();
+            img.Save(ms, img.RawFormat);//存储到流
+            byte[] image_betes = ms.ToArray();//字节流；
+            ms.Close();
+            ExamConfirmModel firmModel = new ExamConfirmModel();
+            string ReturnMessage=firmModel.FaceDetect(usercode, image_betes);
+            var serializer = new JavaScriptSerializer();
+            Face_Compare FaceModel = serializer.Deserialize<Face_Compare>(ReturnMessage);
+            firmModel.SaveFaceImage(usercode, image_betes, FaceModel);
+
+            return Json(FaceModel);
+            //2.	相似度阈值建议：≥0.65：可判定为同一人
+        }
     }
 }

@@ -21,6 +21,9 @@ namespace advt.Data
 
         int Delete_advt_users(int id);
 
+        int Insert_sys_log(Entity.sys_log info, string[] Include, string[] Exclude);
+        IDataReader Get_sys_log( string UserName);
         #endregion
     }
+
 }

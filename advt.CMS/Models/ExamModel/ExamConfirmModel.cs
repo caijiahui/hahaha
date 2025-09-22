@@ -1,12 +1,18 @@
 ﻿using advt.Data;
 using advt.Entity;
+using Newtonsoft.Json;
 using NPOI.POIFS.Crypt.Dsig;
 using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Utilities;
+using Org.BouncyCastle.Utilities.Encoders;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 
 namespace advt.CMS.Models.ExamModel
@@ -126,6 +132,113 @@ namespace advt.CMS.Models.ExamModel
             var lst = Data.ExamSubject.Get_All_ExamSubject(new { TypeName =code});
             LSubject = lst.GroupBy(x => x.SubjectName).Select(y => y.Key).Distinct().ToList();
         }
+        /// <summary>
+        /// 考试前检验是否最新登录状态
+        /// </summary>
+        /// <param name="NewGuid"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public bool CheckLogStauts(string NewGuid, string userName)
+        {
+            Entity.sys_log log = advt.Data.sys_log.Get_sys_log(userName);
+            if (log.newguid == NewGuid)
+            { return true; }
+            else
+            { return false; }
+        }
+
+        /// <summary>
+        /// 人脸识别
+        /// </summary>
+        /// <param name="userHrid">工号</param>
+        /// <param name="UploadPhotoImage">拍照图片</param>
+        /// <returns></returns>
+        public string  FaceDetect(string userHrid, byte[] UploadPhotoImage )
+        {
+            string apiResponse = "";
+            IDataReader reader = DatabaseProvider.GetInstance().Get_EmployePhoto(userHrid);//从TrainingPlatform数据库获取员工照片             
+            if (reader.Read())
+            {
+                string temp = reader.GetValue(0).ToString();
+                if (!string.IsNullOrEmpty(temp))
+                {
+                    byte[] b = (byte[])reader.GetValue(0);
+
+                    HttpWebResponse response = null;
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://172.21.132.66:8888/face_compare");
+                    request.KeepAlive = false;
+                    request.Method = "POST";
+                    request.Timeout = 9000;
+                    request.ContentType = "application/json;charset=utf-8";//text/xml(GET一般用这个)、application/json、application/x-www-form-urlencoded(一般POST不用json就用这个)、application/x-www-form-urlencoded;charset=utf-8
+
+                    try
+                    {
+                        var requestObj = new
+                        {
+                            src_face_image_base64 = Convert.ToBase64String(b), //基准人脸图像（Base64编码）
+                            dst_face_image_base64= Convert.ToBase64String(UploadPhotoImage)  // 待比对的人脸图像（Base64编码）
+                        };
+                        string requestContent = JsonConvert.SerializeObject(requestObj);
+                        byte[] buffer = Encoding.UTF8.GetBytes(requestContent);
+                        request.ContentLength = buffer.Length;
+                        Stream outStream = request.GetRequestStream();
+                        outStream.Write(buffer, 0, buffer.Length);
+                        outStream.Dispose();
+                        using (response = (HttpWebResponse)request.GetResponse())
+                        {
+                            using (StreamReader streamreader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("utf-8")))
+                            {
+                                apiResponse = streamreader.ReadToEnd();
+                                streamreader.Close();
+                                streamreader.Dispose();
+                            }
+                            response.Close();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        apiResponse = e.ToString();
+                    }
+                    finally
+                    {
+                        if (response != null)
+                            response.Close();
+                        if (request != null)
+                            request.Abort();
+                    }
+                }
+            }
+            return apiResponse;
+        }
+        /// <summary>
+        /// 保存人脸图片
+        /// </summary>
+        /// <param name="userHrid"></param>
+        /// <param name="UploadPhotoImage"></param>
+        public void SaveFaceImage(string userHrid, byte[] UploadPhotoImage, Face_Compare model)
+        {
+            string sqlconnstr = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["advt_pe"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(sqlconnstr))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert  [dbo].[UserPhoto] ( [UserCode], [EmployePhoto], [CreatedDate],face_sim,err_code,processing_time)values(@Var_Hrid,@Image,'" + DateTime.Now + "','"+model.face_sim+"','"+model.err_code+"','"+model.processing_time+"')";
+                SqlParameter Par1 = new SqlParameter("@Var_Hrid", SqlDbType.NVarChar);
+                Par1.Value = userHrid;
+                cmd.Parameters.Add(Par1);
+                SqlParameter Par2 = new SqlParameter("@Image", SqlDbType.Image);
+                Par2.Value = UploadPhotoImage;
+                cmd.Parameters.Add(Par2);
+                int t = (int)(cmd.ExecuteNonQuery());
+                //if (t > 0)
+                //{
+                //    Console.WriteLine("插入成功");
+                //}
+                conn.Close();
+            }
+
+        }
     }
     public class UserInfos
     { 
@@ -143,5 +256,30 @@ namespace advt.CMS.Models.ExamModel
 
 
     }
+    public class Face_Compare
+    {
+        /// <summary>
+        ///  人脸相似度得分（0-1，值越大相似度越高）
+        /// </summary>
+        public string face_sim { get; set; }
+        /// <summary>
+        /// 处理状态码（详见错误码表）
+        /// </summary>
+        public string err_code { get; set; }
+        /// <summary>
+        /// 模型分析耗时
+        /// </summary>
+        public string processing_time { get; set; }
+    }
+
+//    错误码 常量标识    说明
+//0	OK 比对成功
+//1	RunTimeExcept 系统运行时异常
+//2	SrcImageNoFace 基准图像未检测到人脸
+//3	SrcImageFaceMoreThanOne 基准图像检测到多个人脸
+//4	DstImageNoFace 待比对图像未检测到人脸
+//5	DstImageFaceMoreThanOne 待比对图像检测到多个人脸
+
+
 
 }
